@@ -5,7 +5,7 @@ import { createMemoryHistory, createRouter } from 'vue-router'
 import { createI18n } from '@museumwnf/viewer-core/i18n'
 import { centuryPresets, collectionTreeFromThemes, loadEntities, useDataPackage } from '@museumwnf/viewer-core'
 import {
-  CatalogueResultsView, EssayView, HomeView, PartnerListView, RecordView, LinkListView, SearchFormView, TextPageView, TimelineResultsView,
+  CatalogueResultsView, EssayView, HomeView, PartnerListView, RecordView, RecordSheetView, LinkListView, SearchFormView, TextPageView, TimelineResultsView,
 } from '../src/views/index.js'
 import { layoutTexts, withSiteRights } from './helpers.js'
 
@@ -453,6 +453,72 @@ describe('RecordView', () => {
     } finally {
       restore()
     }
+  })
+})
+
+describe('RecordSheetView', () => {
+  const spec = {
+    entity: 'objects',
+    translations: ['glossary'],
+    fields: [
+      { key: 'name', label: 'sheet.field.name', value: 'name' },
+      { key: 'location', label: 'sheet.field.location', value: 'location' },
+    ],
+    citation: { project: 'ISL' },
+    related: { route: 'objects-detail' },
+  }
+
+  it('renders a RecordView unchanged when no dataGetter is passed — the gallery shape', async () => {
+    const { wrapper } = await mountView(RecordSheetView, { props: { spec, id: 'o1' }, route: '/objects/o1' })
+    await settle(() => wrapper.text().includes('Prepared by'))
+    expect(wrapper.find('h1').html()).toContain('Glazed <em>bowl</em>')
+    expect(wrapper.findAll('.mwnf-sheet__label').map((l) => l.text())).toEqual(['Name', 'Location'])
+    expect(wrapper.find('.mwnf-related .mwnf-list__name').text()).toBe('Mosque lamp')
+    expect(wrapper.find('.vc-not-found').exists()).toBe(false)
+  })
+
+  it("forwards a website's slots straight through to RecordView, by name, unmodified", async () => {
+    const { wrapper } = await mountView(RecordSheetView, {
+      props: { spec, id: 'o1' },
+      slots: {
+        header: '<template #header="{ text }"><p class="own-header">{{ text.name }}</p></template>',
+        related: '<template #related="{ records, outside }"><p class="own-related">{{ records.map((r) => r.name).join("+") }} / {{ outside.length }} outside</p></template>',
+      },
+      route: '/objects/o1',
+    })
+    await settle(() => wrapper.find('.own-header').exists())
+    expect(wrapper.find('.own-header').text()).toBe('Glazed *bowl*')
+    expect(wrapper.find('.own-related').text()).toBe('Mosque lamp / 1 outside')
+  })
+
+  it('still shows RecordView\'s own not-found view for an id the entity does not carry at all, with no dataGetter set', async () => {
+    const { wrapper } = await mountView(RecordSheetView, { props: { spec, id: 'nope' }, route: '/objects/nope' })
+    await nextTick()
+    expect(wrapper.find('.vc-not-found').exists()).toBe(true)
+  })
+
+  it('shows the not-found view without ever mounting RecordView when dataGetter reports the id missing from this language build', async () => {
+    // `o1` is a perfectly real record in the fixture package — this stands
+    // in for an exhibition's per-build `itemById`, which can say "not in
+    // this build" for an id the whole package still carries.
+    const { wrapper } = await mountView(RecordSheetView, {
+      props: { spec, id: 'o1', dataGetter: () => null },
+      route: '/objects/o1',
+    })
+    await nextTick()
+    expect(wrapper.find('.vc-not-found').exists()).toBe(true)
+    expect(wrapper.find('h1').exists()).toBe(false)
+    expect(wrapper.find('.mwnf-sheet__label').exists()).toBe(false)
+  })
+
+  it('renders RecordView as usual when dataGetter reports the id present', async () => {
+    const { wrapper } = await mountView(RecordSheetView, {
+      props: { spec, id: 'o1', dataGetter: (id) => (id === 'o1' ? { id } : null) },
+      route: '/objects/o1',
+    })
+    await settle(() => wrapper.text().includes('Prepared by'))
+    expect(wrapper.find('h1').html()).toContain('Glazed <em>bowl</em>')
+    expect(wrapper.find('.vc-not-found').exists()).toBe(false)
   })
 })
 
@@ -1586,10 +1652,10 @@ describe('TimelineResultsView', () => {
 })
 
 describe('the views entry point', () => {
-  it('exports the nine views and no shell', async () => {
+  it('exports the ten views and no shell', async () => {
     const entry = await import('../src/views/index.js')
     expect(Object.keys(entry).sort()).toEqual([
-      'CatalogueResultsView', 'EssayView', 'HomeView', 'LinkListView', 'PartnerListView', 'RecordView', 'SearchFormView', 'TextPageView', 'TimelineResultsView',
+      'CatalogueResultsView', 'EssayView', 'HomeView', 'LinkListView', 'PartnerListView', 'RecordSheetView', 'RecordView', 'SearchFormView', 'TextPageView', 'TimelineResultsView',
     ])
     vi.restoreAllMocks()
   })

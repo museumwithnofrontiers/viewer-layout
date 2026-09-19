@@ -1,6 +1,6 @@
 # Slot catalogue
 
-Every prop and slot of `PageShell`, `SiteShell`, and the nine composed views
+Every prop and slot of `PageShell`, `SiteShell`, and the ten composed views
 exported from `@museumwnf/viewer-layout/views`, extracted from `main`'s
 source — plus a one-line purpose for every `/content` component. Read
 [`designer-contract.md`](./designer-contract.md) first for who owns what and
@@ -134,7 +134,7 @@ unused.
 
 ## Composed views (`@museumwnf/viewer-layout/views`)
 
-Every one of the nine takes a `spec` object (plus, where noted, `id`) as its
+Every one of the ten takes a `spec` object (plus, where noted, `id`) as its
 real configuration surface — the table below lists just the outer props;
 `spec`'s own shape is summarized per view and documented fully in the
 [README](../README.md#composed-views).
@@ -188,6 +188,24 @@ language, languages, select, dir, glossary, ready, attribution, t, tr }`.
 | `related` | The whole related-records block | `{ ...ctx, records, outside }` — `records` is the spec-built rows, `outside` the related records the package doesn't carry |
 | `aside` | Beside the sheet (only rendered if filled) | `ctx` |
 | `after` | Below everything, outside the two-column body | `ctx` |
+
+### RecordSheetView
+
+Built on `RecordView`; the DXA gallery/exhibition item sheet.
+
+**Props:** every `RecordView` prop (`spec`, `id`, `entity`), forwarded
+unchanged, plus `dataGetter` (Function, optional) — `(id) => record | null |
+undefined`, a website's own language-subset record lookup. Left unset, this
+view is a bare `RecordView` (the gallery shape — no per-language split).
+Supplied and it reports `id` missing, the view renders `NotFoundView`
+*before* `RecordView` ever mounts (the exhibition shape's per-language-build
+404 — a record the data package carries can still be absent from this
+particular language build, which `RecordView`'s own "not in the package"
+gate, reading the whole package regardless of language, does not catch).
+
+| Slot | Replaces / wraps | Slot props |
+|---|---|---|
+| *(every `RecordView` slot: `header`, `before-sheet`, one per dynamic row, `after-sheet`, `source`, `related`, `aside`, `after`)* | Forwarded straight to `RecordView` by name, unmodified — this view declares no slot of its own | Whatever `RecordView` hands that same slot |
 
 ### EssayView
 

@@ -3,7 +3,8 @@
 ## 2.14.0 (2026-09-19)
 
 Part of the exhibition Theme view epic (museumwithnofrontiers/inventory-app#1729),
-package-side story #1811.
+package-side story #1811, and the DXA-item-sheet epic
+(museumwithnofrontiers/inventory-app#1728).
 
 ### Added
 
@@ -18,6 +19,17 @@ package-side story #1811.
   rationale and what a site's own `Theme.vue` shrinks to. Migrating
   the-use-of-colours-in-art and water-in-islam onto them is a follow-up,
   per-site story.
+- New composed view `RecordSheetView`, built on `RecordView`: forwards
+  `spec`/`id`/`entity` and every slot straight through unchanged, and adds
+  an optional `dataGetter` prop — `(id) => record | null | undefined` — for
+  the one behavioural difference between a DXA gallery and exhibition item
+  sheet: an exhibition ships one build per language and an id the data
+  package carries can still be missing from this build's language subset,
+  which `RecordView`'s own package-wide "not found" gate does not catch. A
+  gallery passes no `dataGetter` and gets exactly today's `RecordView`.
+  Exported from `@museumwnf/viewer-layout/views`, ready for carpets,
+  amulets, the-use-of-colours-in-art and water-in-islam to replace their
+  local `ItemSheet.vue` with (site migration is a separate story per site).
 
 ## 2.13.0 (2026-09-19)
 
