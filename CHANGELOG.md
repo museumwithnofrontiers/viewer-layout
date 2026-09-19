@@ -1,5 +1,20 @@
 # Changelog
 
+## 2.13.0 (2026-09-19)
+
+Part of the project-knowledge epic (museumwithnofrontiers/inventory-app#1727),
+viewer-layout half of phase 3.
+
+### Changed
+
+- `RecordView`'s citation now reads the project name from the data package's
+  `manifest.projects` (via `@museumwnf/viewer-core`'s `useProjects()`),
+  honouring an explicit `spec.citation.project` id first, and falling back to
+  the deprecated `projectName(record.project_key, t)` only for a data package
+  that predates inventory-app#1727 phase 2. `peerDependencies`/
+  `devDependencies` now require `@museumwnf/viewer-core ^1.15.0` (the first
+  version exporting `useProjects`).
+
 ## 2.12.0
 
 Part of the M1 npmjs-publishing epic (metanull/inventory-app#1721). Requires

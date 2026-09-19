@@ -3,7 +3,8 @@ import { computed, useSlots } from 'vue'
 import { useRoute } from 'vue-router'
 import {
   NotFoundView, byId, citation, entityRef, languageLabels, projectName, renderBlock, renderInline,
-  renderPlain, sheetRows, sourceUrl, useDataPackage, useGlossaryPopup, useI18n, useRecordSheet, useRelatedRecords,
+  renderPlain, sheetRows, sourceUrl, useDataPackage, useGlossaryPopup, useI18n, useProjects, useRecordSheet,
+  useRelatedRecords,
 } from '@museumwnf/viewer-core'
 import GlossaryPopover from '../content/GlossaryPopover.vue'
 import MediaGallery from '../content/MediaGallery.vue'
@@ -60,6 +61,7 @@ const props = defineProps({
 
 const { t, locale } = useI18n()
 const pkg = useDataPackage()
+const projects = useProjects()
 const slots = useSlots()
 const route = useRoute()
 
@@ -159,7 +161,11 @@ const workingNumber = computed(() => String(record.value?.[spec.value.workingNum
 const citationText = computed(() => {
   const s = spec.value.citation
   if (!record.value || s === false) return ''
-  const project = typeof s?.project === 'function' ? s.project(record.value, ctx.value) : projectName(s?.project ?? record.value.project_key, t)
+  const projectId = typeof s?.project === 'function' ? null : (s?.project ?? record.value.project_id)
+  const project = typeof s?.project === 'function'
+    ? s.project(record.value, ctx.value)
+    // fallback for data packages that predate inventory-app#1727 phase 2
+    : projects.label(projectId) ?? projectName(s?.project ?? record.value.project_key, t)
   // `permalink: false` keeps disabling it; a string keeps winning; otherwise
   // (unset, or `true`) the address is the site's own — `sourceUrl` reads the
   // declared `site.origin`, so a site that has not declared one gets no

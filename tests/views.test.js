@@ -94,8 +94,8 @@ async function settle(predicate, tries = 40) {
   await nextTick()
 }
 
-async function mountView(component, { props = {}, slots = {}, route = '/' } = {}) {
-  const i18n = createI18n({ locale: 'en', messages: { en: texts } })
+async function mountView(component, { props = {}, slots = {}, route = '/', locale = 'en' } = {}) {
+  const i18n = createI18n({ locale, messages: { en: texts } })
   const router = createRouter({
     history: createMemoryHistory(),
     routes: [
@@ -312,6 +312,38 @@ describe('RecordView', () => {
     expect(wrapper.find('.mwnf-related .mwnf-list__meta').text()).toContain('Same workshop')
     expect(wrapper.find('.mwnf-record__back').text()).toContain('Back to results')
     expect(wrapper.find('.mwnf-media').exists()).toBe(true)
+  })
+
+  it("reads the citation's project name from the data package manifest when the spec sets no project override", async () => {
+    const { wrapper } = await mountView(RecordView, {
+      props: { spec: { ...spec, citation: {} }, id: 'o3' },
+      route: '/objects/o3',
+    })
+    await settle(() => wrapper.find('.mwnf-credits__citation').text().length > 0)
+    expect(wrapper.find('.mwnf-credits__citation').text()).toContain('in Discover Islamic Art (package)')
+  })
+
+  it("reads the manifest project name in the record's active language", async () => {
+    const { wrapper } = await mountView(RecordView, {
+      props: { spec: { ...spec, citation: {} }, id: 'o3' },
+      route: '/objects/o3',
+      locale: 'fr',
+    })
+    await settle(() => wrapper.find('.mwnf-credits__citation').text().length > 0)
+    expect(wrapper.find('.mwnf-credits__citation').text()).toContain("in Découvrir l'art islamique (paquet)")
+  })
+
+  it('falls back to the legacy project name when the project id is absent from the manifest', async () => {
+    // `o4` carries a `project_id` the fixture manifest has no `projects` entry
+    // for (and a legacy `project_key`), the shape of a data package that
+    // predates inventory-app#1727 phase 2.
+    const { wrapper } = await mountView(RecordView, {
+      props: { spec: { ...spec, citation: {} }, id: 'o4' },
+      route: '/objects/o4',
+    })
+    await settle(() => wrapper.find('.mwnf-credits__citation').text().length > 0)
+    expect(wrapper.find('.mwnf-credits__citation').text()).toContain('in Discover Islamic Art')
+    expect(wrapper.find('.mwnf-credits__citation').text()).not.toContain('(package)')
   })
 
   it("hands a related block of the site's own the rows and the records outside the package", async () => {

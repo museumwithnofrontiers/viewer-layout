@@ -39,7 +39,8 @@
     "end_date": null,
     "images": [{ "url": "fragment.jpg" }],
     "glossary_ids": ["g1", "g2"],
-    "related_items": []
+    "related_items": [],
+    "project_id": "p-isl"
   },
   {
     "id": "o4",
@@ -52,6 +53,8 @@
     "end_date": 1600,
     "images": [{ "url": "tile.jpg" }],
     "glossary_ids": [],
-    "related_items": []
+    "related_items": [],
+    "project_id": "p-unknown",
+    "project_key": "ISL"
   }
 ]
