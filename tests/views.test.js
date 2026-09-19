@@ -5,7 +5,7 @@ import { createMemoryHistory, createRouter } from 'vue-router'
 import { createI18n } from '@museumwnf/viewer-core/i18n'
 import { centuryPresets, collectionTreeFromThemes, loadEntities, useDataPackage } from '@museumwnf/viewer-core'
 import {
-  CatalogueResultsView, EssayView, HomeView, PartnerListView, RecordView, LinkListView, SearchFormView, TextPageView, TimelineResultsView,
+  CatalogueResultsView, EssayView, HomeView, PartnerListView, RecordView, RecordSheetView, LinkListView, SearchFormView, TextPageView, TimelineResultsView,
 } from '../src/views/index.js'
 import { layoutTexts, withSiteRights } from './helpers.js'
 
@@ -46,6 +46,31 @@ const texts = {
   'record.action.backToResults': 'Back to results',
   'record.citation.in': 'in',
   'record.related.items': 'Related items',
+  'record.related.onDisplayIn': 'On display in',
+  'record.related.exhibitions': 'Exhibitions',
+  'record.related.galleries': 'Galleries',
+  'record.related.audioVideo': 'Audio / video',
+  'record.related.timelineForItem': 'Timeline for this item',
+  'record.action.download': 'Download',
+  'record.action.downloadPdf': 'As PDF (including images)',
+  'record.action.addToCollection': 'Add to my collection',
+  'record.sheet.sourceDatabase': 'Source database',
+  'record.dynasty.list': 'Dynasties',
+  'sheet.field.holdingMuseum': 'Holding museum',
+  'gallery.related.title': 'Related content',
+  'gallery.related.description': 'What this gallery relates the record to.',
+  'gallery.action.seeDatabaseEntry': 'See database entry',
+  'gallery.results.notInThisGallery': 'Not in this gallery',
+  'gallery.nav.artisticIntroduction': 'Artistic introduction',
+  'gallery.search.relatedDatabase': 'Search the related database',
+  'gallery.search.overallDatabase': 'Search the overall database',
+  'gallery.nav.overallDatabase': 'MWNF database',
+  'gallery.item.explorePartnerNote': 'Available in',
+  'gallery.item.linkPending': 'link pending',
+  'gallery.section.timeline': 'Timeline',
+  'exhibition.results.notInThisExhibition': 'Not in this exhibition',
+  'timeline.action.beginFullSearch': 'Begin a full search',
+  'timeline.results.noEvents': 'No events for this period.',
   'exhibition.theme.previous': 'Previous',
   'exhibition.theme.next': 'Next',
   'exhibition.theme.inThisTheme': 'In This Theme',
@@ -453,6 +478,239 @@ describe('RecordView', () => {
     } finally {
       restore()
     }
+  })
+})
+
+describe('RecordSheetView', () => {
+  const spec = {
+    entity: 'objects',
+    translations: ['glossary'],
+    fields: [
+      { key: 'name', label: 'sheet.field.name', value: 'name' },
+      { key: 'location', label: 'sheet.field.location', value: 'location' },
+    ],
+    citation: { project: 'ISL' },
+    related: { route: 'objects-detail' },
+  }
+
+  // A gallery/exhibition item-sheet spec, the shape carpets/amulets and
+  // the-use-of-colours-in-art/water-in-islam each build in their own
+  // composables/sheet.js — every block inventory-app#1728 asks
+  // RecordSheetView to own, driven by spec keys and by data the fixture
+  // package already carries (see docs/slot-catalogue.md for each key).
+  const sheetSpec = {
+    entity: 'objects',
+    translations: ['glossary'],
+    fields: [
+      { key: 'name', label: 'sheet.field.name', value: 'name' },
+      { key: 'museum', label: 'sheet.field.holdingMuseum', value: (c) => c.record.partner_id, render: 'custom' },
+      { key: 'location', label: 'sheet.field.location', value: 'location' },
+    ],
+    citation: { project: 'ISL' },
+    sourceDatabase: {
+      chipClass: (record) => (record.project_id === 'p-isl' ? 'mwnf-chip--ISLandEPM' : null),
+      addToCollection: {},
+    },
+    notice: { show: (record) => record.id === 'o1', label: 'gallery.item.explorePartnerNote' },
+    museum: {
+      route: (partnerId) => (partnerId === 'm1' ? { name: 'objects-detail', params: { id: 'partner-m1' } } : null),
+      label: (partnerId) => (partnerId === 'm1' ? 'Zed Museum' : 'Hidden Museum'),
+    },
+    related: {
+      route: 'objects-detail',
+      title: 'gallery.related.title',
+      description: 'gallery.related.description',
+      actionLabel: 'gallery.action.seeDatabaseEntry',
+      notInPackageLabel: 'gallery.results.notInThisGallery',
+      outsideChip: (ref) => (ref.project_key ? 'mwnf-chip--ISLandEPM' : null),
+      artisticIntroductionLabel: 'gallery.nav.artisticIntroduction',
+      databaseLabel: 'gallery.search.relatedDatabase',
+      overallDatabase: { label: 'gallery.search.overallDatabase', linkLabel: 'gallery.nav.overallDatabase' },
+      onDisplayIn: { linkPendingLabel: 'gallery.item.linkPending' },
+      dynasties: () => ({ records: [{ id: 'd1', from_ad: 900, to_ad: 1000 }], tr: (d) => ({ name: `Dynasty ${d.id}` }) }),
+      timeline: (record) => ({
+        heading: 'gallery.section.timeline',
+        countries: [{ value: 'all', label: 'All Countries' }, { value: 'eg', label: 'Egypt' }],
+        defaultCountry: () => 'all',
+        events: (country) => (country === 'eg' ? [{ year_from: 950, text: { description: 'An event in *Egypt*.' } }] : []),
+        range: [record.start_date ?? null, record.end_date ?? null],
+        era: (year) => (year == null ? '?' : String(year)),
+        searchTo: (country, range) => ({ name: 'timeline-results', query: { country, begin: String(range[0] ?? ''), end: String(range[1] ?? '') } }),
+      }),
+    },
+  }
+
+  it('renders the sheet through a bare spec when no dataGetter is passed — the gallery shape', async () => {
+    const { wrapper } = await mountView(RecordSheetView, { props: { spec, id: 'o1' }, route: '/objects/o1' })
+    await settle(() => wrapper.text().includes('Prepared by'))
+    expect(wrapper.find('h1').html()).toContain('Glazed <em>bowl</em>')
+    expect(wrapper.findAll('.mwnf-sheet__label').map((l) => l.text())).toEqual(['Name', 'Location'])
+    expect(wrapper.find('.mwnf-related .mwnf-grid__name').text()).toBe('Mosque lamp')
+    // None of the DXA-only blocks render without their spec keys.
+    expect(wrapper.find('.mwnf-sheet-source').exists()).toBe(false)
+    expect(wrapper.find('.mwnf-sheet-notice').exists()).toBe(false)
+    expect(wrapper.find('.vc-not-found').exists()).toBe(false)
+  })
+
+  it("forwards a website's slots straight through to RecordView, by name, unmodified", async () => {
+    const { wrapper } = await mountView(RecordSheetView, {
+      props: { spec, id: 'o1' },
+      slots: {
+        header: '<template #header="{ text }"><p class="own-header">{{ text.name }}</p></template>',
+        related: '<template #related="{ records, outside }"><p class="own-related">{{ records.map((r) => r.name).join("+") }} / {{ outside.length }} outside</p></template>',
+      },
+      route: '/objects/o1',
+    })
+    await settle(() => wrapper.find('.own-header').exists())
+    expect(wrapper.find('.own-header').text()).toBe('Glazed *bowl*')
+    expect(wrapper.find('.own-related').text()).toBe('Mosque lamp / 1 outside')
+  })
+
+  it('still shows RecordView\'s own not-found view for an id the entity does not carry at all, with no dataGetter set', async () => {
+    const { wrapper } = await mountView(RecordSheetView, { props: { spec, id: 'nope' }, route: '/objects/nope' })
+    await nextTick()
+    expect(wrapper.find('.vc-not-found').exists()).toBe(true)
+  })
+
+  it('shows the not-found view without ever mounting RecordView when dataGetter reports the id missing from this language build', async () => {
+    // `o1` is a perfectly real record in the fixture package — this stands
+    // in for an exhibition's per-build `itemById`, which can say "not in
+    // this build" for an id the whole package still carries.
+    const { wrapper } = await mountView(RecordSheetView, {
+      props: { spec, id: 'o1', dataGetter: () => null },
+      route: '/objects/o1',
+    })
+    await nextTick()
+    expect(wrapper.find('.vc-not-found').exists()).toBe(true)
+    expect(wrapper.find('h1').exists()).toBe(false)
+    expect(wrapper.find('.mwnf-sheet__label').exists()).toBe(false)
+  })
+
+  it('renders RecordView as usual when dataGetter reports the id present', async () => {
+    const { wrapper } = await mountView(RecordSheetView, {
+      props: { spec, id: 'o1', dataGetter: (id) => (id === 'o1' ? { id } : null) },
+      route: '/objects/o1',
+    })
+    await settle(() => wrapper.text().includes('Prepared by'))
+    expect(wrapper.find('h1').html()).toContain('Glazed <em>bowl</em>')
+    expect(wrapper.find('.vc-not-found').exists()).toBe(false)
+  })
+
+  it('renders the source-database chip, the backward-compatibility code and the add-to-collection link — spec.sourceDatabase', async () => {
+    const { wrapper } = await mountView(RecordSheetView, { props: { spec: sheetSpec, id: 'o1' }, route: '/objects/o1' })
+    await settle(() => wrapper.find('.mwnf-sheet-source').exists())
+    const source = wrapper.find('.mwnf-sheet-source')
+    expect(source.find('.mwnf-chip').classes()).toContain('mwnf-chip--ISLandEPM')
+    expect(source.find('.mwnf-sheet-source__line').text()).toContain('Discover Islamic Art (package)')
+    expect(source.find('.mwnf-sheet-source__uid code').text()).toBe('mwnf3:objects:o1')
+    const collectionLink = source.find('.mwnf-sheet-source__collection a')
+    expect(collectionLink.text()).toContain('Add to my collection')
+    expect(collectionLink.attributes('href')).toBe('https://www.museumwnf.org/mycollection/index.php')
+  })
+
+  it('shows the explore-partner notice only when spec.notice.show says yes — spec.notice', async () => {
+    const { wrapper } = await mountView(RecordSheetView, { props: { spec: sheetSpec, id: 'o1' }, route: '/objects/o1' })
+    await settle(() => wrapper.find('.mwnf-sheet-notice').exists())
+    expect(wrapper.find('.mwnf-sheet-notice').text()).toContain('Available in')
+
+    const { wrapper: o2Wrapper } = await mountView(RecordSheetView, { props: { spec: sheetSpec, id: 'o2' }, route: '/objects/o2' })
+    await settle(() => o2Wrapper.find('.mwnf-sheet__label').exists())
+    expect(o2Wrapper.find('.mwnf-sheet-notice').exists()).toBe(false)
+  })
+
+  it("links the holding museum's page, or falls back to plain text when spec.museum.route says no — spec.museum", async () => {
+    const { wrapper: withLink } = await mountView(RecordSheetView, { props: { spec: sheetSpec, id: 'o1' }, route: '/objects/o1' })
+    await settle(() => withLink.text().includes('Prepared by'))
+    expect(withLink.text()).toContain('Zed Museum')
+    expect(withLink.html()).toMatch(/<a[^>]*href="\/objects\/partner-m1"[^>]*>Zed Museum<\/a>/)
+
+    const { wrapper: withoutLink } = await mountView(RecordSheetView, { props: { spec: sheetSpec, id: 'o4' }, route: '/objects/o4' })
+    await settle(() => withoutLink.text().includes('Prepared by'))
+    expect(withoutLink.text()).toContain('Hidden Museum')
+    expect(withoutLink.html()).not.toContain('Hidden Museum</a>')
+  })
+
+  it('renders the related block — objects in the grid, the outside reference, the artistic-introduction/related-database/overall-database links, on-display-in, and the print action — spec.related', async () => {
+    const { wrapper } = await mountView(RecordSheetView, { props: { spec: sheetSpec, id: 'o1' }, route: '/objects/o1' })
+    await settle(() => wrapper.find('.mwnf-sheet-related').exists())
+    const rel = wrapper.find('.mwnf-sheet-related')
+    expect(rel.find('.mwnf-sheet-related__heading').text()).toBe('Related content')
+    expect(rel.find('.mwnf-sheet-related__description').text()).toBe('What this gallery relates the record to.')
+    expect(rel.find('.mwnf-grid__name').text()).toBe('Mosque lamp')
+
+    const reference = rel.find('.mwnf-sheet-related__references li')
+    expect(reference.find('.mwnf-chip').classes()).toContain('mwnf-chip--ISLandEPM')
+    expect(reference.find('code').text()).toBe('mwnf3:objects:x9')
+    expect(reference.text()).toContain('Not in this gallery')
+
+    const links = rel.findAll('.mwnf-sheet-related__line a')
+    const hrefs = links.map((a) => a.attributes('href'))
+    expect(hrefs).toContain('https://islamicart.example.org/artistic-introduction')
+    expect(hrefs).toContain('https://islamicart.example.org/database')
+    expect(hrefs).toContain('https://www.museumwnf.org/database_searchform.php')
+
+    expect(rel.text()).toContain('Sister Gallery')
+    const galleryLink = rel.findAll('a').find((a) => a.text().includes('Sister Gallery'))
+    expect(galleryLink.attributes('href')).toBe('https://sister.example.org')
+    expect(rel.text()).toContain('Pending Exhibition')
+    expect(rel.text()).toContain('link pending')
+
+    const printLine = rel.findAll('.mwnf-sheet-related__line--action').at(0)
+    const printSpy = vi.spyOn(window, 'print').mockImplementation(() => {})
+    await printLine.trigger('click')
+    expect(printSpy).toHaveBeenCalledOnce()
+    printSpy.mockRestore()
+  })
+
+  it('renders the audio/video section, the glossary tool and the dynasty popouts from spec.related', async () => {
+    const { wrapper } = await mountView(RecordSheetView, { props: { spec: sheetSpec, id: 'o1' }, route: '/objects/o1' })
+    await settle(() => wrapper.find('.mwnf-sheet-related').exists())
+    const audio = wrapper.find('.mwnf-sheet-section')
+    expect(audio.find('.mwnf-sheet-section__heading').text()).toBe('Audio / video')
+    const audioLink = audio.find('a')
+    expect(audioLink.text()).toContain('An audio guide')
+    expect(audioLink.attributes('href')).toBe('https://example.org/audio.mp3')
+
+    expect(wrapper.find('.mwnf-glossary-tool').exists()).toBe(true)
+
+    const dynasty = wrapper.find('.mwnf-dynasty-list')
+    expect(dynasty.find('.mwnf-dynasty-list__heading').text()).toBe('Dynasties')
+    expect(dynasty.find('.mwnf-dynasty__summary').text()).toBe('Dynasty d1')
+  })
+
+  it('opens the timeline popout, filters events by the chosen country, and links the full search — spec.related.timeline', async () => {
+    const { wrapper } = await mountView(RecordSheetView, { props: { spec: sheetSpec, id: 'o1' }, route: '/objects/o1' })
+    await settle(() => wrapper.find('.mwnf-sheet-timeline__trigger').exists())
+    expect(wrapper.find('.mwnf-sheet-timeline__popout').exists()).toBe(false)
+
+    await wrapper.find('.mwnf-sheet-timeline__trigger').trigger('click')
+    const popout = wrapper.find('.mwnf-sheet-timeline__popout')
+    expect(popout.exists()).toBe(true)
+    expect(popout.find('.mwnf-sheet-timeline__title').text()).toBe('Timeline')
+    expect(popout.find('.mwnf-sheet-timeline__empty').exists()).toBe(true)
+
+    await popout.find('select').setValue('eg')
+    await nextTick()
+    expect(popout.find('.mwnf-sheet-timeline__empty').exists()).toBe(false)
+    expect(popout.find('.mwnf-sheet-timeline__event').html()).toContain('An event in <em>Egypt</em>.')
+    const link = popout.find('.mwnf-sheet-timeline__link')
+    expect(link.attributes('href')).toContain('/timeline/results')
+    expect(link.attributes('href')).toContain('country=eg')
+  })
+
+  it("narrows the related grid to this build's own language subset and moves the rest into the outside references — the exhibition shape", async () => {
+    // `o2` stands in for a related record the whole package carries but this
+    // particular language build does not — RecordView's own related/outside
+    // split resolves against the whole package, so a real dataGetter (an
+    // exhibition's per-build `itemById.get`) is what narrows it further.
+    const exhibitionDataGetter = (id) => (id === 'o2' ? null : { id })
+    const { wrapper } = await mountView(RecordSheetView, {
+      props: { spec: sheetSpec, id: 'o1', dataGetter: exhibitionDataGetter },
+      route: '/objects/o1',
+    })
+    await settle(() => wrapper.find('.mwnf-sheet-related').exists())
+    expect(wrapper.find('.mwnf-grid__name').exists()).toBe(false)
+    expect(wrapper.findAll('.mwnf-sheet-related__references li')).toHaveLength(2)
   })
 })
 
@@ -1586,10 +1844,10 @@ describe('TimelineResultsView', () => {
 })
 
 describe('the views entry point', () => {
-  it('exports the nine views and no shell', async () => {
+  it('exports the ten views and no shell', async () => {
     const entry = await import('../src/views/index.js')
     expect(Object.keys(entry).sort()).toEqual([
-      'CatalogueResultsView', 'EssayView', 'HomeView', 'LinkListView', 'PartnerListView', 'RecordView', 'SearchFormView', 'TextPageView', 'TimelineResultsView',
+      'CatalogueResultsView', 'EssayView', 'HomeView', 'LinkListView', 'PartnerListView', 'RecordSheetView', 'RecordView', 'SearchFormView', 'TextPageView', 'TimelineResultsView',
     ])
     vi.restoreAllMocks()
   })

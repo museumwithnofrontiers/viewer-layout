@@ -2740,3 +2740,176 @@ details[open] > summary.mwnf-partner-list__group-heading .mwnf-partner-list__gro
 .mwnf-link:hover {
   text-decoration: underline;
 }
+
+/* DXA item sheet (RecordSheetView's own before-sheet/museum/related blocks) */
+
+.mwnf-sheet-source {
+  padding-top: var(--mwnf-space, 0.75rem);
+  font-size: var(--mwnf-sheet-source-size, 0.875rem);
+}
+
+.mwnf-sheet-source__line,
+.mwnf-sheet-source__uid,
+.mwnf-sheet-source__collection {
+  margin: 0 0 var(--mwnf-sheet-source-gap, 0.375rem);
+}
+
+.mwnf-sheet-source__uid code {
+  font-size: var(--mwnf-sheet-source-uid-size, 0.75rem);
+  color: var(--mwnf-sheet-source-uid-color, #666666);
+  word-break: break-all;
+}
+
+.mwnf-sheet-source__line a,
+.mwnf-sheet-source__collection a {
+  color: var(--mwnf-link-text, #0000ff);
+}
+
+.mwnf-sheet-notice {
+  padding: var(--mwnf-sheet-notice-padding, 0.625rem 0.75rem);
+  margin-bottom: var(--mwnf-sheet-section-gap, 1.25rem);
+  font-size: var(--mwnf-sheet-notice-size, 0.8125rem);
+  background-color: var(--mwnf-sheet-notice-background, #f5f5f5);
+}
+
+.mwnf-sheet-related {
+  margin-top: var(--mwnf-sheet-section-gap, 1.25rem);
+  padding-top: var(--mwnf-sheet-related-padding, 1rem);
+  border-top: var(--mwnf-sheet-related-border, 3px solid #dddddd);
+}
+
+.mwnf-sheet-related__heading {
+  font-weight: var(--mwnf-weight-heading, 700);
+  font-size: var(--mwnf-sheet-related-heading-size, 1rem);
+  margin-top: var(--mwnf-space, 0.75rem);
+  padding-bottom: var(--mwnf-sheet-related-heading-gap, 0.25rem);
+  border-bottom: var(--mwnf-sheet-related-heading-border, 1px solid #eeeeee);
+}
+
+.mwnf-sheet-related__heading--caps {
+  text-transform: uppercase;
+}
+
+.mwnf-sheet-related__subheading {
+  font-weight: var(--mwnf-weight-heading, 700);
+  margin-top: var(--mwnf-sheet-related-subheading-gap, 0.5rem);
+}
+
+.mwnf-sheet-related__description {
+  font-size: var(--mwnf-sheet-related-description-size, 0.8125rem);
+  color: var(--mwnf-sheet-related-description-color, #555555);
+  margin-top: var(--mwnf-sheet-related-description-gap, 0.375rem);
+}
+
+.mwnf-sheet-related__line {
+  margin-top: var(--mwnf-sheet-related-line-gap, 0.375rem);
+}
+
+.mwnf-sheet-related__line a {
+  color: var(--mwnf-link-text, #0000ff);
+}
+
+.mwnf-sheet-related__line--action {
+  cursor: pointer;
+  color: var(--mwnf-sheet-related-action-color, inherit);
+}
+
+.mwnf-sheet-related__line--action:hover {
+  text-decoration: underline;
+}
+
+.mwnf-sheet-related__references {
+  list-style: none;
+  margin: var(--mwnf-sheet-related-line-gap, 0.375rem) 0 0;
+  padding: 0;
+}
+
+.mwnf-sheet-related__references li {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--mwnf-sheet-related-reference-gap, 0.5rem);
+  padding: var(--mwnf-sheet-related-reference-padding, 0.1875rem 0);
+  font-size: var(--mwnf-sheet-related-description-size, 0.8125rem);
+}
+
+.mwnf-sheet-related__unresolved {
+  color: var(--mwnf-sheet-related-unresolved-color, #8a8a8a);
+  font-style: italic;
+  font-size: var(--mwnf-sheet-related-unresolved-size, 0.75rem);
+}
+
+.mwnf-sheet-timeline__trigger {
+  cursor: pointer;
+  margin-top: var(--mwnf-sheet-related-line-gap, 0.375rem);
+  color: var(--mwnf-sheet-timeline-trigger-color, inherit);
+}
+
+.mwnf-sheet-timeline__trigger:hover {
+  text-decoration: underline;
+}
+
+.mwnf-sheet-timeline__popout {
+  position: relative;
+  max-width: var(--mwnf-sheet-timeline-popout-width, 40rem);
+  margin: var(--mwnf-sheet-timeline-popout-margin, 0.5rem 0 0.875rem);
+  padding: var(--mwnf-popout-padding, 1rem);
+  background-color: var(--mwnf-popout-background, #ffffff);
+  border: var(--mwnf-popout-border, 1px solid #dddddd);
+}
+
+.mwnf-sheet-timeline__close {
+  position: absolute;
+  top: var(--mwnf-sheet-timeline-close-offset, 0.25rem);
+  inset-inline-end: var(--mwnf-sheet-timeline-close-inline-offset, 0.5rem);
+  cursor: pointer;
+  border: none;
+  background: none;
+  font-size: var(--mwnf-sheet-timeline-close-size, 1rem);
+}
+
+.mwnf-sheet-timeline__title {
+  font-weight: var(--mwnf-weight-heading, 700);
+  margin-bottom: var(--mwnf-sheet-related-subheading-gap, 0.5rem);
+}
+
+.mwnf-sheet-timeline__option {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--mwnf-sheet-related-reference-gap, 0.5rem);
+  font-size: var(--mwnf-sheet-related-description-size, 0.8125rem);
+}
+
+.mwnf-sheet-timeline__link {
+  color: var(--mwnf-link-text, #0000ff);
+}
+
+.mwnf-sheet-timeline__scroll {
+  max-height: var(--mwnf-sheet-timeline-scroll-height, 20rem);
+  overflow: auto;
+  margin-top: var(--mwnf-sheet-related-subheading-gap, 0.5rem);
+  font-size: var(--mwnf-sheet-source-size, 0.875rem);
+}
+
+.mwnf-sheet-timeline__subheader {
+  font-weight: var(--mwnf-weight-heading, 700);
+  margin-bottom: var(--mwnf-sheet-related-subheading-gap, 0.5rem);
+}
+
+.mwnf-sheet-timeline__empty {
+  color: var(--mwnf-sheet-timeline-empty-color, #777777);
+  font-style: italic;
+}
+
+.mwnf-sheet-timeline__event {
+  display: flex;
+  gap: var(--mwnf-sheet-timeline-event-gap, 0.625rem);
+  padding: var(--mwnf-sheet-timeline-event-padding, 0.3125rem 0);
+  border-bottom: var(--mwnf-sheet-timeline-event-border, 1px solid #eeeeee);
+}
+
+.mwnf-sheet-timeline__date {
+  flex: 0 0 5.625rem;
+  font-weight: var(--mwnf-weight-heading, 700);
+}

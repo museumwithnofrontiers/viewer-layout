@@ -1,6 +1,6 @@
 # Slot catalogue
 
-Every prop and slot of `PageShell`, `SiteShell`, and the nine composed views
+Every prop and slot of `PageShell`, `SiteShell`, and the ten composed views
 exported from `@museumwnf/viewer-layout/views`, extracted from `main`'s
 source — plus a one-line purpose for every `/content` component. Read
 [`designer-contract.md`](./designer-contract.md) first for who owns what and
@@ -134,7 +134,7 @@ unused.
 
 ## Composed views (`@museumwnf/viewer-layout/views`)
 
-Every one of the nine takes a `spec` object (plus, where noted, `id`) as its
+Every one of the ten takes a `spec` object (plus, where noted, `id`) as its
 real configuration surface — the table below lists just the outer props;
 `spec`'s own shape is summarized per view and documented fully in the
 [README](../README.md#composed-views).
@@ -188,6 +188,123 @@ language, languages, select, dir, glossary, ready, attribution, t, tr }`.
 | `related` | The whole related-records block | `{ ...ctx, records, outside }` — `records` is the spec-built rows, `outside` the related records the package doesn't carry |
 | `aside` | Beside the sheet (only rendered if filled) | `ctx` |
 | `after` | Below everything, outside the two-column body | `ctx` |
+
+### RecordSheetView
+
+Built on `RecordView`; the DXA gallery/exhibition item sheet. Where the four
+DXA sites (carpets/amulets, the-use-of-colours-in-art/water-in-islam) once
+each carried their own ~250-line `ItemSheet.vue` for this, the blocks that
+were identical within a site pair — and near-identical across the two shapes
+— now live here, driven by `spec` and by data a site passes in; a site's own
+`ItemSheet.vue` is a `spec` (usually built in its own `composables/
+sheet.js`), an `id`, and at most one slot of its own (see the two adoption
+examples in `CHANGELOG.md`). Inventory-app#1728 is the epic; inventory-app
+epic #1727 phase 4 is why `useProjects()` (the record's project name and its
+related-database/artistic-introduction links) is read here directly rather
+than threaded through `spec`.
+
+**Props:** every `RecordView` prop (`spec`, `id`, `entity`), forwarded
+unchanged, plus:
+- `dataGetter` (Function, optional) — `(id) => record | null | undefined`, a
+  website's own language-subset record lookup. Left unset, this view is a
+  bare `RecordView` (the gallery shape — no per-language split). Supplied and
+  it reports `id` missing, the view renders `NotFoundView` *before*
+  `RecordView` ever mounts (the exhibition shape's per-language-build 404 —
+  a record the data package carries can still be absent from this particular
+  language build, which `RecordView`'s own "not in the package" gate,
+  reading the whole package regardless of language, does not catch). The
+  same function also narrows the related block below: a related record it
+  reports missing moves out of the rendered grid and into the "not in this
+  gallery/exhibition" reference list, exactly as `RecordView`'s own
+  `related`/`outside` split does for a record outside the whole package.
+
+**`spec` keys this view reads, on top of every `RecordView` key:**
+
+| Key | Shape | Renders |
+|---|---|---|
+| `sourceDatabase` | `{ label? (entry, default `record.sheet.sourceDatabase`), chipClass(record, ctx) => class \| null, addToCollection: { label? (entry, default `record.action.addToCollection`) } \| false } \| false` | The source-database line (a colour chip from `chipClass` — a site's own project-UUID→colour map, epic #1727 decision 1 — plus the project's name from `useProjects().label()`), the record's `backward_compatibility` code, and the "add to my collection" link (`mwnfLinks.myCollection`). Nothing renders without this key. |
+| `notice` | `{ show(record, ctx) => boolean, label (entry) } \| false` | The Explore-partner notice, in the record's own languages, when `show` says yes. |
+| `museum` | `{ route(partnerId, ctx) => to \| null, label(partnerId, ctx) => string } \| false` | The holding-museum row (the `museum` field's `custom` slot) — a link when `route` returns one, plain text (a hidden partner, say) when it returns null. |
+| `related.title` / `related.description` | entry names | Above the related block, as a caption. |
+| `related.notInPackageLabel` | entry name | On an outside reference, next to its chip and code. |
+| `related.outsideChip(ref, ctx)` | `=> class \| null` | An outside reference's chip class. **`TODO(#1727)`**: `related_items` carries only the legacy `project_key`/`backward_compatibility`, no `project_id`, so this cannot resolve through `useProjects()` yet — a site's own stand-in rule (e.g. `projectFamily(ref.project_key)`) until that platform gap closes. |
+| `related.artisticIntroductionLabel` | entry name | The Artistic Introduction link, shown iff set *and* `useProjects().links(record.project_id).artisticIntroductionUrl` is non-null. |
+| `related.databaseLabel` | entry name | The "search the related database" link, shown iff set *and* `.relatedDatabaseUrl` is non-null; its label text is the project name. |
+| `related.overallDatabase` | `{ label, linkLabel } (entries) \| false` | The portal search link — `mwnfLinks.overallDatabase`, the one address every DXA site shares. |
+| `related.onDisplayIn` | `{ linkPendingLabel (entry) } \| false` | `record.gallery_references`, split by `kind` into galleries/exhibitions; a reference with a `legacy_host` links out, one without shows `linkPendingLabel`. |
+| `related.download` | `false` (default: shown) | The "download as PDF" action (`record.action.download`/`.downloadPdf`), which calls `window.print()`. |
+| `related.glossary` | `false` (default: shown) | `GlossaryTool`, given the record's language and direction. |
+| `related.dynasties(record, language, ctx)` | `=> { records, tr(dynasty) => translation } \| null` | `DynastyList` — a site's own dynasty lookup/filter (which records have a history to show is the site's rule), handed straight to the content component. |
+| `related.media` | `false` (default: shown) | `record.media`, as a `SheetSection` headed `record.related.audioVideo`. |
+| `related.timeline(record, ctx)` | `=> TimelineInfo \| null` | `TimelineLookup` (`/content`) — see its own entry above for `TimelineInfo`'s shape. |
+
+| Slot | Replaces / wraps | Slot props |
+|---|---|---|
+| `before-sheet` | The source-database/collection block and the notice (above) | `ctx` |
+| `museum` | The holding-museum row (above) | `{ row, ...ctx }` |
+| `related` | The whole related-content block (above) | `{ ...ctx, records, outside }` |
+| *(every other `RecordView` slot: `header`, one per other dynamic row, `after-sheet`, `source`, `aside`, `after`)* | Forwarded straight to `RecordView` by name, unmodified | Whatever `RecordView` hands that same slot |
+
+Every slot above still follows "a slot fills, the default content renders
+otherwise" — a site that fills `before-sheet`/`museum`/`related` itself keeps
+full control of that block; this view's own rendering is only the fallback.
+This view owns no project UUID, no site name and no legacy key of its own;
+the one `// TODO(#1727)` above is the sole exception, and it names the
+platform gap rather than working around it.
+
+**Target adoption** — carpets/amulets (the gallery shape, no `dataGetter`;
+`composables/sheet.js`'s `itemSheet` carries every `sourceDatabase`/
+`notice`/`museum`/`related.*` key above):
+
+```vue
+<script setup>
+import { BackLink, RecordLanguages } from '@museumwnf/viewer-layout/content'
+import { RecordSheetView } from '@museumwnf/viewer-layout/views'
+import { itemSheet } from '../composables/sheet.js'
+
+defineProps({ id: { type: String, required: true } })
+</script>
+
+<template>
+  <RecordSheetView :spec="itemSheet" :id="id" class="database-page">
+    <template #header="{ languages, language, select }">
+      <div class="languages">
+        <RecordLanguages :languages="languages" :language="language" @select="select" />
+      </div>
+      <BackLink />
+    </template>
+  </RecordSheetView>
+</template>
+```
+
+the-use-of-colours-in-art/water-in-islam (the exhibition shape — the one
+difference from the gallery is `dataGetter`, its per-build `itemById.get`):
+
+```vue
+<script setup>
+import { BackLink, RecordLanguages } from '@museumwnf/viewer-layout/content'
+import { RecordSheetView } from '@museumwnf/viewer-layout/views'
+import { itemById } from '../composables/useExhibitionData.js'
+import { itemSheet } from '../composables/sheet.js'
+
+defineProps({ id: { type: String, required: true } })
+</script>
+
+<template>
+  <RecordSheetView :spec="itemSheet" :id="id" :data-getter="(itemId) => itemById.get(itemId)" class="database-page">
+    <template #header="{ languages, language, select }">
+      <div class="languages">
+        <RecordLanguages :languages="languages" :language="language" @select="select" />
+      </div>
+      <BackLink />
+    </template>
+  </RecordSheetView>
+</template>
+```
+
+Both are under 40 lines: a `spec`, the `dataGetter` an exhibition needs, and
+the one slot (`header`) this view leaves to the site. Adopting either is a
+separate story per site — this PR only makes the shared view ready for it.
 
 ### EssayView
 
@@ -314,6 +431,7 @@ through it), not a public building block.
 | `TimelineEventList` | Timeline events as rows: date, caption, description, media, actions |
 | `PictureGallery` | A DXA exhibition theme page's curated-picture panel + thumbnail strip, with the related-works toggle |
 | `PictureNarrative` | The same page's narrative body: the selected picture's curated text plus its related pictures, forward and backward |
+| `TimelineLookup` | The DXA item sheet's own timeline popout: a trigger, a country select and the events for the record's own date range |
 
 Full prop/slot detail for `PictureGallery`/`PictureNarrative`, and the
 decomposition rationale behind them, is in

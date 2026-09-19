@@ -31,6 +31,7 @@ import {
   SiblingGalleries,
   SourceCredit,
   TimelineEventList,
+  TimelineLookup,
 } from '../src/content/index.js'
 import { globalWithI18n, withSiteRights } from './helpers.js'
 
@@ -801,5 +802,60 @@ describe('TimelineEventList', () => {
     expect(wrapper.find('.own-actions').text()).toBe('1 links')
     expect(wrapper.find('.mwnf-timeline__media-item').exists()).toBe(false)
     expect(wrapper.find('.mwnf-timeline__action').exists()).toBe(false)
+  })
+})
+
+describe('TimelineLookup', () => {
+  const info = {
+    heading: 'Timeline',
+    countries: [{ value: 'all', label: 'All Countries' }, { value: 'eg', label: 'Egypt' }],
+    defaultCountry: () => 'all',
+    events: (country) => (country === 'eg' ? [{ id: 'e1', year_from: 950, text: { description: 'A *dynasty* rises.' } }] : []),
+    range: [900, 1000],
+    era: (year) => `AD ${year}`,
+    searchTo: (country, range) => ({ name: 'timeline-results', query: { country, begin: String(range[0]), end: String(range[1]) } }),
+  }
+
+  async function mountLookup(props = {}) {
+    const router = createRouter({
+      history: createMemoryHistory(),
+      routes: [{ path: '/timeline/results', name: 'timeline-results', component: { template: '<p>results</p>' } }],
+    })
+    await router.push('/')
+    const { global } = globalWithI18n()
+    return mount(TimelineLookup, { props: { info, ...props }, global: { ...global, plugins: [...global.plugins, router] } })
+  }
+
+  it('opens onto a country select, the event list for the chosen country, and the full-search link', async () => {
+    const wrapper = await mountLookup()
+    expect(wrapper.find('.mwnf-sheet-timeline__popout').exists()).toBe(false)
+
+    await wrapper.find('.mwnf-sheet-timeline__trigger').trigger('click')
+    expect(wrapper.find('.mwnf-sheet-timeline__title').text()).toBe('Timeline')
+    expect(wrapper.find('.mwnf-sheet-timeline__subheader').text()).toContain('AD 900')
+    expect(wrapper.find('.mwnf-sheet-timeline__empty').exists()).toBe(true)
+    expect(wrapper.find('.mwnf-sheet-timeline__link').attributes('href')).toContain('country=all')
+
+    await wrapper.find('select').setValue('eg')
+    expect(wrapper.find('.mwnf-sheet-timeline__empty').exists()).toBe(false)
+    expect(wrapper.find('.mwnf-sheet-timeline__event').html()).toContain('<em>dynasty</em>')
+    expect(wrapper.find('.mwnf-sheet-timeline__link').attributes('href')).toContain('country=eg')
+
+    await wrapper.find('.mwnf-sheet-timeline__close').trigger('click')
+    expect(wrapper.find('.mwnf-sheet-timeline__popout').exists()).toBe(false)
+  })
+
+  it('resets to the new default country when a new record hands it a new info object', async () => {
+    const wrapper = await mountLookup()
+    await wrapper.find('.mwnf-sheet-timeline__trigger').trigger('click')
+    await wrapper.find('select').setValue('eg')
+    expect(wrapper.find('.mwnf-sheet-timeline__event').exists()).toBe(true)
+
+    // A different record's `info` (a fresh object, the way RecordSheetView
+    // recomputes it per record) resets the selection to its own default,
+    // the way `watch(item, …, { immediate: true })` used to.
+    await wrapper.setProps({ info: { ...info, defaultCountry: () => 'all' } })
+    expect(wrapper.find('select').element.value).toBe('all')
+    expect(wrapper.find('.mwnf-sheet-timeline__event').exists()).toBe(false)
   })
 })

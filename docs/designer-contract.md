@@ -13,7 +13,7 @@ version of the same facts is [`slot-catalogue.md`](./slot-catalogue.md).
 
 Owns every file under `src/{content,sections,views,components}` — `PageShell.vue`
 at the package root, `components/SiteShell.vue`, the seven `sections/App*.vue`
-shell pieces, the 25 `content/*.vue` building blocks, and the nine
+shell pieces, the 25 `content/*.vue` building blocks, and the ten
 `views/*.vue` composed pages.
 
 These files carry markup, props, slots and behaviour — never presentation.
