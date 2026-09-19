@@ -502,6 +502,25 @@
   /* --mwnf-view-essay-variant-border: 2px solid transparent; Variant thumbnail border */
   /* --mwnf-view-essay-variant-active-border: #1c1c1c; The selected variant's border color */
 
+  /* ---------- Content: PictureGallery, PictureNarrative ---------- */
+  /* --mwnf-picture-gallery-image-max-height: 26.25rem; The selected picture's max height */
+  /* --mwnf-picture-gallery-detail-size: 0.9375rem;   Panel detail text size */
+  /* --mwnf-picture-gallery-link-color: inherit;      The "see item entry" link color */
+  /* --mwnf-picture-gallery-empty-padding: 2.5rem 0;  Padding around the "no picture selected" message */
+  /* --mwnf-picture-gallery-thumb-gap: 0.875rem;      Gap between thumbnails, in the strip and the related blocks */
+  /* --mwnf-picture-gallery-thumb-size: 8.125rem;     Thumbnail width and height, shared by both components */
+  /* --mwnf-picture-gallery-thumb-active-outline: #1c1c1c; The selected thumbnail's outline color */
+  /* --mwnf-picture-gallery-related-opacity: 0.75;    Opacity of a thumbnail hidden behind "Add related works" */
+  /* --mwnf-picture-gallery-caption-width: 16.25rem;  Width of the hover caption shown under a thumbnail */
+  /* --mwnf-picture-gallery-caption-padding: 0.5rem;  Hover caption padding */
+  /* --mwnf-picture-gallery-caption-size: 0.8125rem;  Hover caption text size */
+  /* --mwnf-picture-gallery-caption-background: #ffffff; Hover caption background */
+  /* --mwnf-picture-gallery-caption-color: inherit;   Hover caption text color */
+  /* --mwnf-picture-gallery-toggle-gap: 0.5rem;       Gap around the "Add related works" toggle */
+  /* --mwnf-picture-narrative-heading-gap: 0.5rem;    Gap under a "Related items" heading */
+  /* --mwnf-picture-narrative-relation-size: 0.75rem; The forward relation text's size */
+  /* --mwnf-picture-narrative-relation-gap: 0.25rem;  Gap above the forward relation text */
+
   /* ---------- Content: PartnerMap ---------- */
   /* --mwnf-partner-map-padding: 1.25rem 0;            Vertical padding */
   /* --mwnf-partner-map-title-size: 1rem;              Title size */

@@ -1,5 +1,24 @@
 # Changelog
 
+## 2.14.0 (2026-09-19)
+
+Part of the exhibition Theme view epic (museumwithnofrontiers/inventory-app#1729),
+package-side story #1811.
+
+### Added
+
+- `PictureGallery` and `PictureNarrative`, two new `/content` components
+  decomposed out of the DXA exhibition family's `Theme.vue` (453 lines,
+  byte-identical between the-use-of-colours-in-art and water-in-islam):
+  `PictureGallery` is the curated-picture side panel + thumbnail strip
+  (with the "Add related works" toggle), `PictureNarrative` is the
+  narrative body below it — the selected picture's own curated text plus
+  its related pictures, forward and backward, including links that cross a
+  theme boundary. See `docs/theme-components.md` for the full decomposition
+  rationale and what a site's own `Theme.vue` shrinks to. Migrating
+  the-use-of-colours-in-art and water-in-islam onto them is a follow-up,
+  per-site story.
+
 ## 2.13.0 (2026-09-19)
 
 Part of the project-knowledge epic (museumwithnofrontiers/inventory-app#1727),

@@ -1736,6 +1736,207 @@
   }
 }
 
+/* ── PictureGallery ─────────────────────────────────────────────────────── */
+/* The curated-picture side panel + thumbnail strip a DXA exhibition theme
+   page shows beside its narrative body — EssayView's `panel`/`thumbnails`
+   slots, filled with this component rather than its own default (a picture
+   is not a catalogue record, so its card styling stays apart from
+   `.mwnf-essay__panel`/`__thumbs`, which assume one). */
+
+.mwnf-picture-gallery__image img {
+  width: 100%;
+  object-fit: contain;
+  max-height: var(--mwnf-picture-gallery-image-max-height, 26.25rem);
+}
+
+.mwnf-picture-gallery__details {
+  padding-top: var(--mwnf-space, 0.75rem);
+  font-size: var(--mwnf-picture-gallery-detail-size, 0.9375rem);
+  line-height: var(--mwnf-line-height, 1.45);
+}
+
+.mwnf-picture-gallery__detail {
+  margin: 0 0 var(--mwnf-view-essay-panel-field-gap, 0.25rem);
+}
+
+.mwnf-picture-gallery__detail--title {
+  font-weight: var(--mwnf-weight-heading, 700);
+}
+
+.mwnf-picture-gallery__label {
+  margin-inline-end: var(--mwnf-view-essay-panel-field-gap, 0.25rem);
+  font-weight: var(--mwnf-sheet-label-weight, 600);
+}
+
+.mwnf-picture-gallery__link {
+  display: inline-block;
+  margin-top: var(--mwnf-space, 0.75rem);
+  color: var(--mwnf-picture-gallery-link-color, var(--mwnf-view-back-color, inherit));
+  font-size: var(--mwnf-view-essay-panel-field-size, 0.8125rem);
+}
+
+.mwnf-picture-gallery__unresolved {
+  margin-top: var(--mwnf-space, 0.75rem);
+  font-style: italic;
+  color: var(--mwnf-color-muted, #555555);
+}
+
+.mwnf-picture-gallery__empty {
+  padding: var(--mwnf-picture-gallery-empty-padding, 2.5rem 0);
+  font-style: italic;
+}
+
+.mwnf-picture-gallery__strip {
+  width: 100%;
+  padding-bottom: var(--mwnf-space, 0.75rem);
+}
+
+.mwnf-picture-gallery__thumbs {
+  display: flex;
+  gap: var(--mwnf-picture-gallery-thumb-gap, 0.875rem);
+  overflow-x: auto;
+  margin: 0;
+  padding: 0 0 0.5rem;
+  list-style: none;
+}
+
+.mwnf-picture-gallery__thumb {
+  position: relative;
+  flex: 0 0 auto;
+  width: var(--mwnf-picture-gallery-thumb-size, 8.125rem);
+}
+
+.mwnf-picture-gallery__thumb button {
+  display: block;
+  width: 100%;
+  padding: 0;
+  border: none;
+  background: none;
+  cursor: pointer;
+}
+
+.mwnf-picture-gallery__thumb img {
+  width: var(--mwnf-picture-gallery-thumb-size, 8.125rem);
+  height: var(--mwnf-picture-gallery-thumb-size, 8.125rem);
+  object-fit: cover;
+  display: block;
+}
+
+.mwnf-picture-gallery__thumb--active img {
+  outline: 4px solid var(--mwnf-picture-gallery-thumb-active-outline, var(--mwnf-view-essay-thumb-active-border, #1c1c1c));
+  outline-offset: -4px;
+}
+
+.mwnf-picture-gallery__thumb--related img {
+  opacity: var(--mwnf-picture-gallery-related-opacity, 0.75);
+}
+
+.mwnf-picture-gallery__thumb-text,
+.mwnf-picture-narrative__thumb-text {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  z-index: 5;
+  width: var(--mwnf-picture-gallery-caption-width, 16.25rem);
+  padding: var(--mwnf-picture-gallery-caption-padding, 0.5rem);
+  font-size: var(--mwnf-picture-gallery-caption-size, 0.8125rem);
+  background-color: var(--mwnf-picture-gallery-caption-background, #ffffff);
+  color: var(--mwnf-picture-gallery-caption-color, inherit);
+}
+
+.mwnf-picture-gallery__thumb:hover .mwnf-picture-gallery__thumb-text {
+  display: block;
+}
+
+.mwnf-picture-gallery__toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--mwnf-picture-gallery-toggle-gap, 0.5rem);
+  padding-top: var(--mwnf-picture-gallery-toggle-gap, 0.5rem);
+  cursor: pointer;
+}
+
+@media (max-width: 60.875rem) {
+  .mwnf-picture-gallery__thumb-text,
+  .mwnf-picture-narrative__thumb-text {
+    display: none !important;
+  }
+}
+
+/* ── PictureNarrative ───────────────────────────────────────────────────── */
+/* The narrative content below the same page's essay body (EssayView's
+   `after-body` slot): the selected picture's own curated text, then its
+   related pictures — forward and, when another picture points at it,
+   backward too. Thumbnail sizing/caption tokens are shared with
+   PictureGallery on purpose: the two components render the same pictures,
+   one node's worth in the strip, one picture's relations here. */
+
+.mwnf-picture-narrative {
+  display: flex;
+  flex-direction: column;
+  gap: var(--mwnf-space, 0.75rem);
+}
+
+.mwnf-picture-narrative__text {
+  margin: 0;
+  line-height: var(--mwnf-line-height, 1.6);
+}
+
+.mwnf-picture-narrative__text--reciprocal {
+  font-style: italic;
+}
+
+.mwnf-picture-narrative__related {
+  padding-top: var(--mwnf-sheet-section-padding, 1rem);
+  border-top: var(--mwnf-sheet-section-border, 1px solid #dddddd);
+}
+
+.mwnf-picture-narrative__heading {
+  font-weight: var(--mwnf-weight-heading, 700);
+  margin-bottom: var(--mwnf-picture-narrative-heading-gap, 0.5rem);
+}
+
+.mwnf-picture-narrative__images {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--mwnf-picture-gallery-thumb-gap, 0.875rem);
+}
+
+.mwnf-picture-narrative__image {
+  position: relative;
+  width: var(--mwnf-picture-gallery-thumb-size, 8.125rem);
+}
+
+.mwnf-picture-narrative__image img {
+  width: var(--mwnf-picture-gallery-thumb-size, 8.125rem);
+  height: var(--mwnf-picture-gallery-thumb-size, 8.125rem);
+  object-fit: cover;
+  display: block;
+}
+
+.mwnf-picture-narrative__image button {
+  display: block;
+  padding: 0;
+  border: none;
+  background: none;
+  cursor: pointer;
+}
+
+.mwnf-picture-narrative__image--main img {
+  outline: 4px solid var(--mwnf-picture-gallery-caption-background, #ffffff);
+  outline-offset: -4px;
+}
+
+.mwnf-picture-narrative__relation {
+  font-size: var(--mwnf-picture-narrative-relation-size, 0.75rem);
+  padding-top: var(--mwnf-picture-narrative-relation-gap, 0.25rem);
+}
+
+.mwnf-picture-narrative__image:hover .mwnf-picture-narrative__thumb-text {
+  display: block;
+}
+
 /* ── PartnerMap ─────────────────────────────────────────────────────────── */
 
 .mwnf-partner-map {
