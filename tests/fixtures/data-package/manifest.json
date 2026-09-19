@@ -8,5 +8,13 @@
       { "code": "de", "label": "Deutsch" }
     ],
     "names": { "en": "Fixture Museum", "fr": "Musée fictif" }
+  },
+  "projects": {
+    "p-isl": {
+      "name": { "en": "Discover Islamic Art (package)", "fr": "Découvrir l'art islamique (paquet)" },
+      "site_url": "https://islamicart.example.org",
+      "related_database_url": null,
+      "artistic_introduction_url": null
+    }
   }
 }
