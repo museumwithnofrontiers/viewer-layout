@@ -273,9 +273,14 @@ the application registered, without any router coupling here.
 | `DynastyPopout` | `dynasty` (record: `from_ah`/`to_ah`/`from_ad`/`to_ad`), `text` (its translation: `name`, `also_known_as`, `area`, `history`), `dir` | one dynasty, collapsed behind a native `<details>` toggle: name, also known as, area, AH/AD dates, history as Markdown |
 | `DynastyList` | `heading`, `dynasties`, `tr` (dynasty → its translation), `dir` | one `DynastyPopout` per dynasty of a record, `RelatedRecords`'s shape |
 | `TimelineEventList` | `events: [{ id, date, caption?, description? (block HTML), media?: [{ image, alt?, to? \| href?, caption? }], actions?: [{ label, to? \| href? }] }]` | one row per event; `caption`/`description` are rendered output, the same convention `RecordList`'s `name` follows; `#date`, `#caption`, `#media`, `#actions` slots (each given `{ event }`), `#empty` slot |
+| `PictureGallery` | `pictures: [{ id, image, imageAlt?, name (inline HTML), imageCaption?, detail?, fields?: [{ label, value }], to (route \| null), backRelated?: [{ picture, reciprocalText }] }]`, `selectedId` (v-model), `seeItemEntry`/`unresolvedEntry`/`emptyEntry`/`addRelatedEntry`/`hideRelatedEntry` (entry names) | a DXA exhibition theme page's curated-picture side panel + thumbnail strip: the selected picture large, its fields, a link to the parent record (or the "not in this exhibition" message when `to` is `null`); a picture that is the target of some other picture's related link (`backRelated`) starts hidden behind an "Add related works" toggle |
+| `PictureNarrative` | `picture` (the selected picture, `PictureGallery`'s shape plus `related: [{ picture, text }]` and `backRelated: [{ picture, reciprocalText }]`), `contextualDescription` (Markdown), `relatedHeadingEntry`/`reciprocalFallbackEntry` (entry names); emits `select(id)` | the same page's narrative body, below `EssayView`'s own prose: the selected picture's own curated text, then the pictures it relates to (forward) and, when one points at it, the one it is related to (backward) — either direction may cross a theme boundary, which is why the website resolves the target/source picture rather than this component |
 
 The record contract `RecordList`, `RecordGrid` and `RelatedRecords` share:
 `{ id, image?, imageAlt?, name (inline HTML), meta: [string], badge?, href? | to? }`.
+`PictureGallery` and `PictureNarrative` share a narrower one — a curated
+picture is not a catalogue record (several can share one parent, or none) —
+documented above and in [`docs/theme-components.md`](docs/theme-components.md).
 
 The texts they read — `core.action.apply`, `.reset`, `.close`,
 `core.pagination.*`, `catalogue.pagination.*`, `record.action.*ShortDescription`,
@@ -286,8 +291,13 @@ every bundle of `@museumwnf/viewer-i18n` from 1.7.0. `GlossaryTool` also reads
 (2.3.0); `DynastyPopout` reads `record.dynasty.heading` (2.3.0) and
 `sheet.field.alsoKnownAs`, `.area`, `.history`. `SourceCredit` reads
 `record.source.label` (2.5.0); the footer attribution (`SiteShell`) reads
-`record.source.rightsHolder` and `.termsOfUse` (2.5.0). Every other text is a
-prop.
+`record.source.rightsHolder` and `.termsOfUse` (2.5.0). `PictureGallery`/
+`PictureNarrative` default to `exhibition.theme.seeItemEntry`, `.recordNotInSite`,
+`.additionalContent`, `.addRelatedWorks`, `.hideRelatedWorks` and
+`exhibition.related.items`, `.reciprocal` — already in every bundle of
+`@museumwnf/viewer-i18n`'s `exhibition` namespace, the same entries
+the-use-of-colours-in-art's and water-in-islam's `Theme.vue` already read.
+Every other text is a prop.
 
 ## Content classes
 

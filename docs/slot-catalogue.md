@@ -312,3 +312,9 @@ through it), not a public building block.
 | `DynastyPopout` | One dynasty's details (dates, area, history) behind a native toggle |
 | `DynastyList` | One `DynastyPopout` per dynasty of a record |
 | `TimelineEventList` | Timeline events as rows: date, caption, description, media, actions |
+| `PictureGallery` | A DXA exhibition theme page's curated-picture panel + thumbnail strip, with the related-works toggle |
+| `PictureNarrative` | The same page's narrative body: the selected picture's curated text plus its related pictures, forward and backward |
+
+Full prop/slot detail for `PictureGallery`/`PictureNarrative`, and the
+decomposition rationale behind them, is in
+[`theme-components.md`](./theme-components.md).
