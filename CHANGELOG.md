@@ -19,17 +19,40 @@ package-side story #1811, and the DXA-item-sheet epic
   rationale and what a site's own `Theme.vue` shrinks to. Migrating
   the-use-of-colours-in-art and water-in-islam onto them is a follow-up,
   per-site story.
-- New composed view `RecordSheetView`, built on `RecordView`: forwards
-  `spec`/`id`/`entity` and every slot straight through unchanged, and adds
-  an optional `dataGetter` prop — `(id) => record | null | undefined` — for
-  the one behavioural difference between a DXA gallery and exhibition item
-  sheet: an exhibition ships one build per language and an id the data
-  package carries can still be missing from this build's language subset,
-  which `RecordView`'s own package-wide "not found" gate does not catch. A
-  gallery passes no `dataGetter` and gets exactly today's `RecordView`.
-  Exported from `@museumwnf/viewer-layout/views`, ready for carpets,
-  amulets, the-use-of-colours-in-art and water-in-islam to replace their
-  local `ItemSheet.vue` with (site migration is a separate story per site).
+- New composed view `RecordSheetView`, built on `RecordView`: the DXA
+  gallery/exhibition item sheet, with an optional `dataGetter` prop —
+  `(id) => record | null | undefined` — for the one behavioural difference
+  between the two shapes: an exhibition ships one build per language and an
+  id the data package carries can still be missing from this build's
+  language subset, which `RecordView`'s own package-wide "not found" gate
+  does not catch. A gallery passes no `dataGetter` and gets exactly
+  `RecordView`'s own record gate.
+- `RecordSheetView` now also owns every block that was byte-identical within
+  carpets/amulets and within the-use-of-colours-in-art/water-in-islam, and
+  near-identical across the two pairs: the source-database/collection block
+  and its chip (`spec.sourceDatabase`), the Explore-partner notice
+  (`spec.notice`), the holding-museum row (`spec.museum`), and the whole
+  related-content block — the outside-reference chips, the Artistic
+  Introduction/related-database/overall-database links, the on-display-in
+  list, the audio/video section, the glossary tool, the dynasty popouts, the
+  timeline popout (new content component `TimelineLookup`), and the print
+  action (`spec.related.*`, documented in full in `docs/slot-catalogue.md`).
+  Every block still renders through a slot with this view's own content as
+  the default — `before-sheet`, `museum` and `related` — so a site keeps the
+  ability to override any one of them; every other `RecordView` slot
+  (`header` among them) still forwards straight through, unmodified. This
+  view carries no project UUID, no site name and no legacy key of its own —
+  the one `// TODO(#1727)` in the related block's outside-reference chip
+  names a platform gap instead of working around it. `useProjects()` (peer
+  `@museumwnf/viewer-core` ^1.15.0) is read directly for a project's name
+  and its related-database/artistic-introduction links.
+  Exported from `@museumwnf/viewer-layout/views` (`TimelineLookup` also from
+  `@museumwnf/viewer-layout/content`), ready for carpets, amulets, the-use-
+  of-colours-in-art and water-in-islam to replace their local
+  `ItemSheet.vue` with — under 40 lines each, a `spec` (mostly built in the
+  site's own `composables/sheet.js`), `id`, and the `header` slot; see the
+  two adoption examples at the end of `RecordSheetView`'s entry in
+  `docs/slot-catalogue.md` (site migration is a separate story per site).
 
 ## 2.13.0 (2026-09-19)
 

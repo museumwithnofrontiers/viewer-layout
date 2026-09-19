@@ -13,7 +13,14 @@
     "related_items": [
       { "id": "o2", "in_package": true, "justifications": { "en": "Same workshop", "fr": "Même atelier" } },
       { "id": "x9", "in_package": false, "backward_compatibility": "mwnf3:objects:x9", "project_key": "ISL" }
-    ]
+    ],
+    "project_id": "p-isl",
+    "backward_compatibility": "mwnf3:objects:o1",
+    "gallery_references": [
+      { "id": "ref-gal-1", "kind": "gallery", "name": "Sister Gallery", "legacy_host": "https://sister.example.org" },
+      { "id": "ref-exh-1", "kind": "exhibition", "name": "Pending Exhibition" }
+    ],
+    "media": [{ "url": "https://example.org/audio.mp3", "title": "An audio guide" }]
   },
   {
     "id": "o2",

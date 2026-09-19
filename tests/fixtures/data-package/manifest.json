@@ -13,8 +13,8 @@
     "p-isl": {
       "name": { "en": "Discover Islamic Art (package)", "fr": "Découvrir l'art islamique (paquet)" },
       "site_url": "https://islamicart.example.org",
-      "related_database_url": null,
-      "artistic_introduction_url": null
+      "related_database_url": "https://islamicart.example.org/database",
+      "artistic_introduction_url": "https://islamicart.example.org/artistic-introduction"
     }
   }
 }
