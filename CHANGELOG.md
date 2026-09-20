@@ -1,5 +1,20 @@
 # Changelog
 
+## 2.15.1 (2026-09-20)
+
+Part of the #1727 cleanup wave, story
+`#1727 cleanup: viewer-layout accepts viewer-core 2 (viewer-layout)`.
+
+### Changed
+
+- `peerDependencies["@museumwnf/viewer-core"]` widened from `^1.16.0` to
+  `^1.16.0 || ^2.0.0`. The next viewer-core major removes only the
+  deprecated legacy project API (`PROJECT_ENTRIES`, `PROJECT_FAMILIES`,
+  `projectFamily`, `projectName`, `useProjectName`), which this package
+  does not use (confirmed by `git grep` over `src`/`tests`/`README.md`/
+  `docs`), so the wider range is a safe, additive step ahead of that
+  major landing.
+
 ## 2.15.0 (2026-09-20)
 
 Part of the DXA family pages epic (museumwithnofrontiers/inventory-app#1731,
