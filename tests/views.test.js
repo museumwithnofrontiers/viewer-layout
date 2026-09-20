@@ -640,7 +640,8 @@ describe('RecordSheetView', () => {
 
     const reference = rel.find('.mwnf-sheet-related__references li')
     expect(reference.find('.mwnf-chip').classes()).toContain('mwnf-chip--ISLandEPM')
-    expect(reference.find('code').text()).toBe('mwnf3:objects:x9')
+    expect(reference.text()).toContain('Discover Islamic Art (package)')
+    expect(reference.find('code').exists()).toBe(false)
     expect(reference.text()).toContain('Not in this gallery')
 
     const links = rel.findAll('.mwnf-sheet-related__line a')
@@ -660,6 +661,14 @@ describe('RecordSheetView', () => {
     await printLine.trigger('click')
     expect(printSpy).toHaveBeenCalledOnce()
     printSpy.mockRestore()
+  })
+
+  it("falls back to the outside reference's backward-compatibility code when its stub carries no project_id", async () => {
+    const { wrapper } = await mountView(RecordSheetView, { props: { spec: sheetSpec, id: 'o4' }, route: '/objects/o4' })
+    await settle(() => wrapper.find('.mwnf-sheet-related').exists())
+    const reference = wrapper.find('.mwnf-sheet-related__references li')
+    expect(reference.find('code').text()).toBe('mwnf3:objects:x7')
+    expect(reference.text()).not.toContain('Discover Islamic Art')
   })
 
   it('renders the audio/video section, the glossary tool and the dynasty popouts from spec.related', async () => {

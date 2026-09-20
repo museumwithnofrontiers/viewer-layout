@@ -141,11 +141,11 @@ function relatedInfo(record, ctx) {
     : []
   const references = [...outside, ...extraOutside].map((ref) => ({
     ...ref,
-    // TODO(#1727): the exporter's `related_items` stub only carries the
-    // legacy `project_key`/`backward_compatibility`, no `project_id` UUID,
-    // so a reference outside the package cannot resolve through
-    // `useProjects()` yet — `outsideChip` is a site's own stand-in rule
-    // (e.g. `projectFamily(ref.project_key)`) until that platform gap closes.
+    // The exporter's `related_items` stub carries a `project_id` since
+    // inventory-app#1807; resolve it through `useProjects()` for the chip's
+    // visible text, and fall back to the stub's own `backward_compatibility`
+    // code only when the stub has no `project_id` at all.
+    name: ref.project_id ? projects.label(ref.project_id) : null,
     chipClass: s.outsideChip ? s.outsideChip(ref, ctx) : null,
   }))
   const onDisplayIn = s.onDisplayIn && s.onDisplayIn !== false
@@ -230,8 +230,9 @@ function printSheet() {
             <RelatedRecords :heading="rel.heading" :records="rel.inPackage" :variant="rel.variant" :action-label="rel.actionLabel">
               <ul v-if="rel.references.length" class="mwnf-sheet-related__references">
                 <li v-for="ref in rel.references" :key="ref.id">
-                  <span v-if="ref.chipClass" class="mwnf-chip" :class="ref.chipClass">{{ ref.project_key }}</span>
-                  <code>{{ ref.backward_compatibility }}</code>
+                  <span v-if="ref.chipClass" class="mwnf-chip" :class="ref.chipClass" aria-hidden="true"></span>
+                  <template v-if="ref.name">{{ ref.name }}</template>
+                  <code v-else>{{ ref.backward_compatibility }}</code>
                   <span v-if="rel.notInPackageLabel" class="mwnf-sheet-related__unresolved">{{ rel.notInPackageLabel }}</span>
                 </li>
               </ul>

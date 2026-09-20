@@ -12,7 +12,7 @@
     "glossary_ids": ["g1"],
     "related_items": [
       { "id": "o2", "in_package": true, "justifications": { "en": "Same workshop", "fr": "Même atelier" } },
-      { "id": "x9", "in_package": false, "backward_compatibility": "mwnf3:objects:x9", "project_key": "ISL" }
+      { "id": "x9", "in_package": false, "backward_compatibility": "mwnf3:objects:x9", "project_key": "ISL", "project_id": "p-isl" }
     ],
     "project_id": "p-isl",
     "backward_compatibility": "mwnf3:objects:o1",
@@ -60,7 +60,9 @@
     "end_date": 1600,
     "images": [{ "url": "tile.jpg" }],
     "glossary_ids": [],
-    "related_items": [],
+    "related_items": [
+      { "id": "x7", "in_package": false, "backward_compatibility": "mwnf3:objects:x7" }
+    ],
     "project_id": "p-unknown",
     "project_key": "ISL"
   }
