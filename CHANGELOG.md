@@ -57,6 +57,21 @@ package side, part 2), story
   2026-09-20 (inventory-app#1807).
   Fixes museumwithnofrontiers/inventory-app#1827.
 
+### Removed
+
+- `RecordView`'s citation no longer falls back to viewer-core's deprecated
+  `projectName(record.project_key, t)` for a data package predating
+  inventory-app#1727 phase 2 — no such package exists any more (every site
+  republished 2026-09-20). The citation now reads only
+  `useProjects().label(spec.citation.project ?? record.project_id)`,
+  omitting the project name (rather than printing a legacy key) when
+  `label()` returns null. viewer-layout no longer imports any of
+  viewer-core's deprecated project API (`projectName`, `useProjectName`,
+  `projectFamily`, `PROJECT_ENTRIES`, `PROJECT_FAMILIES`) — the
+  precondition for viewer-core's next major.
+  Fixes museumwithnofrontiers/inventory-app#1840.
+  Part of museumwithnofrontiers/inventory-app#1727.
+
 ## 2.14.0 (2026-09-19)
 
 Part of the exhibition Theme view epic (museumwithnofrontiers/inventory-app#1729),
