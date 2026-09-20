@@ -226,8 +226,8 @@ unchanged, plus:
 | `notice` | `{ show(record, ctx) => boolean, label (entry) } \| false` | The Explore-partner notice, in the record's own languages, when `show` says yes. |
 | `museum` | `{ route(partnerId, ctx) => to \| null, label(partnerId, ctx) => string } \| false` | The holding-museum row (the `museum` field's `custom` slot) — a link when `route` returns one, plain text (a hidden partner, say) when it returns null. |
 | `related.title` / `related.description` | entry names | Above the related block, as a caption. |
-| `related.notInPackageLabel` | entry name | On an outside reference, next to its chip and code. |
-| `related.outsideChip(ref, ctx)` | `=> class \| null` | An outside reference's chip class. **`TODO(#1727)`**: `related_items` carries only the legacy `project_key`/`backward_compatibility`, no `project_id`, so this cannot resolve through `useProjects()` yet — a site's own stand-in rule (e.g. `projectFamily(ref.project_key)`) until that platform gap closes. |
+| `related.notInPackageLabel` | entry name | On an outside reference, next to its chip and name (or code). |
+| `related.outsideChip(ref, ctx)` | `=> class \| null` | An outside reference's chip class. The chip's visible text is not this — it is `useProjects().label(ref.project_id)`, falling back to the stub's `backward_compatibility` code only when `project_id` is absent. |
 | `related.artisticIntroductionLabel` | entry name | The Artistic Introduction link, shown iff set *and* `useProjects().links(record.project_id).artisticIntroductionUrl` is non-null. |
 | `related.databaseLabel` | entry name | The "search the related database" link, shown iff set *and* `.relatedDatabaseUrl` is non-null; its label text is the project name. |
 | `related.overallDatabase` | `{ label, linkLabel } (entries) \| false` | The portal search link — `mwnfLinks.overallDatabase`, the one address every DXA site shares. |

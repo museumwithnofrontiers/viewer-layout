@@ -47,6 +47,16 @@ package side, part 2), story
   to `^1.16.0` (from `^1.15.0`) — the DXA pages import
   `@museumwnf/viewer-core/dxa`.
 
+### Fixed
+
+- `RecordSheetView`'s related block: an outside reference's chip now shows
+  the project's name (`useProjects().label(ref.project_id)`), falling back
+  to the stub's `backward_compatibility` code only when `project_id` is
+  absent — no longer the raw legacy `project_key`. `related_items` stubs
+  have carried `project_id` since every data package republished
+  2026-09-20 (inventory-app#1807).
+  Fixes museumwithnofrontiers/inventory-app#1827.
+
 ## 2.14.0 (2026-09-19)
 
 Part of the exhibition Theme view epic (museumwithnofrontiers/inventory-app#1729),
