@@ -1,0 +1,4 @@
+[
+  { "id": "tag-bowl", "category": "type", "legacy_tag_id": "1", "label": "Bowl" },
+  { "id": "tag-ceramic", "category": "material", "legacy_tag_id": "2", "label": "Ceramic" }
+]

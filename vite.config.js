@@ -6,18 +6,21 @@ export default defineConfig({
   plugins: [vue()],
   build: {
     lib: {
-      // Four entry points: the whole package; the content components on
+      // Five entry points: the whole package; the content components on
       // their own, so a page that composes a list and a pagination does not
       // carry the shell with them; the composed views, which a website names
-      // in its configuration; and `SiteShell`, which — like the composed
+      // in its configuration; `SiteShell`, which — like the composed
       // views — reads `@museumwnf/viewer-core` itself and so cannot be part
-      // of the package root (see `src/components/index.js`). What they
-      // share is emitted once.
+      // of the package root (see `src/components/index.js`); and the DXA
+      // family pages (epic inventory-app#1731) plus `standardRoutes`, which
+      // read `@museumwnf/viewer-core/dxa` the same way. What they share is
+      // emitted once.
       entry: {
         index: 'src/index.js',
         content: 'src/content/index.js',
         views: 'src/views/index.js',
         components: 'src/components/index.js',
+        dxa: 'src/dxa/index.js',
       },
       formats: ['es'],
       fileName: (format, name) => `${name}.js`,
@@ -31,7 +34,7 @@ export default defineConfig({
       // the application installed. `vue-router` is external for the same
       // reason — `SearchFormView` navigates on the application's own router
       // instance, the one every website already provides.
-      external: ['vue', 'vue-router', '@museumwnf/viewer-core', '@museumwnf/viewer-core/i18n'],
+      external: ['vue', 'vue-router', '@museumwnf/viewer-core', '@museumwnf/viewer-core/i18n', '@museumwnf/viewer-core/dxa'],
       output: {
         assetFileNames: 'viewer-layout.[ext]',
       },

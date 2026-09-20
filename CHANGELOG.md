@@ -1,5 +1,52 @@
 # Changelog
 
+## 2.15.0 (2026-09-20)
+
+Part of the DXA family pages epic (museumwithnofrontiers/inventory-app#1731,
+package side, part 2), story
+`#1731 package side: DXA family pages and standardRoutes ship from viewer-layout/dxa`.
+
+### Added
+
+- `@museumwnf/viewer-layout/dxa`, a new sub-path entry: the gallery/
+  exhibition thin pages confirmed byte-identical within each DXA site pair
+  on `origin/main` 2026-09-20 (carpets/amulets — 11 gallery pages;
+  the-use-of-colours-in-art/water-in-islam — 9 exhibition pages), built
+  from `@museumwnf/viewer-core/dxa`'s composables (1.16.0), plus
+  `standardRoutes(family, config)` — a `RouteRecord[]` factory a site
+  spreads into its `dataset.config.js`'s `extraViews`. Route names and
+  paths are pinned to exactly what carpets'/colours' own `dataset.config.js`
+  register today, so adopting the factory keeps every existing deep link
+  working. `config` carries only the handful of genuine per-site strings
+  the scouting confirmed (`creditsBody` for the gallery family;
+  `partnerObjects: { emptyPartner, emptyInstitution, institutionSummary,
+  partnerProfileLabel, institutionProfileLabel }` for the exhibition
+  family's `PartnerObjects`/`InstitutionMonuments` shape) — every other
+  text is a literal shared entry, read by `npx viewer-i18n-check`.
+  `standardRoutes('exhibition', config)` also registers the `institution`/
+  `institution-monuments` routes against the same `PartnerProfile`/
+  `PartnerObjects` components with `props: { variant: 'institution' }` — no
+  separate component. `About`/`ThemeGallery`/`Themes`/`RelatedContent` stay
+  out of the exhibition family for now, blocked on the Theme epic
+  (inventory-app#1729); the exhibition family's `/credits` route is not
+  promoted either — colours/water-in-islam never had a `Credits.vue`, only
+  a one-line `TextPageView` call over a local `creditsSpec`. Full
+  page-by-page detail in `docs/slot-catalogue.md`'s new "DXA family pages"
+  section.
+- `src/styles/dxa.css`, imported from `src/dxa/index.js`: every `<style
+  scoped>` block the 20 source `.vue` files carried, moved out over
+  `--mwnf-*` tokens (two new ones added to `tokens.reference.css`:
+  `--mwnf-dxa-heading-color`, `--mwnf-dxa-band-background`) instead of the
+  sites' own `--theme-*`/`--link-blue`/`--background-color` names — no
+  `<style>` block under `src/dxa`, matching the existing rule for
+  `src/{content,sections,views,components}`.
+
+### Changed
+
+- `peerDependencies`/`devDependencies` on `@museumwnf/viewer-core` bumped
+  to `^1.16.0` (from `^1.15.0`) — the DXA pages import
+  `@museumwnf/viewer-core/dxa`.
+
 ## 2.14.0 (2026-09-19)
 
 Part of the exhibition Theme view epic (museumwithnofrontiers/inventory-app#1729),

@@ -735,4 +735,8 @@
   /* --mwnf-loader-size: 0.875rem;                   Loader text size */
 
   /* --mwnf-link-text: #0000ff;                      Link text color */
+
+  /* ---------- DXA family pages (src/dxa/) ---------- */
+  /* --mwnf-dxa-heading-color: #1c1c1c;              Partner name / profile heading color */
+  /* --mwnf-dxa-band-background: #f0f0f0;            Language switcher / tab strip / timeline-link box background */
 }

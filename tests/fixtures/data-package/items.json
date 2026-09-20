@@ -1,0 +1,31 @@
+[
+  {
+    "id": "item-dxa-1",
+    "internal_name": "Fixture Bowl",
+    "country_id": "c-eg",
+    "partner_id": "p1",
+    "dynasty_ids": ["dyn-1"],
+    "tag_ids": ["tag-bowl", "tag-ceramic"],
+    "start_date": 900,
+    "end_date": 950,
+    "project_id": null,
+    "owner_reference": "INV-DXA-1",
+    "artist_names": ["A. Potter"],
+    "images": [{ "url": "bowl.jpg", "display_order": 0 }],
+    "languages": ["en"]
+  },
+  {
+    "id": "item-dxa-2",
+    "internal_name": "Fixture Lamp",
+    "country_id": "c-sy",
+    "partner_id": null,
+    "dynasty_ids": [],
+    "tag_ids": [],
+    "start_date": null,
+    "end_date": null,
+    "project_id": null,
+    "owner_reference": "INV-DXA-2",
+    "images": [],
+    "languages": []
+  }
+]
