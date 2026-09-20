@@ -1,0 +1,395 @@
+/*
+ * Structural styles for the DXA family pages (src/dxa/) of
+ * @museumwnf/viewer-layout — the gallery/exhibition thin views promoted from
+ * carpets/amulets and colours/water-in-islam (epic inventory-app#1731).
+ * Every visual value is read from a --mwnf-* custom property with a neutral
+ * fallback, as in content.css/layout.css; see tokens.reference.css for the
+ * complete list. The per-site variants these pages replace read their own
+ * `--theme-*`/`--link-blue`/`--background-color` names — this file reads the
+ * platform's own token vocabulary instead, so a site themes these pages the
+ * same way it themes everything else, through theme/tokens.css.
+ */
+
+/* Editorial (About / Credits / SearchHowTo) */
+
+.mwnf-dxa-editorial {
+  background: var(--mwnf-color-background, #ffffff);
+  width: 100%;
+  min-height: 25rem;
+  padding-bottom: 2.5rem;
+}
+
+/* Partners list */
+
+.mwnf-dxa-partners {
+  background: var(--mwnf-color-background, #ffffff);
+  width: 100%;
+  min-height: 25rem;
+  padding-bottom: 1.875rem;
+}
+
+.mwnf-dxa-partners-options {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 0 2.5rem;
+}
+
+.mwnf-dxa-partner-text {
+  flex: 1;
+  min-width: 0;
+}
+
+.mwnf-dxa-partner-name {
+  font-weight: 700;
+  color: var(--mwnf-dxa-heading-color, #1c1c1c);
+}
+
+.mwnf-dxa-partner-name a {
+  font-weight: 700;
+  color: var(--mwnf-link-text, #0000ff);
+  text-decoration: none;
+}
+
+.mwnf-dxa-partner-name a:hover {
+  text-decoration: underline;
+}
+
+.mwnf-dxa-partner-meta {
+  font-size: 0.8125rem;
+  color: var(--mwnf-color-muted, #555555);
+  margin: 0.1875rem 0;
+}
+
+.mwnf-dxa-partner-meta--empty {
+  font-style: italic;
+}
+
+.mwnf-dxa-partner-links a {
+  color: var(--mwnf-link-text, #0000ff);
+  font-size: 0.8125rem;
+  text-decoration: none;
+}
+
+.mwnf-dxa-partner-links a:hover {
+  text-decoration: underline;
+}
+
+.mwnf-dxa-partner-link-divider {
+  margin: 0 0.375rem;
+  color: var(--mwnf-color-muted, #999999);
+}
+
+.mwnf-dxa-partner-logo img {
+  max-width: 7.5rem;
+  max-height: 4.375rem;
+  object-fit: contain;
+  display: block;
+}
+
+/* Partner profile */
+
+.mwnf-dxa-partner-profile {
+  background: var(--mwnf-color-background, #ffffff);
+  width: 100%;
+  min-height: 25rem;
+  padding-bottom: 2.5rem;
+}
+
+.mwnf-dxa-profile-languages {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.125rem;
+  background: var(--mwnf-dxa-band-background, #f0f0f0);
+  padding: 0.375rem 1.25rem;
+}
+
+.mwnf-dxa-partner-location {
+  color: var(--mwnf-color-muted, #555555);
+  margin-bottom: 0.75rem;
+}
+
+.mwnf-dxa-profile-links-container {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  background: var(--mwnf-dxa-band-background, #f0f0f0);
+  padding: 0.5rem 0.75rem;
+  margin: 0.625rem 0;
+}
+
+.mwnf-dxa-profile-links {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.375rem;
+}
+
+.mwnf-dxa-profile-links button {
+  background: none;
+  border: none;
+  font-family: inherit;
+  font-size: 0.9375rem;
+  color: var(--mwnf-dxa-heading-color, #1c1c1c);
+  cursor: pointer;
+}
+
+.mwnf-dxa-profile-tab--active {
+  font-weight: 700;
+  text-decoration: underline;
+}
+
+.mwnf-dxa-profile-links a {
+  color: var(--mwnf-link-text, #0000ff);
+  font-size: 0.875rem;
+}
+
+.mwnf-dxa-profile-divider {
+  color: var(--mwnf-color-muted, #999999);
+  opacity: 0.6;
+}
+
+.mwnf-dxa-profile-objects-link a {
+  text-decoration: none;
+}
+
+.mwnf-dxa-profile-photo-wrapper {
+  display: flex;
+  gap: 1.625rem;
+  align-items: flex-start;
+  padding-top: 1.125rem;
+}
+
+.mwnf-dxa-profile-photo {
+  flex: 0 0 38%;
+  max-width: 38%;
+}
+
+.mwnf-dxa-profile-info {
+  flex: 1;
+  min-width: 0;
+  line-height: 1.55;
+}
+
+.mwnf-dxa-contact-header {
+  font-weight: 700;
+  color: var(--mwnf-dxa-heading-color, #1c1c1c);
+  margin-bottom: 0.25rem;
+}
+
+.mwnf-dxa-contact-person {
+  margin-top: 0.75rem;
+}
+
+.mwnf-dxa-contact-title {
+  font-style: italic;
+}
+
+.mwnf-dxa-profile-info a {
+  color: var(--mwnf-link-text, #0000ff);
+}
+
+.mwnf-dxa-partner-logos img {
+  max-width: 12.5rem;
+  display: block;
+  margin-bottom: 0.75rem;
+}
+
+.mwnf-dxa-additional-urls {
+  margin-top: 0.75rem;
+  word-break: break-all;
+}
+
+@media only screen and (max-width: 53.0625rem) {
+  .mwnf-dxa-profile-photo-wrapper {
+    flex-direction: column;
+  }
+
+  .mwnf-dxa-profile-photo {
+    max-width: 100%;
+    flex: none;
+    width: 100%;
+  }
+}
+
+/* Search results */
+
+.mwnf-dxa-search-results {
+  background: var(--mwnf-color-background, #ffffff);
+  width: 100%;
+  min-height: 25rem;
+}
+
+.mwnf-dxa-refine-search {
+  display: flex;
+  gap: 0.5rem;
+  max-width: 22.5rem;
+}
+
+.mwnf-dxa-refine-search-input {
+  flex: 1;
+  min-width: 0;
+  padding: 0.3125rem 0.5rem;
+  font-family: inherit;
+  border: 1px solid var(--mwnf-color-border, #dddddd);
+}
+
+.mwnf-dxa-refine-search-submit {
+  padding: 0.3125rem 0.875rem;
+  font-family: inherit;
+  cursor: pointer;
+}
+
+.mwnf-dxa-how-to {
+  margin-top: 0.5rem;
+}
+
+.mwnf-dxa-how-to a {
+  color: var(--mwnf-link-text, #0000ff);
+  font-size: 0.8125rem;
+}
+
+.mwnf-dxa-no-results {
+  padding: 2.5rem 0;
+}
+
+.mwnf-dxa-no-results a {
+  color: var(--mwnf-link-text, #0000ff);
+}
+
+.mwnf-dxa-no-results-divider {
+  margin: 0 0.375rem;
+  color: var(--mwnf-color-muted, #999999);
+}
+
+/* Timeline results / gallery */
+
+.mwnf-dxa-timeline-results {
+  background: var(--mwnf-color-background, #ffffff);
+  width: 100%;
+  min-height: 25rem;
+  padding-bottom: 1.875rem;
+}
+
+.mwnf-dxa-timeline-gallery {
+  background: var(--mwnf-color-background, #ffffff);
+  width: 100%;
+  min-height: 25rem;
+  padding-bottom: 1.875rem;
+}
+
+.mwnf-dxa-back-to-events {
+  margin-bottom: 0.5rem;
+}
+
+.mwnf-dxa-back-to-events a {
+  color: var(--mwnf-link-text, #0000ff);
+  font-size: 0.8125rem;
+}
+
+.mwnf-dxa-pages {
+  padding-inline: 1.25rem;
+}
+
+/* Collection results */
+
+.mwnf-dxa-collection-results {
+  background: var(--mwnf-color-background, #ffffff);
+  width: 100%;
+  min-height: 25rem;
+}
+
+.mwnf-dxa-linkish {
+  background: none;
+  border: none;
+  color: var(--mwnf-link-text, #0000ff);
+  text-decoration: underline;
+  cursor: pointer;
+  font: inherit;
+}
+
+.mwnf-dxa-date-wrapper {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.mwnf-dxa-date-wrapper > * {
+  flex: 1;
+  min-width: 0;
+}
+
+.mwnf-dxa-options-label {
+  font-weight: 700;
+  margin-bottom: 0.25rem;
+}
+
+.mwnf-dxa-timeline-link-box {
+  margin-top: 1rem;
+  background: var(--mwnf-dxa-band-background, #f0f0f0);
+  padding: 0.875rem;
+}
+
+.mwnf-dxa-timeline-link-box a {
+  color: var(--mwnf-link-text, #0000ff);
+}
+
+/* Collection search (entrance) */
+
+.mwnf-dxa-collection-search {
+  display: flex;
+  flex-wrap: wrap;
+  background: var(--mwnf-color-background, #ffffff);
+  width: 100%;
+}
+
+.mwnf-dxa-dropdown-label {
+  max-width: 18.75rem;
+  padding-bottom: 0.375rem;
+  font-size: 125%;
+  font-weight: 700;
+}
+
+.mwnf-dxa-description {
+  width: 60%;
+  padding: 3.125rem 4.6875rem 1.25rem 0;
+  margin-top: 2.8125rem;
+}
+
+.mwnf-dxa-description a {
+  color: var(--mwnf-link-text, #0000ff);
+}
+
+@media only screen and (max-width: 53.0625rem) {
+  .mwnf-dxa-collection-search {
+    flex-direction: column;
+  }
+
+  .mwnf-dxa-description {
+    width: 100%;
+    padding: 1.875rem;
+    margin-top: 0;
+  }
+}
+
+/* Partner objects */
+
+.mwnf-dxa-partner-objects {
+  background: var(--mwnf-color-background, #ffffff);
+  width: 100%;
+  min-height: 25rem;
+  padding-bottom: 1.875rem;
+}
+
+.mwnf-dxa-partner-objects-header {
+  padding: 0.5rem 0 0.75rem;
+}
+
+.mwnf-dxa-profile-link-container {
+  padding: 1rem 0 0;
+}
+
+.mwnf-dxa-profile-link {
+  color: var(--mwnf-link-text, #0000ff);
+}

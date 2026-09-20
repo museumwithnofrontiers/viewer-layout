@@ -423,6 +423,30 @@ except where noted:
 | islamicart/baroqueart `TimelineEntrance`/`TimelineResults` | the same controls, `event: (event, ctx) => ({ ..., actions: [{ label: 'timeline.action.viewItemsFromPeriod', to: itemsLink(event) }] })` for the per-event "View items from this period" link |
 | sharinghistory `TimelineResults` (no separate entrance page in legacy; `entrance: true` on the same spec shape covers it) | `scope: 'collection'`, `controls` adding `{ key: 'collection', label: 'sharinghistory.nav.timeline' }` fed by `collections: (ctx) => [{ value: 'pc', label: t('sharinghistory.nav.permanentCollection') }, ...exhibitions]`, `event(...)` composing the "Country \| Theme" `caption` and the image/item strip as `media` |
 
+## DXA family pages
+
+`@museumwnf/viewer-layout/dxa` ships the gallery/exhibition thin pages
+confirmed byte-identical within each DXA site pair on `origin/main` —
+11 gallery pages (from carpets/amulets), 9 exhibition pages (from
+the-use-of-colours-in-art/water-in-islam) — plus `standardRoutes(family,
+config)`, the RouteRecord factory a site spreads into `extraViews`:
+
+```js
+import { standardRoutes } from '@museumwnf/viewer-layout/dxa'
+
+extraViews: [
+  ...standardRoutes('gallery', { creditsBody: 'carpets.credits.body' }),
+  // + this gallery's own routes: home, item, collection entrance,
+  // timeline entrance, partners entrance
+]
+```
+
+Route names and paths are pinned to what every live DXA site already
+registers, so adopting the factory keeps every existing deep link (and
+every `legacyRoutes` resolver targeting those names) working unmodified.
+Full page-by-page prop/slot/entry table in
+[`docs/slot-catalogue.md`](docs/slot-catalogue.md#dxa-family-pages-museumwnfviewer-layoutdxa).
+
 ## Theming
 
 Every color, font, spacing, radius comes from a `--mwnf-*` CSS custom property with a neutral fallback. Full list: [`tokens.reference.css`](src/tokens.reference.css) (also exported as `@museumwnf/viewer-layout/tokens.reference.css`) — copy it into your website as `theme/tokens.css` and set values.

@@ -1,5 +1,22 @@
 [
-  { "id": "p1", "internal_name": "Zed Museum", "country_id": "c-eg", "level": "partner", "parent_id": null, "project_ids": ["ISL"], "item_count": 12, "logos": [{ "url": "p1-logo.png" }] },
+  {
+    "id": "p1",
+    "internal_name": "Zed Museum",
+    "country_id": "c-eg",
+    "level": "partner",
+    "parent_id": null,
+    "project_ids": ["ISL"],
+    "item_count": 12,
+    "logos": [{ "url": "p1-logo.png" }],
+    "latitude": 30.0444,
+    "longitude": 31.2357,
+    "map_zoom": 10,
+    "images": [
+      { "url": "p1-photo.jpg", "display_order": 0, "captions": { "en": "Courtyard" }, "photographer": "A. Photographer", "copyright": "CC-BY" }
+    ],
+    "contact_person_1": { "name": "Jane Curator", "title": "Curator", "phone": "+20 000 0000", "email": "jane@example.org" },
+    "additional_urls": [{ "url": "https://p1.example.org/extra" }]
+  },
   { "id": "p7", "internal_name": "Alpha Museum", "country_id": "c-eg", "level": null, "parent_id": null, "project_ids": ["ISL"], "item_count": 0 },
   { "id": "p2", "internal_name": "Attached Gallery", "country_id": "c-eg", "level": "associated_partner", "parent_id": "p1", "project_ids": ["ISL"], "item_count": 0 },
   { "id": "p3", "internal_name": "Damascus Museum", "country_id": "c-sy", "level": null, "parent_id": null, "project_ids": ["EPM"], "item_count": 5 },

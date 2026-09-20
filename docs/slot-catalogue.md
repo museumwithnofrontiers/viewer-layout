@@ -394,6 +394,73 @@ countries, collections, gallery, t, tr }`.
 Note: only rendered when `spec.entrance` is not set — an entrance-mode
 instance shows the form alone.
 
+## DXA family pages (`@museumwnf/viewer-layout/dxa`)
+
+The gallery/exhibition thin pages confirmed byte-identical within each pair
+(carpets/amulets, colours/water-in-islam, `origin/main` 2026-09-20) —
+epic inventory-app#1731. Each is a spec-only call to a composed view above
+plus a `#row`/`#header`/etc. slot filled with what that pair's own
+`Partners.vue`/`PartnerProfile.vue`/… used to fill — no `<style>` block
+(`src/styles/dxa.css` carries the rules). `standardRoutes(family, config)`
+(`src/dxa/routes.js`) is the entry point a site actually imports; the pages
+below are exported too, for a site that wants one on a route of its own.
+
+A site adopting the factory:
+
+```js
+import { standardRoutes } from '@museumwnf/viewer-layout/dxa'
+
+extraViews: [
+  ...standardRoutes('gallery', { creditsBody: 'carpets.credits.body' }),
+  // + this gallery's own routes: home, item, collection entrance,
+  // timeline entrance, partners entrance
+]
+```
+
+`About`/`ThemeGallery`/`Themes`/`RelatedContent` are not part of
+`standardRoutes('exhibition', …)` yet — blocked on the Theme epic
+(inventory-app#1729). The exhibition family's `/credits` route is not
+promoted either: colours/water-in-islam never had a `Credits.vue` of their
+own — their credits route points `TextPageView` directly at a local
+`creditsSpec`, a one-line site concern, not a thin view.
+
+### Gallery (`GalleryXxx`, from carpets)
+
+| Page | Wraps | Props | Reads |
+|---|---|---|---|
+| `GalleryAbout` | `TextPageView` | — | `gallery.about.body` (shared entry) |
+| `GalleryCredits` | `TextPageView` | `bodyKey` (String, required) | `config.creditsBody` via `bodyKey` |
+| `GallerySearchHowTo` | `TextPageView` | — | `catalogue.search.howToEssay` |
+| `GalleryPartners` | `PartnerListView` | — | `#row` slot: `gallery.partners.intro`, `gallery.partner.noObjectsInGallery`, `gallery.action.readMore`/`.viewObjects` |
+| `GalleryPartnerProfile` | `RecordView` | `id` (String, required) | `header`/`before-sheet`/`after-sheet` slots: `partner.info.*`, `gallery.partner.viewObjects` |
+| `GallerySearchResults` | `CatalogueResultsView` | — | `gallery.section.database`, `gallery.action.seeDatabaseEntry`, `catalogue.search.*`, `catalogue.results.*` |
+| `GalleryTimelineResults` | `TimelineResultsView` | — | — (spec only) |
+| `GalleryTimelineGallery` | `CatalogueResultsView` | — | `timeline.nav.backToEvents` |
+| `GalleryCollectionResults` | `CatalogueResultsView` | — | `catalogue.facet.*`, `catalogue.results.*`, `gallery.section.timeline` |
+| `GalleryCollectionSearch` | `SearchFormView` | — | `catalogue.facet.filterBy`, `gallery.collection.intro` |
+| `GalleryPartnerObjects` | `CatalogueResultsView` | — (reads `route.params.id`) | `gallery.action.partnerProfile`, `partner.item.objectsInSite` |
+
+### Exhibition (`ExhibitionXxx`, from the-use-of-colours-in-art)
+
+| Page | Wraps | Props | Reads |
+|---|---|---|---|
+| `ExhibitionSearchHowTo` | `TextPageView` | — | `catalogue.search.howToEssay` |
+| `ExhibitionPartners` | `PartnerListView` | — | `#row` slot: `exhibition.partners.intro`, `exhibition.partner.noObjectsInExhibition`, `exhibition.action.readMore`/`.viewObjects` |
+| `ExhibitionPartnerProfile` | `RecordView` / `NotFoundView` | `variant` (`'partner'` \| `'institution'`, default `'partner'`) | `partner.info.*`, `exhibition.action.institutionHomepage`, `.viewItems`/`.viewObjects` |
+| `ExhibitionSearchResults` | `CatalogueResultsView` | — | `exhibition.section.database`, `exhibition.action.seeDatabaseEntry` |
+| `ExhibitionTimelineResults` | `TimelineResultsView` | — | — (spec only) |
+| `ExhibitionTimelineGallery` | `CatalogueResultsView` | — | — (spec only; no `actions` slot, unlike the gallery shape) |
+| `ExhibitionCollectionResults` | `CatalogueResultsView` | — | `catalogue.facet.*`, `exhibition.section.timeline` |
+| `ExhibitionCollectionSearch` | `SearchFormView` | — | `exhibition.collection.intro` |
+| `ExhibitionPartnerObjects` | `CatalogueResultsView` | `variant` (`'partner'` \| `'institution'`), `texts` (Object, required: `{ emptyPartner, emptyInstitution, institutionSummary, partnerProfileLabel, institutionProfileLabel }` — `config.partnerObjects`) | `partner.item.objectsInSite` (partner-variant summary only; the rest come from `texts`) |
+
+`standardRoutes('exhibition', config)` also registers `institution`/
+`institution-monuments` against `ExhibitionPartnerProfile`/
+`ExhibitionPartnerObjects` with `props: { variant: 'institution' }` (plus
+`texts` for the objects page) — no separate component, the same reduction
+colours'/water-in-islam's own (retired) `InstitutionProfile.vue`/
+`InstitutionMonuments.vue` already made.
+
 ## `/content` components
 
 Every component `src/content/index.js` exports from
