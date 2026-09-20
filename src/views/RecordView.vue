@@ -2,7 +2,7 @@
 import { computed, useSlots } from 'vue'
 import { useRoute } from 'vue-router'
 import {
-  NotFoundView, byId, citation, entityRef, languageLabels, projectName, renderBlock, renderInline,
+  NotFoundView, byId, citation, entityRef, languageLabels, renderBlock, renderInline,
   renderPlain, sheetRows, sourceUrl, useDataPackage, useGlossaryPopup, useI18n, useProjects, useRecordSheet,
   useRelatedRecords,
 } from '@museumwnf/viewer-core'
@@ -164,8 +164,7 @@ const citationText = computed(() => {
   const projectId = typeof s?.project === 'function' ? null : (s?.project ?? record.value.project_id)
   const project = typeof s?.project === 'function'
     ? s.project(record.value, ctx.value)
-    // fallback for data packages that predate inventory-app#1727 phase 2
-    : projects.label(projectId) ?? projectName(s?.project ?? record.value.project_key, t)
+    : projects.label(projectId)
   // `permalink: false` keeps disabling it; a string keeps winning; otherwise
   // (unset, or `true`) the address is the site's own — `sourceUrl` reads the
   // declared `site.origin`, so a site that has not declared one gets no

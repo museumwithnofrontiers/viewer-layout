@@ -314,7 +314,7 @@ describe('RecordView', () => {
       { key: 'type', label: 'sheet.field.type', value: 'type', render: 'custom' },
     ],
     sections: [{ key: 'description', label: 'sheet.field.description', value: 'description' }],
-    citation: { project: 'ISL' },
+    citation: { project: 'p-isl' },
     back: { label: 'record.action.backToResults', to: { name: 'objects-list' } },
     related: { route: 'objects-detail' },
   }
@@ -358,17 +358,19 @@ describe('RecordView', () => {
     expect(wrapper.find('.mwnf-credits__citation').text()).toContain("in Découvrir l'art islamique (paquet)")
   })
 
-  it('falls back to the legacy project name when the project id is absent from the manifest', async () => {
-    // `o4` carries a `project_id` the fixture manifest has no `projects` entry
-    // for (and a legacy `project_key`), the shape of a data package that
-    // predates inventory-app#1727 phase 2.
+  it("omits the project name from the citation when the manifest has no entry for the record's project id", async () => {
+    // `o4` carries a `project_id` the fixture manifest has no `projects`
+    // entry for — `useProjects().label()` resolves to `null`, and the
+    // citation drops the project rather than printing a legacy key.
     const { wrapper } = await mountView(RecordView, {
       props: { spec: { ...spec, citation: {} }, id: 'o4' },
       route: '/objects/o4',
     })
     await settle(() => wrapper.find('.mwnf-credits__citation').text().length > 0)
-    expect(wrapper.find('.mwnf-credits__citation').text()).toContain('in Discover Islamic Art')
-    expect(wrapper.find('.mwnf-credits__citation').text()).not.toContain('(package)')
+    const text = wrapper.find('.mwnf-credits__citation').text()
+    expect(text).toContain('in Museum With No Frontiers')
+    expect(text).not.toContain('Discover Islamic Art')
+    expect(text).not.toContain('ISL')
   })
 
   it("hands a related block of the site's own the rows and the records outside the package", async () => {
@@ -447,14 +449,14 @@ describe('RecordView', () => {
     const restore = withSiteRights()
     try {
       const { wrapper: withString } = await mountView(RecordView, {
-        props: { spec: { ...spec, citation: { project: 'ISL', permalink: 'https://own.example/fixed' } }, id: 'o1' },
+        props: { spec: { ...spec, citation: { project: 'p-isl', permalink: 'https://own.example/fixed' } }, id: 'o1' },
         route: '/objects/o1',
       })
       await settle(() => withString.text().includes('Prepared by'))
       expect(withString.find('.mwnf-credits__citation').text()).toContain('https://own.example/fixed')
 
       const { wrapper: withFalse } = await mountView(RecordView, {
-        props: { spec: { ...spec, citation: { project: 'ISL', permalink: false } }, id: 'o1' },
+        props: { spec: { ...spec, citation: { project: 'p-isl', permalink: false } }, id: 'o1' },
         route: '/objects/o1',
       })
       await settle(() => withFalse.text().includes('Prepared by'))
@@ -489,7 +491,7 @@ describe('RecordSheetView', () => {
       { key: 'name', label: 'sheet.field.name', value: 'name' },
       { key: 'location', label: 'sheet.field.location', value: 'location' },
     ],
-    citation: { project: 'ISL' },
+    citation: { project: 'p-isl' },
     related: { route: 'objects-detail' },
   }
 
@@ -506,7 +508,7 @@ describe('RecordSheetView', () => {
       { key: 'museum', label: 'sheet.field.holdingMuseum', value: (c) => c.record.partner_id, render: 'custom' },
       { key: 'location', label: 'sheet.field.location', value: 'location' },
     ],
-    citation: { project: 'ISL' },
+    citation: { project: 'p-isl' },
     sourceDatabase: {
       chipClass: (record) => (record.project_id === 'p-isl' ? 'mwnf-chip--ISLandEPM' : null),
       addToCollection: {},
