@@ -33,7 +33,7 @@ import SourceCredit from '../content/SourceCredit.vue'
 //     mediaVariant: '' | 'row',
 //     credits: [{ field: 'author', label: 'sheet.field.preparedBy' }, …],
 //     workingNumber: 'mwnf_reference',
-//     citation: { project: 'ISL' | (record, ctx) => string, permalink: true | false | string } | false,
+//     citation: { project: '<project id>' | (record, ctx) => string, permalink: true | false | string } | false,
 //     related: { variant: 'list' | 'grid', heading: 'record.related.items', record: (entry, ctx) => row } | false,
 //     back: { label: 'record.action.backToResults', to | href },
 //     title: (ctx) => inline HTML,                     // default: the record's name
