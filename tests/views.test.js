@@ -524,7 +524,7 @@ describe('RecordSheetView', () => {
       description: 'gallery.related.description',
       actionLabel: 'gallery.action.seeDatabaseEntry',
       notInPackageLabel: 'gallery.results.notInThisGallery',
-      outsideChip: (ref) => (ref.project_key ? 'mwnf-chip--ISLandEPM' : null),
+      outsideChip: (ref) => (ref.project_id ? 'mwnf-chip--ISLandEPM' : null),
       artisticIntroductionLabel: 'gallery.nav.artisticIntroduction',
       databaseLabel: 'gallery.search.relatedDatabase',
       overallDatabase: { label: 'gallery.search.overallDatabase', linkLabel: 'gallery.nav.overallDatabase' },
@@ -1479,7 +1479,7 @@ describe('PartnerListView', () => {
       props: {
         spec: {
           entity: 'partners',
-          scope: (partner) => partner.project_ids?.includes('nope'),
+          scope: (partner) => partner.project_uuids?.includes('nope'),
           empty: 'core.action.empty',
         },
       },
@@ -1495,7 +1495,7 @@ describe('PartnerListView', () => {
       props: {
         spec: {
           entity: 'partners',
-          scope: (partner) => partner.project_ids?.includes('EPM'),
+          scope: (partner) => partner.project_uuids?.includes('p-epm'),
           group: { tier: 'level', order: 'country' },
           label: countryOrOther,
           record: (partner, ctx) => ({ name: ctx.renderInline(`Museum: ${ctx.tr(partner.id).name ?? partner.internal_name}`), route: { name: 'partner', params: { id: partner.id }, query: { lang: 'fr' } } }),
@@ -1504,7 +1504,7 @@ describe('PartnerListView', () => {
       route: '/partners',
     })
     await settle(() => wrapper.findAll('.mwnf-partner-list__name').length > 0)
-    // Only the EPM partners (Syria's) match the scope.
+    // Only the Syria partners (the second fixture project) match the scope.
     expect(wrapper.findAll('.mwnf-partner-list__group-title').map((g) => g.text())).toEqual(['Syria'])
     expect(wrapper.find('.mwnf-partner-list__name').text()).toBe('Museum: Damascus Museum')
     expect(wrapper.find('.mwnf-partner-list__name').attributes('href')).toBe('/partner/p3?lang=fr')
