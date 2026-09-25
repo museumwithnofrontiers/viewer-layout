@@ -2880,6 +2880,20 @@ details[open] > summary.mwnf-partner-list__group-heading .mwnf-partner-list__gro
   color: var(--mwnf-back-bar-hover-text, inherit);
 }
 
+/* BackLink variant="bar": the link is the bar. */
+.mwnf-back-bar--link {
+  display: inline-block;
+  margin: var(--mwnf-back-bar-margin, 0);
+  color: var(--mwnf-back-bar-text, inherit);
+  font-size: var(--mwnf-back-bar-size, 0.9375rem);
+  text-decoration: none;
+}
+
+.mwnf-back-bar--link:hover {
+  text-decoration: underline;
+  color: var(--mwnf-back-bar-hover-text, inherit);
+}
+
 /* Project chips with family variants */
 
 .mwnf-chip {
@@ -3058,6 +3072,68 @@ details[open] > summary.mwnf-partner-list__group-heading .mwnf-partner-list__gro
 }
 
 .mwnf-sheet-related__unresolved {
+  color: var(--mwnf-sheet-related-unresolved-color, #8a8a8a);
+  font-style: italic;
+  font-size: var(--mwnf-sheet-related-unresolved-size, 0.75rem);
+}
+
+/* Item-page blocks (SpecialFeatures, RelatedMedia, OnDisplayIn): the
+   standalone item pages and the DXA item sheet draw them alike. */
+
+.mwnf-special-features__item {
+  margin-bottom: var(--mwnf-special-features-gap, 1rem);
+}
+
+.mwnf-special-features__name {
+  margin: 0 0 var(--mwnf-special-features-name-gap, 0.25rem);
+  font-size: var(--mwnf-special-features-name-size, 0.9375rem);
+  font-weight: var(--mwnf-special-features-name-weight, 500);
+  color: var(--mwnf-special-features-name-color, inherit);
+}
+
+.mwnf-special-features__meta {
+  margin: 0 0 var(--mwnf-special-features-name-gap, 0.25rem);
+  font-size: var(--mwnf-special-features-meta-size, 0.75rem);
+  color: var(--mwnf-special-features-meta-color, #555555);
+}
+
+.mwnf-related-media__entry {
+  margin-top: var(--mwnf-related-media-gap, 0.375rem);
+}
+
+.mwnf-related-media__link {
+  font-size: var(--mwnf-related-media-link-size, inherit);
+  font-weight: var(--mwnf-related-media-link-weight, inherit);
+  color: var(--mwnf-related-media-link-color, var(--mwnf-link-text, #0000ff));
+}
+
+.mwnf-related-media__description {
+  margin: var(--mwnf-related-media-description-gap, 0.125rem) 0 0;
+  font-size: var(--mwnf-related-media-description-size, 0.75rem);
+  color: var(--mwnf-related-media-description-color, #555555);
+}
+
+.mwnf-on-display__subheading {
+  margin: var(--mwnf-sheet-related-subheading-gap, 0.5rem) 0 0;
+  font-weight: var(--mwnf-weight-heading, 700);
+}
+
+.mwnf-on-display__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  font-size: var(--mwnf-on-display-size, inherit);
+}
+
+.mwnf-on-display__item {
+  margin-top: var(--mwnf-on-display-gap, 0.375rem);
+}
+
+.mwnf-on-display__item a {
+  color: var(--mwnf-on-display-link-color, var(--mwnf-link-text, #0000ff));
+}
+
+.mwnf-on-display__pending {
   color: var(--mwnf-sheet-related-unresolved-color, #8a8a8a);
   font-style: italic;
   font-size: var(--mwnf-sheet-related-unresolved-size, 0.75rem);

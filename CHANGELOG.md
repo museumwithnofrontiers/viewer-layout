@@ -1,3 +1,40 @@
+## 2.17.0 (2026-09-25)
+
+Part of M10 epic 5 (museumwithnofrontiers/inventory-app#2016), stories
+museumwithnofrontiers/inventory-app#2038 and #2039.
+
+### Added
+
+- `BackLink` `variant="bar"`: the products' back bar. A link carrying
+  `.mwnf-back-bar` (and `.mwnf-back-bar--link`), addressed to the fallback so
+  it also opens in a new tab, with an `arrow` before the label (`←` by
+  default) and a default slot that replaces the label. Token:
+  `--mwnf-back-bar-margin`.
+- Item-page blocks in `/content`. The three standalone item pages and
+  `RecordSheetView` each drew their own version.
+  - `SpecialFeatures`: a monument's sub-details, as the data package embeds
+    them on it (`details`). Each has its name, location, dates, artists, a
+    description with the record's glossary terms, and its pictures.
+  - `RelatedMedia`: a record's audio and video. With `language`, only that
+    language's entries when there are any.
+  - `OnDisplayIn`: the exhibitions, chapters and galleries that show a
+    record, in groups. A route links inside the site; an external address is
+    marked ↗; a name with no address is plain text, followed by
+    `pendingLabel` when given.
+  - Tokens: `--mwnf-special-features-*`, `--mwnf-related-media-*`,
+    `--mwnf-on-display-*`.
+
+### Changed
+
+- `BackLink` goes back only when the previous page is one of this website's
+  own (vue-router's `history.state.back`). Otherwise it goes to its fallback,
+  so a visitor who arrived from another site stays on this one. With no
+  fallback it still goes back through whatever history the tab has, as
+  before.
+- `RecordSheetView` draws its audio/video section with `RelatedMedia` and its
+  on-display-in groups with `OnDisplayIn`. The section's heading and its
+  links are unchanged; the lines carry the blocks' classes instead of
+  `.mwnf-sheet-related__line`, `__subheading` and `__unresolved`.
 ## 2.16.0 (2026-09-25)
 
 Part of M10 epic 4 (museumwithnofrontiers/inventory-app#2015), stories

@@ -5,9 +5,10 @@ import {
 } from '@museumwnf/viewer-core'
 import DynastyList from '../content/DynastyList.vue'
 import GlossaryTool from '../content/GlossaryTool.vue'
+import OnDisplayIn from '../content/OnDisplayIn.vue'
 import PartnerPanel from '../content/PartnerPanel.vue'
+import RelatedMedia from '../content/RelatedMedia.vue'
 import RelatedRecords from '../content/RelatedRecords.vue'
-import SheetSection from '../content/SheetSection.vue'
 import TimelineLookup from '../content/TimelineLookup.vue'
 import RecordView from './RecordView.vue'
 
@@ -174,8 +175,19 @@ function relatedInfo(record, ctx) {
     name: ref.project_id ? projects.label(ref.project_id) : null,
     chipClass: s.outsideChip ? s.outsideChip(ref, ctx) : null,
   }))
+  // A place with a legacy host links out to it; one without is named, with the
+  // spec's "link pending" note (OnDisplayIn's pendingLabel).
+  const place = (ref) => ({
+    id: ref.id, label: mdInline(ref.name ?? ''), href: ref.legacy_host || '', external: Boolean(ref.legacy_host),
+  })
   const onDisplayIn = s.onDisplayIn && s.onDisplayIn !== false
-    ? { linkPendingLabel: t(s.onDisplayIn.linkPendingLabel), galleries: galleryReferences(record), exhibitions: exhibitionReferences(record) }
+    ? {
+      pendingLabel: s.onDisplayIn.linkPendingLabel ?? '',
+      groups: [
+        { heading: 'record.related.exhibitions', links: exhibitionReferences(record).map(place) },
+        { heading: 'record.related.galleries', links: galleryReferences(record).map(place) },
+      ].filter((group) => group.links.length),
+    }
     : null
   const database = s.databaseLabel && relatedDatabaseUrl(record)
     ? { url: relatedDatabaseUrl(record), label: t(s.databaseLabel), name: projects.label(record.project_id) }
@@ -288,28 +300,11 @@ function printSheet() {
               :dir="relCtx.dir"
             />
 
-            <SheetSection v-if="rel.media.length" :heading="t('record.related.audioVideo')">
-              <p v-for="file in rel.media" :key="file.url" class="mwnf-sheet-related__line">
-                <a :href="file.url" target="_blank" rel="noopener">↗ {{ file.title ?? file.url }}</a>
-              </p>
-            </SheetSection>
+            <RelatedMedia :media="rel.media" :descriptions="false" :dir="relCtx.dir" />
 
-            <div v-if="rel.onDisplayIn && (rel.onDisplayIn.galleries.length || rel.onDisplayIn.exhibitions.length)">
+            <div v-if="rel.onDisplayIn?.groups.length">
               <p class="mwnf-sheet-related__heading">{{ t('record.related.onDisplayIn') }}</p>
-              <div v-if="rel.onDisplayIn.exhibitions.length">
-                <p class="mwnf-sheet-related__subheading">{{ t('record.related.exhibitions') }}</p>
-                <p v-for="ref in rel.onDisplayIn.exhibitions" :key="ref.id" class="mwnf-sheet-related__line">
-                  <a v-if="ref.legacy_host" :href="ref.legacy_host" target="_blank" rel="noopener">↗ {{ ref.name }}</a>
-                  <span v-else>{{ ref.name }} <span class="mwnf-sheet-related__unresolved">{{ rel.onDisplayIn.linkPendingLabel }}</span></span>
-                </p>
-              </div>
-              <div v-if="rel.onDisplayIn.galleries.length">
-                <p class="mwnf-sheet-related__subheading">{{ t('record.related.galleries') }}</p>
-                <p v-for="ref in rel.onDisplayIn.galleries" :key="ref.id" class="mwnf-sheet-related__line">
-                  <a v-if="ref.legacy_host" :href="ref.legacy_host" target="_blank" rel="noopener">↗ {{ ref.name }}</a>
-                  <span v-else>{{ ref.name }} <span class="mwnf-sheet-related__unresolved">{{ rel.onDisplayIn.linkPendingLabel }}</span></span>
-                </p>
-              </div>
+              <OnDisplayIn heading="" :groups="rel.onDisplayIn.groups" :pending-label="rel.onDisplayIn.pendingLabel" :dir="relCtx.dir" />
             </div>
 
             <div v-if="rel.database">

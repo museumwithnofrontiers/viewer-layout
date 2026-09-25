@@ -1,6 +1,6 @@
 import { readFileSync } from 'node:fs'
 import { resolve } from 'node:path'
-import { beforeAll, describe, expect, it } from 'vitest'
+import { afterEach, beforeAll, describe, expect, it, vi } from 'vitest'
 import { mount } from '@vue/test-utils'
 import { nextTick } from 'vue'
 import { createMemoryHistory, createRouter } from 'vue-router'
@@ -16,6 +16,7 @@ import {
   GlossaryPopover,
   GlossaryTool,
   MediaGallery,
+  OnDisplayIn,
   Pagination,
   PartnerMap,
   PartnerPanel,
@@ -25,16 +26,18 @@ import {
   RecordLanguages,
   RecordList,
   RecordSheet,
+  RelatedMedia,
   RelatedRecords,
   ResultsSummary,
   SectionCards,
   SheetSection,
   SiblingGalleries,
   SourceCredit,
+  SpecialFeatures,
   TimelineEventList,
   TimelineLookup,
 } from '../src/content/index.js'
-import { globalWithI18n, withSiteRights } from './helpers.js'
+import { globalWithI18n, layoutTexts, withSiteRights } from './helpers.js'
 
 const records = [
   { id: 'a', image: 'a.jpg', imageAlt: 'A', name: 'Glazed <em>bowl</em>', meta: ['Egypt', '900–950'], badge: 'object', href: '#/item/a' },
@@ -772,18 +775,53 @@ describe('PopupLogo', () => {
 })
 
 describe('BackLink', () => {
-  it('renders a button that calls router.back() when history is available', async () => {
-    // Simulate browser history length > 1
-    Object.defineProperty(window.history, 'length', {
-      value: 2,
-      configurable: true,
+  // The tab's history as a visitor's browser holds it: its length, and the
+  // state vue-router writes on every entry of its own (`back` is the previous
+  // page of this website, null on the first page the visitor opened).
+  function history({ length, back = null }) {
+    Object.defineProperty(window.history, 'length', { value: length, configurable: true })
+    window.history.replaceState(back === null ? null : { back }, '')
+  }
+
+  async function mountWithRouter(props) {
+    const router = createRouter({
+      history: createMemoryHistory(),
+      routes: [
+        { path: '/', name: 'home', component: { template: '<p />' } },
+        { path: '/partners', name: 'partners', component: { template: '<p />' } },
+        { path: '/partners/:id', name: 'partner', component: { template: '<p />' } },
+      ],
     })
-    const wrapper = mount(BackLink, {
-      props: { to: '#/fallback' },
-      ...globalWithI18n(),
-    })
-    expect(wrapper.find('button').exists()).toBe(true)
-    expect(wrapper.find('button').text()).toContain('back')
+    await router.push('/partners/p1')
+    const back = vi.spyOn(router, 'back').mockImplementation(() => {})
+    const push = vi.spyOn(router, 'push').mockImplementation(() => Promise.resolve())
+    const i18n = globalWithI18n().global.plugins
+    const wrapper = mount(BackLink, { props, global: { plugins: [...i18n, router] } })
+    return { wrapper, back, push }
+  }
+
+  afterEach(() => history({ length: 1 }))
+
+  it('renders a button that goes back when the previous page is this website\'s own', async () => {
+    history({ length: 3, back: '/partners' })
+    const { wrapper, back } = await mountWithRouter({ to: { name: 'partners' } })
+    expect(wrapper.find('button.mwnf-back-link__button').exists()).toBe(true)
+    await wrapper.find('button').trigger('click')
+    expect(back).toHaveBeenCalledOnce()
+  })
+
+  it('renders the fallback for a visitor who arrived from another site, who stays on this one', async () => {
+    history({ length: 2 })
+    const { wrapper, back } = await mountWithRouter({ to: { name: 'partners' } })
+    expect(wrapper.find('a.mwnf-back-link__button').attributes('href')).toBe('/partners')
+    expect(back).not.toHaveBeenCalled()
+  })
+
+  it('goes back through whatever history the tab has when no fallback is given', async () => {
+    history({ length: 2 })
+    const { wrapper, back } = await mountWithRouter({})
+    await wrapper.find('button').trigger('click')
+    expect(back).toHaveBeenCalledOnce()
   })
 
   it('renders a link with fallback route when history is not available', () => {
@@ -808,6 +846,210 @@ describe('BackLink', () => {
       ...globalWithI18n(),
     })
     expect(wrapper.text()).toContain('back')
+  })
+
+  describe('variant="bar"', () => {
+    it('is a link carrying the back bar, addressed to the fallback, with the arrow before the label', async () => {
+      history({ length: 1 })
+      const { wrapper } = await mountWithRouter({ variant: 'bar', label: 'core.action.close', to: { name: 'partners' } })
+      const link = wrapper.find('a')
+      expect(link.classes()).toEqual(['mwnf-back-bar', 'mwnf-back-bar--link'])
+      expect(link.attributes('href')).toBe('/partners')
+      expect(link.text()).toBe('← Close')
+      expect(link.find('.mwnf-back-bar__arrow').attributes('aria-hidden')).toBe('true')
+      expect(wrapper.find('button').exists()).toBe(false)
+    })
+
+    it('goes back when the previous page is this website\'s own', async () => {
+      history({ length: 3, back: '/partners?page=2' })
+      const { wrapper, back, push } = await mountWithRouter({ variant: 'bar', to: { name: 'partners' } })
+      await wrapper.find('a').trigger('click')
+      expect(back).toHaveBeenCalledOnce()
+      expect(push).not.toHaveBeenCalled()
+    })
+
+    it('goes to the fallback for a visitor who arrived from another site', async () => {
+      history({ length: 2 })
+      const { wrapper, back, push } = await mountWithRouter({ variant: 'bar', to: { name: 'partners' } })
+      await wrapper.find('a').trigger('click')
+      expect(back).not.toHaveBeenCalled()
+      expect(push).toHaveBeenCalledWith({ name: 'partners' })
+    })
+
+    it('leaves a modified click to the browser, which opens the fallback elsewhere', async () => {
+      history({ length: 3, back: '/partners' })
+      const { wrapper, back, push } = await mountWithRouter({ variant: 'bar', to: { name: 'partners' } })
+      await wrapper.find('a').trigger('click', { ctrlKey: true })
+      expect(back).not.toHaveBeenCalled()
+      expect(push).not.toHaveBeenCalled()
+    })
+
+    it('never lets its bare # reach a hash router when there is no fallback', async () => {
+      history({ length: 1 })
+      const { wrapper, back } = await mountWithRouter({ variant: 'bar' })
+      const link = wrapper.find('a')
+      expect(link.attributes('href')).toBe('#')
+      const event = new MouseEvent('click', { bubbles: true, cancelable: true })
+      link.element.dispatchEvent(event)
+      expect(event.defaultPrevented).toBe(true)
+      expect(back).not.toHaveBeenCalled()
+    })
+
+    it('takes its own arrow, and its default slot in place of the label', async () => {
+      history({ length: 1 })
+      const { wrapper } = await mountWithRouter({ variant: 'bar', arrow: '‹', label: 'core.action.close', to: { name: 'partners' } })
+      expect(wrapper.find('a').text()).toBe('‹ Close')
+      const slotted = mount(BackLink, {
+        props: { variant: 'bar', href: '#/exhibitions/e1' },
+        slots: { default: 'Back to The Umayyads' },
+        ...globalWithI18n(),
+      })
+      expect(slotted.find('a').text()).toBe('← Back to The Umayyads')
+      expect(slotted.find('a').attributes('href')).toBe('#/exhibitions/e1')
+    })
+  })
+})
+
+describe('SpecialFeatures', () => {
+  const texts = {
+    d1: { name: 'The *hall*', location: 'East wing', dates: 'c. 1700', description: 'Gilded stucco work.' },
+    d2: { name: 'The chapel' },
+  }
+  const features = [
+    { id: 'd2', internal_name: 'chapel', display_order: 2, images: [], artist_names: [] },
+    {
+      id: 'd1', internal_name: 'hall', display_order: 1, artist_names: ['B. Carlone', 'C. Carlone'],
+      images: [{ url: 'https://example.org/hall.jpg', captions: { en: 'The hall', de: 'Der Saal' } }],
+    },
+    { id: 'd3', internal_name: 'Untranslated room', display_order: null },
+  ]
+  const mountFeatures = (props = {}) => mount(SpecialFeatures, {
+    props: { features, tr: (feature) => texts[feature.id], language: 'de', ...props },
+    ...globalWithI18n({ messages: { en: { ...layoutTexts, 'sheet.field.specialFeatures': 'Special features' } } }),
+  })
+
+  it('renders nothing for a record with no features', () => {
+    expect(mountFeatures({ features: [] }).html()).toBe('<!--v-if-->')
+  })
+
+  it('lists the features in their order, each with its name, location, dates, artists and pictures', () => {
+    const wrapper = mountFeatures()
+    expect(wrapper.find('.mwnf-sheet-section__heading').text()).toBe('Special features')
+    const items = wrapper.findAll('.mwnf-special-features__item')
+    expect(items.map((item) => item.find('.mwnf-special-features__name').text())).toEqual(['The hall', 'The chapel', 'Untranslated room'])
+    expect(items[0].find('.mwnf-special-features__name').html()).toContain('<em>hall</em>')
+    expect(items[0].findAll('.mwnf-special-features__meta').map((m) => m.text())).toEqual(['East wing', 'c. 1700', 'B. Carlone, C. Carlone'])
+    expect(items[0].find('.mwnf-media img').attributes()).toMatchObject({ src: 'https://example.org/hall.jpg', alt: 'Der Saal' })
+    expect(items[1].find('.mwnf-special-features__meta').exists()).toBe(false)
+    expect(items[1].find('.mwnf-media').exists()).toBe(false)
+  })
+
+  it("highlights the record's glossary terms in a description, as the sheet does", () => {
+    const glossary = [{ id: 'g1', spelling: 'stucco', word: 'Stucco', definition: 'Fine plaster.' }]
+    const description = mountFeatures({ glossary }).find('.mwnf-special-features__description')
+    expect(description.find('.gloss-term').text()).toBe('stucco')
+    expect(mountFeatures().find('.mwnf-special-features__description .gloss-term').exists()).toBe(false)
+  })
+})
+
+describe('RelatedMedia', () => {
+  const media = [
+    { type: 'video', title: 'A curator presents the carpet', description: 'Filmed in the museum.', url: 'https://example.org/en', language: 'en' },
+    { type: 'video', title: 'Une conservatrice présente le tapis', description: null, url: 'https://example.org/fr', language: 'fr' },
+    { type: 'audio', title: null, url: 'https://example.org/untitled.mp3', language: null },
+  ]
+  const texts = { messages: { en: { ...layoutTexts, 'record.related.audioVideo': 'Audio / video', 'record.related.video': 'Video' } } }
+
+  it('links every entry out, marked ↗, under the audio/video heading', () => {
+    const wrapper = mount(RelatedMedia, { props: { media }, ...globalWithI18n(texts) })
+    expect(wrapper.find('.mwnf-sheet-section__heading').text()).toBe('Audio / video')
+    const links = wrapper.findAll('.mwnf-related-media__link')
+    expect(links.map((a) => a.text())).toEqual(['↗ A curator presents the carpet', '↗ Une conservatrice présente le tapis', '↗ https://example.org/untitled.mp3'])
+    expect(links[0].attributes()).toMatchObject({ href: 'https://example.org/en', target: '_blank', rel: 'noopener' })
+    expect(wrapper.find('.mwnf-related-media__description').text()).toBe('Filmed in the museum.')
+  })
+
+  it("keeps the language's own entries when it has any, and every entry otherwise", () => {
+    const fr = mount(RelatedMedia, { props: { media, language: 'fr' }, ...globalWithI18n(texts) })
+    expect(fr.findAll('.mwnf-related-media__link').map((a) => a.attributes('href'))).toEqual(['https://example.org/fr'])
+    const de = mount(RelatedMedia, { props: { media, language: 'de' }, ...globalWithI18n(texts) })
+    expect(de.findAll('.mwnf-related-media__link')).toHaveLength(3)
+  })
+
+  it('takes its heading, leaves the descriptions out when asked, and renders nothing with no entry', () => {
+    const wrapper = mount(RelatedMedia, { props: { media, heading: 'record.related.video', descriptions: false }, ...globalWithI18n(texts) })
+    expect(wrapper.find('.mwnf-sheet-section__heading').text()).toBe('Video')
+    expect(wrapper.find('.mwnf-related-media__description').exists()).toBe(false)
+    expect(mount(RelatedMedia, { props: { media: [] }, ...globalWithI18n(texts) }).html()).toBe('<!--v-if-->')
+  })
+})
+
+describe('OnDisplayIn', () => {
+  const texts = {
+    messages: {
+      en: {
+        ...layoutTexts,
+        'record.related.onDisplayIn': 'On display in',
+        'record.related.exhibitions': 'Exhibitions',
+        'record.related.galleries': 'Galleries',
+        'gallery.item.linkPending': 'link pending',
+      },
+    },
+  }
+  const withRouter = async () => {
+    const router = createRouter({
+      history: createMemoryHistory(),
+      routes: [{ path: '/exhibition/:id', name: 'exhibition', component: { template: '<p />' } }],
+    })
+    await router.push('/exhibition/e0')
+    return { global: { plugins: [...globalWithI18n(texts).global.plugins, router] } }
+  }
+
+  it('lists the places under its heading, a route as a link inside this site', async () => {
+    const wrapper = mount(OnDisplayIn, {
+      props: { groups: [{ links: [{ id: 'e1', label: 'The <em>Umayyads</em>', to: { name: 'exhibition', params: { id: 'e1' } } }] }] },
+      ...(await withRouter()),
+    })
+    expect(wrapper.find('.mwnf-sheet-section__heading').text()).toBe('On display in')
+    expect(wrapper.find('.mwnf-on-display__subheading').exists()).toBe(false)
+    const link = wrapper.find('.mwnf-on-display__item a')
+    expect(link.attributes('href')).toBe('/exhibition/e1')
+    expect(link.attributes('target')).toBeUndefined()
+    expect(link.html()).toContain('<em>Umayyads</em>')
+  })
+
+  it('groups the places under their subheadings, marks an external link ↗, and notes a place with no address', () => {
+    const wrapper = mount(OnDisplayIn, {
+      props: {
+        heading: '',
+        pendingLabel: 'gallery.item.linkPending',
+        groups: [
+          { heading: 'record.related.exhibitions', links: [{ id: 'x1', label: 'Pending Exhibition' }] },
+          { heading: 'record.related.galleries', links: [{ id: 'g1', label: 'Textiles', href: 'https://textiles.example.org', external: true }] },
+          { heading: 'record.related.galleries', links: [] },
+        ],
+      },
+      ...globalWithI18n(texts),
+    })
+    // No heading: the groups alone, under the one the page draws.
+    expect(wrapper.find('.mwnf-sheet-section').exists()).toBe(false)
+    expect(wrapper.findAll('.mwnf-on-display__subheading').map((p) => p.text())).toEqual(['Exhibitions', 'Galleries'])
+    const items = wrapper.findAll('.mwnf-on-display__item')
+    expect(items[0].text()).toBe('Pending Exhibition link pending')
+    expect(items[0].find('a').exists()).toBe(false)
+    expect(items[1].text()).toBe('↗ Textiles')
+    expect(items[1].find('a').attributes()).toMatchObject({ href: 'https://textiles.example.org', target: '_blank', rel: 'noopener' })
+  })
+
+  it('renders a name with no address as plain text when there is no pending note, and nothing with no place', () => {
+    const wrapper = mount(OnDisplayIn, {
+      props: { heading: 'record.related.galleries', groups: [{ links: [{ label: 'Water in Islam' }] }] },
+      ...globalWithI18n(texts),
+    })
+    expect(wrapper.find('.mwnf-sheet-section__heading').text()).toBe('Galleries')
+    expect(wrapper.find('.mwnf-on-display__item').text()).toBe('Water in Islam')
+    expect(wrapper.find('.mwnf-on-display__item a').exists()).toBe(false)
+    expect(mount(OnDisplayIn, { props: { groups: [{ links: [] }] }, ...globalWithI18n(texts) }).html()).toBe('<!--v-if-->')
   })
 })
 

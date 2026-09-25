@@ -503,7 +503,7 @@ through it), not a public building block.
 | `FeaturedPartners` | A carousel of featured partners (`records`, or `partners` as `partnerView()` builds them), rotated on a timer |
 | `SiblingGalleries` | Sibling-gallery links plus MWNF virtual-museum links |
 | `PopupLogo` | A dismissible fixed modal for sponsor notices |
-| `BackLink` | A "back" link using browser history when available, a route otherwise |
+| `BackLink` | A "back" link: back through this website's own history, its fallback route otherwise; a button, or `variant="bar"` for the products' back bar |
 | `GlossaryTool` | The glossary search box: input, hits, chosen definition as Markdown |
 | `DynastyPopout` | One dynasty's details (dates, area, history) behind a native toggle |
 | `DynastyList` | One `DynastyPopout` per dynasty of a record |
@@ -511,6 +511,9 @@ through it), not a public building block.
 | `PictureGallery` | A DXA exhibition theme page's curated-picture panel + thumbnail strip, with the related-works toggle |
 | `PictureNarrative` | The same page's narrative body: the selected picture's curated text plus its related pictures, forward and backward |
 | `TimelineLookup` | The DXA item sheet's own timeline popout: a trigger, a country select and the events for the record's own date range |
+| `SpecialFeatures` | A monument's sub-details (the package's embedded `details`): name, location, dates, artists, description, pictures |
+| `RelatedMedia` | A record's audio and video links, in its language when it has any |
+| `OnDisplayIn` | The exhibitions, chapters and galleries that show a record, in groups under optional subheadings |
 
 Full prop/slot detail for `PictureGallery`/`PictureNarrative`, and the
 decomposition rationale behind them, is in
