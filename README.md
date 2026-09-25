@@ -1,20 +1,67 @@
 # @museumwnf/viewer-layout
 
-Page structure for MWNF websites: `<PageShell>` composing seven optional, token-styled sections. No data access, no routing, no theming values — websites own their `theme/tokens.css`.
+What the pages of an MWNF website are made of: the page frame, the building
+blocks, the composed views, and the pages of the DXA family (the galleries and
+the exhibitions). Every visual value comes from a `--mwnf-*` token, and a
+website sets its own values in `theme/tokens.css`; the package defines none.
 
-`PageShell` covers the needs of every website from props. A website fills the
-sections it has and leaves the rest empty; a slot is for the *content* of a
-section — the mark in the header, the active view — not for rebuilding the
-section. A website that needs something no prop expresses adds the prop
-here, so the next website has it too.
+## Entry points and layers
+
+Each entry point belongs to one layer of the platform's
+[architecture reference](https://github.com/museumwithnofrontiers/inventory-app/issues/1510), which says what goes where across
+all the packages:
+
+| Entry | Layer | Holds | Reads |
+| --- | --- | --- | --- |
+| `@museumwnf/viewer-layout` | building blocks | `PageShell` and its seven sections, and every block of `/content` | its props, and the texts and Markdown renderers of `@museumwnf/viewer-core` |
+| `@museumwnf/viewer-layout/content` | building blocks | the blocks alone, without the shell | the same |
+| `@museumwnf/viewer-layout/views` | composed views | whole pages driven by a spec the website declares, with slots it fills | viewer-core's data layer, the site config and the router |
+| `@museumwnf/viewer-layout/components` | composed views | `SiteShell`, the frame composed from `dataset.config.js` | the site config and the current route |
+| `@museumwnf/viewer-layout/dxa` | DXA family layer | the gallery and exhibition pages, `standardRoutes` | the entries above, `@museumwnf/viewer-core` and `@museumwnf/viewer-core/dxa` |
+| `@museumwnf/viewer-layout/style.css` | — | one stylesheet for every entry, the family styles included | — |
+| `@museumwnf/viewer-layout/tokens.reference.css` | — | every token the package reads, with its fallback | — |
+
+A block is fed by its props: a plain view-model built by viewer-core or by
+the website. Beyond its props it reads only viewer-core's texts and
+renderers, and at most the one viewer-core helper its job needs
+(`GlossaryTool` searches the glossary, `SourceCredit` builds the page's
+address). It declares no route and reads no spec: that is what a composed
+view does.
+
+**Where a new component goes:**
+
+1. **Into the lowest layer that fits.** A block comes before a composed view,
+   and a composed view before a family page. A block is promoted here when
+   several websites need the same thing; a whole page is shared only inside
+   the DXA family, under `/dxa`.
+2. **A generic component never defaults to one family's texts.** A block or a
+   composed view defaults to a shared entry (`core.*`, `record.*`,
+   `partner.*`, …) or takes the entry name as a prop; it never defaults to a
+   `gallery.*` or `exhibition.*` entry.
+3. **A component only the DXA family uses belongs under `/dxa`.**
+
+**The dependency runs one way.** The root, `/content`, `/views` and
+`/components` never import from `/dxa`. `/dxa` imports only what the other
+entries publish, and `@museumwnf/viewer-core`. A component that moves
+between entries keeps its old export as an alias until the websites have
+moved; a major release then removes the alias.
+
+Where the package does not follow these rules yet, milestone M10 moves it:
+`FeaturedPartners`, `SiblingGalleries`, `PopupLogo`, `PictureGallery`,
+`PictureNarrative` (blocks) and `RecordSheetView` (a composed view) are used
+only by the DXA family and move under `/dxa`
+([inventory-app#2017](https://github.com/museumwithnofrontiers/inventory-app/issues/2017));
+`PictureGallery`, `PictureNarrative` and `EssayView` default to
+`exhibition.*` entries, and `FeaturedPartners` to `partner.featured`, which
+does not exist.
 
 Two companion docs give a more scannable version of who-owns-what and the
 full slot list: [`docs/designer-contract.md`](docs/designer-contract.md) (the
-four roles — components, tokens/CSS, site designer, translator — and the
-token → overrides → slot → own-view decision ladder) and
-[`docs/slot-catalogue.md`](docs/slot-catalogue.md) (every prop and slot of
-`PageShell`, `SiteShell` and the ten composed views, plus a one-line purpose
-for every `/content` component).
+four roles — components, tokens/CSS, site designer, translator — the
+token → overrides → slot → own-view decision ladder, and where a new
+component goes) and [`docs/slot-catalogue.md`](docs/slot-catalogue.md)
+(every prop and slot of `PageShell`, `SiteShell` and the composed views,
+plus a one-line purpose for every `/content` component).
 
 ## Install
 
@@ -80,6 +127,12 @@ notice, a sponsor heading — is a prop, and the website passes it through its
 own `t()`.
 
 ## PageShell
+
+`PageShell` covers the needs of every website from props. A website fills the
+sections it has and leaves the rest empty; a slot is for the *content* of a
+section — the mark in the header, the active view — not for rebuilding the
+section. A website that needs something no prop expresses adds the prop
+here, so the next website has it too.
 
 Sections render top to bottom in this fixed order. Every section is optional: it renders nothing unless its slot or driving props are set. The default slot (→ `AppContent`) is where the router-view goes.
 
@@ -295,10 +348,16 @@ every bundle of `@museumwnf/viewer-i18n` from 1.7.0. `GlossaryTool` also reads
 `record.source.rightsHolder` and `.termsOfUse` (2.5.0). `PictureGallery`/
 `PictureNarrative` default to `exhibition.theme.seeItemEntry`, `.recordNotInSite`,
 `.additionalContent`, `.addRelatedWorks`, `.hideRelatedWorks` and
-`exhibition.related.items`, `.reciprocal` — already in every bundle of
-`@museumwnf/viewer-i18n`'s `exhibition` namespace, the same entries
-the-use-of-colours-in-art's and water-in-islam's `Theme.vue` already read.
-Every other text is a prop.
+`exhibition.related.items`, `.reciprocal`, which only the `exhibition` and
+`standalone` bundles of `@museumwnf/viewer-i18n` carry — a family default
+in a generic entry, which ends when the two move under `/dxa` (see
+[Entry points and layers](#entry-points-and-layers)). Every other text is a
+prop.
+
+`FeaturedPartners`, `SiblingGalleries`, `PopupLogo`, `PictureGallery` and
+`PictureNarrative` are used only by the DXA family, and move under `/dxa`
+in milestone M10; their exports here stay as aliases until the websites have
+moved.
 
 ## Content classes
 
@@ -319,9 +378,11 @@ Building blocks copied from the legacy sites' own `site.css` files, available as
 
 ## Composed views
 
-Ten whole pages, made of the content components on viewer-core's
+Whole pages, made of the content components on viewer-core's
 composables and driven by a declaration the website writes instead of a
-page. They are exported from `@museumwnf/viewer-layout/views` — and only from
+page. They are the broad page structures every kind of website shares;
+`RecordSheetView`, used only by the DXA family, moves under `/dxa` with a
+Detail name in milestone M10. They are exported from `@museumwnf/viewer-layout/views` — and only from
 there: they read the records and the engine from `@museumwnf/viewer-core`
 itself, whose entry point carries `.vue` files, and a website's test runner
 that loads this package natively would fail on the first one if the package
@@ -425,11 +486,22 @@ except where noted:
 
 ## DXA family pages
 
-`@museumwnf/viewer-layout/dxa` ships the gallery/exhibition thin pages
-confirmed byte-identical within each DXA site pair on `origin/main` —
-11 gallery pages (from carpets/amulets), 9 exhibition pages (from
-the-use-of-colours-in-art/water-in-islam) — plus `standardRoutes(family,
-config)`, the RouteRecord factory a site spreads into `extraViews`:
+`@museumwnf/viewer-layout/dxa` is the DXA family layer: the only place
+where whole pages are shared. The galleries are one site with different
+data, and so are the exhibitions — the legacy served each family from one
+application — so a page that is the same on every site of a family lives
+here once, beside the data composables of `@museumwnf/viewer-core/dxa`.
+
+What may go here: a page, a component or a style that only the gallery or
+the exhibition family uses, and that is the same on every site of that
+family. A difference between two sites of a family is a config value or a
+token, not a second copy of the page. Nothing outside `/dxa` imports from
+it, and a website can still replace any family page with its own component
+on the same route name. Texts stay in `@museumwnf/viewer-i18n`'s `gallery`
+and `exhibition` sections.
+
+It ships each family's pages plus `standardRoutes(family, config)`, the
+RouteRecord factory a site spreads into `extraViews`:
 
 ```js
 import { standardRoutes } from '@museumwnf/viewer-layout/dxa'

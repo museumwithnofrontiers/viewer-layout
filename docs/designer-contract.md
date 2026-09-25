@@ -11,14 +11,15 @@ version of the same facts is [`slot-catalogue.md`](./slot-catalogue.md).
 
 ### 1. Components maintainer — this package's `.vue` files
 
-Owns every file under `src/{content,sections,views,components}` — `PageShell.vue`
-at the package root, `components/SiteShell.vue`, the seven `sections/App*.vue`
-shell pieces, the 25 `content/*.vue` building blocks, and the ten
-`views/*.vue` composed pages.
+Owns every `.vue` file of the package — `PageShell.vue` at the package root,
+`components/SiteShell.vue`, the seven `sections/App*.vue` shell pieces, the
+`content/*.vue` building blocks, the `views/*.vue` composed pages, and the
+DXA family pages under `dxa/gallery/` and `dxa/exhibition/`. Where a new one
+goes is [below](#where-a-new-component-goes).
 
-These files carry markup, props, slots and behaviour — never presentation.
-Confirmed by reading every one of them: **zero `<style>` blocks** anywhere
-under `src/{content,sections,views,components}` on `main`. A change here
+These files carry markup, props, slots and behaviour — never presentation:
+there is **no `<style>` block** anywhere under
+`src/{content,sections,views,components,dxa}`. A change here
 should never need to touch a colour, a size or a spacing value; those are a
 token's job (role 2). This is deliberate and load-bearing, not an accident of
 the current file set — it is what makes roles 1 and 2 separable without
@@ -37,11 +38,13 @@ alternative.
 
 ### 2. Tokens / CSS maintainer — this package's stylesheets
 
-Owns three files, all shipped by this package and none of them a `.vue`
+Owns four files, all shipped by this package and none of them a `.vue`
 file:
 
 - `src/styles/layout.css` — the shell/chrome: header, banner, navigation,
   footer.
+- `src/styles/dxa.css` — the DXA family pages under `src/dxa/`, and nothing
+  else: a rule a generic component needs belongs in `content.css`.
 - `src/styles/content.css` — the content components, plus the `.mwnf-*`
   utility classes (`.mwnf-panel`, `.mwnf-heading`, `.mwnf-form-table`,
   `.mwnf-button`, `.mwnf-select`, `.mwnf-back-bar`, `.mwnf-chip`,
@@ -116,6 +119,38 @@ needs.
    view importing `TextPageView`/`SectionCards`, no shared source touched).
    This is the escape hatch every composed view leaves open on purpose; it
    is not a fork of this package.
+
+## Where a new component goes
+
+When step 4 of the ladder turns out to be needed on more than one site, the
+page's pieces move into the packages. The platform's
+[architecture reference](https://github.com/museumwithnofrontiers/inventory-app/issues/1510) says where, for every package; for
+this one:
+
+| Layer | Folder (entry point) | What belongs there |
+| --- | --- | --- |
+| Building blocks | `content/` (`/content`, and the package root with `PageShell` and `sections/`) | A small visual component used as it is wherever the thing appears, fed by its props — a plain view-model built by viewer-core or by the site. No spec, no route of its own. |
+| Composed views | `views/` (`/views`), `components/` (`/components`) | A page skeleton driven by a spec the site declares, with slots the site fills. |
+| DXA family layer | `dxa/` (`/dxa`) | A page, a component or a style only the galleries or the exhibitions use, the same on every site of that family. The only place where whole pages are shared. |
+
+Three rules decide between them:
+
+1. **Promote into the lowest layer that fits.** A block comes before a
+   composed view, and a composed view before a family page.
+2. **A generic component never defaults to one family's texts.** A block or
+   a composed view defaults to a shared entry (`core.*`, `record.*`,
+   `partner.*`, …) or takes the entry name as a prop — never a `gallery.*`
+   or `exhibition.*` entry.
+3. **A component only the DXA family uses belongs under `dxa/`.**
+
+`content/`, `sections/`, `views/` and `components/` never import from
+`dxa/`; `dxa/` imports only what the other entries publish. A component
+that moves keeps its old export as an alias until the websites have moved,
+and a major release removes the alias.
+
+A page that is one site's own stays in that site — a standalone product
+(islamicart, baroqueart, sharinghistory) shares blocks and composed views
+with the others, never pages.
 
 ## Cross-check: `website-template`
 
