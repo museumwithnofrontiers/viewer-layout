@@ -5,8 +5,9 @@ import { createMemoryHistory, createRouter } from 'vue-router'
 import { createI18n } from '@museumwnf/viewer-core/i18n'
 import { centuryPresets, collectionTreeFromThemes, loadEntities, useDataPackage } from '@museumwnf/viewer-core'
 import {
-  CatalogueResultsView, EssayView, HomeView, PartnerListView, RecordView, RecordSheetView, LinkListView, SearchFormView, TextPageView, TimelineResultsView,
+  CatalogueResultsView, EssayView, HomeView, PartnerListView, RecordView, LinkListView, SearchFormView, TextPageView, TimelineResultsView,
 } from '../src/views/index.js'
+import ItemDetailView from '../src/dxa/ItemDetailView.vue'
 import { layoutTexts, withSiteRights } from './helpers.js'
 
 // The composed views render a real page out of the fixture package behind
@@ -506,7 +507,7 @@ describe('RecordView', () => {
   })
 })
 
-describe('RecordSheetView', () => {
+describe('ItemDetailView', () => {
   const spec = {
     entity: 'objects',
     translations: ['glossary'],
@@ -521,7 +522,7 @@ describe('RecordSheetView', () => {
   // A gallery/exhibition item-sheet spec, the shape carpets/amulets and
   // the-use-of-colours-in-art/water-in-islam each build in their own
   // composables/sheet.js — every block inventory-app#1728 asks
-  // RecordSheetView to own, driven by spec keys and by data the fixture
+  // ItemDetailView to own, driven by spec keys and by data the fixture
   // package already carries (see docs/slot-catalogue.md for each key).
   const sheetSpec = {
     entity: 'objects',
@@ -565,7 +566,7 @@ describe('RecordSheetView', () => {
   }
 
   it('renders the sheet through a bare spec when no dataGetter is passed — the gallery shape', async () => {
-    const { wrapper } = await mountView(RecordSheetView, { props: { spec, id: 'o1' }, route: '/objects/o1' })
+    const { wrapper } = await mountView(ItemDetailView, { props: { spec, id: 'o1' }, route: '/objects/o1' })
     await settle(() => wrapper.text().includes('Prepared by'))
     expect(wrapper.find('h1').html()).toContain('Glazed <em>bowl</em>')
     expect(wrapper.findAll('.mwnf-sheet__label').map((l) => l.text())).toEqual(['Name', 'Location'])
@@ -577,7 +578,7 @@ describe('RecordSheetView', () => {
   })
 
   it("forwards a website's slots straight through to RecordView, by name, unmodified", async () => {
-    const { wrapper } = await mountView(RecordSheetView, {
+    const { wrapper } = await mountView(ItemDetailView, {
       props: { spec, id: 'o1' },
       slots: {
         header: '<template #header="{ text }"><p class="own-header">{{ text.name }}</p></template>',
@@ -591,7 +592,7 @@ describe('RecordSheetView', () => {
   })
 
   it('still shows RecordView\'s own not-found view for an id the entity does not carry at all, with no dataGetter set', async () => {
-    const { wrapper } = await mountView(RecordSheetView, { props: { spec, id: 'nope' }, route: '/objects/nope' })
+    const { wrapper } = await mountView(ItemDetailView, { props: { spec, id: 'nope' }, route: '/objects/nope' })
     await nextTick()
     expect(wrapper.find('.vc-not-found').exists()).toBe(true)
   })
@@ -600,7 +601,7 @@ describe('RecordSheetView', () => {
     // `o1` is a perfectly real record in the fixture package — this stands
     // in for an exhibition's per-build `itemById`, which can say "not in
     // this build" for an id the whole package still carries.
-    const { wrapper } = await mountView(RecordSheetView, {
+    const { wrapper } = await mountView(ItemDetailView, {
       props: { spec, id: 'o1', dataGetter: () => null },
       route: '/objects/o1',
     })
@@ -611,7 +612,7 @@ describe('RecordSheetView', () => {
   })
 
   it('renders RecordView as usual when dataGetter reports the id present', async () => {
-    const { wrapper } = await mountView(RecordSheetView, {
+    const { wrapper } = await mountView(ItemDetailView, {
       props: { spec, id: 'o1', dataGetter: (id) => (id === 'o1' ? { id } : null) },
       route: '/objects/o1',
     })
@@ -621,7 +622,7 @@ describe('RecordSheetView', () => {
   })
 
   it('renders the source-database chip, the backward-compatibility code and the add-to-collection link — spec.sourceDatabase', async () => {
-    const { wrapper } = await mountView(RecordSheetView, { props: { spec: sheetSpec, id: 'o1' }, route: '/objects/o1' })
+    const { wrapper } = await mountView(ItemDetailView, { props: { spec: sheetSpec, id: 'o1' }, route: '/objects/o1' })
     await settle(() => wrapper.find('.mwnf-sheet-source').exists())
     const source = wrapper.find('.mwnf-sheet-source')
     expect(source.find('.mwnf-chip').classes()).toContain('mwnf-chip--ISLandEPM')
@@ -633,17 +634,17 @@ describe('RecordSheetView', () => {
   })
 
   it('shows the explore-partner notice only when spec.notice.show says yes — spec.notice', async () => {
-    const { wrapper } = await mountView(RecordSheetView, { props: { spec: sheetSpec, id: 'o1' }, route: '/objects/o1' })
+    const { wrapper } = await mountView(ItemDetailView, { props: { spec: sheetSpec, id: 'o1' }, route: '/objects/o1' })
     await settle(() => wrapper.find('.mwnf-sheet-notice').exists())
     expect(wrapper.find('.mwnf-sheet-notice').text()).toContain('Available in')
 
-    const { wrapper: o2Wrapper } = await mountView(RecordSheetView, { props: { spec: sheetSpec, id: 'o2' }, route: '/objects/o2' })
+    const { wrapper: o2Wrapper } = await mountView(ItemDetailView, { props: { spec: sheetSpec, id: 'o2' }, route: '/objects/o2' })
     await settle(() => o2Wrapper.find('.mwnf-sheet__label').exists())
     expect(o2Wrapper.find('.mwnf-sheet-notice').exists()).toBe(false)
   })
 
   it("shows the holder text, then the partner's summary linked through spec.museum.route — spec.museum (D3)", async () => {
-    const { wrapper: withLink } = await mountView(RecordSheetView, { props: { spec: sheetSpec, id: 'o1' }, route: '/objects/o1' })
+    const { wrapper: withLink } = await mountView(ItemDetailView, { props: { spec: sheetSpec, id: 'o1' }, route: '/objects/o1' })
     // The country's label arrives with the countries entity the view loads.
     await settle(() => withLink.find('.mwnf-sheet-museum .mwnf-partner-panel--summary').exists() && withLink.find('.mwnf-sheet-museum .mwnf-partner-panel--summary').text().includes('Egypt'))
     const museum = withLink.find('.mwnf-sheet-museum')
@@ -655,21 +656,21 @@ describe('RecordSheetView', () => {
     expect(summary.find('a').text()).toBe('About Zed Museum')
 
     // spec.museum.route says no (an exhibition's hidden partner): the name stays, the link goes.
-    const { wrapper: withoutLink } = await mountView(RecordSheetView, { props: { spec: sheetSpec, id: 'o4' }, route: '/objects/o4' })
+    const { wrapper: withoutLink } = await mountView(ItemDetailView, { props: { spec: sheetSpec, id: 'o4' }, route: '/objects/o4' })
     await settle(() => withoutLink.find('.mwnf-sheet-museum .mwnf-partner-panel--summary').exists() && withoutLink.find('.mwnf-sheet-museum .mwnf-partner-panel--summary').text().includes('Syria'))
     expect(withoutLink.find('.mwnf-sheet-museum__holder').text()).toBe('Damascus Museum')
     expect(withoutLink.find('.mwnf-partner-panel--summary').text()).toBe('About Damascus Museum, Damascus, Syria')
     expect(withoutLink.find('.mwnf-partner-panel--summary a').exists()).toBe(false)
 
     // A partner the package does not carry leaves the holder text alone.
-    const { wrapper: noPartner } = await mountView(RecordSheetView, { props: { spec: sheetSpec, id: 'o2' }, route: '/objects/o2' })
+    const { wrapper: noPartner } = await mountView(ItemDetailView, { props: { spec: sheetSpec, id: 'o2' }, route: '/objects/o2' })
     await settle(() => noPartner.find('.mwnf-sheet-museum__holder').exists())
     expect(noPartner.find('.mwnf-sheet-museum__holder').text()).toBe('A private collection')
     expect(noPartner.find('.mwnf-partner-panel').exists()).toBe(false)
   })
 
   it('renders the related block — objects in the grid, the outside reference, the artistic-introduction/related-database/overall-database links, on-display-in, and the print action — spec.related', async () => {
-    const { wrapper } = await mountView(RecordSheetView, { props: { spec: sheetSpec, id: 'o1' }, route: '/objects/o1' })
+    const { wrapper } = await mountView(ItemDetailView, { props: { spec: sheetSpec, id: 'o1' }, route: '/objects/o1' })
     await settle(() => wrapper.find('.mwnf-sheet-related').exists())
     const rel = wrapper.find('.mwnf-sheet-related')
     expect(rel.find('.mwnf-sheet-related__heading').text()).toBe('Related content')
@@ -702,7 +703,7 @@ describe('RecordSheetView', () => {
   })
 
   it("falls back to the outside reference's backward-compatibility code when its stub carries no project_id", async () => {
-    const { wrapper } = await mountView(RecordSheetView, { props: { spec: sheetSpec, id: 'o4' }, route: '/objects/o4' })
+    const { wrapper } = await mountView(ItemDetailView, { props: { spec: sheetSpec, id: 'o4' }, route: '/objects/o4' })
     await settle(() => wrapper.find('.mwnf-sheet-related').exists())
     const reference = wrapper.find('.mwnf-sheet-related__references li')
     expect(reference.find('code').text()).toBe('mwnf3:objects:x7')
@@ -710,7 +711,7 @@ describe('RecordSheetView', () => {
   })
 
   it('renders the audio/video section, the glossary tool and the dynasty popouts from spec.related', async () => {
-    const { wrapper } = await mountView(RecordSheetView, { props: { spec: sheetSpec, id: 'o1' }, route: '/objects/o1' })
+    const { wrapper } = await mountView(ItemDetailView, { props: { spec: sheetSpec, id: 'o1' }, route: '/objects/o1' })
     await settle(() => wrapper.find('.mwnf-sheet-related').exists())
     const audio = wrapper.find('.mwnf-sheet-section')
     expect(audio.find('.mwnf-sheet-section__heading').text()).toBe('Audio / video')
@@ -726,7 +727,7 @@ describe('RecordSheetView', () => {
   })
 
   it('opens the timeline popout, filters events by the chosen country, and links the full search — spec.related.timeline', async () => {
-    const { wrapper } = await mountView(RecordSheetView, { props: { spec: sheetSpec, id: 'o1' }, route: '/objects/o1' })
+    const { wrapper } = await mountView(ItemDetailView, { props: { spec: sheetSpec, id: 'o1' }, route: '/objects/o1' })
     await settle(() => wrapper.find('.mwnf-sheet-timeline__trigger').exists())
     expect(wrapper.find('.mwnf-sheet-timeline__popout').exists()).toBe(false)
 
@@ -751,7 +752,7 @@ describe('RecordSheetView', () => {
     // split resolves against the whole package, so a real dataGetter (an
     // exhibition's per-build `itemById.get`) is what narrows it further.
     const exhibitionDataGetter = (id) => (id === 'o2' ? null : { id })
-    const { wrapper } = await mountView(RecordSheetView, {
+    const { wrapper } = await mountView(ItemDetailView, {
       props: { spec: sheetSpec, id: 'o1', dataGetter: exhibitionDataGetter },
       route: '/objects/o1',
     })
@@ -1893,10 +1894,10 @@ describe('TimelineResultsView', () => {
 })
 
 describe('the views entry point', () => {
-  it('exports the ten views and no shell', async () => {
+  it('exports the nine views and no shell', async () => {
     const entry = await import('../src/views/index.js')
     expect(Object.keys(entry).sort()).toEqual([
-      'CatalogueResultsView', 'EssayView', 'HomeView', 'LinkListView', 'PartnerListView', 'RecordSheetView', 'RecordView', 'SearchFormView', 'TextPageView', 'TimelineResultsView',
+      'CatalogueResultsView', 'EssayView', 'HomeView', 'LinkListView', 'PartnerListView', 'RecordView', 'SearchFormView', 'TextPageView', 'TimelineResultsView',
     ])
     vi.restoreAllMocks()
   })

@@ -2975,7 +2975,7 @@ details[open] > summary.mwnf-partner-list__group-heading .mwnf-partner-list__gro
   text-decoration: underline;
 }
 
-/* DXA item sheet (RecordSheetView's own before-sheet/museum/related blocks) */
+/* DXA item sheet (ItemDetailView's own before-sheet/museum/related blocks) */
 
 .mwnf-sheet-source {
   padding-top: var(--mwnf-space, 0.75rem);

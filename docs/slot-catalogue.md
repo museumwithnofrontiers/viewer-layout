@@ -194,8 +194,8 @@ language, languages, select, dir, glossary, ready, attribution, t, tr }`.
 
 ### ItemDetailView (was RecordSheetView)
 
-`/dxa`'s `ItemDetailView` since 2.18.0; `/views` keeps `RecordSheetView` as a
-deprecated alias until the next major. The family item pages,
+`/dxa`'s `ItemDetailView` since 2.18.0 (`/views`' `RecordSheetView` went in
+3.0.0). The family item pages,
 `GalleryItemDetail` and `ExhibitionItemDetail`, are it with each family's
 spec (viewer-core's `useGalleryItemDetail` / `useExhibitionItemDetail`),
 and `standardRoutes(family, { pages: true })` serves them.
@@ -261,60 +261,33 @@ This view owns no project UUID, no site name and no legacy key of its own;
 the one `// TODO(#1727)` above is the sole exception, and it names the
 platform gap rather than working around it.
 
-**Target adoption** — carpets/amulets (the gallery shape, no `dataGetter`;
-`composables/sheet.js`'s `itemSheet` carries every `sourceDatabase`/
-`notice`/`museum`/`related.*` key above):
+**The family's use** — `GalleryItemDetail` (`src/dxa/gallery/ItemDetail.vue`);
+`ExhibitionItemDetail` differs by one prop, `dataGetter`, its per-build
+`itemById.get`:
 
 ```vue
 <script setup>
 import { BackLink, RecordLanguages } from '@museumwnf/viewer-layout/content'
-import { RecordSheetView } from '@museumwnf/viewer-layout/views'
-import { itemSheet } from '../composables/sheet.js'
+import { ItemDetailView } from '@museumwnf/viewer-layout/dxa'
+import { itemDetail } from './data.js' // viewer-core's useGalleryItemDetail
 
 defineProps({ id: { type: String, required: true } })
 </script>
 
 <template>
-  <RecordSheetView :spec="itemSheet" :id="id" class="database-page">
+  <ItemDetailView :spec="itemDetail" :id="id" class="mwnf-dxa-item">
     <template #header="{ languages, language, select }">
-      <div class="languages">
+      <div class="mwnf-dxa-item__languages">
         <RecordLanguages :languages="languages" :language="language" @select="select" />
       </div>
       <BackLink />
     </template>
-  </RecordSheetView>
+  </ItemDetailView>
 </template>
 ```
 
-the-use-of-colours-in-art/water-in-islam (the exhibition shape — the one
-difference from the gallery is `dataGetter`, its per-build `itemById.get`):
-
-```vue
-<script setup>
-import { BackLink, RecordLanguages } from '@museumwnf/viewer-layout/content'
-import { RecordSheetView } from '@museumwnf/viewer-layout/views'
-import { itemById } from '../composables/useExhibitionData.js'
-import { itemSheet } from '../composables/sheet.js'
-
-defineProps({ id: { type: String, required: true } })
-</script>
-
-<template>
-  <RecordSheetView :spec="itemSheet" :id="id" :data-getter="(itemId) => itemById.get(itemId)" class="database-page">
-    <template #header="{ languages, language, select }">
-      <div class="languages">
-        <RecordLanguages :languages="languages" :language="language" @select="select" />
-      </div>
-      <BackLink />
-    </template>
-  </RecordSheetView>
-</template>
-```
-
-Both are under 40 lines: a `spec`, the `dataGetter` an exhibition needs, and
-the one slot (`header`) this view leaves to the site. They are the family's
-`GalleryItemDetail` / `ExhibitionItemDetail` now, where the language row is
-`.mwnf-dxa-item__languages` and the page `.mwnf-dxa-item`.
+A `spec`, the `dataGetter` an exhibition needs, and the one slot (`header`)
+this view leaves to its page.
 
 ### EssayView
 
@@ -445,7 +418,7 @@ own — their credits route points `TextPageView` directly at a local
 | `GalleryCredits` | `TextPageView` | `bodyKey` (String, required) | `config.creditsBody` via `bodyKey` |
 | `GallerySearchHowTo` | `TextPageView` | — | `catalogue.search.howToEssay` |
 | `GalleryPartners` | `PartnerListView` | — | `PartnerPanel` line rows: `gallery.partners.intro`, `gallery.partner.noObjectsInGallery`, `partner.action.readMore`/`.viewObjects` |
-| `GalleryPartnerProfile` | `PartnerDetail` (`RecordView` + `PartnerPanel`) | `id` (String, required) | `partner.info.*`, `partner.nav.homepage`, `partner.action.viewObjects` |
+| `PartnerDetail` with `galleryPartnerDetail` | `RecordView` + `PartnerPanel` | `id` (String, required), `family` | `partner.info.*`, `partner.nav.homepage`, `partner.action.viewObjects` |
 | `GallerySearchResults` | `CatalogueResultsView` | — | `gallery.section.database`, `gallery.action.seeDatabaseEntry`, `catalogue.search.*`, `catalogue.results.*` |
 | `GalleryTimelineResults` | `TimelineResultsView` | — | — (spec only) |
 | `GalleryTimelineGallery` | `CatalogueResultsView` | — | `timeline.nav.backToEvents` |
@@ -459,7 +432,7 @@ own — their credits route points `TextPageView` directly at a local
 |---|---|---|---|
 | `ExhibitionSearchHowTo` | `TextPageView` | — | `catalogue.search.howToEssay` |
 | `ExhibitionPartners` | `PartnerListView` | — | `PartnerPanel` line rows: `exhibition.partners.intro`, `exhibition.partner.noObjectsInExhibition`, `partner.action.readMore`/`.viewObjects` |
-| `ExhibitionPartnerProfile` | `PartnerDetail` (`RecordView` + `PartnerPanel`) / `NotFoundView` | `variant` (`'partner'` \| `'institution'`, default `'partner'`) | `partner.info.*`, `partner.nav.homepage` / `exhibition.action.institutionHomepage`, `partner.action.viewObjects` / `exhibition.action.viewItems` |
+| `PartnerDetail` with `exhibitionPartnerDetail` | `RecordView` + `PartnerPanel` / `NotFoundView` | `id`, `family`, `variant` (`'partner'` \| `'institution'`, default `'partner'`) | `partner.info.*`, `partner.nav.homepage` / `exhibition.action.institutionHomepage`, `partner.action.viewObjects` / `exhibition.action.viewItems` |
 | `ExhibitionSearchResults` | `CatalogueResultsView` | — | `exhibition.section.database`, `exhibition.action.seeDatabaseEntry` |
 | `ExhibitionTimelineResults` | `TimelineResultsView` | — | — (spec only) |
 | `ExhibitionTimelineGallery` | `CatalogueResultsView` | — | — (spec only; no `actions` slot, unlike the gallery shape) |
@@ -479,8 +452,6 @@ variant for the body, the view-objects button in its `actions` slot. Props:
 `id`, `family` (a family's `partnerDetail`, exported as
 `galleryPartnerDetail`/`exhibitionPartnerDetail`: `{ spec, visible(id),
 view(partner, text), labels: { partner, institution? } }`), `variant`.
-`GalleryPartnerProfile`/`ExhibitionPartnerProfile` remain as the same page
-under their old names, until the major release of inventory-app#2017.
 
 ## `/content` components
 

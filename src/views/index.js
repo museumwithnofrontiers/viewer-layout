@@ -11,9 +11,6 @@ import '../styles/content.css'
 export { default as HomeView } from './HomeView.vue'
 export { default as CatalogueResultsView } from './CatalogueResultsView.vue'
 export { default as RecordView } from './RecordView.vue'
-// Deprecated alias: the DXA item page's composed view is `/dxa`'s
-// `ItemDetailView` now (inventory-app#2055), until the removing major release.
-export { default as RecordSheetView } from '../dxa/ItemDetailView.vue'
 export { default as EssayView } from './EssayView.vue'
 export { default as LinkListView } from './LinkListView.vue'
 export { default as PartnerListView } from './PartnerListView.vue'

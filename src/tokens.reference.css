@@ -315,7 +315,7 @@
   /* --mwnf-credits-color: #555555;                  Credits text color */
   /* --mwnf-credits-gap: 0.25rem 1rem;               Gap in the credits list */
 
-  /* ---------- Content: RecordSheetView (the DXA item sheet's own blocks) ---------- */
+  /* ---------- Content: ItemDetailView (the DXA item sheet's own blocks) ---------- */
   /* --mwnf-sheet-museum-gap: 0.25rem;               Holder text to partner summary */
   /* --mwnf-sheet-source-size: 0.875rem;             Source-database block text size */
   /* --mwnf-sheet-source-gap: 0.375rem;              Gap between its lines */
