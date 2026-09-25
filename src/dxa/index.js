@@ -12,6 +12,34 @@ import '../styles/dxa.css'
 
 export { standardRoutes } from './routes.js'
 
+// A DXA site's whole declaration, from its own values (inventory-app#2053/#2054).
+export { exhibitionConfig, galleryConfig } from './config.js'
+
+// The family pages a site used to carry, and the two shells. `standardRoutes`
+// serves the pages with `pages: true`; exported for a site that wraps one.
+export { default as GalleryShell } from './gallery/Shell.vue'
+export { default as GalleryHome } from './gallery/Home.vue'
+export { default as GalleryItemDetail } from './gallery/ItemDetail.vue'
+export { default as GalleryTimeline } from './gallery/Timeline.vue'
+export { default as ExhibitionShell } from './exhibition/Shell.vue'
+export { default as ExhibitionHome } from './exhibition/Home.vue'
+export { default as ExhibitionAbout } from './exhibition/About.vue'
+export { default as ExhibitionThemes } from './exhibition/Themes.vue'
+export { default as ExhibitionTheme } from './exhibition/Theme.vue'
+export { default as ExhibitionThemeGallery } from './exhibition/ThemeGallery.vue'
+export { default as ExhibitionItemDetail } from './exhibition/ItemDetail.vue'
+export { default as ExhibitionRelatedContent } from './exhibition/RelatedContent.vue'
+export { default as ExhibitionTimeline } from './exhibition/Timeline.vue'
+export { aboutSpec as exhibitionAboutSpec, themeNodeRoute, themeSpec as exhibitionThemeSpec } from './exhibition/themeSpecs.js'
+
+// The family-only blocks and the item page's composed view (inventory-app#2055);
+// `/content` and `/views` keep deprecated aliases until the next major.
+export { default as ItemDetailView } from './ItemDetailView.vue'
+export { default as FeaturedPartners } from './FeaturedPartners.vue'
+export { default as SiblingGalleries } from './SiblingGalleries.vue'
+export { default as PopupLogo } from './PopupLogo.vue'
+export { default as PictureGallery } from './PictureGallery.vue'
+export { default as PictureNarrative } from './PictureNarrative.vue'
 // One partner page for both families (inventory-app#2034); each family's
 // own half is its `partnerDetail`, the `family` prop `standardRoutes`
 // passes. `GalleryPartnerProfile`/`ExhibitionPartnerProfile` below are that

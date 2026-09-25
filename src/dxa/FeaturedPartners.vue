@@ -1,6 +1,6 @@
 <script setup>
 import { computed, onMounted, onBeforeUnmount, ref } from 'vue'
-import SmartLink from './SmartLink.vue'
+import SmartLink from '../content/SmartLink.vue'
 
 // A carousel of featured partner records: one showing at a time, rotated on a
 // timer, with bullet controls. The site provides the records (filtered and
@@ -19,7 +19,7 @@ const props = defineProps({
   // `descriptionLength` characters. Given, it wins over `records`.
   partners: { type: Array, default: () => [] },
   descriptionLength: { type: Number, default: 420 },
-  headingEntry: { type: String, default: 'partner.featured' },
+  headingEntry: { type: String, default: 'partner.list.featured' },
 })
 
 function plainText(html) {

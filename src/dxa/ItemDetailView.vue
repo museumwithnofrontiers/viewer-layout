@@ -10,7 +10,7 @@ import PartnerPanel from '../content/PartnerPanel.vue'
 import RelatedMedia from '../content/RelatedMedia.vue'
 import RelatedRecords from '../content/RelatedRecords.vue'
 import TimelineLookup from '../content/TimelineLookup.vue'
-import RecordView from './RecordView.vue'
+import RecordView from '../views/RecordView.vue'
 
 // The DXA gallery/exhibition item sheet, composed. `RecordView` is still the
 // engine — the field sheet, the credits, the citation, the related records,

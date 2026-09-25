@@ -17,7 +17,7 @@ all the packages:
 | `@museumwnf/viewer-layout/content` | building blocks | the blocks alone, without the shell | the same |
 | `@museumwnf/viewer-layout/views` | composed views | whole pages driven by a spec the website declares, with slots it fills | viewer-core's data layer, the site config and the router |
 | `@museumwnf/viewer-layout/components` | composed views | `SiteShell`, the frame composed from `dataset.config.js` | the site config and the current route |
-| `@museumwnf/viewer-layout/dxa` | DXA family layer | the gallery and exhibition pages, `standardRoutes` | the entries above, `@museumwnf/viewer-core` and `@museumwnf/viewer-core/dxa` |
+| `@museumwnf/viewer-layout/dxa` | DXA family layer | the gallery and exhibition pages and shells, the family-only blocks, `standardRoutes`, `galleryConfig` / `exhibitionConfig` | the entries above, `@museumwnf/viewer-core` and `@museumwnf/viewer-core/dxa` |
 | `@museumwnf/viewer-layout/style.css` | — | one stylesheet for every entry, the family styles included | — |
 | `@museumwnf/viewer-layout/tokens.reference.css` | — | every token the package reads, with its fallback | — |
 
@@ -46,14 +46,15 @@ entries publish, and `@museumwnf/viewer-core`. A component that moves
 between entries keeps its old export as an alias until the websites have
 moved; a major release then removes the alias.
 
-Where the package does not follow these rules yet, milestone M10 moves it:
 `FeaturedPartners`, `SiblingGalleries`, `PopupLogo`, `PictureGallery`,
-`PictureNarrative` (blocks) and `RecordSheetView` (a composed view) are used
-only by the DXA family and move under `/dxa`
-([inventory-app#2017](https://github.com/museumwithnofrontiers/inventory-app/issues/2017));
-`PictureGallery`, `PictureNarrative` and `EssayView` default to
-`exhibition.*` entries, and `FeaturedPartners` to `partner.featured`, which
-does not exist.
+`PictureNarrative` (blocks) and `ItemDetailView` (the composed view that was
+`RecordSheetView`) are used only by the DXA family and live under `/dxa`
+since 2.18.0; `/content` and `/views` keep their old names as deprecated
+aliases until the next major
+([inventory-app#2055](https://github.com/museumwithnofrontiers/inventory-app/issues/2055)).
+Where the package does not follow the rules yet: `PictureGallery`,
+`PictureNarrative` and `EssayView` default to `exhibition.*` entries
+(inventory-app#2019).
 
 Two companion docs give a more scannable version of who-owns-what and the
 full slot list: [`docs/designer-contract.md`](docs/designer-contract.md) (the
@@ -355,14 +356,15 @@ every bundle of `@museumwnf/viewer-i18n` from 1.7.0. `GlossaryTool` also reads
 `.additionalContent`, `.addRelatedWorks`, `.hideRelatedWorks` and
 `exhibition.related.items`, `.reciprocal`, which only the `exhibition` and
 `standalone` bundles of `@museumwnf/viewer-i18n` carry — a family default
-in a generic entry, which ends when the two move under `/dxa` (see
+in the family's entry now, where the two live since 2.18.0 (see
 [Entry points and layers](#entry-points-and-layers)). Every other text is a
 prop.
 
 `FeaturedPartners`, `SiblingGalleries`, `PopupLogo`, `PictureGallery` and
-`PictureNarrative` are used only by the DXA family, and move under `/dxa`
-in milestone M10; their exports here stay as aliases until the websites have
-moved.
+`PictureNarrative` are used only by the DXA family, and live under `/dxa`
+since 2.18.0; their exports here are deprecated aliases until the next
+major. `FeaturedPartners`' heading defaults to `partner.list.featured`
+(viewer-i18n 4.3.0).
 
 ## Content classes
 
@@ -386,8 +388,9 @@ Building blocks copied from the legacy sites' own `site.css` files, available as
 Whole pages, made of the content components on viewer-core's
 composables and driven by a declaration the website writes instead of a
 page. They are the broad page structures every kind of website shares;
-`RecordSheetView`, used only by the DXA family, moves under `/dxa` with a
-Detail name in milestone M10. They are exported from `@museumwnf/viewer-layout/views` — and only from
+`RecordSheetView`, used only by the DXA family, is `/dxa`'s `ItemDetailView`
+since 2.18.0, and stays here as a deprecated alias until the next major.
+They are exported from `@museumwnf/viewer-layout/views` — and only from
 there: they read the records and the engine from `@museumwnf/viewer-core`
 itself, whose entry point carries `.vue` files, and a website's test runner
 that loads this package natively would fail on the first one if the package
@@ -505,23 +508,48 @@ it, and a website can still replace any family page with its own component
 on the same route name. Texts stay in `@museumwnf/viewer-i18n`'s `gallery`
 and `exhibition` sections.
 
-It ships each family's pages plus `standardRoutes(family, config)`, the
-RouteRecord factory a site spreads into `extraViews`. One page serves both
-families: `PartnerDetail`, the partner page (`PartnerPanel`'s `full`
-variant), fed by each family's own half — `galleryPartnerDetail` /
-`exhibitionPartnerDetail`, which `standardRoutes` passes as its `family`
-prop; `GalleryPartnerProfile`/`ExhibitionPartnerProfile` are the same page
-under their old names.
+Since 2.18.0 it holds a whole DXA site but its values. A gallery's or an
+exhibition's `dataset.config.js` is one call:
 
 ```js
-import { standardRoutes } from '@museumwnf/viewer-layout/dxa'
+import { galleryConfig } from '@museumwnf/viewer-layout/dxa'
 
-extraViews: [
-  ...standardRoutes('gallery', { creditsBody: 'carpets.credits.body' }),
-  // + this gallery's own routes: home, item, collection entrance,
-  // timeline entrance, partners entrance
-]
+export default galleryConfig({
+  datasetPackage: '@museumwnf/carpets-data',
+  siteName: 'Carpets',                                   // for a package without manifest.site
+  origin: 'https://museumwithnofrontiers.github.io/carpets',
+  projectColors: { '<project id>': 'mwnf-chip--DCA' },  // one of the mwnf-chip--* classes
+  noticeProjects: ['<project id>'],                      // sheets with the Explore-partner notice
+  creditsBody: 'carpets.credits.body',
+})
 ```
+
+`exhibitionConfig` takes the same values (and `partnerObjects`, overrides of
+the shared `exhibition.partnerObjects.*` entries). The config carries the
+family's shell (`GalleryShell` / `ExhibitionShell`), menu, banner, sponsor
+strip, legacy redirects, and every page through
+`standardRoutes(family, { pages: true, … })`:
+
+- the eleven pages every site of a family already served from here
+  (search, partners, partner and institution pages, timeline results and
+  gallery, collection search and results, and a gallery's about and
+  credits);
+- with `pages: true`, the pages each site used to carry itself: the home
+  page, the item page (`GalleryItemDetail` / `ExhibitionItemDetail`, on
+  `ItemDetailView` and viewer-core's `useGalleryItemDetail` /
+  `useExhibitionItemDetail`), the timeline entrance, and an exhibition's
+  about page, themes, theme pages, theme galleries, related content and
+  credits.
+
+One page serves both families: `PartnerDetail`, the partner page
+(`PartnerPanel`'s `full` variant), fed by each family's own half —
+`galleryPartnerDetail` / `exhibitionPartnerDetail`, which `standardRoutes`
+passes as its `family` prop; `GalleryPartnerProfile` /
+`ExhibitionPartnerProfile` are the same page under their old names.
+
+An exhibition's theme pages read its three theme colours as
+`--mwnf-dxa-theme-*` tokens; a record with no project gets the
+`mwnf-chip--Explore` chip.
 
 Route names and paths are pinned to what every live DXA site already
 registers, so adopting the factory keeps every existing deep link (and

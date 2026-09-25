@@ -1,7 +1,7 @@
 <script setup>
 import { computed, ref, watch } from 'vue'
 import { useI18n } from '@museumwnf/viewer-core'
-import SmartLink from './SmartLink.vue'
+import SmartLink from '../content/SmartLink.vue'
 
 // The curated-picture side panel + thumbnail strip a DXA exhibition theme
 // page shows beside its narrative body (the shell around it is EssayView's
