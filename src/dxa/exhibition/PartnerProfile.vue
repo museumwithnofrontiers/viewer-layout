@@ -58,6 +58,10 @@ function website(text) {
 function contacts(record) {
   return [record.contact_person_1, record.contact_person_2].filter(Boolean)
 }
+
+function location(record, text) {
+  return [text.city, labelOf('countries', record.country_id)].filter(Boolean).join(', ')
+}
 </script>
 
 <template>
@@ -67,6 +71,13 @@ function contacts(record) {
         <RecordLanguages :languages="languages" :language="language" @select="select" />
       </div>
       <BackLink />
+
+      <!-- The name and "city, country" head the page, as on the gallery
+           profile and on legacy's own exhibition PartnerProfile. The
+           location joins what is there, so a partner without a city or a
+           country (an international foundation) shows no stray comma. -->
+      <p class="mwnf-dxa-partner-name">{{ labelOf('partners', record.id) }}</p>
+      <p class="mwnf-dxa-partner-location" v-if="location(record, text)">{{ location(record, text) }}</p>
 
       <div class="mwnf-dxa-profile-links-container">
         <div class="mwnf-dxa-profile-links">

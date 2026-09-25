@@ -1,5 +1,18 @@
 # Changelog
 
+## 2.15.2 (2026-09-25)
+
+Part of M10 epic 1 (museumwithnofrontiers/inventory-app#2012), story
+museumwithnofrontiers/inventory-app#2024.
+
+### Fixed
+
+- `dxa/exhibition/PartnerProfile.vue` shows the partner's name and
+  "city, country" at the top of the page, as the gallery profile and the
+  legacy exhibition client do. The location joins only what is present, so a
+  partner without a city or a country shows no stray comma. The institution
+  variant gets the same header.
+
 ## 2.15.1 (2026-09-20)
 
 Part of the #1727 cleanup wave, story

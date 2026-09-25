@@ -1,6 +1,6 @@
 {
   "name": "@museumwnf/viewer-layout",
-  "version": "2.15.1",
+  "version": "2.15.2",
   "description": "Page structure for MWNF websites: PageShell composing seven optional, token-styled sections, the content components a page is made of, and the composed views a website names instead of writing a page.",
   "type": "module",
   "license": "SEE LICENSE IN LICENSE.md",
