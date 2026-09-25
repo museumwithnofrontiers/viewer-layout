@@ -77,6 +77,16 @@ describe('ExhibitionPartnerProfile', () => {
     expect(wrapper.text()).toContain('fixture')
   })
 
+  it('heads the page with the partner name and "city, country"', async () => {
+    const { wrapper } = await mountPage(ExhibitionPartnerProfile, {
+      route: '/partner/p1',
+      messages: texts,
+    })
+    await settle(() => wrapper.text().includes('fixture'))
+    expect(wrapper.find('.mwnf-dxa-partner-name').text()).toBe('Zed Museum')
+    expect(wrapper.find('.mwnf-dxa-partner-location').text()).toBe('Cairo, Egypt')
+  })
+
   it('renders the institution variant with its own homepage label', async () => {
     const { wrapper } = await mountPage(ExhibitionPartnerProfile, {
       props: { variant: 'institution' },
@@ -85,6 +95,7 @@ describe('ExhibitionPartnerProfile', () => {
     })
     await settle(() => wrapper.text().includes('fixture'))
     expect(wrapper.text()).toContain('fixture')
+    expect(wrapper.find('.mwnf-dxa-partner-name').text()).toBe('Zed Museum')
   })
 })
 
