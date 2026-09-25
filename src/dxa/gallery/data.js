@@ -53,7 +53,9 @@ export const partnerViewCtx = {
 export const partnerDetail = {
   spec: { ...partnerSheet, media: () => [] },
   visible: () => true,
-  view: (partner, text) => partnerView(partner, text, partnerViewCtx),
+  // The English the family loads up front, under the record's own language:
+  // the page draws at once, and switches when that language arrives.
+  view: (partner, text) => partnerView(partner, { ...tr('partners', partner.id, defaultLang), ...text }, partnerViewCtx),
   labels: {
     partner: { objects: 'partner.action.viewObjects', homepage: 'partner.nav.homepage' },
   },

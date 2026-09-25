@@ -25,7 +25,7 @@ import RecordView from '../views/RecordView.vue'
 //     visible(id),                false for a partner with no page (the
 //                                 exhibitions' hidden rule)
 //     view(partner, text),        viewer-core's partnerView() with the
-//                                 family's routes and labels
+//                                 family's routes, over its English text
 //     labels: { partner, institution? }  → { objects, homepage } entries }
 
 const props = defineProps({
@@ -43,17 +43,19 @@ const labels = computed(() => props.family.labels?.[props.variant] ?? props.fami
 
 <template>
   <RecordView v-if="family.visible(id)" :spec="family.spec" :id="id" class="mwnf-dxa-partner-profile">
-    <template #header="{ languages, language, select, ready }">
+    <template #header="{ languages, language, select }">
       <div class="mwnf-dxa-profile-languages">
         <RecordLanguages :languages="languages" :language="language" @select="select" />
       </div>
       <BackLink />
-      <div v-if="!ready" class="mwnf-loader">{{ t('core.status.loading') }}</div>
     </template>
 
-    <template #before-sheet="{ record, text, ready, dir }">
+    <!-- Drawn as soon as the record is: the family's view reads the English
+         the family loads up front under the record's own language, so the
+         name and location show at once and switch when that language
+         arrives, as the family's pages always did. -->
+    <template #before-sheet="{ record, text, dir }">
       <PartnerPanel
-        v-if="ready"
         variant="full"
         :partner="family.view(record, text)"
         :heading="1"
