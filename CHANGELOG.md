@@ -1,3 +1,49 @@
+## 2.18.0 (2026-09-25)
+
+Part of M10 epic 6 (museumwithnofrontiers/inventory-app#2017), stories
+museumwithnofrontiers/inventory-app#2052, #2053, #2054 and #2055. Requires
+`@museumwnf/viewer-core` 2.3.0 (the family item-page specs and the
+exhibition themes) and `@museumwnf/viewer-i18n` 4.3.0
+(`partner.list.featured`, `exhibition.partnerObjects.*`).
+
+### Added (`/dxa`)
+
+- **The pages each DXA site carried itself.** They were the same code on
+  every site of a family.
+  - Galleries: `GalleryHome`, `GalleryItemDetail`, `GalleryTimeline`.
+  - Exhibitions: `ExhibitionHome`, `ExhibitionAbout`, `ExhibitionThemes`,
+    `ExhibitionTheme`, `ExhibitionThemeGallery`, `ExhibitionItemDetail`,
+    `ExhibitionRelatedContent`, `ExhibitionTimeline`, plus the theme pages'
+    specs (`exhibitionThemeSpec`, `exhibitionAboutSpec`, `themeNodeRoute`).
+- **The two shells,** `GalleryShell` and `ExhibitionShell`.
+- **`galleryConfig(values)` and `exhibitionConfig(values)`:** a DXA site's
+  whole declaration from the few values its own `dataset.config.js` differed
+  by: the package, name, origin, project chips, notice projects and credits
+  entry.
+- **`standardRoutes(family, { pages: true })`** also serves the pages above,
+  under the names, paths and `meta` the sites registered. An exhibition gets
+  its credits page given `creditsBody`. `partnerObjects` defaults to the
+  shared `exhibition.partnerObjects.*` entries, so a site no longer passes it.
+- **The item page's two-column layout** (`.mwnf-dxa-item`) and the theme
+  pages' styles are in `dxa.css`. The theme pages read an exhibition's theme
+  colours as tokens: `--mwnf-dxa-theme-background`, `-text`, `-contrast`,
+  `-contrast-text`, `-main`.
+- **`mwnf-chip--Explore`** (`--mwnf-project-Explore`, legacy's `#006950`): the
+  chip of a record no project claims.
+
+### Changed
+
+- **The family-only blocks and composed view moved to `/dxa`:**
+  `FeaturedPartners`, `SiblingGalleries`, `PopupLogo`, `PictureGallery`,
+  `PictureNarrative`, and `RecordSheetView`, now `ItemDetailView`. `/content`
+  and `/views` keep the old names as deprecated aliases until the next major.
+- **`FeaturedPartners`' heading** defaults to `partner.list.featured`. The old
+  default, `partner.featured`, was an entry that never existed.
+- **The `DGA` chip is legacy's Glass Art blue, `#0059bf`.** It was grey
+  (`#263238`), the Galleries colour, on every gallery and exhibition.
+- **The `ISLandEPM` chip's text is black,** as in legacy.
+- `peerDependencies`: `@museumwnf/viewer-core` `^2.3.0`.
+- CI: viewer-workflows v1.9.0.
 ## 2.17.0 (2026-09-25)
 
 Part of M10 epic 5 (museumwithnofrontiers/inventory-app#2016), stories

@@ -1,6 +1,7 @@
 import { partnerView } from '@museumwnf/viewer-core'
 import {
   useExhibitionData, useExhibitionCollection, useExhibitionTimeline, useExhibitionPartner,
+  useExhibitionItemDetail, useExhibitionThemes,
 } from '@museumwnf/viewer-core/dxa'
 
 // The exhibition family's own instance of the shared DXA data layer (epics
@@ -8,21 +9,26 @@ import {
 // module, the same shape the-use-of-colours-in-art's/water-in-islam's own
 // (now retired) `composables/exhibitionData.js` threaded through for their
 // site. No `config` is passed to any of them: a particular exhibition's own
-// project colours/notice list live in that site's `dataset.config.js`/item
-// sheet (epic #1728, out of scope for these thin pages), not here. The
-// item-sheet composable (`useExhibitionSheet`) is not called at all — no
-// page in this family needs it.
+// project colours and notice list live in that site's `dataset.config.js`,
+// which the item page's spec reads through `useSiteConfig()`.
 
 export const data = useExhibitionData()
 const collection = useExhibitionCollection(data)
 const timeline = useExhibitionTimeline(data, collection)
 const partner = useExhibitionPartner(data)
 
+// The theme pages' tree and pictures, and the item page's spec
+// (inventory-app#2053).
+export const themes = useExhibitionThemes(data)
+export const { itemDetail } = useExhibitionItemDetail(data, timeline)
+
 export const {
-  defaultLang, tr, md, mdInline, labelOf, loadEnglish,
-  items, itemById, countries, timelines,
+  defaultLang, tr, md, mdInline, mdStrip, labelOf, loadEnglish,
+  exhibition, relatedContent, items, itemById, countries, timelines, visiblePartners,
   visiblePartnerById, isHiddenPartner,
   itemRoute, partnerRoute, partnerObjectsRoute,
+  chromeImage, countryLabelFromCode,
+  exhibitionTitle, exhibitionSubtitle, exhibitionHeadline, bannerCaption,
 } = data
 
 export const {

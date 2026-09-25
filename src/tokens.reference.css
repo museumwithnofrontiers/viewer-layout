@@ -758,19 +758,21 @@
   /* --mwnf-chip-background: #1c1c1c;                Chip background color (default fallback) */
   /* --mwnf-chip-radius: 0;                          Chip corner radius */
   /* --mwnf-project-ISLandEPM: #ffcc00;               Discover Islamic Art / Exhibitions colours chip */
-  /* --mwnf-project-ISLandEPM-text: #222222;         Discover Islamic Art / Exhibitions chip text */
+  /* --mwnf-project-ISLandEPM-text: #000000;         Discover Islamic Art / Exhibitions chip text */
   /* --mwnf-project-DBA: #001d66;                    Discover Baroque Art chip colour */
   /* --mwnf-project-DBA-text: #ffffff;               Discover Baroque Art chip text */
   /* --mwnf-project-AWE: #900000;                    Sharing History chip colour */
   /* --mwnf-project-AWE-text: #ffffff;               Sharing History chip text */
   /* --mwnf-project-DCA: #6b612b;                    Discover Carpets chip colour */
   /* --mwnf-project-DCA-text: #ffffff;               Discover Carpets chip text */
-  /* --mwnf-project-DGA: #263238;                    Discover Galleries chip colour */
-  /* --mwnf-project-DGA-text: #ffffff;               Discover Galleries chip text */
+  /* --mwnf-project-DGA: #0059bf;                    Discover Glass Art chip colour */
+  /* --mwnf-project-DGA-text: #ffffff;               Discover Glass Art chip text */
   /* --mwnf-project-EXH: #7f01d4;                    Exhibitions chip colour */
   /* --mwnf-project-EXH-text: #ffffff;               Exhibitions chip text */
   /* --mwnf-project-Galleries: #263238;              Galleries chip colour */
   /* --mwnf-project-Galleries-text: #ffffff;         Galleries chip text */
+  /* --mwnf-project-Explore: #006950;                Explore chip colour (a record no project claims) */
+  /* --mwnf-project-Explore-text: #ffffff;           Explore chip text */
 
   /* --mwnf-popout-padding: 1rem;                    Popout box padding */
   /* --mwnf-popout-background: #ffffff;              Popout box background color */
@@ -785,4 +787,9 @@
   /* ---------- DXA family pages (src/dxa/) ---------- */
   /* --mwnf-dxa-heading-color: #1c1c1c;              Partner name / profile heading color */
   /* --mwnf-dxa-band-background: #f0f0f0;            Language switcher / tab strip / timeline-link box background */
+  /* --mwnf-dxa-theme-background: #ffffff;           Exhibition theme pages: the ground (legacy's secondary colour) */
+  /* --mwnf-dxa-theme-text: #000000;                 Their text and tour links (secondary text colour) */
+  /* --mwnf-dxa-theme-contrast: #64bfd9;             The heading band and link hover (contrast colour) */
+  /* --mwnf-dxa-theme-contrast-text: #000000;        The heading band's text (contrast text colour) */
+  /* --mwnf-dxa-theme-main: #000000;                 The themes page's left half (main colour) */
 }

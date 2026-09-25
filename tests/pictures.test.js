@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import { mount } from '@vue/test-utils'
-import PictureGallery from '../src/content/PictureGallery.vue'
-import PictureNarrative from '../src/content/PictureNarrative.vue'
+import PictureGallery from '../src/dxa/PictureGallery.vue'
+import PictureNarrative from '../src/dxa/PictureNarrative.vue'
 import { globalWithI18n } from './helpers.js'
 
 // The DXA exhibition theme page's two seams, extracted from Theme.vue

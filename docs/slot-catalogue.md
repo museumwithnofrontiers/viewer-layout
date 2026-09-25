@@ -192,7 +192,13 @@ language, languages, select, dir, glossary, ready, attribution, t, tr }`.
 | `aside` | Beside the sheet (only rendered if filled) | `ctx` |
 | `after` | Below everything, outside the two-column body | `ctx` |
 
-### RecordSheetView
+### ItemDetailView (was RecordSheetView)
+
+`/dxa`'s `ItemDetailView` since 2.18.0; `/views` keeps `RecordSheetView` as a
+deprecated alias until the next major. The family item pages,
+`GalleryItemDetail` and `ExhibitionItemDetail`, are it with each family's
+spec (viewer-core's `useGalleryItemDetail` / `useExhibitionItemDetail`),
+and `standardRoutes(family, { pages: true })` serves them.
 
 Built on `RecordView`; the DXA gallery/exhibition item sheet. Where the four
 DXA sites (carpets/amulets, the-use-of-colours-in-art/water-in-islam) once
@@ -306,8 +312,9 @@ defineProps({ id: { type: String, required: true } })
 ```
 
 Both are under 40 lines: a `spec`, the `dataGetter` an exhibition needs, and
-the one slot (`header`) this view leaves to the site. Adopting either is a
-separate story per site — this PR only makes the shared view ready for it.
+the one slot (`header`) this view leaves to the site. They are the family's
+`GalleryItemDetail` / `ExhibitionItemDetail` now, where the language row is
+`.mwnf-dxa-item__languages` and the page `.mwnf-dxa-item`.
 
 ### EssayView
 

@@ -20,6 +20,32 @@ import ExhibitionTimelineGallery from './exhibition/TimelineGallery.vue'
 import ExhibitionCollectionResults from './exhibition/CollectionResults.vue'
 import ExhibitionCollectionSearch from './exhibition/CollectionSearch.vue'
 import ExhibitionPartnerObjects from './exhibition/PartnerObjects.vue'
+import TextPageView from '../views/TextPageView.vue'
+
+// The family pages a site used to carry itself (inventory-app#2053/#2054),
+// served when `pages: true` — loaded on their route, as the sites loaded
+// their own.
+const GalleryHome = () => import('./gallery/Home.vue')
+const GalleryItemDetail = () => import('./gallery/ItemDetail.vue')
+const GalleryTimeline = () => import('./gallery/Timeline.vue')
+const ExhibitionHome = () => import('./exhibition/Home.vue')
+const ExhibitionAbout = () => import('./exhibition/About.vue')
+const ExhibitionThemes = () => import('./exhibition/Themes.vue')
+const ExhibitionTheme = () => import('./exhibition/Theme.vue')
+const ExhibitionThemeGallery = () => import('./exhibition/ThemeGallery.vue')
+const ExhibitionItemDetail = () => import('./exhibition/ItemDetail.vue')
+const ExhibitionRelatedContent = () => import('./exhibition/RelatedContent.vue')
+const ExhibitionTimeline = () => import('./exhibition/Timeline.vue')
+
+// The exhibition partner-objects texts, the same in every exhibition (viewer-i18n
+// 4.3.0). A site's own `partnerObjects` still overrides them.
+const EXHIBITION_PARTNER_OBJECTS = {
+  emptyPartner: 'exhibition.partnerObjects.emptyPartner',
+  emptyInstitution: 'exhibition.partnerObjects.emptyInstitution',
+  institutionSummary: 'exhibition.partner.monumentsInExhibition',
+  partnerProfileLabel: 'exhibition.partnerObjects.partnerProfile',
+  institutionProfileLabel: 'exhibition.partnerObjects.institutionProfile',
+}
 
 // The route entries every DXA gallery/exhibition registered for itself,
 // byte-identical name-for-name and path-for-path across carpets/amulets
@@ -46,19 +72,33 @@ import ExhibitionPartnerObjects from './exhibition/PartnerObjects.vue'
 //     // timeline entrance, partners entrance
 //   ]
 //
-// `About`/`ThemeGallery`/`Themes`/`RelatedContent` are not part of
-// `standardRoutes('exhibition', …)` — blocked on the Theme epic
-// (inventory-app#1729); a site keeps writing those itself until they are
-// promoted in a later pass. The exhibition family's credits route is not
-// promoted either: colours/water-in-islam never had a `Credits.vue` — their
-// `/credits` route points `TextPageView` directly at a local `creditsSpec`,
-// a one-line site concern, not a thin view.
+// With `pages: true` they also serve the pages each site of the family still
+// wrote for itself (inventory-app#2053/#2054): the home page, the item page
+// and the timeline entrance, and for an exhibition its about page, themes,
+// theme pages, theme galleries, related content and, given `creditsBody`,
+// its credits page. `galleryConfig`/`exhibitionConfig` (config.js) pass it;
+// a site still declaring those routes itself leaves it off.
 
 function galleryRoutes(config) {
   const meta = sectionMeta(['gallery', 'items', 'partners', 'countries'])
   const creditsBody = config.creditsBody
 
+  const pages = config.pages
+    ? [
+      { path: '/', name: 'home', component: GalleryHome, meta: meta('home') },
+      {
+        path: '/item/:id',
+        name: 'item',
+        component: GalleryItemDetail,
+        props: (route) => ({ id: String(route.params.id) }),
+        meta: meta('database', 'languages', 'dynasties', 'glossary', 'timelines', 'timeline_events'),
+      },
+      { path: '/timeline', name: 'timeline', component: GalleryTimeline, meta: meta('timeline', 'timelines', 'timeline_events') },
+    ]
+    : []
+
   return [
+    ...pages,
     { path: '/search', name: 'search-results', component: GallerySearchResults, meta: meta('database') },
     { path: '/how-to-search', name: 'search-how-to', component: GallerySearchHowTo, meta: meta('database') },
     { path: '/partners', name: 'partners', component: GalleryPartners, meta: meta('partners') },
@@ -102,9 +142,35 @@ function galleryRoutes(config) {
 
 function exhibitionRoutes(config) {
   const meta = sectionMeta(['exhibition', 'items', 'partners', 'countries'])
-  const texts = config.partnerObjects
+  const texts = { ...EXHIBITION_PARTNER_OBJECTS, ...config.partnerObjects }
+
+  // `/theme/:id` keeps legacy's `display_order - 1`: the About theme is display
+  // order 1, so the first listed theme is `/theme/1`. The sub-theme and picture
+  // segments name which part of the theme is read, so they stay in the path.
+  const pages = config.pages
+    ? [
+      { path: '/', name: 'home', component: ExhibitionHome, meta: meta('home') },
+      { path: '/about', name: 'about', component: ExhibitionAbout, meta: meta('about', 'themes') },
+      { path: '/themes', name: 'themes', component: ExhibitionThemes, meta: meta('themes', 'themes') },
+      { path: '/theme/:id/:subtheme?/:image?', name: 'theme', component: ExhibitionTheme, meta: meta('themes', 'themes', 'glossary', 'dynasties') },
+      { path: '/theme-gallery/:id', name: 'theme-gallery', component: ExhibitionThemeGallery, meta: meta('themes', 'themes') },
+      {
+        path: '/item/:id',
+        name: 'item',
+        component: ExhibitionItemDetail,
+        props: (route) => ({ id: String(route.params.id) }),
+        meta: meta('database', 'languages', 'dynasties', 'glossary', 'timelines', 'timeline_events'),
+      },
+      { path: '/related', name: 'related', component: ExhibitionRelatedContent, meta: meta('related', 'related_content') },
+      { path: '/timeline', name: 'timeline', component: ExhibitionTimeline, meta: meta('timeline', 'timelines', 'timeline_events') },
+      ...(config.creditsBody
+        ? [{ path: '/credits', name: 'credits', component: TextPageView, props: { spec: { body: config.creditsBody, back: true } }, meta: meta('credits') }]
+        : []),
+    ]
+    : []
 
   return [
+    ...pages,
     { path: '/search', name: 'search-results', component: ExhibitionSearchResults, meta: meta('database') },
     { path: '/how-to-search', name: 'search-how-to', component: ExhibitionSearchHowTo, meta: meta('database') },
     { path: '/partners', name: 'partners', component: ExhibitionPartners, meta: meta('partners') },
@@ -164,12 +230,16 @@ function exhibitionRoutes(config) {
  *
  * @param {'gallery' | 'exhibition'} family
  * @param {object} config
- * @param {string} [config.creditsBody] — gallery only: the entry name the
- *   `credits` route's `TextPageView` reads (e.g. `'carpets.credits.body'`).
- * @param {object} [config.partnerObjects] — exhibition only: the five entry
- *   names `PartnerObjects.vue`/`InstitutionMonuments.vue` never shared
- *   across sites: `{ emptyPartner, emptyInstitution, institutionSummary,
- *   partnerProfileLabel, institutionProfileLabel }`.
+ * @param {object} [config.partnerObjects] — exhibition only: overrides of the
+ *   five partner-objects entry names, `{ emptyPartner, emptyInstitution,
+ *   institutionSummary, partnerProfileLabel, institutionProfileLabel }`, which
+ *   default to the shared `exhibition.partnerObjects.*` entries.
+ * @param {boolean} [config.pages] — also serve the family pages each site used
+ *   to write itself (home, item, timeline entrance; for an exhibition also
+ *   about, themes, theme, theme gallery, related content).
+ * @param {string} [config.creditsBody] — the entry name the `credits` page's
+ *   body reads (e.g. `'carpets.credits.body'`): a gallery's always, an
+ *   exhibition's with `pages`.
  * @returns {Array<import('vue-router').RouteRecordRaw>}
  */
 export function standardRoutes(family, config = {}) {

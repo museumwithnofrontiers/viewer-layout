@@ -2907,7 +2907,7 @@ details[open] > summary.mwnf-partner-list__group-heading .mwnf-partner-list__gro
 
 .mwnf-chip--ISLandEPM {
   background-color: var(--mwnf-project-ISLandEPM, #ffcc00);
-  color: var(--mwnf-project-ISLandEPM-text, #222222);
+  color: var(--mwnf-project-ISLandEPM-text, #000000);
 }
 
 .mwnf-chip--DBA {
@@ -2926,7 +2926,7 @@ details[open] > summary.mwnf-partner-list__group-heading .mwnf-partner-list__gro
 }
 
 .mwnf-chip--DGA {
-  background-color: var(--mwnf-project-DGA, #263238);
+  background-color: var(--mwnf-project-DGA, #0059bf);
   color: var(--mwnf-project-DGA-text, #ffffff);
 }
 
@@ -2938,6 +2938,13 @@ details[open] > summary.mwnf-partner-list__group-heading .mwnf-partner-list__gro
 .mwnf-chip--Galleries {
   background-color: var(--mwnf-project-Galleries, #263238);
   color: var(--mwnf-project-Galleries-text, #ffffff);
+}
+
+/* A record no project claims: legacy's Explore colour (the exhibitions
+   client's `.Explore`). */
+.mwnf-chip--Explore {
+  background-color: var(--mwnf-project-Explore, #006950);
+  color: var(--mwnf-project-Explore-text, #ffffff);
 }
 
 /* Popout box (sheet's popout / detail box) */

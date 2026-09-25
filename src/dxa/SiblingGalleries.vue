@@ -1,5 +1,5 @@
 <script setup>
-import SmartLink from './SmartLink.vue'
+import SmartLink from '../content/SmartLink.vue'
 
 // Two blocks of gallery links: sibling galleries in this instance, and the
 // other MWNF virtual museums. Each gallery/museum is a record with an optional

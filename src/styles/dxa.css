@@ -258,3 +258,245 @@
 .mwnf-dxa-profile-link {
   color: var(--mwnf-link-text, #0000ff);
 }
+
+/* ── The family pages each site used to carry (inventory-app#2053/#2054) ── */
+
+/* The MWNF mark in the header (both shells) */
+
+.mwnf-dxa-logo-mark {
+  display: inline-block;
+  border: 2px solid currentColor;
+  padding: 0.25rem 0.5rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  font-size: 1.125rem;
+}
+
+.mwnf-dxa-home {
+  width: 100%;
+}
+
+/* The item page: legacy's two columns — the photos on the left, the field
+   sheet on the right, the related content spanning both — over
+   RecordSheetView's single column, a narrow screen returning to one. */
+
+.mwnf-dxa-item {
+  background: var(--mwnf-color-background, #ffffff);
+  width: 100%;
+  min-height: 25rem;
+}
+
+.mwnf-dxa-item__languages {
+  background: var(--mwnf-dxa-band-background, #f0f0f0);
+  padding: 0.375rem 1.25rem;
+}
+
+.mwnf-dxa-item .mwnf-record__body {
+  padding: 0 1.25rem 1.875rem;
+}
+
+.mwnf-dxa-item .mwnf-record__main {
+  display: grid;
+  grid-template-columns: 42% minmax(0, 1fr);
+  column-gap: 1.625rem;
+  align-items: start;
+}
+
+.mwnf-dxa-item .mwnf-record__main > * {
+  grid-column: 2;
+}
+
+.mwnf-dxa-item .mwnf-record__main > .mwnf-media {
+  grid-column: 1;
+  grid-row: 1 / span 12;
+}
+
+.mwnf-dxa-item .mwnf-record__main > .mwnf-sheet-related {
+  grid-column: 1 / -1;
+}
+
+.mwnf-dxa-item .mwnf-sheet__value a {
+  color: var(--mwnf-link-text, #0000ff);
+}
+
+@media only screen and (max-width: 53.0625rem) {
+  .mwnf-dxa-item .mwnf-record__main {
+    display: block;
+  }
+}
+
+/* An exhibition's theme pages. The colours are the exhibition's own theme
+   colours (legacy's main/secondary/contrast): the page's ground and text,
+   the heading band, and the hover of the tour links. */
+
+.mwnf-dxa-theme,
+.mwnf-dxa-about,
+.mwnf-dxa-theme-gallery,
+.mwnf-dxa-related {
+  background: var(--mwnf-dxa-theme-background, #ffffff);
+  color: var(--mwnf-dxa-theme-text, #000000);
+  width: 100%;
+}
+
+.mwnf-dxa-theme__heading {
+  background: var(--mwnf-dxa-theme-contrast, #64bfd9);
+  color: var(--mwnf-dxa-theme-contrast-text, #000000);
+  font-size: 1.375rem;
+  font-weight: 700;
+  padding: 0.5rem 0.75rem;
+}
+
+.mwnf-dxa-theme__subheading {
+  font-size: 1.125rem;
+  font-weight: 700;
+  padding: 0.75rem 0 0.25rem;
+}
+
+.mwnf-dxa-theme__tour {
+  display: flex;
+  justify-content: space-between;
+  padding: 1.5625rem 0 0.625rem;
+  font-weight: 700;
+}
+
+.mwnf-dxa-theme__tour-link,
+.mwnf-dxa-theme__subtheme a {
+  color: var(--mwnf-dxa-theme-text, #000000);
+  text-decoration: none;
+}
+
+.mwnf-dxa-theme__tour-link:hover,
+.mwnf-dxa-theme__subtheme a:hover {
+  background: var(--mwnf-dxa-theme-contrast, #64bfd9);
+}
+
+.mwnf-dxa-theme__subthemes {
+  padding-top: 0.9375rem;
+}
+
+.mwnf-dxa-theme__subthemes-label,
+.mwnf-dxa-theme__subtheme--current {
+  font-weight: 700;
+}
+
+/* The themes page: legacy paints the left half in the main colour and lays
+   the cards over it, so they read as inset; a narrow screen drops the half. */
+
+.mwnf-dxa-themes {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  background: var(--mwnf-dxa-theme-background, #ffffff);
+}
+
+.mwnf-dxa-themes::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 50%;
+  background: var(--mwnf-dxa-theme-main, #000000);
+}
+
+.mwnf-dxa-themes__container {
+  position: relative;
+  z-index: 1;
+  width: 95%;
+  padding: 1.875rem 3.125rem 3.125rem;
+}
+
+@media only screen and (max-width: 74.9375rem) {
+  .mwnf-dxa-themes__container {
+    width: 100%;
+    padding: 1.875rem;
+  }
+}
+
+@media only screen and (max-width: 40.5625rem) {
+  .mwnf-dxa-themes::before {
+    background: transparent;
+  }
+}
+
+/* A theme's gallery */
+
+.mwnf-dxa-theme-gallery {
+  min-height: 25rem;
+  padding-bottom: 1.875rem;
+}
+
+.mwnf-dxa-theme-gallery .mwnf-catalogue__body {
+  padding: 0 1.25rem;
+}
+
+.mwnf-dxa-theme-gallery__empty {
+  padding: 1.875rem 0.625rem;
+  font-style: italic;
+}
+
+/* An exhibition's related content */
+
+.mwnf-dxa-related {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 25rem;
+}
+
+.mwnf-dxa-related .mwnf-link-list__groups {
+  width: 70%;
+  padding: 1.25rem 3.125rem 3.125rem;
+}
+
+@media only screen and (max-width: 60.875rem) {
+  .mwnf-dxa-related .mwnf-link-list__groups {
+    width: 100%;
+    padding: 1.25rem 1.875rem 3.125rem;
+  }
+}
+
+/* The timeline entrance: an exhibition's introduction under the form; a
+   gallery's beside it, a narrow screen stacking the two. */
+
+.mwnf-dxa-timeline__intro {
+  padding: 1.25rem 1.875rem 2.5rem;
+  line-height: 1.55;
+}
+
+.mwnf-dxa-timeline__intro a {
+  color: var(--mwnf-link-text, #0000ff);
+}
+
+.mwnf-dxa-timeline {
+  display: flex;
+  background: var(--mwnf-color-background, #ffffff);
+  width: 100%;
+  min-height: 25rem;
+}
+
+.mwnf-dxa-timeline__form {
+  width: 40%;
+  padding: 3.125rem;
+  max-width: 21.875rem;
+}
+
+.mwnf-dxa-timeline .mwnf-dxa-timeline__intro {
+  width: 60%;
+  padding: 3.125rem 4.6875rem 3.125rem 0;
+}
+
+@media only screen and (max-width: 53.0625rem) {
+  .mwnf-dxa-timeline {
+    flex-direction: column;
+  }
+
+  .mwnf-dxa-timeline__form,
+  .mwnf-dxa-timeline .mwnf-dxa-timeline__intro {
+    width: 100%;
+    max-width: none;
+    padding: 1.875rem;
+  }
+}
