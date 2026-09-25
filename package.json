@@ -1,6 +1,6 @@
 {
   "name": "@museumwnf/viewer-layout",
-  "version": "2.15.2",
+  "version": "2.16.0",
   "description": "Page structure for MWNF websites: PageShell composing seven optional, token-styled sections, the content components a page is made of, and the composed views a website names instead of writing a page.",
   "type": "module",
   "license": "SEE LICENSE IN LICENSE.md",
@@ -35,12 +35,12 @@
     "test": "vitest run"
   },
   "peerDependencies": {
-    "@museumwnf/viewer-core": "^1.16.0 || ^2.0.0",
+    "@museumwnf/viewer-core": "^2.1.0",
     "vue": "^3.5.0",
     "vue-router": "^4.5.0 || ^5.0.0"
   },
   "devDependencies": {
-    "@museumwnf/viewer-core": "^1.16.0",
+    "@museumwnf/viewer-core": "^2.1.0",
     "@vitejs/plugin-vue": "^6.0.8",
     "@vue/test-utils": "^2.4.11",
     "jsdom": "^30.0.1",

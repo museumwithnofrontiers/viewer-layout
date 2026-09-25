@@ -83,8 +83,9 @@ describe('ExhibitionPartnerProfile', () => {
       messages: texts,
     })
     await settle(() => wrapper.text().includes('fixture'))
-    expect(wrapper.find('.mwnf-dxa-partner-name').text()).toBe('Zed Museum')
-    expect(wrapper.find('.mwnf-dxa-partner-location').text()).toBe('Cairo, Egypt')
+    // The shared PartnerPanel heads the page (inventory-app#2034).
+    expect(wrapper.find('h1.mwnf-partner-panel__name').text()).toBe('Zed Museum')
+    expect(wrapper.find('.mwnf-partner-panel__location').text()).toBe('Cairo, Egypt')
   })
 
   it('renders the institution variant with its own homepage label', async () => {
@@ -95,7 +96,9 @@ describe('ExhibitionPartnerProfile', () => {
     })
     await settle(() => wrapper.text().includes('fixture'))
     expect(wrapper.text()).toContain('fixture')
-    expect(wrapper.find('.mwnf-dxa-partner-name').text()).toBe('Zed Museum')
+    expect(wrapper.find('h1.mwnf-partner-panel__name').text()).toBe('Zed Museum')
+    // The institution's own homepage label, from the family's `labels.institution`.
+    expect(wrapper.find('.mwnf-partner-panel__homepage').text()).toContain(texts['exhibition.action.institutionHomepage'])
   })
 })
 

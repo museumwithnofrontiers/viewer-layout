@@ -4,7 +4,7 @@ import { beforeAll, describe, expect, it } from 'vitest'
 import { mount } from '@vue/test-utils'
 import { nextTick } from 'vue'
 import { createMemoryHistory, createRouter } from 'vue-router'
-import { loadEntities, useDataPackage } from '@museumwnf/viewer-core'
+import { loadEntities, partnerView, useDataPackage } from '@museumwnf/viewer-core'
 import {
   BackLink,
   DynastyList,
@@ -18,6 +18,7 @@ import {
   MediaGallery,
   Pagination,
   PartnerMap,
+  PartnerPanel,
   PopupLogo,
   RecordCredits,
   RecordGrid,
@@ -421,9 +422,8 @@ describe('PartnerMap', () => {
     })
     expect(wrapper.find('.mwnf-partner-map').exists()).toBe(true)
     expect(wrapper.find('.mwnf-partner-map__embed').attributes('src')).toContain('openstreetmap.org')
-    // The title text is derived from the i18n dictionary
-    const title = wrapper.find('.mwnf-partner-map__embed').attributes('title')
-    expect(title).toBeTruthy()
+    // The frame's title names the partner next to "Map of" (never inside it: texts carry no placeholders).
+    expect(wrapper.find('.mwnf-partner-map__embed').attributes('title')).toBe('Map of Louvre Museum')
     expect(wrapper.find('.mwnf-partner-map__link a').attributes('href')).toContain('openstreetmap.org')
   })
 
@@ -453,6 +453,185 @@ describe('PartnerMap', () => {
     expect(wrapper.find('.mwnf-partner-map__link a').text()).toContain('Open in OpenStreetMap')
     // iframe title should render as "Map" from partner.map.map (since no label)
     expect(wrapper.find('.mwnf-partner-map__embed').attributes('title')).toBe('Map')
+  })
+})
+
+describe('PartnerPanel', () => {
+  const record = {
+    id: 'p-cairo',
+    type: 'museum',
+    country_id: 'c-eg',
+    latitude: 30.0478,
+    longitude: 31.2336,
+    map_zoom: 16,
+    item_count: 12,
+    contact_persons: [
+      { title: 'Director', name: 'A. First', phone: '+20 1', fax: '+20 2', email: 'first@example.org' },
+      { name: 'B. Second' },
+    ],
+    additional_urls: [{ url: 'www.friends.example.org', title: 'Friends' }],
+    images: [{ url: 'courtyard.jpg', alt_text: 'The courtyard', display_order: 1 }],
+    logos: [{ url: 'logo.png', logo_type: 'primary', alt_text: null, display_order: 1 }],
+  }
+  const text = {
+    name: 'Museum of *Islamic* Art',
+    city: 'Cairo',
+    description: 'A museum.',
+    address: 'Port Said Street',
+    phone: '+20 0',
+    fax: '+20 3',
+    email: 'info@example.org',
+    website: 'www.example.org',
+  }
+  const partner = partnerView(record, text, {
+    countryLabel: () => 'Egypt',
+    route: (p) => `#/partner/${p.id}`,
+    objectsRoute: (p) => `#/partner/${p.id}/objects`,
+  })
+
+  it('line: logo, the name as a link with its city, the count; actions only when turned on', () => {
+    const wrapper = mount(PartnerPanel, { props: { partner, variant: 'line' }, ...globalWithI18n() })
+    expect(wrapper.find('.mwnf-partner-panel__logo').attributes('src')).toBe('logo.png')
+    expect(wrapper.find('.mwnf-partner-panel__logo').attributes('alt')).toBe('Museum of Islamic Art')
+    const name = wrapper.find('a.mwnf-partner-panel__name')
+    expect(name.attributes('href')).toBe('#/partner/p-cairo')
+    expect(name.text()).toBe('Museum of Islamic Art, Cairo')
+    expect(name.html()).toContain('<em>Islamic</em>')
+    expect(wrapper.find('.mwnf-partner-panel__count').text()).toBe('12 object(s) in this site')
+    expect(wrapper.find('.mwnf-partner-panel__actions').exists()).toBe(false)
+
+    const withActions = mount(PartnerPanel, { props: { partner, variant: 'line', show: { actions: true } }, ...globalWithI18n() })
+    const links = withActions.findAll('.mwnf-partner-panel__actions a')
+    expect(links.map((a) => [a.text(), a.attributes('href')])).toEqual([
+      ['Read more', '#/partner/p-cairo'],
+      ['View objects', '#/partner/p-cairo/objects'],
+    ])
+  })
+
+  it('line: a partner holding nothing shows the emptyLabel line, and no View objects link', () => {
+    const empty = { ...partner, itemCount: 0, objectsRoute: null }
+    const wrapper = mount(PartnerPanel, {
+      props: { partner: empty, variant: 'line', emptyLabel: 'partner.info.logo', show: { actions: true } },
+      ...globalWithI18n(),
+    })
+    expect(wrapper.find('.mwnf-partner-panel__count--empty').text()).toBe('Logo')
+    expect(wrapper.findAll('.mwnf-partner-panel__actions a').map((a) => a.text())).toEqual(['Read more'])
+  })
+
+  it('summary: the label, the name as a link, then "city, country"; no logo unless asked', () => {
+    const wrapper = mount(PartnerPanel, { props: { partner, variant: 'summary', label: 'partner.info.about' }, ...globalWithI18n() })
+    expect(wrapper.text()).toBe('About Museum of Islamic Art, Cairo, Egypt')
+    expect(wrapper.find('a').text()).toBe('About Museum of Islamic Art')
+    expect(wrapper.find('.mwnf-partner-panel__logo').exists()).toBe(false)
+    const withLogo = mount(PartnerPanel, { props: { partner, variant: 'summary', show: { logo: true } }, ...globalWithI18n() })
+    expect(withLogo.find('.mwnf-partner-panel__logo').exists()).toBe(true)
+  })
+
+  it('summary with a heading: the name heads the page, over its location', () => {
+    const wrapper = mount(PartnerPanel, { props: { partner, variant: 'summary', heading: 1 }, ...globalWithI18n() })
+    expect(wrapper.classes()).toContain('mwnf-partner-panel--heading')
+    expect(wrapper.find('h1.mwnf-partner-panel__name a').text()).toBe('Museum of Islamic Art')
+    expect(wrapper.find('p.mwnf-partner-panel__location').text()).toBe('Cairo, Egypt')
+  })
+
+  it('a hidden partner keeps its name and loses its link', () => {
+    const hidden = partnerView(record, text, { countryLabel: () => 'Egypt', route: (p) => `#/partner/${p.id}`, hidden: () => true })
+    const wrapper = mount(PartnerPanel, { props: { partner: hidden, variant: 'summary' }, ...globalWithI18n() })
+    expect(wrapper.find('a').exists()).toBe(false)
+    expect(wrapper.text()).toContain('Museum of Islamic Art')
+  })
+
+  it('full: the About · Contact · Logo tabs, the homepage link, the pictures, the map', () => {
+    const wrapper = mount(PartnerPanel, { props: { partner, heading: 1 }, ...globalWithI18n() })
+    expect(wrapper.find('h1.mwnf-partner-panel__name').text()).toBe('Museum of Islamic Art')
+    expect(wrapper.find('.mwnf-partner-panel__location').text()).toBe('Cairo, Egypt')
+    const tablist = wrapper.find('[role="tablist"]')
+    expect(tablist.findAll('[role="tab"]').map((tab) => tab.text())).toEqual(['About', 'Contact', 'Logo'])
+    expect(wrapper.find('.mwnf-partner-panel__homepage').attributes('href')).toBe('https://www.example.org')
+    expect(wrapper.find('.mwnf-partner-panel__homepage').attributes('target')).toBe('_blank')
+    expect(wrapper.find('.mwnf-partner-panel__pictures').exists()).toBe(true)
+    expect(wrapper.find('.mwnf-partner-map').exists()).toBe(true)
+    // About is open; the other panels are there, hidden.
+    const [about, contact] = wrapper.findAll('[role="tabpanel"]')
+    expect(about.isVisible()).toBe(true)
+    expect(about.text()).toBe('A museum.')
+    expect(contact.isVisible()).toBe(false)
+  })
+
+  it('full: the contact tab reads in legacy order, fax included, contact persons after', async () => {
+    const wrapper = mount(PartnerPanel, { props: { partner }, attachTo: document.body, ...globalWithI18n() })
+    await wrapper.findAll('[role="tab"]')[1].trigger('click')
+    const contact = wrapper.find('.mwnf-partner-panel__panel--contact')
+    expect(contact.isVisible()).toBe(true)
+    expect(wrapper.findAll('[role="tab"]')[1].attributes('aria-selected')).toBe('true')
+    const lines = contact.findAll('p').map((line) => line.text())
+    expect(lines).toEqual([
+      'Address(es)',
+      'Port Said Street',
+      'Phone +20 0',
+      'Fax +20 3',
+      'info@example.org',
+      'www.example.org|Friends',
+      'Director', 'A. First', 'Phone +20 1', 'Fax +20 2', 'first@example.org',
+      'B. Second',
+    ])
+    wrapper.unmount()
+  })
+
+  it('full: the arrow keys move along the strip', async () => {
+    const wrapper = mount(PartnerPanel, { props: { partner }, attachTo: document.body, ...globalWithI18n() })
+    const tablist = wrapper.find('[role="tablist"]')
+    await tablist.trigger('keydown', { key: 'ArrowRight' })
+    expect(wrapper.find('.mwnf-partner-panel__tab--active').text()).toBe('Contact')
+    await tablist.trigger('keydown', { key: 'End' })
+    expect(wrapper.find('.mwnf-partner-panel__tab--active').text()).toBe('Logo')
+    await tablist.trigger('keydown', { key: 'ArrowRight' })
+    expect(wrapper.find('.mwnf-partner-panel__tab--active').text()).toBe('About')
+    wrapper.unmount()
+  })
+
+  it('full: show switches parts off; a partner with no contact gets no Contact tab', () => {
+    const wrapper = mount(PartnerPanel, {
+      props: { partner, show: { map: false, pictures: false, homepage: false, logos: false } },
+      ...globalWithI18n(),
+    })
+    expect(wrapper.find('.mwnf-partner-map').exists()).toBe(false)
+    expect(wrapper.find('.mwnf-partner-panel__pictures').exists()).toBe(false)
+    expect(wrapper.find('.mwnf-partner-panel__homepage').exists()).toBe(false)
+    expect(wrapper.findAll('[role="tab"]').map((tab) => tab.text())).toEqual(['About', 'Contact'])
+
+    const bare = partnerView({ id: 'p-bare' }, { name: 'Bare' })
+    const plain = mount(PartnerPanel, { props: { partner: bare }, ...globalWithI18n() })
+    expect(plain.findAll('[role="tab"]').map((tab) => tab.text())).toEqual(['About'])
+  })
+
+  it("full, layout 'sections': About, Contact and Logo one after another, under their titles", () => {
+    const wrapper = mount(PartnerPanel, { props: { partner, layout: 'sections', heading: 1 }, ...globalWithI18n() })
+    expect(wrapper.find('[role="tablist"]').exists()).toBe(false)
+    expect(wrapper.findAll('h2.mwnf-partner-panel__section-title').map((h) => h.text())).toEqual(['About', 'Contact', 'Logo'])
+    expect(wrapper.findAll('.mwnf-partner-panel__panel').every((panel) => panel.isVisible())).toBe(true)
+    // The homepage is still a link, outside any section.
+    expect(wrapper.find('.mwnf-partner-panel__homepage').exists()).toBe(true)
+  })
+
+  it('fills the badge, meta, actions and after slots', () => {
+    const wrapper = mount(PartnerPanel, {
+      props: { partner },
+      slots: {
+        badge: '<span class="own-badge">Museum</span>',
+        meta: '<p class="own-meta">Since 1903</p>',
+        actions: '<a class="own-action" href="#/objects">View objects (12)</a>',
+        after: '<p class="own-after">More</p>',
+      },
+      ...globalWithI18n(),
+    })
+    for (const own of ['.own-badge', '.own-meta', '.own-action', '.own-after']) expect(wrapper.find(own).exists()).toBe(true)
+    expect(wrapper.find('.mwnf-partner-panel__bar .own-action').exists()).toBe(true)
+  })
+
+  it('renders nothing without a partner', () => {
+    const wrapper = mount(PartnerPanel, { props: { partner: null }, ...globalWithI18n() })
+    expect(wrapper.find('.mwnf-partner-panel').exists()).toBe(false)
   })
 })
 
@@ -487,6 +666,20 @@ describe('FeaturedPartners', () => {
     await nextTick()
     // Verify the second bullet is now active
     expect(wrapper.findAll('.mwnf-featured-partners__bullet')[1].classes()).toContain('mwnf-featured-partners__bullet--active')
+  })
+
+  it('takes the partners as partnerView() builds them: first picture, "city, country", plain description cut short', () => {
+    const view = partnerView(
+      { id: 'p1', country_id: 'c-fr', images: [{ url: 'hall.jpg', alt_text: 'Hall' }], logos: [{ url: 'logo.png' }] },
+      { name: 'Partner *One*', city: 'Paris', description: 'A **grand** museum by the river, with a long history.' },
+      { countryLabel: () => 'France', route: () => '#/partner/p1' },
+    )
+    const wrapper = mount(FeaturedPartners, { props: { partners: [view], descriptionLength: 20 }, ...globalWithI18n() })
+    expect(wrapper.find('.mwnf-featured-partners__name').text()).toBe('Partner One')
+    expect(wrapper.find('.mwnf-featured-partners__logo').attributes('src')).toBe('hall.jpg')
+    expect(wrapper.find('.mwnf-featured-partners__location').text()).toBe('Paris, France')
+    expect(wrapper.find('.mwnf-featured-partners__description').text()).toBe('A grand museum by...')
+    expect(wrapper.find('.mwnf-featured-partners__card').attributes('href')).toBe('#/partner/p1')
   })
 
   it('renders nothing when no records', () => {

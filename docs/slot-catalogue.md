@@ -224,7 +224,7 @@ unchanged, plus:
 |---|---|---|
 | `sourceDatabase` | `{ label? (entry, default `record.sheet.sourceDatabase`), chipClass(record, ctx) => class \| null, addToCollection: { label? (entry, default `record.action.addToCollection`) } \| false } \| false` | The source-database line (a colour chip from `chipClass` — a site's own project-UUID→colour map, epic #1727 decision 1 — plus the project's name from `useProjects().label()`), the record's `backward_compatibility` code, and the "add to my collection" link (`mwnfLinks.myCollection`). Nothing renders without this key. |
 | `notice` | `{ show(record, ctx) => boolean, label (entry) } \| false` | The Explore-partner notice, in the record's own languages, when `show` says yes. |
-| `museum` | `{ route(partnerId, ctx) => to \| null, label(partnerId, ctx) => string } \| false` | The holding-museum row (the `museum` field's `custom` slot) — a link when `route` returns one, plain text (a hidden partner, say) when it returns null. |
+| `museum` | `{ route(partnerId, ctx) => to \| null } \| false` | The holding-museum row (the `museum` field's `custom` slot): the item's holder text, then the partner as `PartnerPanel`'s `summary` — "About {name}, {city}, {country}" — linked when `route` returns a location, name only (a hidden partner) when it returns null (decision D3). `label` is no longer read. `false` keeps the holder text alone. |
 | `related.title` / `related.description` | entry names | Above the related block, as a caption. |
 | `related.notInPackageLabel` | entry name | On an outside reference, next to its chip and name (or code). |
 | `related.outsideChip(ref, ctx)` | `=> class \| null` | An outside reference's chip class. The chip's visible text is not this — it is `useProjects().label(ref.project_id)`, falling back to the stub's `backward_compatibility` code only when `project_id` is absent. |
@@ -341,8 +341,11 @@ selectedVariant, selectVariant, breadcrumb, previous, next, t, tr }`.
 ### PartnerListView
 
 **Props:** `spec` (Object, required — `entity`, `scope`, `group`,
-`orderToggle`, `nested`, `label`, `record`, `route`, `variant`, `count`,
-text overrides).
+`orderToggle`, `nested`, `label`, `record`, `route`, `objectsRoute`,
+`actions`, `emptyLabel`, `variant`, `count`, text overrides). The default row
+is `PartnerPanel`'s `line` over viewer-core's `partnerView()`: `objectsRoute`
+links the line's View objects, `actions: true` turns on its Read more · View
+objects links, `emptyLabel` is the line for a partner holding nothing.
 
 Base context every slot also receives: `{ t, locale, groups, orderDir,
 toggleOrder }`.
@@ -351,7 +354,7 @@ toggleOrder }`.
 |---|---|---|
 | `before` | Above the order toggle and the groups | base context |
 | `group-heading` | One group's heading (default: `group.label`) | `{ group, ...base }` |
-| `row` | One partner row — main, associated, and (when `nested`) a child row too | `{ group, partner, row, ...base }` |
+| `row` | One partner row — main, associated, and (when `nested`) a child row too | `{ group, partner, row, view, ...base }` — `view` is the partner's view-model, `row` the flat `{ name, city, logo, count, route }` |
 | `after` | Below the groups | base context |
 
 ### SearchFormView
@@ -431,8 +434,8 @@ own — their credits route points `TextPageView` directly at a local
 | `GalleryAbout` | `TextPageView` | — | `gallery.about.body` (shared entry) |
 | `GalleryCredits` | `TextPageView` | `bodyKey` (String, required) | `config.creditsBody` via `bodyKey` |
 | `GallerySearchHowTo` | `TextPageView` | — | `catalogue.search.howToEssay` |
-| `GalleryPartners` | `PartnerListView` | — | `#row` slot: `gallery.partners.intro`, `gallery.partner.noObjectsInGallery`, `gallery.action.readMore`/`.viewObjects` |
-| `GalleryPartnerProfile` | `RecordView` | `id` (String, required) | `header`/`before-sheet`/`after-sheet` slots: `partner.info.*`, `gallery.partner.viewObjects` |
+| `GalleryPartners` | `PartnerListView` | — | `PartnerPanel` line rows: `gallery.partners.intro`, `gallery.partner.noObjectsInGallery`, `partner.action.readMore`/`.viewObjects` |
+| `GalleryPartnerProfile` | `PartnerDetail` (`RecordView` + `PartnerPanel`) | `id` (String, required) | `partner.info.*`, `partner.nav.homepage`, `partner.action.viewObjects` |
 | `GallerySearchResults` | `CatalogueResultsView` | — | `gallery.section.database`, `gallery.action.seeDatabaseEntry`, `catalogue.search.*`, `catalogue.results.*` |
 | `GalleryTimelineResults` | `TimelineResultsView` | — | — (spec only) |
 | `GalleryTimelineGallery` | `CatalogueResultsView` | — | `timeline.nav.backToEvents` |
@@ -445,8 +448,8 @@ own — their credits route points `TextPageView` directly at a local
 | Page | Wraps | Props | Reads |
 |---|---|---|---|
 | `ExhibitionSearchHowTo` | `TextPageView` | — | `catalogue.search.howToEssay` |
-| `ExhibitionPartners` | `PartnerListView` | — | `#row` slot: `exhibition.partners.intro`, `exhibition.partner.noObjectsInExhibition`, `exhibition.action.readMore`/`.viewObjects` |
-| `ExhibitionPartnerProfile` | `RecordView` / `NotFoundView` | `variant` (`'partner'` \| `'institution'`, default `'partner'`) | `partner.info.*`, `exhibition.action.institutionHomepage`, `.viewItems`/`.viewObjects` |
+| `ExhibitionPartners` | `PartnerListView` | — | `PartnerPanel` line rows: `exhibition.partners.intro`, `exhibition.partner.noObjectsInExhibition`, `partner.action.readMore`/`.viewObjects` |
+| `ExhibitionPartnerProfile` | `PartnerDetail` (`RecordView` + `PartnerPanel`) / `NotFoundView` | `variant` (`'partner'` \| `'institution'`, default `'partner'`) | `partner.info.*`, `partner.nav.homepage` / `exhibition.action.institutionHomepage`, `partner.action.viewObjects` / `exhibition.action.viewItems` |
 | `ExhibitionSearchResults` | `CatalogueResultsView` | — | `exhibition.section.database`, `exhibition.action.seeDatabaseEntry` |
 | `ExhibitionTimelineResults` | `TimelineResultsView` | — | — (spec only) |
 | `ExhibitionTimelineGallery` | `CatalogueResultsView` | — | — (spec only; no `actions` slot, unlike the gallery shape) |
@@ -455,11 +458,19 @@ own — their credits route points `TextPageView` directly at a local
 | `ExhibitionPartnerObjects` | `CatalogueResultsView` | `variant` (`'partner'` \| `'institution'`), `texts` (Object, required: `{ emptyPartner, emptyInstitution, institutionSummary, partnerProfileLabel, institutionProfileLabel }` — `config.partnerObjects`) | `partner.item.objectsInSite` (partner-variant summary only; the rest come from `texts`) |
 
 `standardRoutes('exhibition', config)` also registers `institution`/
-`institution-monuments` against `ExhibitionPartnerProfile`/
-`ExhibitionPartnerObjects` with `props: { variant: 'institution' }` (plus
-`texts` for the objects page) — no separate component, the same reduction
-colours'/water-in-islam's own (retired) `InstitutionProfile.vue`/
-`InstitutionMonuments.vue` already made.
+`institution-monuments` against `PartnerDetail`/`ExhibitionPartnerObjects`
+with `variant: 'institution'` (plus `texts` for the objects page) — no
+separate component, the same reduction colours'/water-in-islam's own
+(retired) `InstitutionProfile.vue`/`InstitutionMonuments.vue` already made.
+
+**`PartnerDetail`** is the partner page of both families (inventory-app#2034):
+`RecordView` for the language and the not-found case, `PartnerPanel`'s `full`
+variant for the body, the view-objects button in its `actions` slot. Props:
+`id`, `family` (a family's `partnerDetail`, exported as
+`galleryPartnerDetail`/`exhibitionPartnerDetail`: `{ spec, visible(id),
+view(partner, text), labels: { partner, institution? } }`), `variant`.
+`GalleryPartnerProfile`/`ExhibitionPartnerProfile` remain as the same page
+under their old names, until the major release of inventory-app#2017.
 
 ## `/content` components
 
@@ -488,7 +499,8 @@ through it), not a public building block.
 | `MediaGallery` | A record's images: current one large, thumbnails, a lightbox |
 | `GlossaryPopover` | The definition of a clicked glossary term, as a fixed popover |
 | `PartnerMap` | An OpenStreetMap embed centred on a partner's coordinates |
-| `FeaturedPartners` | A carousel of featured partner records, rotated on a timer |
+| `PartnerPanel` | One partner: a list `line`, the `summary` under an item's holder, the `full` partner page (tabs, or `sections`) |
+| `FeaturedPartners` | A carousel of featured partners (`records`, or `partners` as `partnerView()` builds them), rotated on a timer |
 | `SiblingGalleries` | Sibling-gallery links plus MWNF virtual-museum links |
 | `PopupLogo` | A dismissible fixed modal for sponsor notices |
 | `BackLink` | A "back" link using browser history when available, a route otherwise |

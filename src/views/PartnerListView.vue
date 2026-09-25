@@ -1,9 +1,9 @@
 <script setup>
 import { computed } from 'vue'
 import {
-  groupByCountry, partnerHierarchy, renderInline, renderPlain, useDataPackage, useI18n, useListQuery, entityRef,
+  groupByCountry, partnerHierarchy, partnerView, renderInline, renderPlain, useDataPackage, useI18n, useListQuery, entityRef,
 } from '@museumwnf/viewer-core'
-import SmartLink from '../content/SmartLink.vue'
+import PartnerPanel from '../content/PartnerPanel.vue'
 
 // The partner list, composed: islamicart's/sharinghistory's country
 // accordion with main/associated tiers, and the DXA family's plain country
@@ -45,6 +45,13 @@ import SmartLink from '../content/SmartLink.vue'
 //                                           // facet's label(value)
 //     record: (partner, ctx) => ({ name, city, logo, count, route }),  // the row
 //     route: 'partner' | (partner, ctx) => (to | href),  // the row's default page
+//     objectsRoute: (partner, ctx) => (to | href),  // the page of the items a
+//                                           // partner holds, for the line's
+//                                           // View objects link
+//     actions: true | false,               // the line's Read more · View
+//                                           // objects links (the DXA rows)
+//     emptyLabel,                          // entry for a partner holding
+//                                           // nothing; default: no line
 //     variant: 'accordion' | 'open',       // accordion: collapsible <details>;
 //                                           // open: always-expanded sections
 //     count: true | false,                 // the "Partners found: N" line
@@ -68,10 +75,12 @@ import SmartLink from '../content/SmartLink.vue'
 //
 // Slots: `before` (above the toggle and the groups), `group-heading` (given
 // `{ group, ... }`; the default renders `group.label`), `row` (given
-// `{ group, partner, row, ... }`, once per partner — main, associated and,
-// when nested, a child row too; the default renders the logo, "Name, City",
-// and the count line), `after` (below the groups). Every slot also receives
-// the base context: `{ t, locale, groups, orderDir, toggleOrder }`.
+// `{ group, partner, row, view, ... }`, once per partner — main, associated
+// and, when nested, a child row too; the default is `PartnerPanel`'s `line`
+// variant over `view`, viewer-core's `partnerView()`: the logo, "Name,
+// City" and the count line), `after` (below the groups). Every slot also
+// receives the base context: `{ t, locale, groups, orderDir, toggleOrder }`.
+// `row` keeps the shape `spec.record` returns, for a slot written against it.
 
 const props = defineProps({
   spec: { type: Object, required: true },
@@ -121,20 +130,40 @@ function routeOf(partner) {
   return typeof r === 'function' ? r(partner, helpers) : { name: r, params: { id: partner.id } }
 }
 
-function defaultRecord(partner, ctx) {
-  const text = ctx.tr(partner.id)
-  const name = text.name ?? partner.internal_name ?? partner.id
+// A row is the partner's view-model — what `PartnerPanel` renders — plus
+// the flat `{ name, city, logo, count, route }` a `#row` slot or a
+// `spec.record` reads. A site's own `spec.record` still decides the row: its
+// shape is lifted into the view-model the panel needs.
+function viewOf(partner) {
+  const objects = spec.value.objectsRoute
+  return partnerView(partner, helpers.tr(partner.id), {
+    route: routeOf,
+    objectsRoute: objects ? (p) => objects(p, helpers) : null,
+  })
+}
+
+function fromRecord(partner, row) {
+  const name = row.name ?? ''
   return {
-    name: ctx.renderInline(String(name)),
-    city: text.city ?? '',
-    logo: partner.logos?.[0]?.url ?? '',
-    count: partner.item_count ?? 0,
-    route: routeOf(partner),
+    ...partnerView(partner, {}, {}),
+    name,
+    plainName: plainOf(name),
+    city: row.city ?? '',
+    location: row.city ?? '',
+    logos: row.logo ? [{ url: row.logo, alt: plainOf(name), type: '' }] : [],
+    itemCount: row.count ?? 0,
+    route: row.route ?? null,
   }
 }
 
-function buildRow(partner) {
-  return (spec.value.record ?? defaultRecord)(partner, helpers)
+function buildEntry(partner) {
+  if (spec.value.record) {
+    const row = spec.value.record(partner, helpers)
+    return { partner, row, view: fromRecord(partner, row) }
+  }
+  const view = viewOf(partner)
+  const row = { name: view.name, city: view.city, logo: view.logos[0]?.url ?? '', count: view.itemCount, route: view.route }
+  return { partner, row, view }
 }
 
 // A row's `name` is already rendered (Markdown to HTML, the record
@@ -171,8 +200,8 @@ const groups = computed(() => {
   const byRowName = (a, b) => plainOf(a.row.name).localeCompare(plainOf(b.row.name))
 
   return raw.map((group) => {
-    let main = group.main.map((partner) => ({ partner, row: buildRow(partner) })).sort(byRowName)
-    let associated = group.associated.map((partner) => ({ partner, row: buildRow(partner) })).sort(byRowName)
+    let main = group.main.map(buildEntry).sort(byRowName)
+    let associated = group.associated.map(buildEntry).sort(byRowName)
 
     if (byName && orderDir.value === 'desc') {
       main.reverse()
@@ -186,7 +215,7 @@ const groups = computed(() => {
           .children(entry.partner.id)
           .filter((child) => remaining.has(child.id))
         for (const child of children) remaining.delete(child.id)
-        return { ...entry, children: children.map((partner) => ({ partner, row: buildRow(partner) })) }
+        return { ...entry, children: children.map(buildEntry) }
       })
       associated = associated.filter((entry) => remaining.has(entry.partner.id))
     }
@@ -200,7 +229,11 @@ const hasResults = computed(() => groups.value.some((group) => group.main.length
 // ── Texts ────────────────────────────────────────────────────────────────
 
 const associatedLabel = computed(() => t(spec.value.associatedLabel ?? 'partner.list.associated'))
-const objectsLabel = computed(() => t(spec.value.objectsLabel ?? 'partner.item.objectsInSite'))
+const lineProps = computed(() => ({
+  objectsLabel: spec.value.objectsLabel ?? 'partner.item.objectsInSite',
+  emptyLabel: spec.value.emptyLabel ?? '',
+  show: { actions: Boolean(spec.value.actions) },
+}))
 const foundLabel = computed(() => t(spec.value.foundLabel ?? 'partner.list.partnersFound'))
 const sortAscendingLabel = computed(() => t(spec.value.sortAscendingLabel ?? 'partner.list.sortAscending'))
 const sortDescendingLabel = computed(() => t(spec.value.sortDescendingLabel ?? 'partner.list.sortDescending'))
@@ -243,23 +276,15 @@ const slotProps = computed(() => ({ t, locale, groups: groups.value, orderDir: o
         <div class="mwnf-partner-list__tier">
           <div v-for="entry in group.main" :key="entry.partner.id" class="mwnf-partner-list__row-block">
             <div class="mwnf-partner-list__row">
-              <slot name="row" :group="group" :partner="entry.partner" :row="entry.row" v-bind="slotProps">
-                <img v-if="entry.row.logo" class="mwnf-partner-list__logo" :src="entry.row.logo" :alt="plainOf(entry.row.name)" loading="lazy" />
-                <component :is="entry.row.route ? SmartLink : 'span'" class="mwnf-partner-list__name" :to="entry.row.route">
-                  <span v-html="entry.row.name"></span><span v-if="entry.row.city">, {{ entry.row.city }}</span>
-                </component>
-                <span v-if="entry.row.count" class="mwnf-partner-list__meta">{{ entry.row.count }} {{ objectsLabel }}</span>
+              <slot name="row" :group="group" :partner="entry.partner" :row="entry.row" :view="entry.view" v-bind="slotProps">
+                <PartnerPanel variant="line" :partner="entry.view" v-bind="lineProps" />
               </slot>
             </div>
 
             <div v-if="entry.children?.length" class="mwnf-partner-list__children">
               <div v-for="child in entry.children" :key="child.partner.id" class="mwnf-partner-list__row mwnf-partner-list__row--child">
-                <slot name="row" :group="group" :partner="child.partner" :row="child.row" v-bind="slotProps">
-                  <img v-if="child.row.logo" class="mwnf-partner-list__logo" :src="child.row.logo" :alt="plainOf(child.row.name)" loading="lazy" />
-                  <component :is="child.row.route ? SmartLink : 'span'" class="mwnf-partner-list__name" :to="child.row.route">
-                    <span v-html="child.row.name"></span><span v-if="child.row.city">, {{ child.row.city }}</span>
-                  </component>
-                  <span v-if="child.row.count" class="mwnf-partner-list__meta">{{ child.row.count }} {{ objectsLabel }}</span>
+                <slot name="row" :group="group" :partner="child.partner" :row="child.row" :view="child.view" v-bind="slotProps">
+                  <PartnerPanel variant="line" :partner="child.view" v-bind="lineProps" />
                 </slot>
               </div>
             </div>
@@ -269,12 +294,8 @@ const slotProps = computed(() => ({ t, locale, groups: groups.value, orderDir: o
         <div v-if="group.associated.length" class="mwnf-partner-list__tier mwnf-partner-list__tier--associated">
           <p class="mwnf-partner-list__tier-label">{{ associatedLabel }}</p>
           <div v-for="entry in group.associated" :key="entry.partner.id" class="mwnf-partner-list__row">
-            <slot name="row" :group="group" :partner="entry.partner" :row="entry.row" v-bind="slotProps">
-              <img v-if="entry.row.logo" class="mwnf-partner-list__logo" :src="entry.row.logo" :alt="plainOf(entry.row.name)" loading="lazy" />
-              <component :is="entry.row.route ? SmartLink : 'span'" class="mwnf-partner-list__name" :to="entry.row.route">
-                <span v-html="entry.row.name"></span><span v-if="entry.row.city">, {{ entry.row.city }}</span>
-              </component>
-              <span v-if="entry.row.count" class="mwnf-partner-list__meta">{{ entry.row.count }} {{ objectsLabel }}</span>
+            <slot name="row" :group="group" :partner="entry.partner" :row="entry.row" :view="entry.view" v-bind="slotProps">
+              <PartnerPanel variant="line" :partner="entry.view" v-bind="lineProps" />
             </slot>
           </div>
         </div>

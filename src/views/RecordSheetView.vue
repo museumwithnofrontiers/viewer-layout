@@ -1,13 +1,13 @@
 <script setup>
 import { computed, useSlots } from 'vue'
 import {
-  NotFoundView, mwnfLinks, useI18n, useProjects,
+  NotFoundView, byId, loadEntities, mdInline, mdStrip, mwnfLinks, partnerView, useDataPackage, useI18n, useProjects,
 } from '@museumwnf/viewer-core'
 import DynastyList from '../content/DynastyList.vue'
 import GlossaryTool from '../content/GlossaryTool.vue'
+import PartnerPanel from '../content/PartnerPanel.vue'
 import RelatedRecords from '../content/RelatedRecords.vue'
 import SheetSection from '../content/SheetSection.vue'
-import SmartLink from '../content/SmartLink.vue'
 import TimelineLookup from '../content/TimelineLookup.vue'
 import RecordView from './RecordView.vue'
 
@@ -111,11 +111,37 @@ function beforeSheetInfo(record, ctx) {
 }
 
 // ── The holding-museum row ──────────────────────────────────────────────────
+// The item's holder text, then the partner it refers to as `PartnerPanel`'s
+// `summary` — "About {name}, {city}, {country}", linked to the partner's page
+// through `spec.museum.route` (decision D3, inventory-app#2015). The holder
+// is free text of the item's translation, not a partner reference, so the
+// two are shown side by side rather than one standing for the other. A
+// partner the package does not carry leaves the holder text alone; a
+// `route` answering null (an exhibition's hidden partner) keeps the name
+// and drops the link.
 
-function museumInfo(partnerId, ctx) {
+const pkg = useDataPackage()
+const partnerById = byId('partners')
+const countryById = byId('countries')
+loadEntities(['partners', 'countries'])
+pkg.loadTranslations('countries', 'en')
+
+function countryLabel(countryId, language) {
+  const text = pkg.tr('countries', countryId, language, 'en')
+  return mdStrip(text.name ?? countryById.value?.get(countryId)?.internal_name ?? '')
+}
+
+function museumBlock(ctx) {
+  const holder = ctx.text?.holder ? mdInline(String(ctx.text.holder)) : ''
   const m = spec.value.museum === false ? null : spec.value.museum ?? null
-  if (!m || !partnerId) return null
-  return { to: m.route ? m.route(partnerId, ctx) : null, label: m.label ? m.label(partnerId, ctx) : '' }
+  const partner = m ? partnerById.value?.get(ctx.record?.partner_id) : null
+  const view = partner
+    ? partnerView(partner, pkg.tr('partners', partner.id, ctx.language, 'en'), {
+      countryLabel: (id) => countryLabel(id, ctx.language),
+      route: (p) => (m.route ? m.route(p.id, ctx) : null),
+    })
+    : null
+  return { holder, view }
 }
 
 // ── The related-content block ───────────────────────────────────────────────
@@ -213,9 +239,17 @@ function printSheet() {
 
     <template #museum="museumCtx">
       <slot name="museum" v-bind="museumCtx">
-        <template v-for="info in [museumInfo(museumCtx.row?.value, museumCtx)]" :key="'museum'">
-          <SmartLink v-if="info?.to" :to="info.to">{{ info.label }}</SmartLink>
-          <span v-else-if="info">{{ info.label }}</span>
+        <template v-for="info in [museumBlock(museumCtx)]" :key="'museum'">
+          <div class="mwnf-sheet-museum">
+            <p v-if="info.holder" class="mwnf-sheet-museum__holder" v-html="info.holder"></p>
+            <PartnerPanel
+              v-if="info.view"
+              variant="summary"
+              :partner="info.view"
+              label="partner.info.about"
+              :dir="museumCtx.dir"
+            />
+          </div>
         </template>
       </slot>
     </template>

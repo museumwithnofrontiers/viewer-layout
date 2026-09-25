@@ -109,6 +109,7 @@ const texts = {
   'partner.list.sortAscending': 'Sort A-Z',
   'partner.list.sortDescending': 'Sort Z-A',
   'partner.item.objectsInSite': 'object(s) in this site',
+  'partner.info.about': 'About',
 }
 
 const COUNTRY_NAMES = { 'c-eg': 'Egypt', 'c-sy': 'Syria' }
@@ -515,8 +516,7 @@ describe('RecordSheetView', () => {
     },
     notice: { show: (record) => record.id === 'o1', label: 'gallery.item.explorePartnerNote' },
     museum: {
-      route: (partnerId) => (partnerId === 'm1' ? { name: 'objects-detail', params: { id: 'partner-m1' } } : null),
-      label: (partnerId) => (partnerId === 'm1' ? 'Zed Museum' : 'Hidden Museum'),
+      route: (partnerId) => (partnerId === 'p1' ? { name: 'objects-detail', params: { id: 'partner-p1' } } : null),
     },
     related: {
       route: 'objects-detail',
@@ -620,16 +620,30 @@ describe('RecordSheetView', () => {
     expect(o2Wrapper.find('.mwnf-sheet-notice').exists()).toBe(false)
   })
 
-  it("links the holding museum's page, or falls back to plain text when spec.museum.route says no — spec.museum", async () => {
+  it("shows the holder text, then the partner's summary linked through spec.museum.route — spec.museum (D3)", async () => {
     const { wrapper: withLink } = await mountView(RecordSheetView, { props: { spec: sheetSpec, id: 'o1' }, route: '/objects/o1' })
-    await settle(() => withLink.text().includes('Prepared by'))
-    expect(withLink.text()).toContain('Zed Museum')
-    expect(withLink.html()).toMatch(/<a[^>]*href="\/objects\/partner-m1"[^>]*>Zed Museum<\/a>/)
+    // The country's label arrives with the countries entity the view loads.
+    await settle(() => withLink.find('.mwnf-sheet-museum .mwnf-partner-panel--summary').exists() && withLink.find('.mwnf-sheet-museum .mwnf-partner-panel--summary').text().includes('Egypt'))
+    const museum = withLink.find('.mwnf-sheet-museum')
+    // The holder is the item's own free text; the summary is the partner it refers to.
+    expect(museum.find('.mwnf-sheet-museum__holder').text()).toBe('Zed Museum, Cairo')
+    const summary = museum.find('.mwnf-partner-panel--summary')
+    expect(summary.text()).toBe('About Zed Museum, Cairo, Egypt')
+    expect(summary.find('a').attributes('href')).toBe('/objects/partner-p1')
+    expect(summary.find('a').text()).toBe('About Zed Museum')
 
+    // spec.museum.route says no (an exhibition's hidden partner): the name stays, the link goes.
     const { wrapper: withoutLink } = await mountView(RecordSheetView, { props: { spec: sheetSpec, id: 'o4' }, route: '/objects/o4' })
-    await settle(() => withoutLink.text().includes('Prepared by'))
-    expect(withoutLink.text()).toContain('Hidden Museum')
-    expect(withoutLink.html()).not.toContain('Hidden Museum</a>')
+    await settle(() => withoutLink.find('.mwnf-sheet-museum .mwnf-partner-panel--summary').exists() && withoutLink.find('.mwnf-sheet-museum .mwnf-partner-panel--summary').text().includes('Syria'))
+    expect(withoutLink.find('.mwnf-sheet-museum__holder').text()).toBe('Damascus Museum')
+    expect(withoutLink.find('.mwnf-partner-panel--summary').text()).toBe('About Damascus Museum, Damascus, Syria')
+    expect(withoutLink.find('.mwnf-partner-panel--summary a').exists()).toBe(false)
+
+    // A partner the package does not carry leaves the holder text alone.
+    const { wrapper: noPartner } = await mountView(RecordSheetView, { props: { spec: sheetSpec, id: 'o2' }, route: '/objects/o2' })
+    await settle(() => noPartner.find('.mwnf-sheet-museum__holder').exists())
+    expect(noPartner.find('.mwnf-sheet-museum__holder').text()).toBe('A private collection')
+    expect(noPartner.find('.mwnf-partner-panel').exists()).toBe(false)
   })
 
   it('renders the related block — objects in the grid, the outside reference, the artistic-introduction/related-database/overall-database links, on-display-in, and the print action — spec.related', async () => {
@@ -1354,28 +1368,30 @@ describe('PartnerListView', () => {
     expect(groups.every((g) => g.element.tagName === 'DETAILS' && g.attributes('open') !== undefined)).toBe(true)
 
     const egypt = groups[0]
-    expect(egypt.findAll('.mwnf-partner-list__tier')[0].findAll('.mwnf-partner-list__name').map((n) => n.text())).toEqual([
+    expect(egypt.findAll('.mwnf-partner-list__tier')[0].findAll('.mwnf-partner-panel__name').map((n) => n.text())).toEqual([
       'Alpha Museum, Giza',
       'Zed Museum, Cairo',
     ])
     expect(egypt.find('.mwnf-partner-list__tier--associated .mwnf-partner-list__tier-label').text()).toBe('Associated Partners')
-    expect(egypt.find('.mwnf-partner-list__tier--associated .mwnf-partner-list__name').text()).toBe('Attached Gallery, Cairo')
+    expect(egypt.find('.mwnf-partner-list__tier--associated .mwnf-partner-panel__name').text()).toBe('Attached Gallery, Cairo')
     // p1 carries a logo; the alt text is the plain name, not the HTML.
-    expect(egypt.find('.mwnf-partner-list__logo').attributes('src')).toBe('p1-logo.png')
-    expect(egypt.find('.mwnf-partner-list__logo').attributes('alt')).toBe('Zed Museum')
+    expect(egypt.find('.mwnf-partner-panel__logo').attributes('src')).toBe('p1-logo.png')
+    expect(egypt.find('.mwnf-partner-panel__logo').attributes('alt')).toBe('Zed Museum')
     // p1's own item_count (12) prints against the shared entry; p7's (0) prints nothing.
-    expect(egypt.findAll('.mwnf-partner-list__meta').map((m) => m.text())).toEqual(['12 object(s) in this site'])
+    expect(egypt.findAll('.mwnf-partner-panel__count').map((m) => m.text())).toEqual(['12 object(s) in this site'])
+    // Each row is PartnerPanel's line variant.
+    expect(egypt.findAll('.mwnf-partner-list__row .mwnf-partner-panel--line')).toHaveLength(3)
     // Links go through the row's own route.
-    const link = egypt.findAll('.mwnf-partner-list__name')[1]
+    const link = egypt.findAll('.mwnf-partner-panel__name')[1]
     expect(link.attributes('href')).toBe('/partner/p1')
 
     // No translation at all: falls back to internal_name, and to no country.
     const other = groups[1]
-    expect(other.find('.mwnf-partner-list__name').text()).toBe('International Foundation')
+    expect(other.find('.mwnf-partner-panel__name').text()).toBe('International Foundation')
     expect(other.find('.mwnf-partner-list__tier--associated').exists()).toBe(false)
 
     const syria = groups[2]
-    expect(syria.findAll('.mwnf-partner-list__tier--associated .mwnf-partner-list__name').map((n) => n.text())).toEqual([
+    expect(syria.findAll('.mwnf-partner-list__tier--associated .mwnf-partner-panel__name').map((n) => n.text())).toEqual([
       'Aleppo Annex, Aleppo',
       'Homs Collection, Homs',
     ])
@@ -1401,16 +1417,16 @@ describe('PartnerListView', () => {
     // p2 is parented to p1 ("Zed Museum"): nested under it, not in the flat column.
     expect(egypt.find('.mwnf-partner-list__tier--associated').exists()).toBe(false)
     const zed = egypt.findAll('.mwnf-partner-list__row-block')[1]
-    expect(zed.find('.mwnf-partner-list__name').text()).toBe('Zed Museum, Cairo')
-    expect(zed.find('.mwnf-partner-list__children .mwnf-partner-list__name').text()).toBe('Attached Gallery, Cairo')
+    expect(zed.find('.mwnf-partner-panel__name').text()).toBe('Zed Museum, Cairo')
+    expect(zed.find('.mwnf-partner-list__children .mwnf-partner-panel__name').text()).toBe('Attached Gallery, Cairo')
 
     const syria = groups[2]
     // p5's parent_id ("px-missing") is not in the fixture: it keeps its place
     // in the flat column rather than being dropped.
     expect(syria.find('.mwnf-partner-list__tier--associated').exists()).toBe(true)
-    expect(syria.find('.mwnf-partner-list__tier--associated .mwnf-partner-list__name').text()).toBe('Homs Collection, Homs')
+    expect(syria.find('.mwnf-partner-list__tier--associated .mwnf-partner-panel__name').text()).toBe('Homs Collection, Homs')
     const damascus = syria.findAll('.mwnf-partner-list__row-block')[0]
-    expect(damascus.find('.mwnf-partner-list__children .mwnf-partner-list__name').text()).toBe('Aleppo Annex, Aleppo')
+    expect(damascus.find('.mwnf-partner-list__children .mwnf-partner-panel__name').text()).toBe('Aleppo Annex, Aleppo')
   })
 
   it('the open, untiered A-Z list (the DXA shape): no tiers, a variant with no accordion, and an order toggle mirrored in the query', async () => {
@@ -1430,7 +1446,7 @@ describe('PartnerListView', () => {
     expect(groups.map((g) => g.find('.mwnf-partner-list__group-title').text())).toEqual(['Egypt', 'Other', 'Syria'])
     // No tier at all: every partner - main and what would be associated - is one list.
     expect(wrapper.findAll('.mwnf-partner-list__tier--associated')).toHaveLength(0)
-    expect(groups[0].findAll('.mwnf-partner-list__name').map((n) => n.text())).toEqual([
+    expect(groups[0].findAll('.mwnf-partner-panel__name').map((n) => n.text())).toEqual([
       'Alpha Museum, Giza',
       'Attached Gallery, Cairo',
       'Zed Museum, Cairo',
@@ -1459,11 +1475,11 @@ describe('PartnerListView', () => {
       },
       route: '/partners?order=desc',
     })
-    await settle(() => wrapper.findAll('.mwnf-partner-list__name').length > 0)
+    await settle(() => wrapper.findAll('.mwnf-partner-panel__name').length > 0)
 
     expect(wrapper.findAll('.mwnf-partner-list__group')).toHaveLength(1)
     expect(wrapper.find('.mwnf-partner-list__group-title').exists()).toBe(false)
-    expect(wrapper.findAll('.mwnf-partner-list__name').map((n) => n.text())).toEqual([
+    expect(wrapper.findAll('.mwnf-partner-panel__name').map((n) => n.text())).toEqual([
       'Zed Museum, Cairo',
       'International Foundation',
       'Homs Collection, Homs',
@@ -1503,11 +1519,11 @@ describe('PartnerListView', () => {
       },
       route: '/partners',
     })
-    await settle(() => wrapper.findAll('.mwnf-partner-list__name').length > 0)
+    await settle(() => wrapper.findAll('.mwnf-partner-panel__name').length > 0)
     // Only the Syria partners (the second fixture project) match the scope.
     expect(wrapper.findAll('.mwnf-partner-list__group-title').map((g) => g.text())).toEqual(['Syria'])
-    expect(wrapper.find('.mwnf-partner-list__name').text()).toBe('Museum: Damascus Museum')
-    expect(wrapper.find('.mwnf-partner-list__name').attributes('href')).toBe('/partner/p3?lang=fr')
+    expect(wrapper.find('.mwnf-partner-panel__name').text()).toBe('Museum: Damascus Museum')
+    expect(wrapper.find('.mwnf-partner-panel__name').attributes('href')).toBe('/partner/p3?lang=fr')
   })
 
   it('hands #before/#group-heading/#row/#after slots the group, partner and row, replacing the default markup', async () => {

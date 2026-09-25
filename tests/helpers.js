@@ -48,7 +48,17 @@ export const layoutTexts = {
   'sheet.field.history': 'History',
   // PartnerMap entries (viewer-i18n 2.4.0+)
   'partner.map.map': 'Map',
-  'partner.map.mapOf': 'Map of {label}',
+  'partner.map.mapOf': 'Map of',
+  'partner.info.about': 'About',
+  'partner.info.contact': 'Contact',
+  'partner.info.logo': 'Logo',
+  'partner.info.addresses': 'Address(es)',
+  'partner.info.phone': 'Phone',
+  'partner.info.fax': 'Fax',
+  'partner.nav.homepage': 'Go to the Partner’s homepage',
+  'partner.item.objectsInSite': 'object(s) in this site',
+  'partner.action.readMore': 'Read more',
+  'partner.action.viewObjects': 'View objects',
   'partner.map.openInOpenStreetMap': 'Open in OpenStreetMap',
 }
 
