@@ -180,6 +180,28 @@ describe('HomeView', () => {
     expect(wrapper.find('.mwnf-featured__action').text()).toContain('View details')
   })
 
+  it('never shows a record the featured filter leaves out (a site\'s own visible rule)', async () => {
+    for (const seed of [1, 2, 3, 4]) {
+      const { wrapper } = await mountView(HomeView, {
+        props: { featured: { entity: 'objects', heading: 'site.home.onDisplay', seed, filter: (record) => record.id === 'o3' } },
+      })
+      await settle(() => wrapper.find('.mwnf-featured').exists())
+      expect(wrapper.find('.mwnf-featured__name').text()).toBe('Fragment')
+    }
+  })
+
+  it('draws the welcome and the record on display as panels when asked', async () => {
+    const featured = { entity: 'objects', heading: 'site.home.onDisplay', seed: 1 }
+    const { wrapper } = await mountView(HomeView, { props: { title: 'site.home.title', featured, panels: true } })
+    await settle(() => wrapper.find('.mwnf-featured').exists())
+    expect(wrapper.find('.mwnf-home__welcome').classes()).toContain('mwnf-panel')
+    expect(wrapper.find('.mwnf-featured').classes()).toContain('mwnf-panel')
+
+    const { wrapper: plain } = await mountView(HomeView, { props: { title: 'site.home.title', featured } })
+    await settle(() => plain.find('.mwnf-featured').exists())
+    expect(plain.find('.mwnf-panel').exists()).toBe(false)
+  })
+
   it('renders nothing but the slots when nothing is declared', async () => {
     const { wrapper } = await mountView(HomeView, { slots: { default: '<p class="own">Own content</p>' } })
     expect(wrapper.find('.own').exists()).toBe(true)

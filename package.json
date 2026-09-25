@@ -40,7 +40,7 @@
     "vue-router": "^4.5.0 || ^5.0.0"
   },
   "devDependencies": {
-    "@museumwnf/viewer-core": "^2.1.0",
+    "@museumwnf/viewer-core": "^2.2.0",
     "@vitejs/plugin-vue": "^6.0.8",
     "@vue/test-utils": "^2.4.11",
     "jsdom": "^30.0.1",

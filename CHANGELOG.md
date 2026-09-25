@@ -1,7 +1,7 @@
 ## 2.17.0 (2026-09-25)
 
 Part of M10 epic 5 (museumwithnofrontiers/inventory-app#2016), stories
-museumwithnofrontiers/inventory-app#2038 and #2039.
+museumwithnofrontiers/inventory-app#2038, #2039 and #2040.
 
 ### Added
 
@@ -23,6 +23,10 @@ museumwithnofrontiers/inventory-app#2038 and #2039.
     `pendingLabel` when given.
   - Tokens: `--mwnf-special-features-*`, `--mwnf-related-media-*`,
     `--mwnf-on-display-*`.
+- `HomeView`, for the standalone home pages (#2040):
+  - `featured.filter`: the records the pick may show. It needs
+    `@museumwnf/viewer-core` 2.2.0, whose `useFeaturedRecord` takes it.
+  - `panels`: the welcome and the record on display as `.mwnf-panel` boxes.
 
 ### Changed
 

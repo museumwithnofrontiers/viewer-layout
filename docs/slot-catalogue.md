@@ -142,8 +142,11 @@ real configuration surface — the table below lists just the outer props;
 ### HomeView
 
 **Props:** `title` (String), `intro` (String, Markdown), `cards` (Array),
-`featured` (Object) — or the same four keys under `config.home`, read
-through `useSiteConfig()`, when no prop is passed.
+`featured` (Object: `entity`, `heading`, `action`, `route`, `eyebrow`, `meta`,
+`seed`, and `filter` — the records the pick may show, viewer-core 2.2.0),
+`panels` (Boolean: the welcome and the record on display as `.mwnf-panel`
+boxes) — or the same keys under `config.home`, read through
+`useSiteConfig()`, when no prop is passed.
 
 | Slot | Replaces / wraps | Slot props |
 |---|---|---|
