@@ -278,7 +278,7 @@
 
 /* The item page: legacy's two columns — the photos on the left, the field
    sheet on the right, the related content spanning both — over
-   RecordSheetView's single column, a narrow screen returning to one. Its
+   ItemDetailView's single column, a narrow screen returning to one. Its
    ground is white on a gallery's tinted page; an exhibition sets its own. */
 
 .mwnf-dxa-item {

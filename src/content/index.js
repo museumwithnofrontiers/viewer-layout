@@ -31,13 +31,3 @@ export { default as TimelineLookup } from './TimelineLookup.vue'
 export { default as SpecialFeatures } from './SpecialFeatures.vue'
 export { default as RelatedMedia } from './RelatedMedia.vue'
 export { default as OnDisplayIn } from './OnDisplayIn.vue'
-
-// Deprecated aliases: the DXA family's own blocks moved to `/dxa`, where a
-// site imports them from now on (inventory-app#2055). They stay here until
-// the major release that removes them, once no site imports them from here —
-// the one-way rule's sanctioned exception while a component moves.
-export { default as FeaturedPartners } from '../dxa/FeaturedPartners.vue'
-export { default as SiblingGalleries } from '../dxa/SiblingGalleries.vue'
-export { default as PopupLogo } from '../dxa/PopupLogo.vue'
-export { default as PictureGallery } from '../dxa/PictureGallery.vue'
-export { default as PictureNarrative } from '../dxa/PictureNarrative.vue'
