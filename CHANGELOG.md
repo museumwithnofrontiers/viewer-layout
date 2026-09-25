@@ -25,9 +25,12 @@ exhibition themes) and `@museumwnf/viewer-i18n` 4.3.0
   its credits page given `creditsBody`. `partnerObjects` defaults to the
   shared `exhibition.partnerObjects.*` entries, so a site no longer passes it.
 - **The item page's two-column layout** (`.mwnf-dxa-item`) and the theme
-  pages' styles are in `dxa.css`. The theme pages read an exhibition's theme
-  colours as tokens: `--mwnf-dxa-theme-background`, `-text`, `-contrast`,
-  `-contrast-text`, `-main`.
+  pages' styles are in `dxa.css`. The item page's ground is
+  `--mwnf-dxa-item-background` (white, a gallery's item page on its tinted
+  page) and its sheet links `--mwnf-dxa-item-link` (the accent), both of
+  which an exhibition sets to its own. The theme pages read an exhibition's
+  theme colours as tokens: `--mwnf-dxa-theme-background`, `-text`,
+  `-contrast`, `-contrast-text`, `-main`.
 - **`mwnf-chip--Explore`** (`--mwnf-project-Explore`, legacy's `#006950`): the
   chip of a record no project claims.
 

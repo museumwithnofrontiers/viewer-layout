@@ -278,10 +278,11 @@
 
 /* The item page: legacy's two columns — the photos on the left, the field
    sheet on the right, the related content spanning both — over
-   RecordSheetView's single column, a narrow screen returning to one. */
+   RecordSheetView's single column, a narrow screen returning to one. Its
+   ground is white on a gallery's tinted page; an exhibition sets its own. */
 
 .mwnf-dxa-item {
-  background: var(--mwnf-color-background, #ffffff);
+  background: var(--mwnf-dxa-item-background, #ffffff);
   width: 100%;
   min-height: 25rem;
 }
@@ -316,7 +317,7 @@
 }
 
 .mwnf-dxa-item .mwnf-sheet__value a {
-  color: var(--mwnf-link-text, #0000ff);
+  color: var(--mwnf-dxa-item-link, var(--mwnf-color-accent, #1c1c1c));
 }
 
 @media only screen and (max-width: 53.0625rem) {

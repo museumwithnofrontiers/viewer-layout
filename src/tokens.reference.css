@@ -787,6 +787,8 @@
   /* ---------- DXA family pages (src/dxa/) ---------- */
   /* --mwnf-dxa-heading-color: #1c1c1c;              Partner name / profile heading color */
   /* --mwnf-dxa-band-background: #f0f0f0;            Language switcher / tab strip / timeline-link box background */
+  /* --mwnf-dxa-item-background: #ffffff;            Item page ground (white on a gallery's tinted page) */
+  /* --mwnf-dxa-item-link: var(--mwnf-color-accent); Item sheet value links */
   /* --mwnf-dxa-theme-background: #ffffff;           Exhibition theme pages: the ground (legacy's secondary colour) */
   /* --mwnf-dxa-theme-text: #000000;                 Their text and tour links (secondary text colour) */
   /* --mwnf-dxa-theme-contrast: #64bfd9;             The heading band and link hover (contrast colour) */
