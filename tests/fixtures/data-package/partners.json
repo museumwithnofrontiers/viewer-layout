@@ -14,7 +14,7 @@
     "images": [
       { "url": "p1-photo.jpg", "display_order": 0, "captions": { "en": "Courtyard" }, "photographer": "A. Photographer", "copyright": "CC-BY" }
     ],
-    "contact_person_1": { "name": "Jane Curator", "title": "Curator", "phone": "+20 000 0000", "email": "jane@example.org" },
+    "contact_persons": [{ "name": "Jane Curator", "title": "Curator", "phone": "+20 000 0000", "email": "jane@example.org" }],
     "additional_urls": [{ "url": "https://p1.example.org/extra" }]
   },
   { "id": "p7", "internal_name": "Alpha Museum", "country_id": "c-eg", "level": null, "parent_id": null, "project_uuids": ["p-isl"], "item_count": 0 },
