@@ -129,11 +129,14 @@ describe('exhibitionConfig', () => {
 })
 
 describe('the family-only blocks (inventory-app#2055)', () => {
-  it('live under /dxa, with /content and /views keeping the old names as aliases', () => {
+  it('live under /dxa only (the aliases went in 3.0.0, inventory-app#2058)', () => {
     for (const name of ['FeaturedPartners', 'SiblingGalleries', 'PopupLogo', 'PictureGallery', 'PictureNarrative']) {
       expect(dxa[name], name).toBeTruthy()
-      expect(content[name], name).toBe(dxa[name])
+      expect(content[name], name).toBeUndefined()
     }
-    expect(views.RecordSheetView).toBe(dxa.ItemDetailView)
+    expect(dxa.ItemDetailView).toBeTruthy()
+    expect(views.RecordSheetView).toBeUndefined()
+    expect(dxa.GalleryPartnerProfile).toBeUndefined()
+    expect(dxa.ExhibitionPartnerProfile).toBeUndefined()
   })
 })

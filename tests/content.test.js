@@ -10,7 +10,6 @@ import {
   DynastyList,
   DynastyPopout,
   FacetSelect,
-  FeaturedPartners,
   FeaturedRecord,
   FilterPanel,
   GlossaryPopover,
@@ -20,7 +19,6 @@ import {
   Pagination,
   PartnerMap,
   PartnerPanel,
-  PopupLogo,
   RecordCredits,
   RecordGrid,
   RecordLanguages,
@@ -31,12 +29,15 @@ import {
   ResultsSummary,
   SectionCards,
   SheetSection,
-  SiblingGalleries,
   SourceCredit,
   SpecialFeatures,
   TimelineEventList,
   TimelineLookup,
 } from '../src/content/index.js'
+// The DXA family's own blocks, which live under /dxa only (inventory-app#2058).
+import FeaturedPartners from '../src/dxa/FeaturedPartners.vue'
+import PopupLogo from '../src/dxa/PopupLogo.vue'
+import SiblingGalleries from '../src/dxa/SiblingGalleries.vue'
 import { globalWithI18n, layoutTexts, withSiteRights } from './helpers.js'
 
 const records = [
@@ -1286,7 +1287,7 @@ describe('TimelineLookup', () => {
     await wrapper.find('select').setValue('eg')
     expect(wrapper.find('.mwnf-sheet-timeline__event').exists()).toBe(true)
 
-    // A different record's `info` (a fresh object, the way RecordSheetView
+    // A different record's `info` (a fresh object, the way ItemDetailView
     // recomputes it per record) resets the selection to its own default,
     // the way `watch(item, …, { immediate: true })` used to.
     await wrapper.setProps({ info: { ...info, defaultCountry: () => 'all' } })

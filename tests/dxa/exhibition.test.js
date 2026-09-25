@@ -2,7 +2,8 @@ import { beforeAll, describe, expect, it } from 'vitest'
 import { loadEntities, useDataPackage } from '@museumwnf/viewer-core'
 import ExhibitionSearchHowTo from '../../src/dxa/exhibition/SearchHowTo.vue'
 import ExhibitionPartners from '../../src/dxa/exhibition/Partners.vue'
-import ExhibitionPartnerProfile from '../../src/dxa/exhibition/PartnerProfile.vue'
+import PartnerDetail from '../../src/dxa/PartnerDetail.vue'
+import { partnerDetail } from '../../src/dxa/exhibition/data.js'
 import ExhibitionSearchResults from '../../src/dxa/exhibition/SearchResults.vue'
 import ExhibitionTimelineResults from '../../src/dxa/exhibition/TimelineResults.vue'
 import ExhibitionTimelineGallery from '../../src/dxa/exhibition/TimelineGallery.vue'
@@ -67,9 +68,12 @@ describe('ExhibitionPartners', () => {
   })
 })
 
-describe('ExhibitionPartnerProfile', () => {
+// The exhibition's partner page: the family's shared PartnerDetail with its
+// own half, as standardRoutes('exhibition') mounts it (inventory-app#2034).
+describe('PartnerDetail (exhibition)', () => {
   it('renders the partner variant by default', async () => {
-    const { wrapper } = await mountPage(ExhibitionPartnerProfile, {
+    const { wrapper } = await mountPage(PartnerDetail, {
+      props: { id: 'p1', family: partnerDetail },
       route: '/partner/p1',
       messages: texts,
     })
@@ -78,7 +82,8 @@ describe('ExhibitionPartnerProfile', () => {
   })
 
   it('heads the page with the partner name and "city, country"', async () => {
-    const { wrapper } = await mountPage(ExhibitionPartnerProfile, {
+    const { wrapper } = await mountPage(PartnerDetail, {
+      props: { id: 'p1', family: partnerDetail },
       route: '/partner/p1',
       messages: texts,
     })
@@ -89,8 +94,8 @@ describe('ExhibitionPartnerProfile', () => {
   })
 
   it('renders the institution variant with its own homepage label', async () => {
-    const { wrapper } = await mountPage(ExhibitionPartnerProfile, {
-      props: { variant: 'institution' },
+    const { wrapper } = await mountPage(PartnerDetail, {
+      props: { id: 'p1', family: partnerDetail, variant: 'institution' },
       route: '/institution/p1',
       messages: texts,
     })

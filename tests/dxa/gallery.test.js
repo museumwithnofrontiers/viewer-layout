@@ -4,7 +4,8 @@ import GalleryAbout from '../../src/dxa/gallery/About.vue'
 import GalleryCredits from '../../src/dxa/gallery/Credits.vue'
 import GallerySearchHowTo from '../../src/dxa/gallery/SearchHowTo.vue'
 import GalleryPartners from '../../src/dxa/gallery/Partners.vue'
-import GalleryPartnerProfile from '../../src/dxa/gallery/PartnerProfile.vue'
+import PartnerDetail from '../../src/dxa/PartnerDetail.vue'
+import { partnerDetail } from '../../src/dxa/gallery/data.js'
 import GallerySearchResults from '../../src/dxa/gallery/SearchResults.vue'
 import GalleryTimelineResults from '../../src/dxa/gallery/TimelineResults.vue'
 import GalleryTimelineGallery from '../../src/dxa/gallery/TimelineGallery.vue'
@@ -76,10 +77,12 @@ describe('GalleryPartners', () => {
   })
 })
 
-describe('GalleryPartnerProfile', () => {
+// The gallery's partner page: the family's shared PartnerDetail with its own
+// half, as standardRoutes('gallery') mounts it (inventory-app#2034).
+describe('PartnerDetail (gallery)', () => {
   it('renders the partner name, city and description', async () => {
-    const { wrapper } = await mountPage(GalleryPartnerProfile, {
-      props: { id: 'p1' },
+    const { wrapper } = await mountPage(PartnerDetail, {
+      props: { id: 'p1', family: partnerDetail },
       route: '/partner/p1',
       messages: texts,
     })

@@ -1,3 +1,28 @@
+## 3.0.0 (2026-09-25)
+
+Part of M10 epic 6 (museumwithnofrontiers/inventory-app#2017), story
+museumwithnofrontiers/inventory-app#2058: the moved components exist only under
+`/dxa`. Every DXA site moved onto the family pages with 2.18.0, and no
+website imports any of the names below; package-ci builds and tests all 46
+against this release.
+
+### Removed
+
+- The `/content` aliases of the family-only blocks: `FeaturedPartners`,
+  `SiblingGalleries`, `PopupLogo`, `PictureGallery`, `PictureNarrative`.
+- The `/views` alias `RecordSheetView`.
+- `GalleryPartnerProfile` and `ExhibitionPartnerProfile` (`/dxa`), the
+  family's partner page under its old names.
+
+### Migration
+
+- A family-only block: import it from `@museumwnf/viewer-layout/dxa`, under
+  the same name.
+- `RecordSheetView` → `ItemDetailView` from `@museumwnf/viewer-layout/dxa`,
+  the same props and slots.
+- `GalleryPartnerProfile` / `ExhibitionPartnerProfile` → `PartnerDetail` with
+  `family: galleryPartnerDetail` / `exhibitionPartnerDetail` (and `variant`
+  for an institution), as `standardRoutes` registers it.
 ## 2.18.0 (2026-09-25)
 
 Part of M10 epic 6 (museumwithnofrontiers/inventory-app#2017), stories

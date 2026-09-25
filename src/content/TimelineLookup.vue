@@ -5,16 +5,12 @@ import { useI18n } from '@museumwnf/viewer-core/i18n'
 import SmartLink from './SmartLink.vue'
 
 // The timeline popout a DXA gallery/exhibition item sheet opens onto its own
-// sheet — the shape carpets/amulets and the-use-of-colours-in-art/
-// water-in-islam each wrote for themselves, byte-identical within their own
-// pair and near-identical across the two: a trigger line, a country select,
-// a "see the full search" link and the events for the record's own date
-// range. What differs between a gallery and an exhibition — a gallery's
-// countries as `{ value, label }[]`, an exhibition's as `[code, label][]`;
-// the events lookup's own signature; the search route's query keys — is the
-// site's own `useTimeline.js`, so `RecordSheetView` asks the site's `spec`
-// for one small, already-normalized `info` object instead of guessing at
-// any of that.
+// sheet: a trigger line, a country select, a "see the full search" link and
+// the events for the record's own date range. The countries, the events
+// lookup and the search route are the family's item-page spec
+// (`@museumwnf/viewer-core/dxa`), so `ItemDetailView` asks the `spec` for
+// one small, already-normalized `info` object instead of guessing at any
+// of that.
 const props = defineProps({
   /**
    * `{ trigger?, heading, countries: [{ value, label }], defaultCountry?,
