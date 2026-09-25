@@ -1,5 +1,6 @@
 <script setup>
 import { computed } from 'vue'
+import { useI18n } from '@museumwnf/viewer-core/i18n'
 
 // An embedded map for a partner's location, using OpenStreetMap's keyless public
 // embed. Coordinates (latitude, longitude) drive the map centre and marker; zoom
@@ -19,6 +20,8 @@ const props = defineProps({
   label: { type: String, default: '' },
 })
 
+const { t } = useI18n()
+
 const hasLocation = computed(() =>
   Number.isFinite(props.latitude) && Number.isFinite(props.longitude)
 )
@@ -36,6 +39,10 @@ const src = computed(() =>
   `https://www.openstreetmap.org/export/embed.html?bbox=${bbox.value}&layer=mapnik&marker=${props.latitude}%2C${props.longitude}`
 )
 
+// A text is never interpolated (viewer-core's texts carry no placeholders),
+// so the partner's name sits next to "Map of", not inside it.
+const frameTitle = computed(() => (props.label ? `${t(props.mapOfEntry)} ${props.label}` : t(props.mapTitleEntry)))
+
 const fullMap = computed(() =>
   `https://www.openstreetmap.org/?mlat=${props.latitude}&mlon=${props.longitude}#map=${props.zoom || 15}/${props.latitude}/${props.longitude}`
 )
@@ -46,7 +53,7 @@ const fullMap = computed(() =>
     <p class="mwnf-partner-map__title">{{ $t(mapTitleEntry) }}</p>
     <iframe
       :src="src"
-      :title="label ? $t(mapOfEntry, { label }) : $t(mapTitleEntry)"
+      :title="frameTitle"
       loading="lazy"
       referrerpolicy="no-referrer"
       class="mwnf-partner-map__embed"

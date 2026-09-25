@@ -1,9 +1,11 @@
 import { sectionMeta } from '@museumwnf/viewer-core'
+import PartnerDetail from './PartnerDetail.vue'
+import { partnerDetail as galleryPartnerDetail } from './gallery/data.js'
+import { partnerDetail as exhibitionPartnerDetail } from './exhibition/data.js'
 import GalleryAbout from './gallery/About.vue'
 import GalleryCredits from './gallery/Credits.vue'
 import GallerySearchHowTo from './gallery/SearchHowTo.vue'
 import GalleryPartners from './gallery/Partners.vue'
-import GalleryPartnerProfile from './gallery/PartnerProfile.vue'
 import GallerySearchResults from './gallery/SearchResults.vue'
 import GalleryTimelineResults from './gallery/TimelineResults.vue'
 import GalleryTimelineGallery from './gallery/TimelineGallery.vue'
@@ -12,7 +14,6 @@ import GalleryCollectionSearch from './gallery/CollectionSearch.vue'
 import GalleryPartnerObjects from './gallery/PartnerObjects.vue'
 import ExhibitionSearchHowTo from './exhibition/SearchHowTo.vue'
 import ExhibitionPartners from './exhibition/Partners.vue'
-import ExhibitionPartnerProfile from './exhibition/PartnerProfile.vue'
 import ExhibitionSearchResults from './exhibition/SearchResults.vue'
 import ExhibitionTimelineResults from './exhibition/TimelineResults.vue'
 import ExhibitionTimelineGallery from './exhibition/TimelineGallery.vue'
@@ -64,8 +65,8 @@ function galleryRoutes(config) {
     {
       path: '/partner/:id',
       name: 'partner',
-      component: GalleryPartnerProfile,
-      props: (route) => ({ id: route.params.id }),
+      component: PartnerDetail,
+      props: (route) => ({ id: String(route.params.id), family: galleryPartnerDetail }),
       meta: meta('partners', 'languages'),
     },
     { path: '/partner/:id/objects', name: 'partner-objects', component: GalleryPartnerObjects, meta: meta('partners') },
@@ -107,7 +108,13 @@ function exhibitionRoutes(config) {
     { path: '/search', name: 'search-results', component: ExhibitionSearchResults, meta: meta('database') },
     { path: '/how-to-search', name: 'search-how-to', component: ExhibitionSearchHowTo, meta: meta('database') },
     { path: '/partners', name: 'partners', component: ExhibitionPartners, meta: meta('partners') },
-    { path: '/partner/:id', name: 'partner', component: ExhibitionPartnerProfile, meta: meta('partners', 'languages') },
+    {
+      path: '/partner/:id',
+      name: 'partner',
+      component: PartnerDetail,
+      props: (route) => ({ id: String(route.params.id), family: exhibitionPartnerDetail }),
+      meta: meta('partners', 'languages'),
+    },
     {
       path: '/partner/:id/objects',
       name: 'partner-objects',
@@ -118,8 +125,8 @@ function exhibitionRoutes(config) {
     {
       path: '/institution/:id',
       name: 'institution',
-      component: ExhibitionPartnerProfile,
-      props: { variant: 'institution' },
+      component: PartnerDetail,
+      props: (route) => ({ id: String(route.params.id), family: exhibitionPartnerDetail, variant: 'institution' }),
       meta: meta('partners', 'languages'),
     },
     {

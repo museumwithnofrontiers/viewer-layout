@@ -1,3 +1,62 @@
+## 2.16.0 (2026-09-25)
+
+Part of M10 epic 4 (museumwithnofrontiers/inventory-app#2015), stories
+museumwithnofrontiers/inventory-app#2032, #2033 and #2034. Requires
+`@museumwnf/viewer-core` 2.1.0 (`partnerView()`) and `@museumwnf/viewer-i18n`
+4.2.0 (`partner.action.*`).
+
+### Added
+
+- `PartnerPanel` (`/content`): one partner, wherever it appears, rendered from
+  viewer-core's `partnerView()` view-model.
+  - `line`: a list's row.
+  - `summary`: the line under an item's holder text, or a page's heading.
+  - `full`: the partner page. The About · Contact · Logo tabs by default
+    (decision D2), or `layout: 'sections'`; the homepage link, the pictures
+    beside the open panel, the map below.
+  - `show` switches parts off; `heading` sets the name's level; labels are
+    entry names with shared defaults.
+  - Slots: `badge`, `meta`, `actions`, `after`.
+  - Tokens: `--mwnf-partner-*`, listed in `tokens.reference.css`.
+- `PartnerDetail` (`/dxa`): the partner page of both DXA families (decision
+  D4), on `RecordView` and the `full` panel. Each family's own half is its
+  `partnerDetail` (exported as `galleryPartnerDetail` /
+  `exhibitionPartnerDetail`), which `standardRoutes` passes as `family`.
+- `PartnerListView`'s spec: `objectsRoute`, `actions` and `emptyLabel`, for
+  the line's View objects link, its Read more · View objects links and the
+  "no objects" line. The `row` slot also receives `view`.
+- `FeaturedPartners`: a `partners` prop taking `partnerView()` view-models,
+  next to `records`.
+
+### Changed
+
+- `PartnerListView`'s default row is `PartnerPanel`'s `line`. A `spec.record`
+  row is still honoured: its shape is lifted into the view-model. The row's
+  parts carry the panel's classes (`.mwnf-partner-panel__name`, `__logo`,
+  `__count`) instead of `.mwnf-partner-list__name`, `__logo`, `__meta`. The
+  list's own wrappers (`__row`, `__row-block`, `__children`, `__group*`) are
+  unchanged.
+- `RecordSheetView`'s `museum` block shows the item's holder text, then the
+  partner as the `summary` panel: "About {name}, {city}, {country}", linked
+  through `spec.museum.route` (decision D3). `spec.museum.label` is no longer
+  read. A partner the package does not carry leaves the holder text alone.
+- The DXA partner pages (`GalleryPartnerProfile`, `ExhibitionPartnerProfile`)
+  are `PartnerDetail`, kept under their old export names until the major
+  release of inventory-app#2017. The family partner lists render their rows as
+  `line` panels, and the partner-objects pages head with the `summary`.
+  `dxa.css` maps the family's colours onto the panel's tokens, and drops the
+  rules of the markup it replaced.
+
+### Fixed
+
+- The gallery partner page showed its photos twice. They now show once, in
+  the panel.
+- DXA partner picture captions were always empty: they read a `captions` map
+  the package never carries. They now read `alt_text`.
+- The partner's own fax shows in the contact block. No page showed it before.
+- `PartnerMap`'s frame title names the partner ("Map of {name}"). It used to
+  interpolate the name into a text, which texts never allow, so the name was
+  dropped.
 # Changelog
 
 ## 2.15.2 (2026-09-25)

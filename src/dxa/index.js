@@ -12,6 +12,15 @@ import '../styles/dxa.css'
 
 export { standardRoutes } from './routes.js'
 
+// One partner page for both families (inventory-app#2034); each family's
+// own half is its `partnerDetail`, the `family` prop `standardRoutes`
+// passes. `GalleryPartnerProfile`/`ExhibitionPartnerProfile` below are that
+// page too, kept under their old names until inventory-app#2017's major
+// release.
+export { default as PartnerDetail } from './PartnerDetail.vue'
+export { partnerDetail as galleryPartnerDetail } from './gallery/data.js'
+export { partnerDetail as exhibitionPartnerDetail } from './exhibition/data.js'
+
 export { default as GalleryAbout } from './gallery/About.vue'
 export { default as GalleryCredits } from './gallery/Credits.vue'
 export { default as GallerySearchHowTo } from './gallery/SearchHowTo.vue'

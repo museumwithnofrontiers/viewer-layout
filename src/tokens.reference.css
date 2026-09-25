@@ -316,6 +316,7 @@
   /* --mwnf-credits-gap: 0.25rem 1rem;               Gap in the credits list */
 
   /* ---------- Content: RecordSheetView (the DXA item sheet's own blocks) ---------- */
+  /* --mwnf-sheet-museum-gap: 0.25rem;               Holder text to partner summary */
   /* --mwnf-sheet-source-size: 0.875rem;             Source-database block text size */
   /* --mwnf-sheet-source-gap: 0.375rem;              Gap between its lines */
   /* --mwnf-sheet-source-uid-size: 0.75rem;          backward_compatibility code size */
@@ -565,6 +566,31 @@
   /* --mwnf-partner-map-border: 1px solid #dddddd;     Map border */
   /* --mwnf-partner-map-link-gap: 0.375rem;            Gap before the full-map link */
   /* --mwnf-partner-map-link-size: 0.875rem;           Full-map link text size */
+
+  /* ---------- Content: PartnerPanel ---------- */
+  /* --mwnf-partner-name-color: inherit;               Name, section and contact headings */
+  /* --mwnf-partner-name-weight: 700;                  Name weight (page, heading) */
+  /* --mwnf-partner-link-color: var(--mwnf-color-accent);  Links: name, actions, contact, homepage */
+  /* --mwnf-partner-muted-color: var(--mwnf-color-muted);  Location, count, dividers */
+  /* --mwnf-partner-divider-gap: 0.375rem;             Space around a | divider */
+  /* --mwnf-partner-logo-width: 7.5rem;                Line/summary logo, max width */
+  /* --mwnf-partner-logo-height: 4.375rem;             Line/summary logo, max height */
+  /* --mwnf-partner-line-gap: 0.75rem;                 Gap between logo and text */
+  /* --mwnf-partner-line-name-weight: 500;             Name weight in a list line */
+  /* --mwnf-partner-line-meta-gap: 0.1875rem;          Gap above the count and actions */
+  /* --mwnf-partner-meta-size: 0.8125rem;              Count and actions text size */
+  /* --mwnf-partner-summary-name-weight: 400;          Name weight in the item-page line */
+  /* --mwnf-partner-gap: 0.75rem;                      Gap between the page's parts */
+  /* --mwnf-partner-header-gap: 0.25rem;               Gap under the name and headings */
+  /* --mwnf-partner-title-size: 1.5rem;                Name size on the partner page */
+  /* --mwnf-partner-bar-padding: 0.5rem 0.75rem;       Tab band padding */
+  /* --mwnf-partner-bar-background: #f0f0f0;           Tab band background */
+  /* --mwnf-partner-tab-size: 0.9375rem;               Tab and homepage text size */
+  /* --mwnf-partner-tab-color: inherit;                Tab text color */
+  /* --mwnf-partner-body-gap: 1.625rem;                Gap between pictures and panel */
+  /* --mwnf-partner-pictures-width: 38%;               Pictures column width */
+  /* --mwnf-partner-line-height: 1.55;                 Panel line height */
+  /* --mwnf-partner-logos-width: 12.5rem;              Logo tab image, max width */
 
   /* ---------- Content: FeaturedPartners ---------- */
   /* --mwnf-featured-partners-padding: 1.25rem 0;      Vertical padding */

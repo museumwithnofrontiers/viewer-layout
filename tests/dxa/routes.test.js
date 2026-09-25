@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { standardRoutes } from '../../src/dxa/routes.js'
+import { partnerDetail as exhibitionPartnerDetail } from '../../src/dxa/exhibition/data.js'
 
 // Pins `standardRoutes`' route name/path sets to exactly what carpets' and
 // the-use-of-colours-in-art's own `dataset.config.js` register on
@@ -69,11 +70,14 @@ describe('standardRoutes("exhibition", config)', () => {
     ])
   })
 
-  it('reuses PartnerProfile/PartnerObjects for the institution routes, no separate component', () => {
+  it('reuses PartnerDetail/PartnerObjects for the institution routes, no separate component', () => {
     const partner = routes.find((r) => r.name === 'partner')
     const institution = routes.find((r) => r.name === 'institution')
     expect(institution.component).toBe(partner.component)
-    expect(institution.props).toEqual({ variant: 'institution' })
+    // One family config for both routes; only the institution's variant differs.
+    const route = { params: { id: 'p1' } }
+    expect(partner.props(route)).toEqual({ id: 'p1', family: exhibitionPartnerDetail })
+    expect(institution.props(route)).toEqual({ id: 'p1', family: exhibitionPartnerDetail, variant: 'institution' })
 
     const partnerObjects = routes.find((r) => r.name === 'partner-objects')
     const institutionMonuments = routes.find((r) => r.name === 'institution-monuments')

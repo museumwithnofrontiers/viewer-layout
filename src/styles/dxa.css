@@ -35,56 +35,28 @@
   padding: 0 2.5rem;
 }
 
-.mwnf-dxa-partner-text {
-  flex: 1;
-  min-width: 0;
+/* The partner pages render the shared `PartnerPanel` (content.css,
+   inventory-app#2034). The family's own colours reach it through its
+   tokens, and legacy's list line keeps its bold name and its logo on the
+   right; legacy's partner name was a little larger than the text, not a
+   title. */
+
+.mwnf-dxa-partners,
+.mwnf-dxa-partner-profile,
+.mwnf-dxa-partner-objects {
+  --mwnf-partner-name-color: var(--mwnf-dxa-heading-color, #1c1c1c);
+  --mwnf-partner-link-color: var(--mwnf-link-text, #0000ff);
+  --mwnf-partner-tab-color: var(--mwnf-dxa-heading-color, #1c1c1c);
+  --mwnf-partner-bar-background: var(--mwnf-dxa-band-background, #f0f0f0);
+  --mwnf-partner-title-size: 1.1rem;
 }
 
-.mwnf-dxa-partner-name {
+.mwnf-dxa-partners .mwnf-partner-panel--line .mwnf-partner-panel__logo {
+  order: 2;
+}
+
+.mwnf-dxa-partners .mwnf-partner-panel--line .mwnf-partner-panel__name {
   font-weight: 700;
-  color: var(--mwnf-dxa-heading-color, #1c1c1c);
-}
-
-.mwnf-dxa-partner-name a {
-  font-weight: 700;
-  color: var(--mwnf-link-text, #0000ff);
-  text-decoration: none;
-}
-
-.mwnf-dxa-partner-name a:hover {
-  text-decoration: underline;
-}
-
-.mwnf-dxa-partner-meta {
-  font-size: 0.8125rem;
-  color: var(--mwnf-color-muted, #555555);
-  margin: 0.1875rem 0;
-}
-
-.mwnf-dxa-partner-meta--empty {
-  font-style: italic;
-}
-
-.mwnf-dxa-partner-links a {
-  color: var(--mwnf-link-text, #0000ff);
-  font-size: 0.8125rem;
-  text-decoration: none;
-}
-
-.mwnf-dxa-partner-links a:hover {
-  text-decoration: underline;
-}
-
-.mwnf-dxa-partner-link-divider {
-  margin: 0 0.375rem;
-  color: var(--mwnf-color-muted, #999999);
-}
-
-.mwnf-dxa-partner-logo img {
-  max-width: 7.5rem;
-  max-height: 4.375rem;
-  object-fit: contain;
-  display: block;
 }
 
 /* Partner profile */
@@ -104,116 +76,9 @@
   padding: 0.375rem 1.25rem;
 }
 
-.mwnf-dxa-partner-location {
-  color: var(--mwnf-color-muted, #555555);
-  margin-bottom: 0.75rem;
-}
-
-.mwnf-dxa-profile-links-container {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.75rem;
-  background: var(--mwnf-dxa-band-background, #f0f0f0);
-  padding: 0.5rem 0.75rem;
-  margin: 0.625rem 0;
-}
-
-.mwnf-dxa-profile-links {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 0.375rem;
-}
-
-.mwnf-dxa-profile-links button {
-  background: none;
-  border: none;
-  font-family: inherit;
-  font-size: 0.9375rem;
-  color: var(--mwnf-dxa-heading-color, #1c1c1c);
-  cursor: pointer;
-}
-
-.mwnf-dxa-profile-tab--active {
-  font-weight: 700;
-  text-decoration: underline;
-}
-
-.mwnf-dxa-profile-links a {
-  color: var(--mwnf-link-text, #0000ff);
-  font-size: 0.875rem;
-}
-
-.mwnf-dxa-profile-divider {
-  color: var(--mwnf-color-muted, #999999);
-  opacity: 0.6;
-}
-
-.mwnf-dxa-profile-objects-link a {
-  text-decoration: none;
-}
-
-.mwnf-dxa-profile-photo-wrapper {
-  display: flex;
-  gap: 1.625rem;
-  align-items: flex-start;
+.mwnf-dxa-partner-profile .mwnf-partner-panel {
   padding-top: 1.125rem;
 }
-
-.mwnf-dxa-profile-photo {
-  flex: 0 0 38%;
-  max-width: 38%;
-}
-
-.mwnf-dxa-profile-info {
-  flex: 1;
-  min-width: 0;
-  line-height: 1.55;
-}
-
-.mwnf-dxa-contact-header {
-  font-weight: 700;
-  color: var(--mwnf-dxa-heading-color, #1c1c1c);
-  margin-bottom: 0.25rem;
-}
-
-.mwnf-dxa-contact-person {
-  margin-top: 0.75rem;
-}
-
-.mwnf-dxa-contact-title {
-  font-style: italic;
-}
-
-.mwnf-dxa-profile-info a {
-  color: var(--mwnf-link-text, #0000ff);
-}
-
-.mwnf-dxa-partner-logos img {
-  max-width: 12.5rem;
-  display: block;
-  margin-bottom: 0.75rem;
-}
-
-.mwnf-dxa-additional-urls {
-  margin-top: 0.75rem;
-  word-break: break-all;
-}
-
-@media only screen and (max-width: 53.0625rem) {
-  .mwnf-dxa-profile-photo-wrapper {
-    flex-direction: column;
-  }
-
-  .mwnf-dxa-profile-photo {
-    max-width: 100%;
-    flex: none;
-    width: 100%;
-  }
-}
-
 /* Search results */
 
 .mwnf-dxa-search-results {

@@ -3,9 +3,10 @@ import { computed } from 'vue'
 import { useRoute, RouterLink } from 'vue-router'
 import BackLink from '../../content/BackLink.vue'
 import Pagination from '../../content/Pagination.vue'
+import PartnerPanel from '../../content/PartnerPanel.vue'
 import CatalogueResultsView from '../../views/CatalogueResultsView.vue'
 import {
-  visiblePartnerById, partnerRoute, labelOf, tr, defaultLang, PAGE_SIZE, tile,
+  visiblePartnerById, partnerDetail, partnerRoute, tr, defaultLang, PAGE_SIZE, tile,
 } from './data.js'
 
 // The member items one partner holds (epic #1731, from colours/water-in-
@@ -34,7 +35,9 @@ const isInstitutionView = computed(() => props.variant === 'institution')
 const route = useRoute()
 const partner = computed(() => visiblePartnerById(route.params.id))
 
-const city = computed(() => (partner.value ? tr('partners', partner.value.id, defaultLang).city ?? '' : ''))
+// The page's head is the partner's `summary` (inventory-app#2034): the name,
+// linked to its page, and "city, country".
+const view = computed(() => (partner.value ? partnerDetail.view(partner.value, tr('partners', partner.value.id, defaultLang)) : null))
 
 const objectsSpec = computed(() => ({
   entity: 'items',
@@ -56,10 +59,7 @@ const objectsSpec = computed(() => ({
   <CatalogueResultsView v-if="partner" :spec="objectsSpec" class="mwnf-dxa-partner-objects">
     <template #before>
       <BackLink />
-      <div class="mwnf-dxa-partner-objects-header">
-        <p class="mwnf-dxa-partner-name">{{ labelOf('partners', partner.id) }}</p>
-        <p class="mwnf-dxa-partner-location">{{ [city, labelOf('countries', partner.country_id)].filter(Boolean).join(', ') }}</p>
-      </div>
+      <PartnerPanel class="mwnf-dxa-partner-objects-header" variant="summary" :heading="1" :partner="view" />
     </template>
 
     <template #actions="{ pageInfo, goToPage }">
