@@ -21,7 +21,9 @@ import FeaturedRecord from '../content/FeaturedRecord.vue'
 //       eyebrow: 'type',                      // a record field, or (record, text) => string
 //       meta: ['location', 'dates'],          // translation fields, or (record, text) => [string]
 //       seed: 42,                             // optional: a deterministic pick
+//       filter: (record) => boolean,          // optional: the records the pick may show (viewer-core 2.2.0)
 //     },
+//     panels: true,                           // optional: the welcome and the record in .mwnf-panel boxes
 //   }
 //
 // Every text is an entry name written out in the declaration, resolved here
@@ -36,6 +38,7 @@ const props = defineProps({
   intro: { type: String, default: '' },
   cards: { type: Array, default: null },
   featured: { type: Object, default: null },
+  panels: { type: Boolean, default: null },
 })
 
 const { t, locale } = useI18n()
@@ -44,7 +47,7 @@ const home = computed(() => ({ ...(config.home ?? {}), ...pick(props) }))
 
 function pick(source) {
   const out = {}
-  for (const key of ['title', 'intro', 'cards', 'featured']) {
+  for (const key of ['title', 'intro', 'cards', 'featured', 'panels']) {
     if (source[key] != null && source[key] !== '') out[key] = source[key]
   }
   return out
@@ -66,7 +69,9 @@ const entity = featuredSpec.value?.entity ?? ''
 const pkg = useDataPackage()
 if (entity) pkg.loadTranslations(entity, 'en')
 const featured = entity
-  ? useFeaturedRecord(entity, { seed: featuredSpec.value?.seed, images: featuredSpec.value?.images ?? 'images' })
+  ? useFeaturedRecord(entity, {
+    seed: featuredSpec.value?.seed, images: featuredSpec.value?.images ?? 'images', filter: featuredSpec.value?.filter,
+  })
   : computed(() => null)
 
 const text = computed(() => (featured.value ? pkg.tr(entity, featured.value.id, locale.value, 'en') : {}))
@@ -99,14 +104,14 @@ const featuredProps = computed(() => {
 
 <template>
   <section class="mwnf-home">
-    <header v-if="home.title || home.intro" class="mwnf-home__welcome">
+    <header v-if="home.title || home.intro" class="mwnf-home__welcome" :class="{ 'mwnf-panel': home.panels }">
       <h1 v-if="home.title" class="mwnf-home__title">{{ t(home.title) }}</h1>
       <I18nText v-if="home.intro" tag="div" class="mwnf-home__intro" :keypath="home.intro" />
     </header>
     <slot name="before" />
     <SectionCards :cards="cards" />
     <slot />
-    <FeaturedRecord v-if="featuredProps" v-bind="featuredProps" />
+    <FeaturedRecord v-if="featuredProps" v-bind="featuredProps" :class="{ 'mwnf-panel': home.panels }" />
     <slot name="after" />
   </section>
 </template>
