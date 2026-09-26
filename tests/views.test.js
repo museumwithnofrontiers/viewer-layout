@@ -92,9 +92,7 @@ const texts = {
   'site.about.body': 'Information about this collection.',
   'core.action.search': 'Search',
   'timeline.form.allCountries': 'All Countries',
-  'timeline.form.selectCountry': 'Select a Country',
-  'timeline.form.startDate': 'Start Date',
-  'timeline.form.endDate': 'End Date',
+  'catalogue.facet.selectCountry': 'Select a country',
   'timeline.form.fromYearHint': 'e.g. 800',
   'timeline.form.toYearHint': 'e.g. 1400',
   'timeline.form.errorSelect': 'Please select a country, or a start and end date.',
@@ -1624,6 +1622,15 @@ describe('TimelineResultsView', () => {
     expect(wrapper.find('.mwnf-timeline__description').html()).toContain('<em>dynasty</em>')
     expect(wrapper.find('.mwnf-summary__count').text()).toBe('4')
     expect(wrapper.find('.mwnf-pagination').exists()).toBe(true)
+  })
+
+  it('labels its controls with the shared catalogue entries by default', async () => {
+    const { wrapper } = await mountView(TimelineResultsView, { props: { spec: countrySpec }, route: '/timeline/results' })
+    await settle(() => wrapper.findAll('.mwnf-timeline__row').length > 0)
+    const text = wrapper.text()
+    expect(text).toContain('Select a country')
+    expect(text).toContain('Start date')
+    expect(text).toContain('End date')
   })
 
   it('filters by country and period from the URL, under the overlap rule', async () => {

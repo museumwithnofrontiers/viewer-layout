@@ -1,3 +1,16 @@
+## 3.2.0 (2026-09-26)
+
+Part of M10 epic 8 (museumwithnofrontiers/inventory-app#2019), story
+museumwithnofrontiers/inventory-app#2064.
+
+### Changed
+
+- `TimelineResultsView` labels its country and date controls with the shared
+  `catalogue.facet.selectCountry`, `.startDate` and `.endDate` by default, in
+  place of `timeline.form.selectCountry`, `.startDate` and `.endDate`, which
+  said the same in every language but capitalised the English ("Start Date").
+  The timeline form now reads "Start date", as the search forms do. A
+  control's own `label` or `placeholder` still wins.
 ## 3.1.1 (2026-09-26)
 
 Part of M10 epic 8 (museumwithnofrontiers/inventory-app#2019), story

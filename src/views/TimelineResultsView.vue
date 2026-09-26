@@ -291,7 +291,7 @@ function controlLabel(control, fallback) {
           :model-value="activeFilters.country"
           :label="controlLabel(control, 'catalogue.facet.country')"
           :options="countryOptions"
-          :placeholder="control.placeholder ? t(control.placeholder) : t('timeline.form.selectCountry')"
+          :placeholder="control.placeholder ? t(control.placeholder) : t('catalogue.facet.selectCountry')"
           :any-label="control.anyLabel ? t(control.anyLabel) : ''"
           :hide-empty="Boolean(control.hideEmpty)"
           @update:model-value="activeFilters.country = $event"
@@ -309,7 +309,7 @@ function controlLabel(control, fallback) {
         <FacetSelect
           v-else-if="(control.key === 'begin' || control.key === 'end') && controlOptions[control.key]"
           :model-value="activeFilters[control.key]"
-          :label="controlLabel(control, control.key === 'begin' ? 'timeline.form.startDate' : 'timeline.form.endDate')"
+          :label="controlLabel(control, control.key === 'begin' ? 'catalogue.facet.startDate' : 'catalogue.facet.endDate')"
           :options="controlOptions[control.key]"
           :placeholder="control.placeholder ? t(control.placeholder) : t(control.key === 'begin' ? 'timeline.form.fromYearHint' : 'timeline.form.toYearHint')"
           :any-label="control.anyLabel ? t(control.anyLabel) : ''"
@@ -317,7 +317,7 @@ function controlLabel(control, fallback) {
           @update:model-value="activeFilters[control.key] = $event"
         />
         <label v-else class="mwnf-facet">
-          <span class="mwnf-facet__label">{{ controlLabel(control, control.key === 'begin' ? 'timeline.form.startDate' : 'timeline.form.endDate') }}</span>
+          <span class="mwnf-facet__label">{{ controlLabel(control, control.key === 'begin' ? 'catalogue.facet.startDate' : 'catalogue.facet.endDate') }}</span>
           <input
             type="number"
             class="mwnf-facet__select"
