@@ -1,3 +1,30 @@
+## 3.1.0 (2026-09-26)
+
+Part of M10 epic 8 (museumwithnofrontiers/inventory-app#2019), stories
+museumwithnofrontiers/inventory-app#2061 and #2062. Requires
+`@museumwnf/viewer-i18n` 4.5.0 (the shared entries it names).
+
+### Changed
+
+- `EssayView` defaults its texts to shared entries every bundle carries,
+  instead of the exhibitions' `exhibition.theme.*`, which the gallery bundle
+  does not carry: `previous`/`next` → `core.pagination.previous`/`.next`,
+  `inThisTheme` (the strip's label) → `core.nav.inThisSection`, `seeAll` (the
+  panel's link to the selected record) → `catalogue.results.seeDatabaseEntry`.
+  A spec's own names still win. The exhibition family's theme page names its
+  own `exhibition.theme.inThisTheme` and `.seeAllInTheme`, so the exhibitions
+  read what they did.
+- The DXA family layer (`/dxa`: the site config, the pages, the shells) reads
+  the shared entries in place of the `gallery.*`/`exhibition.*` twins that
+  said the same: the menu (`core.nav.*`), the footer (`core.footer.*`), the
+  section titles (`core.section.*`), the related block (`record.related.*`),
+  the search placeholder (`catalogue.search.placeholder`) and the "See
+  Database Entry" links (`catalogue.results.seeDatabaseEntry`); the
+  exhibition theme page's Previous/Next read `core.pagination.*`. Every text
+  reads as it did but one: a gallery's French footer link reads legacy's own
+  "Contacter" where it read "Contact". A website that overloads one of the old
+  names in its own texts overloads the new one instead — none did at this
+  release.
 ## 3.0.0 (2026-09-25)
 
 Part of M10 epic 6 (museumwithnofrontiers/inventory-app#2017), story

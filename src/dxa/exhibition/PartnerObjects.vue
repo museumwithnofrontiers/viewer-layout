@@ -46,7 +46,7 @@ const objectsSpec = computed(() => ({
   pageSize: PAGE_SIZE,
   variant: 'grid',
   recordRoute: 'item',
-  actionLabel: 'exhibition.action.seeDatabaseEntry',
+  actionLabel: 'catalogue.results.seeDatabaseEntry',
   empty: isInstitutionView.value ? props.texts.emptyInstitution : props.texts.emptyPartner,
   record: (item, { t }) => tile(item, t),
   summary: ({ pageInfo, t }) => [

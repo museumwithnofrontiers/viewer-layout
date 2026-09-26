@@ -12,7 +12,10 @@ import { themes } from './data.js'
 //     one-record-per-id model;
 //   * `numbering: false`: the numeral shown is the owning theme's (`romanFor`),
 //     which EssayView cannot supply for a top-level theme of a themes.json
-//     package, whose tree has no root.
+//     package, whose tree has no root;
+//   * `inThisTheme` and `seeAll` keep the exhibitions' own wording ("In This
+//     Theme", "See all Items in this Theme") over EssayView's shared defaults;
+//     its Previous/Next are the shared ones word for word.
 //
 // `aboutSpec` is `about: () => true` because it is only ever mounted at the
 // About theme; `themeSpec` is `about: () => false` because a legacy
@@ -43,6 +46,8 @@ const shared = {
   panel: true,
   navigation: 'tree',
   numbering: false,
+  inThisTheme: 'exhibition.theme.inThisTheme',
+  seeAll: 'exhibition.theme.seeAllInTheme',
 }
 
 export const themeSpec = { ...shared, about: () => false }

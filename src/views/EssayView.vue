@@ -65,10 +65,11 @@ import SourceCredit from '../content/SourceCredit.vue'
 //     previous, next, backTo, inThisTheme, seeAll,  // entry names, overriding the defaults below
 //   }
 //
-// Texts are entry names, resolved through `t`: `previous`/`next` default to
-// `exhibition.theme.previous`/`.next`, `backTo` to `record.action.backToResults`,
-// `inThisTheme` to `exhibition.theme.inThisTheme`, `seeAll` to
-// `exhibition.theme.seeAllInTheme`. Slots — `header`, `before-body`,
+// Texts are entry names, resolved through `t`, and default to shared entries
+// every bundle carries: `previous`/`next` to `core.pagination.previous`/`.next`,
+// `backTo` to `record.action.backToResults`, `inThisTheme` (the label of the
+// strip of pages) to `core.nav.inThisSection`, `seeAll` (the panel's link to
+// the selected record) to `catalogue.results.seeDatabaseEntry`. Slots — `header`, `before-body`,
 // `after-body`, `panel`, `thumbnails`, `aside`, `justifications`,
 // `navigation`, `after` — each receive `{ node, text, language, tree, items,
 // selected, select, selectedVariant, selectVariant, breadcrumb, previous,
@@ -415,11 +416,11 @@ const tabNodes = computed(() => {
   return siblings.value
 })
 
-const previousText = computed(() => spec.value.previous ?? 'exhibition.theme.previous')
-const nextText = computed(() => spec.value.next ?? 'exhibition.theme.next')
+const previousText = computed(() => spec.value.previous ?? 'core.pagination.previous')
+const nextText = computed(() => spec.value.next ?? 'core.pagination.next')
 const backToText = computed(() => spec.value.backTo ?? 'record.action.backToResults')
-const inThisThemeText = computed(() => spec.value.inThisTheme ?? 'exhibition.theme.inThisTheme')
-const seeAllText = computed(() => spec.value.seeAll ?? 'exhibition.theme.seeAllInTheme')
+const inThisThemeText = computed(() => spec.value.inThisTheme ?? 'core.nav.inThisSection')
+const seeAllText = computed(() => spec.value.seeAll ?? 'catalogue.results.seeDatabaseEntry')
 
 // ── The slot context ────────────────────────────────────────────────────────
 

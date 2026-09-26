@@ -62,7 +62,7 @@ const bannerCaption = computed(() => {
     :banner-caption="bannerCaption"
     :banner-title="isHome ? galleryName : undefined"
     :notice="{ title: t('gallery.notice.tip'), text: t('gallery.notice.databaseReplaced') }"
-    :footer-text="`${t('gallery.footer.copyright')} 2004–${currentYear}`"
+    :footer-text="`${t('core.footer.copyright')} 2004–${currentYear}`"
     @update:language="emit('update:language', $event)"
   >
     <template #brand><span class="mwnf-dxa-logo-mark">MWNF</span></template>

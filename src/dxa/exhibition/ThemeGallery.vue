@@ -38,7 +38,7 @@ const spec = computed(() => ({
   variant: 'grid',
   recordRoute: 'item',
   record: (item, helpers) => tile(item, helpers.t),
-  actionLabel: 'exhibition.action.seeDatabaseEntry',
+  actionLabel: 'catalogue.results.seeDatabaseEntry',
   empty: 'exhibition.theme.noRecords',
   summary: () => [{
     label: t('exhibition.theme.galleryLabel'),

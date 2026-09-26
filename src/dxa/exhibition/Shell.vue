@@ -52,7 +52,7 @@ const banner = computed(() => {
 // Legacy's BottomBanner: the exhibition's identity on the left and the two
 // ways into it on the right, under every page, Home included.
 const bottomLinks = computed(() => [
-  { label: t('exhibition.nav.about'), description: t('exhibition.nav.introduction'), href: '#/about' },
+  { label: t('core.nav.about'), description: t('exhibition.nav.introduction'), href: '#/about' },
   { label: t('exhibition.nav.themes'), description: t('exhibition.nav.contentAtAGlance'), href: '#/themes' },
 ])
 
@@ -112,7 +112,7 @@ const popupEnabled = computed(() => {
     hyperlinks-title-href="#/"
     :hyperlinks-subtitle="exhibitionSubtitle(locale)"
     :hyperlinks="bottomLinks"
-    :footer-text="`${t('exhibition.footer.copyright')} 2004–${currentYear}`"
+    :footer-text="`${t('core.footer.copyright')} 2004–${currentYear}`"
     :logos="exhibitionLogos"
     @update:language="emit('update:language', $event)"
   >
