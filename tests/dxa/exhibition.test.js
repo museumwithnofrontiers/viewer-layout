@@ -10,6 +10,7 @@ import ExhibitionTimelineGallery from '../../src/dxa/exhibition/TimelineGallery.
 import ExhibitionCollectionResults from '../../src/dxa/exhibition/CollectionResults.vue'
 import ExhibitionCollectionSearch from '../../src/dxa/exhibition/CollectionSearch.vue'
 import ExhibitionPartnerObjects from '../../src/dxa/exhibition/PartnerObjects.vue'
+import { themeSpec, aboutSpec } from '../../src/dxa/exhibition/themeSpecs.js'
 import { mountPage, settle, sharedDxaTexts } from './helpers.js'
 
 // The exhibition family's thin pages (epic inventory-app#1731, from
@@ -33,10 +34,10 @@ const texts = {
   'exhibition.action.viewObjects': 'View objects',
   'exhibition.action.viewItems': 'View items',
   'exhibition.action.institutionHomepage': 'Institution homepage',
-  'exhibition.action.seeDatabaseEntry': 'See database entry',
-  'exhibition.section.database': 'Database',
-  'exhibition.section.collection': 'Collection',
-  'exhibition.section.timeline': 'Timeline',
+  'catalogue.results.seeDatabaseEntry': 'See database entry',
+  'core.section.database': 'Database',
+  'core.section.collection': 'Collection',
+  'core.section.timeline': 'Timeline',
   'exhibition.collection.intro': 'Search this exhibition.',
   'test.partnerObjects.emptyPartner': 'This partner holds nothing in this exhibition.',
   'test.partnerObjects.emptyInstitution': 'This institution holds nothing in this exhibition.',
@@ -184,5 +185,19 @@ describe('ExhibitionPartnerObjects', () => {
     })
     await settle(() => wrapper.text().includes('Damascus Museum'))
     expect(wrapper.text()).toContain('This partner holds nothing in this exhibition.')
+  })
+})
+
+describe('the theme page specs', () => {
+  // EssayView defaults to the shared entries; the exhibitions keep their own
+  // wording for the two texts that name a theme, and read the shared
+  // Previous/Next, which say the same.
+  it("keep the exhibitions' own strip label and panel link, and the shared Previous/Next", () => {
+    for (const spec of [themeSpec, aboutSpec]) {
+      expect(spec.inThisTheme).toBe('exhibition.theme.inThisTheme')
+      expect(spec.seeAll).toBe('exhibition.theme.seeAllInTheme')
+      expect(spec.previous).toBeUndefined()
+      expect(spec.next).toBeUndefined()
+    }
   })
 })

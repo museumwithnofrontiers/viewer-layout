@@ -163,9 +163,9 @@ const nextArrow = '→'
          into the tour is in `after` below. -->
     <template #navigation="{ previous, next }">
       <div class="mwnf-dxa-theme__tour">
-        <RouterLink v-if="previous" :to="themeNodeRoute(previous)" class="mwnf-dxa-theme__tour-link">← {{ t('exhibition.theme.previous') }}</RouterLink>
+        <RouterLink v-if="previous" :to="themeNodeRoute(previous)" class="mwnf-dxa-theme__tour-link">← {{ t('core.pagination.previous') }}</RouterLink>
         <span v-else></span>
-        <RouterLink v-if="next" :to="themeNodeRoute(next)" class="mwnf-dxa-theme__tour-link">{{ t('exhibition.theme.next') }} {{ nextArrow }}</RouterLink>
+        <RouterLink v-if="next" :to="themeNodeRoute(next)" class="mwnf-dxa-theme__tour-link">{{ t('core.pagination.next') }} {{ nextArrow }}</RouterLink>
       </div>
 
       <div v-if="subThemeNav.length" class="mwnf-dxa-theme__subthemes">
@@ -184,7 +184,7 @@ const nextArrow = '→'
     <template #after="{ next }">
       <div v-if="aboutMode && next" class="mwnf-dxa-theme__tour">
         <span></span>
-        <RouterLink :to="themeNodeRoute(next)" class="mwnf-dxa-theme__tour-link">{{ t('exhibition.theme.next') }} {{ nextArrow }}</RouterLink>
+        <RouterLink :to="themeNodeRoute(next)" class="mwnf-dxa-theme__tour-link">{{ t('core.pagination.next') }} {{ nextArrow }}</RouterLink>
       </div>
       <SourceCredit />
     </template>

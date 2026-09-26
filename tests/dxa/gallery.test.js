@@ -31,10 +31,10 @@ const texts = {
   'gallery.action.readMore': 'Read more',
   'gallery.action.viewObjects': 'View objects',
   'gallery.action.partnerProfile': 'Partner profile',
-  'gallery.action.seeDatabaseEntry': 'See database entry',
-  'gallery.section.database': 'Database',
-  'gallery.section.collection': 'Collection',
-  'gallery.section.timeline': 'Timeline',
+  'catalogue.results.seeDatabaseEntry': 'See database entry',
+  'core.section.database': 'Database',
+  'core.section.collection': 'Collection',
+  'core.section.timeline': 'Timeline',
   'gallery.collection.intro': 'Search this gallery [How to search](#/how-to-search).',
 }
 

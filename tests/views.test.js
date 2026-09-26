@@ -58,24 +58,23 @@ const texts = {
   'record.sheet.sourceDatabase': 'Source database',
   'record.dynasty.list': 'Dynasties',
   'sheet.field.holdingMuseum': 'Holding museum',
-  'gallery.related.title': 'Related content',
-  'gallery.related.description': 'What this gallery relates the record to.',
-  'gallery.action.seeDatabaseEntry': 'See database entry',
+  'record.related.title': 'Related content',
+  'record.related.description': 'What this gallery relates the record to.',
+  'catalogue.results.seeDatabaseEntry': 'See database entry',
   'gallery.results.notInThisGallery': 'Not in this gallery',
-  'gallery.nav.artisticIntroduction': 'Artistic introduction',
-  'gallery.search.relatedDatabase': 'Search the related database',
-  'gallery.search.overallDatabase': 'Search the overall database',
-  'gallery.nav.overallDatabase': 'MWNF database',
+  'core.nav.artisticIntroduction': 'Artistic introduction',
+  'catalogue.search.relatedDatabase': 'Search the related database',
+  'catalogue.search.overallDatabase': 'Search the overall database',
+  'core.nav.overallDatabase': 'MWNF database',
   'gallery.item.explorePartnerNote': 'Available in',
-  'gallery.item.linkPending': 'link pending',
-  'gallery.section.timeline': 'Timeline',
+  'record.related.linkPending': 'link pending',
+  'core.section.timeline': 'Timeline',
   'exhibition.results.notInThisExhibition': 'Not in this exhibition',
   'timeline.action.beginFullSearch': 'Begin a full search',
   'timeline.results.noEvents': 'No events for this period.',
-  'exhibition.theme.previous': 'Previous',
-  'exhibition.theme.next': 'Next',
-  'exhibition.theme.inThisTheme': 'In This Theme',
-  'exhibition.theme.seeAllInTheme': 'See all Items in this Theme',
+  'core.nav.inThisSection': 'In this section',
+  'site.essay.strip': 'In this chapter',
+  'site.essay.seeItem': 'Open the record',
   'sheet.field.description': 'Description',
   'sheet.field.location': 'Location',
   'sheet.field.name': 'Name',
@@ -543,18 +542,18 @@ describe('ItemDetailView', () => {
     },
     related: {
       route: 'objects-detail',
-      title: 'gallery.related.title',
-      description: 'gallery.related.description',
-      actionLabel: 'gallery.action.seeDatabaseEntry',
+      title: 'record.related.title',
+      description: 'record.related.description',
+      actionLabel: 'catalogue.results.seeDatabaseEntry',
       notInPackageLabel: 'gallery.results.notInThisGallery',
       outsideChip: (ref) => (ref.project_id ? 'mwnf-chip--ISLandEPM' : null),
-      artisticIntroductionLabel: 'gallery.nav.artisticIntroduction',
-      databaseLabel: 'gallery.search.relatedDatabase',
-      overallDatabase: { label: 'gallery.search.overallDatabase', linkLabel: 'gallery.nav.overallDatabase' },
-      onDisplayIn: { linkPendingLabel: 'gallery.item.linkPending' },
+      artisticIntroductionLabel: 'core.nav.artisticIntroduction',
+      databaseLabel: 'catalogue.search.relatedDatabase',
+      overallDatabase: { label: 'catalogue.search.overallDatabase', linkLabel: 'core.nav.overallDatabase' },
+      onDisplayIn: { linkPendingLabel: 'record.related.linkPending' },
       dynasties: () => ({ records: [{ id: 'd1', from_ad: 900, to_ad: 1000 }], tr: (d) => ({ name: `Dynasty ${d.id}` }) }),
       timeline: (record) => ({
-        heading: 'gallery.section.timeline',
+        heading: 'core.section.timeline',
         countries: [{ value: 'all', label: 'All Countries' }, { value: 'eg', label: 'Egypt' }],
         defaultCountry: () => 'all',
         events: (country) => (country === 'eg' ? [{ year_from: 950, text: { description: 'An event in *Egypt*.' } }] : []),
@@ -1133,6 +1132,24 @@ describe('EssayView', () => {
     })
     await settle(() => lastWrapper.find('.mwnf-essay__nav').exists())
     expect(lastWrapper.find('.mwnf-essay__nav-link--next').exists()).toBe(false)
+  })
+
+  it('defaults its texts to shared entries every bundle carries, and reads a spec\'s own names over them', async () => {
+    const ready = (w) => w.find('.mwnf-essay__nav').exists() && w.find('.mwnf-essay__panel-link').exists()
+    const { wrapper } = await mountView(EssayView, { props: { spec, id: 'page-a2' }, route: '/theme/page-a2' })
+    await settle(() => ready(wrapper))
+    expect(wrapper.find('.mwnf-essay__tabs').attributes('aria-label')).toBe('In this section')
+    expect(wrapper.find('.mwnf-essay__nav-link--previous').text()).toBe('← Previous')
+    expect(wrapper.find('.mwnf-essay__nav-link--next').text()).toBe('Next →')
+    expect(wrapper.find('.mwnf-essay__panel-link').text()).toBe('See database entry →')
+
+    const { wrapper: own } = await mountView(EssayView, {
+      props: { spec: { ...spec, inThisTheme: 'site.essay.strip', seeAll: 'site.essay.seeItem' }, id: 'page-a2' },
+      route: '/theme/page-a2',
+    })
+    await settle(() => ready(own))
+    expect(own.find('.mwnf-essay__tabs').attributes('aria-label')).toBe('In this chapter')
+    expect(own.find('.mwnf-essay__panel-link').text()).toBe('Open the record →')
   })
 
   it('falls back through the placeholder rule: a synthesized title in the record language, then English, then the internal name', async () => {

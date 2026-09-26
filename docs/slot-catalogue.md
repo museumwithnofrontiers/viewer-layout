@@ -419,10 +419,10 @@ own — their credits route points `TextPageView` directly at a local
 | `GallerySearchHowTo` | `TextPageView` | — | `catalogue.search.howToEssay` |
 | `GalleryPartners` | `PartnerListView` | — | `PartnerPanel` line rows: `gallery.partners.intro`, `gallery.partner.noObjectsInGallery`, `partner.action.readMore`/`.viewObjects` |
 | `PartnerDetail` with `galleryPartnerDetail` | `RecordView` + `PartnerPanel` | `id` (String, required), `family` | `partner.info.*`, `partner.nav.homepage`, `partner.action.viewObjects` |
-| `GallerySearchResults` | `CatalogueResultsView` | — | `gallery.section.database`, `gallery.action.seeDatabaseEntry`, `catalogue.search.*`, `catalogue.results.*` |
+| `GallerySearchResults` | `CatalogueResultsView` | — | `core.section.database`, `catalogue.results.seeDatabaseEntry`, `catalogue.search.*`, `catalogue.results.*` |
 | `GalleryTimelineResults` | `TimelineResultsView` | — | — (spec only) |
 | `GalleryTimelineGallery` | `CatalogueResultsView` | — | `timeline.nav.backToEvents` |
-| `GalleryCollectionResults` | `CatalogueResultsView` | — | `catalogue.facet.*`, `catalogue.results.*`, `gallery.section.timeline` |
+| `GalleryCollectionResults` | `CatalogueResultsView` | — | `catalogue.facet.*`, `catalogue.results.*`, `core.section.timeline` |
 | `GalleryCollectionSearch` | `SearchFormView` | — | `catalogue.facet.filterBy`, `gallery.collection.intro` |
 | `GalleryPartnerObjects` | `CatalogueResultsView` | — (reads `route.params.id`) | `gallery.action.partnerProfile`, `partner.item.objectsInSite` |
 
@@ -433,10 +433,10 @@ own — their credits route points `TextPageView` directly at a local
 | `ExhibitionSearchHowTo` | `TextPageView` | — | `catalogue.search.howToEssay` |
 | `ExhibitionPartners` | `PartnerListView` | — | `PartnerPanel` line rows: `exhibition.partners.intro`, `exhibition.partner.noObjectsInExhibition`, `partner.action.readMore`/`.viewObjects` |
 | `PartnerDetail` with `exhibitionPartnerDetail` | `RecordView` + `PartnerPanel` / `NotFoundView` | `id`, `family`, `variant` (`'partner'` \| `'institution'`, default `'partner'`) | `partner.info.*`, `partner.nav.homepage` / `exhibition.action.institutionHomepage`, `partner.action.viewObjects` / `exhibition.action.viewItems` |
-| `ExhibitionSearchResults` | `CatalogueResultsView` | — | `exhibition.section.database`, `exhibition.action.seeDatabaseEntry` |
+| `ExhibitionSearchResults` | `CatalogueResultsView` | — | `core.section.database`, `catalogue.results.seeDatabaseEntry` |
 | `ExhibitionTimelineResults` | `TimelineResultsView` | — | — (spec only) |
 | `ExhibitionTimelineGallery` | `CatalogueResultsView` | — | — (spec only; no `actions` slot, unlike the gallery shape) |
-| `ExhibitionCollectionResults` | `CatalogueResultsView` | — | `catalogue.facet.*`, `exhibition.section.timeline` |
+| `ExhibitionCollectionResults` | `CatalogueResultsView` | — | `catalogue.facet.*`, `core.section.timeline` |
 | `ExhibitionCollectionSearch` | `SearchFormView` | — | `exhibition.collection.intro` |
 | `ExhibitionPartnerObjects` | `CatalogueResultsView` | `variant` (`'partner'` \| `'institution'`), `texts` (Object, required: `{ emptyPartner, emptyInstitution, institutionSummary, partnerProfileLabel, institutionProfileLabel }` — `config.partnerObjects`) | `partner.item.objectsInSite` (partner-variant summary only; the rest come from `texts`) |
 

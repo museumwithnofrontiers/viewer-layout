@@ -33,12 +33,12 @@ const searchResultsSpec = computed(() => ({
   pageSize: PAGE_SIZE,
   variant: 'grid',
   recordRoute: 'item',
-  actionLabel: 'gallery.action.seeDatabaseEntry',
+  actionLabel: 'catalogue.results.seeDatabaseEntry',
   record: (item, { t }) => tile(item, t),
   pagination: { jump: true },
 
   summary: ({ filters, pageInfo, t, total }) => [
-    { label: t('gallery.section.database'), value: isAllObjects(filters.q) ? t('catalogue.results.allObjects') : `“${filters.q}”` },
+    { label: t('core.section.database'), value: isAllObjects(filters.q) ? t('catalogue.results.allObjects') : `“${filters.q}”` },
     { count: pageInfo.total, value: `${t('catalogue.results.outOf')} ${total} ${t('catalogue.results.objects')}` },
   ],
 }))
@@ -69,7 +69,7 @@ const searchResultsSpec = computed(() => ({
         {{ $t('catalogue.results.noResultsSearch') }}
         <RouterLink :to="{ name: 'search-how-to' }">{{ $t('catalogue.search.howTo') }}</RouterLink>
         <span class="mwnf-dxa-no-results-divider">|</span>
-        <RouterLink :to="{ name: 'collection' }">{{ $t('gallery.section.collection') }}</RouterLink>
+        <RouterLink :to="{ name: 'collection' }">{{ $t('core.section.collection') }}</RouterLink>
       </p>
     </template>
   </CatalogueResultsView>

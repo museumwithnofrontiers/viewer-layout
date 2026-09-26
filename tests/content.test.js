@@ -993,7 +993,7 @@ describe('OnDisplayIn', () => {
         'record.related.onDisplayIn': 'On display in',
         'record.related.exhibitions': 'Exhibitions',
         'record.related.galleries': 'Galleries',
-        'gallery.item.linkPending': 'link pending',
+        'record.related.linkPending': 'link pending',
       },
     },
   }
@@ -1023,7 +1023,7 @@ describe('OnDisplayIn', () => {
     const wrapper = mount(OnDisplayIn, {
       props: {
         heading: '',
-        pendingLabel: 'gallery.item.linkPending',
+        pendingLabel: 'record.related.linkPending',
         groups: [
           { heading: 'record.related.exhibitions', links: [{ id: 'x1', label: 'Pending Exhibition' }] },
           { heading: 'record.related.galleries', links: [{ id: 'g1', label: 'Textiles', href: 'https://textiles.example.org', external: true }] },
