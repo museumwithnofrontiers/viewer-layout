@@ -82,7 +82,7 @@ export function galleryConfig({ datasetPackage, siteName, origin, projectColors 
       footerLinks: [
         { label: 'core.footer.aboutMwnf', href: mwnfLinks.about, external: true },
         { label: 'core.footer.contact', href: mwnfLinks.contact, external: true },
-        { label: 'gallery.footer.legalNotice', href: mwnfLinks.legalNotice, external: true },
+        { label: 'core.footer.legalNotice', href: mwnfLinks.legalNotice, external: true },
         { label: 'core.footer.credits', href: mwnfLinks.credits, external: true },
         { label: 'core.footer.cookies', href: mwnfLinks.cookies, external: true },
       ],
@@ -191,7 +191,7 @@ export function exhibitionConfig({
       footerLinks: [
         { label: 'core.footer.aboutMwnf', href: mwnfLinks.about, external: true },
         { label: 'core.footer.contact', href: mwnfLinks.contact, external: true },
-        { label: 'exhibition.footer.legalNotice', href: mwnfLinks.legalNotice, external: true },
+        { label: 'core.footer.legalNotice', href: mwnfLinks.legalNotice, external: true },
         { label: 'core.footer.credits', href: mwnfLinks.credits, external: true },
         { label: 'core.footer.cookies', href: mwnfLinks.cookies, external: true },
       ],
