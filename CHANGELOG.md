@@ -1,3 +1,14 @@
+## 3.1.1 (2026-09-26)
+
+Part of M10 epic 8 (museumwithnofrontiers/inventory-app#2019), story
+museumwithnofrontiers/inventory-app#2062. Requires `@museumwnf/viewer-i18n`
+4.6.1 (the German of the entry it names).
+
+### Fixed (`/dxa`)
+
+- The footer's legal-notice link reads the shared `core.footer.legalNotice` in
+  place of `gallery.footer.legalNotice` / `exhibition.footer.legalNotice`,
+  which said the same and which 3.1.0 left behind. Every text reads as it did.
 ## 3.1.0 (2026-09-26)
 
 Part of M10 epic 8 (museumwithnofrontiers/inventory-app#2019), stories
