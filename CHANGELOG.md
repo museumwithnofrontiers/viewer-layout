@@ -1,3 +1,17 @@
+## 3.2.1 (2026-09-26)
+
+Part of M10 epic 8 (museumwithnofrontiers/inventory-app#2019), story
+museumwithnofrontiers/inventory-app#2062. Requires `@museumwnf/viewer-i18n`
+5.1.0 (the two entries it names).
+
+### Fixed (`/dxa`)
+
+- The partner-objects page's profile link reads `partner.action.partnerProfile`
+  and the banner's caption reads `layout.banner.detailFrom`, in place of
+  `gallery.action.partnerProfile` / `exhibition.partnerObjects.partnerProfile`
+  and `gallery.banner.detailFrom` / `exhibition.media.detailFrom`, the last
+  family pairs that said the same thing under two names. Every text reads as it
+  did.
 ## 3.2.0 (2026-09-26)
 
 Part of M10 epic 8 (museumwithnofrontiers/inventory-app#2019), story

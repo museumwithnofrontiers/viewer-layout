@@ -30,7 +30,7 @@ const texts = {
   'gallery.partner.viewObjects': 'View objects',
   'gallery.action.readMore': 'Read more',
   'gallery.action.viewObjects': 'View objects',
-  'gallery.action.partnerProfile': 'Partner profile',
+  'partner.action.partnerProfile': 'Partner profile',
   'catalogue.results.seeDatabaseEntry': 'See database entry',
   'core.section.database': 'Database',
   'core.section.collection': 'Collection',

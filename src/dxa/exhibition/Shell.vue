@@ -101,7 +101,7 @@ const popupEnabled = computed(() => {
     header-title-href="#/about"
     :banner-image="bannerImage"
     :banner-caption="banner"
-    :banner-caption-label="t('exhibition.media.detailFrom')"
+    :banner-caption-label="t('layout.banner.detailFrom')"
     :banner-title="isHome ? exhibitionTitle(locale) : ''"
     :banner-subtitle="isHome ? exhibitionSubtitle(locale) : ''"
     :banner-headline="isHome ? exhibitionHeadline(locale) : ''"
