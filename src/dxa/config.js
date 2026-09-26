@@ -102,7 +102,7 @@ export function galleryConfig({ datasetPackage, siteName, origin, projectColors 
     banner: {
       variant: ({ section }) => (section === 'home' ? 'strip' : 'section'),
       eyebrow: ({ section, t }) => (section === 'home' ? t('gallery.banner.discoverGalleries') : ''),
-      captionLabel: 'gallery.banner.detailFrom',
+      captionLabel: 'layout.banner.detailFrom',
       enter: ({ section, t }) => (section === 'home'
         ? { label: '»', href: '#/collection', ariaLabel: t('gallery.action.goToCollection') }
         : null),

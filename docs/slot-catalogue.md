@@ -424,7 +424,7 @@ own — their credits route points `TextPageView` directly at a local
 | `GalleryTimelineGallery` | `CatalogueResultsView` | — | `timeline.nav.backToEvents` |
 | `GalleryCollectionResults` | `CatalogueResultsView` | — | `catalogue.facet.*`, `catalogue.results.*`, `core.section.timeline` |
 | `GalleryCollectionSearch` | `SearchFormView` | — | `catalogue.facet.filterBy`, `gallery.collection.intro` |
-| `GalleryPartnerObjects` | `CatalogueResultsView` | — (reads `route.params.id`) | `gallery.action.partnerProfile`, `partner.item.objectsInSite` |
+| `GalleryPartnerObjects` | `CatalogueResultsView` | — (reads `route.params.id`) | `partner.action.partnerProfile`, `partner.item.objectsInSite` |
 
 ### Exhibition (`ExhibitionXxx`, from the-use-of-colours-in-art)
 

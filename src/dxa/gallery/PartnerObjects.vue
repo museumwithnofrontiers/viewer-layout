@@ -38,7 +38,7 @@ const view = computed(() => (partner.value ? partnerDetail.view(partner.value, t
 
       <template #after>
         <div class="mwnf-dxa-profile-link-container">
-          <RouterLink class="mwnf-dxa-profile-link" :to="partnerRoute(partner)">➤ {{ $t('gallery.action.partnerProfile') }}</RouterLink>
+          <RouterLink class="mwnf-dxa-profile-link" :to="partnerRoute(partner)">➤ {{ $t('partner.action.partnerProfile') }}</RouterLink>
         </div>
       </template>
     </CatalogueResultsView>

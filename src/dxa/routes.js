@@ -43,7 +43,7 @@ const EXHIBITION_PARTNER_OBJECTS = {
   emptyPartner: 'exhibition.partnerObjects.emptyPartner',
   emptyInstitution: 'exhibition.partnerObjects.emptyInstitution',
   institutionSummary: 'exhibition.partner.monumentsInExhibition',
-  partnerProfileLabel: 'exhibition.partnerObjects.partnerProfile',
+  partnerProfileLabel: 'partner.action.partnerProfile',
   institutionProfileLabel: 'exhibition.partnerObjects.institutionProfile',
 }
 
