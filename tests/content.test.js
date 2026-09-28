@@ -719,6 +719,29 @@ describe('SiblingGalleries', () => {
     expect(wrapper.find('.mwnf-sibling-galleries__gallery--no-link').exists()).toBe(true)
   })
 
+  // A gallery's `legacy_host` is the address of another site. In a website —
+  // which always has a router — it must stay that address: handed to
+  // RouterLink as a route, it became `#/https://…`, the site's own not-found
+  // page, on every DXA site's sibling strip.
+  it('links a gallery given as an absolute address to that address, even under a router', async () => {
+    const router = createRouter({
+      history: createMemoryHistory(),
+      routes: [
+        { path: '/', name: 'home', component: { template: '<p />' } },
+        { path: '/gallery/:id', name: 'gallery', component: { template: '<p />' } },
+      ],
+    })
+    await router.push('/')
+    const galleries = [
+      { id: 'g1', name: 'Ceramics', route: 'https://ceramics.museumwnf.org' },
+      { id: 'g2', name: 'Local', route: { name: 'gallery', params: { id: 'g2' } } },
+    ]
+    const i18n = globalWithI18n().global.plugins
+    const wrapper = mount(SiblingGalleries, { props: { galleries }, global: { plugins: [...i18n, router] } })
+    const links = wrapper.findAll('a.mwnf-sibling-galleries__gallery')
+    expect(links.map((link) => link.attributes('href'))).toEqual(['https://ceramics.museumwnf.org', '/gallery/g2'])
+  })
+
   it('renders empty placeholder for galleries without images', () => {
     const galleries = [
       { id: 'g1', name: 'No Image Gallery', image: null, route: {} },

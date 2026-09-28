@@ -1,3 +1,17 @@
+## 3.2.2 (2026-09-28)
+
+Found while building the galleries hub (museumwithnofrontiers/inventory-app#2116,
+milestone M11).
+
+### Fixed
+
+- `SmartLink` treats a `to` that is an absolute address (`https://…`,
+  `mailto:…`) as a plain anchor, never as a route. Under a router it used to
+  hand such a string to `RouterLink`, which read it as a path inside the site:
+  every DXA site's sibling-galleries strip, whose links are each gallery's
+  `legacy_host`, pointed at `#/https://…` — the site's own not-found page.
+  Route locations and relative paths are unchanged.
+
 ## 3.2.1 (2026-09-26)
 
 Part of M10 epic 8 (museumwithnofrontiers/inventory-app#2019), story
