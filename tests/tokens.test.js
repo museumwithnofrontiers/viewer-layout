@@ -61,6 +61,19 @@ describe('token styling', () => {
     expect(missing, `tokens read but not documented:\n${missing.join('\n')}`).toEqual([])
   })
 
+  // A family stylesheet sets tokens for every gallery or exhibition at once;
+  // a misspelt name there would silently theme nothing on every one of them.
+  it.each([
+    ['dxa-gallery.css'],
+    ['dxa-exhibition.css'],
+  ])('%s sets only tokens the package reads', (name) => {
+    const familyCss = readFileSync(resolve(`src/styles/${name}`), 'utf8')
+    const read = new Set(`${layoutCss}\n${contentCss}\n${dxaCss}`.match(/--mwnf-[a-z0-9-]+/g))
+    const set = [...familyCss.matchAll(/(--mwnf-[a-z0-9-]+)\s*:/g)].map((match) => match[1])
+    expect(set.length).toBeGreaterThan(0)
+    expect(set.filter((token) => !read.has(token))).toEqual([])
+  })
+
   // The accent is a surface colour. A theme that paints its menu or its
   // bands in it, as the exhibitions do with their pale contrast tone, would
   // otherwise hide every text that reads it.
