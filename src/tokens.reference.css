@@ -15,7 +15,9 @@
   /* --mwnf-weight-heading: 700;                     Weight for titles */
   /* --mwnf-color-text: #1c1c1c;                     Default text color */
   /* --mwnf-color-background: #ffffff;               Page background */
-  /* --mwnf-color-accent: #1c1c1c;                   Links and accents */
+  /* --mwnf-color-accent: #1c1c1c;                   Surfaces and accents (menu, bands, active states); never a text colour */
+  /* --mwnf-link-text: #0000ff;                      Every link; a component with its own link token falls back to this */
+  /* --mwnf-link-hover-text: var(--mwnf-link-text);  A link's colour on hover, where it changes */
   /* --mwnf-color-muted: #555555;                    Secondary text */
   /* --mwnf-color-border: #dddddd;                   Default border color */
   /* --mwnf-content-width: 64rem;                    Max content width (all sections) */
@@ -191,6 +193,7 @@
   /* --mwnf-card-accordion-child-gap: 0.5rem;        Accordion variant gap between subsections */
   /* --mwnf-card-accordion-child-padding: 0.5rem 0;  Accordion variant subsection padding */
   /* --mwnf-card-accordion-child-border: 1px solid #dddddd; Border above accordion subsections */
+  /* --mwnf-card-accordion-child-hover-color: var(--mwnf-link-hover-text); Accordion variant subsection link on hover */
 
   /* ---------- Content: FeaturedRecord ---------- */
   /* --mwnf-featured-heading-size: 1rem;             Heading over the spotlight */
@@ -443,7 +446,7 @@
   /* --mwnf-prose-paragraph-gap: 1rem;               Gap between paragraphs */
   /* --mwnf-prose-list-indent: 1.5em;                Left indent of lists */
   /* --mwnf-prose-list-item-gap: 0.5rem;             Gap between list items */
-  /* --mwnf-prose-link-hover-color: #555555;         Link hover color */
+  /* --mwnf-prose-link-hover-color: var(--mwnf-link-hover-text, #555555); Link hover color */
   /* --mwnf-link-list-gap: 1.5rem;                   Gap between sections */
   /* --mwnf-link-list-back-size: 0.8125rem;          Back link size */
   /* --mwnf-link-list-title-size: 1.5rem;            Page title size */
@@ -454,6 +457,7 @@
   /* --mwnf-link-list-heading-color: inherit;        Group heading color */
   /* --mwnf-link-list-item-gap: 0.5rem;              Gap between links */
   /* --mwnf-link-list-note-gap: 0.25rem;             Gap between link and note */
+  /* --mwnf-link-list-link-color: var(--mwnf-link-text); Link color */
   /* --mwnf-link-list-link-weight: 500;              Link font weight */
   /* --mwnf-link-list-note-size: 0.8125rem;          Link note size */
   /* --mwnf-link-list-note-color: #555555;           Link note color */
@@ -498,6 +502,7 @@
   /* --mwnf-partner-list-group-title-color: inherit; Its color */
   /* --mwnf-partner-list-group-marker-closed: '▸ ';  The accordion's own disclosure triangle, collapsed */
   /* --mwnf-partner-list-group-marker-open: '▾ ';    Its expanded form */
+  /* --mwnf-partner-list-group-marker-color: inherit; The triangle's color (the heading's own by default) */
   /* --mwnf-partner-list-tier-gap: 0.5rem;           Space above a tier, and above the associated column */
   /* --mwnf-partner-list-tier-border: 1px dashed #dddddd; Line above the associated column */
   /* --mwnf-partner-list-tier-label-size: 0.75rem;   "Associated Partners" size */
@@ -505,8 +510,6 @@
   /* --mwnf-partner-list-row-inline-gap: 0.5rem;     Gap between a row's own logo, name and count */
   /* --mwnf-partner-list-logo-width: 6rem;           Row logo max width */
   /* --mwnf-partner-list-logo-height: 3rem;          Row logo max height */
-  /* --mwnf-partner-list-name-weight: 500;           Row name font weight */
-  /* --mwnf-partner-list-meta-size: 0.8125rem;       The item-count line's size */
   /* --mwnf-partner-list-children-indent: 1.5rem;    Indent of a nested (`nested: true`) associated row */
   /* --mwnf-partner-list-empty-padding: 1rem;        Empty state padding */
   /* --mwnf-partner-list-empty-size: 0.875rem;       Empty state size */
@@ -589,7 +592,7 @@
   /* ---------- Content: PartnerPanel ---------- */
   /* --mwnf-partner-name-color: inherit;               Name, section and contact headings */
   /* --mwnf-partner-name-weight: 700;                  Name weight (page, heading) */
-  /* --mwnf-partner-link-color: var(--mwnf-color-accent);  Links: name, actions, contact, homepage */
+  /* --mwnf-partner-link-color: var(--mwnf-link-text);  Links: name, contact, homepage, actions (not one drawn as a button) */
   /* --mwnf-partner-muted-color: var(--mwnf-color-muted);  Location, count, dividers */
   /* --mwnf-partner-divider-gap: 0.375rem;             Space around a | divider */
   /* --mwnf-partner-logo-width: 7.5rem;                Line/summary logo, max width */
@@ -681,6 +684,7 @@
   /* --mwnf-back-link-button-padding: 0.375rem 0.75rem; Back link button padding */
   /* --mwnf-back-link-size: 0.875rem;                  Back link text size */
   /* --mwnf-back-link-line-height: 1;                  Back link line height */
+  /* --mwnf-back-link-color: var(--mwnf-link-text);    Back link color */
 
   /* ---------- Content: SearchFormView ---------- */
   /* --mwnf-search-form-row-gap: 0.5rem;             Gap between a row's own parts, and between facet columns */
@@ -782,13 +786,12 @@
   /* --mwnf-loader-text: #1c1c1c;                    Loader text color */
   /* --mwnf-loader-size: 0.875rem;                   Loader text size */
 
-  /* --mwnf-link-text: #0000ff;                      Link text color */
 
   /* ---------- DXA family pages (src/dxa/) ---------- */
   /* --mwnf-dxa-heading-color: #1c1c1c;              Partner name / profile heading color */
   /* --mwnf-dxa-band-background: #f0f0f0;            Language switcher / tab strip / timeline-link box background */
   /* --mwnf-dxa-item-background: #ffffff;            Item page ground (white on a gallery's tinted page) */
-  /* --mwnf-dxa-item-link: var(--mwnf-color-accent); Item sheet value links */
+  /* --mwnf-dxa-item-link: var(--mwnf-link-text);   Item sheet value links */
   /* --mwnf-dxa-theme-background: #ffffff;           Exhibition theme pages: the ground (legacy's secondary colour) */
   /* --mwnf-dxa-theme-text: #000000;                 Their text and tour links (secondary text colour) */
   /* --mwnf-dxa-theme-contrast: #64bfd9;             The heading band and link hover (contrast colour) */

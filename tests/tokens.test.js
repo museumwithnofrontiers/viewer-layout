@@ -10,7 +10,18 @@ import { globalWithI18n } from './helpers.js'
 const layoutCss = readFileSync(resolve('src/styles/layout.css'), 'utf8')
 // The content components follow the same rule, in their own stylesheet.
 const contentCss = readFileSync(resolve('src/styles/content.css'), 'utf8')
+const dxaCss = readFileSync(resolve('src/styles/dxa.css'), 'utf8')
 const tokensReference = readFileSync(resolve('src/tokens.reference.css'), 'utf8')
+
+// Every rule of a stylesheet, as jsdom's own parser reads it.
+function cssRules(css) {
+  const style = document.createElement('style')
+  style.textContent = css
+  document.head.appendChild(style)
+  const rules = [...style.sheet.cssRules]
+  style.remove()
+  return rules
+}
 
 describe('token styling', () => {
   afterEach(() => {
@@ -45,9 +56,52 @@ describe('token styling', () => {
 
   it('every token a stylesheet reads is in the reference file', () => {
     const declared = new Set(tokensReference.match(/--mwnf-[a-z0-9-]+/g))
-    const read = new Set(`${layoutCss}\n${contentCss}`.match(/--mwnf-[a-z0-9-]+/g))
+    const read = new Set(`${layoutCss}\n${contentCss}\n${dxaCss}`.match(/--mwnf-[a-z0-9-]+/g))
     const missing = [...read].filter((token) => !declared.has(token))
     expect(missing, `tokens read but not documented:\n${missing.join('\n')}`).toEqual([])
+  })
+
+  // The accent is a surface colour. A theme that paints its menu or its
+  // bands in it, as the exhibitions do with their pale contrast tone, would
+  // otherwise hide every text that reads it.
+  it.each([
+    ['layout.css', layoutCss],
+    ['content.css', contentCss],
+    ['dxa.css', dxaCss],
+  ])('%s never colours text with the accent', (name, css) => {
+    const textColours = cssRules(css)
+      .filter((rule) => rule.style?.getPropertyValue('color').includes('--mwnf-color-accent'))
+      .map((rule) => rule.selectorText)
+    expect(textColours).toEqual([])
+  })
+
+  // `:deep()` exists only in a component's scoped style. In a global
+  // stylesheet the browser drops the whole rule without a word.
+  it.each([
+    ['layout.css', layoutCss],
+    ['content.css', contentCss],
+    ['dxa.css', dxaCss],
+  ])('%s carries no scoped-style selector', (name, css) => {
+    expect(css.replace(/\/\*[\s\S]*?\*\//g, '')).not.toMatch(/:deep\(/)
+  })
+
+  // A link rule of the form `.container a` outranks `.mwnf-button` (an
+  // element and a class against a class), so a button drawn as an anchor in
+  // that container took the link colour over its own background — the
+  // partner page's "View objects".
+  it('leaves an action drawn as a button to the button rule', () => {
+    document.body.innerHTML = `
+      <div class="mwnf-partner-panel__actions">
+        <a class="mwnf-button" href="#/partner/1/objects">View objects</a>
+        <a href="#/partner/1">Read more</a>
+      </div>`
+    const [button, link] = document.querySelectorAll('.mwnf-partner-panel__actions a')
+    const linkColours = cssRules(contentCss).filter((rule) => {
+      const colour = rule.style?.getPropertyValue('color') ?? ''
+      return colour.includes('--mwnf-link-text') || colour.includes('--mwnf-partner-link-color')
+    })
+    expect(linkColours.filter((rule) => button.matches(rule.selectorText)).map((rule) => rule.selectorText)).toEqual([])
+    expect(linkColours.some((rule) => link.matches(rule.selectorText))).toBe(true)
   })
 
   it.each([
