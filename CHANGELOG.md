@@ -1,3 +1,53 @@
+## 3.3.0 (2026-10-05)
+
+The display review's fixes (museumwithnofrontiers/inventory-app#2197).
+
+### Fixed
+
+- The partner page's "View objects" button (`.mwnf-button` in
+  `PartnerPanel`'s actions) keeps the button's colours. The panel's link rule,
+  an element and a class, outranked the button's class and painted its text
+  in the link colour over the button's background.
+- The sponsor popup's paragraph, image and link rules apply. They used
+  `:deep()`, which exists only in a component's scoped style; in this global
+  stylesheet the browser dropped them.
+
+### Changed
+
+- **Every link reads one colour, `--mwnf-link-text`**, and
+  `--mwnf-link-hover-text` where it changes under the pointer. A component
+  whose links a site may want different has its own token falling back to
+  them: `--mwnf-back-link-color`, `--mwnf-link-list-link-color` and
+  `--mwnf-card-accordion-child-hover-color` (new), `--mwnf-partner-link-color`
+  and `--mwnf-dxa-item-link` (now falling back to the link colour, not the
+  accent).
+- **`--mwnf-color-accent` colours no text.** It stays the surface colour
+  (active backgrounds, rules). The prose, sheet, map, related-content and
+  partner links, the Back link and the skip link took it before; a theme that
+  paints its menu or bands in its accent, as the exhibitions do, hid them. A
+  site that wants its links in its accent sets `--mwnf-link-text` to it.
+- The partner list's disclosure triangle takes the group heading's colour
+  (`--mwnf-partner-list-group-marker-color` to set another).
+- The orphan `.mwnf-partner-list__name` / `__meta` rules and their two tokens
+  go: no component has rendered those classes since the rows moved onto
+  `PartnerPanel`'s.
+
+### Added
+
+- `@museumwnf/viewer-layout/dxa/gallery.css` and `/dxa/exhibition.css`, each
+  family's stylesheet: its fonts, page reset, 1350px page column and menu,
+  and its theme as a function of the palette (a gallery's five legacy
+  colours, an exhibition's six). A site imports it between `style.css` and
+  its own `theme/tokens.css`, which then holds the palette and what differs
+  from the family.
+- `@museumwnf/viewer-layout/dxa/testing`: `describeGallerySmoke` and
+  `describeExhibitionSmoke`, the family's smoke test, which a site runs with
+  its own config, texts, package and picks.
+- `CatalogueResultsView`'s `boxed: true` (the results in the site's content
+  box: the panel's frame, a gap under the filters, narrow year fields) and
+  `RecordView`'s `spaced: true` (a gap under the pictures and the sheet): the
+  two looks the virtual museums restyled with `:deep()`.
+
 ## 3.2.2 (2026-09-28)
 
 Found while building the galleries hub (museumwithnofrontiers/inventory-app#2116,
