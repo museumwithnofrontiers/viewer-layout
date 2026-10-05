@@ -236,6 +236,17 @@ describe('CatalogueResultsView', () => {
     expect(wrapper.find('.mwnf-list__link').attributes('href')).toBe('/objects/o1')
   })
 
+  // The look a site would otherwise restyle the view's insides for.
+  it('frames the results as a panel when the spec asks for the boxed look', async () => {
+    const plain = await mountView(CatalogueResultsView, { props: { spec }, route: '/objects' })
+    await settle(() => plain.wrapper.findAll('.mwnf-list__row').length > 0)
+    expect(plain.wrapper.classes()).not.toContain('mwnf-catalogue--boxed')
+
+    const boxed = await mountView(CatalogueResultsView, { props: { spec: { ...spec, boxed: true } }, route: '/objects' })
+    await settle(() => boxed.wrapper.findAll('.mwnf-list__row').length > 0)
+    expect(boxed.wrapper.classes()).toContain('mwnf-catalogue--boxed')
+  })
+
   it('reads its filters from the URL and applies the site rule and the date rule', async () => {
     const { wrapper } = await mountView(CatalogueResultsView, {
       props: { spec: { ...spec, scope: (record) => record.id !== 'o4' } },
@@ -358,6 +369,12 @@ describe('RecordView', () => {
     expect(wrapper.find('.mwnf-related .mwnf-list__meta').text()).toContain('Same workshop')
     expect(wrapper.find('.mwnf-record__back').text()).toContain('Back to results')
     expect(wrapper.find('.mwnf-media').exists()).toBe(true)
+  })
+
+  it('spaces its blocks when the spec asks for it', async () => {
+    const { wrapper } = await mountView(RecordView, { props: { spec: { ...spec, spaced: true }, id: 'o1' }, route: '/objects/o1' })
+    await settle(() => wrapper.find('.mwnf-record').exists())
+    expect(wrapper.find('.mwnf-record').classes()).toContain('mwnf-record--spaced')
   })
 
   it("reads the citation's project name from the data package manifest when the spec sets no project override", async () => {

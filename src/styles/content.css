@@ -1498,6 +1498,31 @@
   flex: 0 0 var(--mwnf-view-aside-width, 16rem);
 }
 
+/* `boxed: true` — the results in the site's content box, as the virtual
+   museums lay out a section page: a gap under the filters, the results framed
+   as a panel, the year fields narrow. */
+.mwnf-catalogue--boxed .mwnf-catalogue__filters {
+  margin-bottom: var(--mwnf-catalogue-boxed-gap, 1rem);
+}
+
+.mwnf-catalogue--boxed .mwnf-catalogue__body {
+  background-color: var(--mwnf-panel-background, #ffffff);
+  border: var(--mwnf-panel-border, 1px solid #dddddd);
+  padding: var(--mwnf-panel-padding, 1.25rem);
+  margin-bottom: var(--mwnf-panel-margin-bottom, 1rem);
+}
+
+.mwnf-catalogue--boxed .mwnf-facet__select[type='number'] {
+  width: var(--mwnf-catalogue-boxed-year-width, 6.25rem);
+}
+
+/* `spaced: true` — a gap under every block of pictures and under the sheet,
+   a special feature's own pictures included. */
+.mwnf-record--spaced .mwnf-media,
+.mwnf-record--spaced .mwnf-sheet {
+  margin-bottom: var(--mwnf-record-spaced-gap, 1.25rem);
+}
+
 .mwnf-record__back {
   font-size: var(--mwnf-view-back-size, 0.8125rem);
   color: var(--mwnf-view-back-color, inherit);

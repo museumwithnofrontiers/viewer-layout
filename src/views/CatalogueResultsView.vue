@@ -35,6 +35,7 @@ import ResultsSummary from '../content/ResultsSummary.vue'
 //     sort: 'chronological' | { undated: 'first' } | (list) => list | false,
 //     pageSize: 20,
 //     variant: 'list' | 'grid',
+//     boxed: true,                                     // the results in the site's content box, as a panel
 //     record: (record, helpers) => { id, image, imageAlt, name, meta, badge, to },  // the row
 //     recordRoute: 'item',                             // the default row's route name
 //     summary: (context) => [{ label, count?, value? }],
@@ -174,7 +175,7 @@ const pagination = computed(() => ({ window: 5, jump: false, ends: true, ...(spe
 </script>
 
 <template>
-  <section class="mwnf-catalogue">
+  <section class="mwnf-catalogue" :class="{ 'mwnf-catalogue--boxed': spec.boxed }">
     <slot name="before" v-bind="slotProps" />
 
     <h1 v-if="spec.title" class="mwnf-catalogue__title">{{ t(spec.title) }}</h1>

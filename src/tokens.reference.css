@@ -526,6 +526,9 @@
   /* --mwnf-view-back-size: 0.8125rem;               The record page's back link, the essay's panel link and nav row */
   /* --mwnf-view-back-color: inherit;                Its color */
   /* --mwnf-view-status-size: 0.75rem;               "Loading…" on the record page and the essay */
+  /* --mwnf-catalogue-boxed-gap: 1rem;               `boxed` results (framed by the panel's tokens): the gap under the filters */
+  /* --mwnf-catalogue-boxed-year-width: 6.25rem;     `boxed` results: a year field's width */
+  /* --mwnf-record-spaced-gap: 1.25rem;             `spaced` record: the gap under the pictures and the sheet */
 
   /* ---------- Content: EssayView ---------- */
   /* --mwnf-view-essay-breadcrumb-gap: 0.375rem;     Gap between breadcrumb parts */
