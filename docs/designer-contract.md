@@ -66,6 +66,11 @@ chrome keys:
   values. Sibling of `src/` at the repo root (confirmed in
   `website-template`), loaded first in `main.js`, right after
   `@museumwnf/viewer-layout/style.css`.
+  A DXA gallery or exhibition loads its family's stylesheet in between
+  (`@museumwnf/viewer-layout/dxa/gallery.css` / `exhibition.css`): the
+  family's theme, read from the palette, so the site's `theme/tokens.css`
+  holds only its palette and what differs from the family. Such a site has
+  no `src/styles/site.css`.
 - `theme/overrides.css` — the free-form escape hatch, loaded immediately
   after `theme/tokens.css` and ahead of `src/styles/site.css`.
   `website-template` ships it as one comment: *"keep it empty until a need

@@ -3,6 +3,12 @@
  * what renders inside a page. Every visual value is read from a --mwnf-*
  * custom property with a neutral fallback, as in layout.css; see
  * tokens.reference.css for the complete list.
+ *
+ * Every link reads one colour, --mwnf-link-text, and its hover colour
+ * --mwnf-link-hover-text. A component that needs its own link colour has a
+ * token of its own that falls back to those two. --mwnf-color-accent is a
+ * surface colour and never colours text here: a theme that paints its menu
+ * or its bands in the accent would otherwise hide its links.
  */
 
 /* Cards (SectionCards) */
@@ -232,7 +238,7 @@
 }
 
 .mwnf-cards--accordion .mwnf-cards__child-link:hover {
-  color: var(--mwnf-color-accent, #1c1c1c);
+  color: var(--mwnf-card-accordion-child-hover-color, var(--mwnf-link-hover-text, var(--mwnf-link-text, #0000ff)));
 }
 
 /* Featured record (FeaturedRecord) */
@@ -350,7 +356,7 @@
 }
 
 .mwnf-list__link:hover .mwnf-list__name {
-  color: var(--mwnf-color-accent, #1c1c1c);
+  color: var(--mwnf-link-hover-text, var(--mwnf-link-text, #0000ff));
 }
 
 .mwnf-list__meta {
@@ -779,7 +785,7 @@
 
 .mwnf-sheet__block a,
 .mwnf-sheet__value a {
-  color: var(--mwnf-color-accent, #1c1c1c);
+  color: var(--mwnf-link-text, #0000ff);
 }
 
 .mwnf-sheet .gloss-term,
@@ -1222,12 +1228,12 @@
 }
 
 .mwnf-prose a {
-  color: var(--mwnf-color-accent, #1c1c1c);
+  color: var(--mwnf-link-text, #0000ff);
   text-decoration: underline;
 }
 
 .mwnf-prose a:hover {
-  color: var(--mwnf-prose-link-hover-color, #555555);
+  color: var(--mwnf-prose-link-hover-color, var(--mwnf-link-hover-text, #555555));
 }
 
 /* Link list (LinkListView) */
@@ -1248,7 +1254,7 @@
 }
 
 .mwnf-link-list__back a:hover {
-  color: var(--mwnf-color-accent, #1c1c1c);
+  color: var(--mwnf-link-hover-text, var(--mwnf-link-text, #0000ff));
 }
 
 .mwnf-link-list__title {
@@ -1295,7 +1301,7 @@
 }
 
 .mwnf-link-list__link {
-  color: var(--mwnf-color-accent, #1c1c1c);
+  color: var(--mwnf-link-list-link-color, var(--mwnf-link-text, #0000ff));
   text-decoration: none;
   font-weight: var(--mwnf-link-list-link-weight, 500);
 }
@@ -1335,7 +1341,7 @@
 }
 
 .mwnf-text-page__back a:hover {
-  color: var(--mwnf-color-accent, #1c1c1c);
+  color: var(--mwnf-link-hover-text, var(--mwnf-link-text, #0000ff));
 }
 
 .mwnf-text-page__heading {
@@ -1490,6 +1496,31 @@
 .mwnf-catalogue__aside,
 .mwnf-record__aside {
   flex: 0 0 var(--mwnf-view-aside-width, 16rem);
+}
+
+/* `boxed: true` — the results in the site's content box, as the virtual
+   museums lay out a section page: a gap under the filters, the results framed
+   as a panel, the year fields narrow. */
+.mwnf-catalogue--boxed .mwnf-catalogue__filters {
+  margin-bottom: var(--mwnf-catalogue-boxed-gap, 1rem);
+}
+
+.mwnf-catalogue--boxed .mwnf-catalogue__body {
+  background-color: var(--mwnf-panel-background, #ffffff);
+  border: var(--mwnf-panel-border, 1px solid #dddddd);
+  padding: var(--mwnf-panel-padding, 1.25rem);
+  margin-bottom: var(--mwnf-panel-margin-bottom, 1rem);
+}
+
+.mwnf-catalogue--boxed .mwnf-facet__select[type='number'] {
+  width: var(--mwnf-catalogue-boxed-year-width, 6.25rem);
+}
+
+/* `spaced: true` — a gap under every block of pictures and under the sheet,
+   a special feature's own pictures included. */
+.mwnf-record--spaced .mwnf-media,
+.mwnf-record--spaced .mwnf-sheet {
+  margin-bottom: var(--mwnf-record-spaced-gap, 1.25rem);
 }
 
 .mwnf-record__back {
@@ -1964,7 +1995,7 @@
 }
 
 .mwnf-partner-map__link a {
-  color: var(--mwnf-color-accent, #1c1c1c);
+  color: var(--mwnf-link-text, #0000ff);
   text-decoration: none;
 }
 
@@ -1985,18 +2016,22 @@
   font-weight: var(--mwnf-partner-name-weight, 700);
 }
 
+/* An action drawn as a button (`.mwnf-button`, the partner page's "View
+   objects") keeps the button's own colours: an element-and-class selector
+   here would otherwise outrank the button's class and paint its text in the
+   link colour, over the button's background. */
 a.mwnf-partner-panel__name,
 .mwnf-partner-panel__name a,
-.mwnf-partner-panel__actions a,
+.mwnf-partner-panel__actions a:not(.mwnf-button),
 .mwnf-partner-panel__contact a,
 .mwnf-partner-panel__homepage {
-  color: var(--mwnf-partner-link-color, var(--mwnf-color-accent, #1c1c1c));
+  color: var(--mwnf-partner-link-color, var(--mwnf-link-text, #0000ff));
   text-decoration: none;
 }
 
 a.mwnf-partner-panel__name:hover,
 .mwnf-partner-panel__name a:hover,
-.mwnf-partner-panel__actions a:hover,
+.mwnf-partner-panel__actions a:not(.mwnf-button):hover,
 .mwnf-partner-panel__contact a:hover,
 .mwnf-partner-panel__homepage:hover {
   text-decoration: underline;
@@ -2456,22 +2491,26 @@ a.mwnf-partner-panel__name:hover,
   line-height: var(--mwnf-line-height, 1.6);
 }
 
-.mwnf-popup-logo__content :deep(p) {
+/* The content is HTML the component inserts, so plain descendant selectors
+   reach it: this stylesheet is global, and `:deep()` exists only in a
+   component's scoped style — a browser drops any rule that carries it. The
+   links take the popup's own text colour, as legacy's did. */
+.mwnf-popup-logo__content p {
   margin: 0 0 var(--mwnf-popup-logo-paragraph-gap, 0.5rem);
 }
 
-.mwnf-popup-logo__content :deep(p:last-child) {
+.mwnf-popup-logo__content p:last-child {
   margin-bottom: 0;
 }
 
-.mwnf-popup-logo__content :deep(img) {
+.mwnf-popup-logo__content img {
   max-width: 100%;
   height: auto;
   display: block;
 }
 
-.mwnf-popup-logo__content :deep(a) {
-  color: var(--mwnf-color-accent, #1c1c1c);
+.mwnf-popup-logo__content a {
+  color: inherit;
 }
 
 /* ── BackLink ───────────────────────────────────────────────────────────── */
@@ -2487,7 +2526,7 @@ a.mwnf-partner-panel__name:hover,
   border: none;
   font-family: var(--mwnf-font-body, system-ui, sans-serif);
   font-size: var(--mwnf-back-link-size, 0.875rem);
-  color: var(--mwnf-color-accent, #1c1c1c);
+  color: var(--mwnf-back-link-color, var(--mwnf-link-text, #0000ff));
   cursor: pointer;
   text-decoration: none;
   line-height: var(--mwnf-back-link-line-height, 1);
@@ -2673,7 +2712,7 @@ a.mwnf-partner-panel__name:hover,
    carries no <summary>, so it never matches this. */
 summary.mwnf-partner-list__group-heading .mwnf-partner-list__group-title::before {
   content: var(--mwnf-partner-list-group-marker-closed, '▸ ');
-  color: var(--mwnf-color-accent, #1c1c1c);
+  color: var(--mwnf-partner-list-group-marker-color, inherit);
 }
 
 details[open] > summary.mwnf-partner-list__group-heading .mwnf-partner-list__group-title::before {
@@ -2719,21 +2758,6 @@ details[open] > summary.mwnf-partner-list__group-heading .mwnf-partner-list__gro
   max-width: var(--mwnf-partner-list-logo-width, 6rem);
   max-height: var(--mwnf-partner-list-logo-height, 3rem);
   object-fit: contain;
-}
-
-.mwnf-partner-list__name {
-  color: var(--mwnf-color-accent, #1c1c1c);
-  text-decoration: none;
-  font-weight: var(--mwnf-partner-list-name-weight, 500);
-}
-
-.mwnf-partner-list__name:hover {
-  text-decoration: underline;
-}
-
-.mwnf-partner-list__meta {
-  font-size: var(--mwnf-partner-list-meta-size, 0.8125rem);
-  color: var(--mwnf-color-muted, #555555);
 }
 
 .mwnf-partner-list__children {

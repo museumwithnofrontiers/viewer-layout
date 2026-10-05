@@ -31,6 +31,7 @@ import SourceCredit from '../content/SourceCredit.vue'
 //     shortDescription: 'short_description' | false,   // the field folded behind the toggle, after `shortDescriptionAfter`
 //     media: (record, ctx) => [{ url, alt, caption, photographer }],   // default: the record's `images`
 //     mediaVariant: '' | 'row',
+//     spaced: true,                                    // a gap under the pictures and under the sheet
 //     credits: [{ field: 'author', label: 'sheet.field.preparedBy' }, …],
 //     workingNumber: 'mwnf_reference',
 //     citation: { project: '<project id>' | (record, ctx) => string, permalink: true | false | string } | false,
@@ -214,7 +215,7 @@ const rowSlots = computed(() => Object.keys(slots).filter((name) => !OWN_SLOTS.h
 <template>
   <NotFoundView v-if="loaded && !record" />
 
-  <article v-else-if="record" class="mwnf-record" @click="onClick">
+  <article v-else-if="record" class="mwnf-record" :class="{ 'mwnf-record--spaced': spec.spaced }" @click="onClick">
     <slot name="header" v-bind="ctx">
       <SmartLink v-if="spec.back" class="mwnf-record__back" :to="spec.back.to" :href="spec.back.href">← {{ t(spec.back.label) }}</SmartLink>
       <RecordLanguages :languages="languageEntries" :language="language" @select="select" />

@@ -18,6 +18,8 @@ all the packages:
 | `@museumwnf/viewer-layout/views` | composed views | whole pages driven by a spec the website declares, with slots it fills | viewer-core's data layer, the site config and the router |
 | `@museumwnf/viewer-layout/components` | composed views | `SiteShell`, the frame composed from `dataset.config.js` | the site config and the current route |
 | `@museumwnf/viewer-layout/dxa` | DXA family layer | the gallery and exhibition pages and shells, the family-only blocks, `standardRoutes`, `galleryConfig` / `exhibitionConfig` | the entries above, `@museumwnf/viewer-core` and `@museumwnf/viewer-core/dxa` |
+| `@museumwnf/viewer-layout/dxa/gallery.css`, `/dxa/exhibition.css` | DXA family layer | each family's stylesheet: its fonts, page reset and page column, and its theme as a function of the palette | the palette a site's `theme/tokens.css` sets |
+| `@museumwnf/viewer-layout/dxa/testing` | DXA family layer | each family's smoke test, `describeGallerySmoke` / `describeExhibitionSmoke` | the site's config, texts and package, in the site's own Vitest |
 | `@museumwnf/viewer-layout/style.css` | — | one stylesheet for every entry, the family styles included | — |
 | `@museumwnf/viewer-layout/tokens.reference.css` | — | every token the package reads, with its fallback | — |
 
@@ -432,8 +434,8 @@ export default {
 | View | Declaration | Slots |
 |---|---|---|
 | `HomeView` | `config.home` or the same as props: `title`, `intro` (Markdown), `cards: [{ title, description, action, to \| href }]`, `featured: { entity, heading, action, route, eyebrow, meta, seed, filter }` — the pick is `useFeaturedRecord`, among the records `filter` keeps (viewer-core 2.2.0) — `panels` (the welcome and the record as `.mwnf-panel` boxes) | `before`, default, `after` |
-| `CatalogueResultsView` | `spec`: `entity`, `keys`, `facets` (viewer-core's facet spec), `facetScope: 'all' \| 'matching'`, `controls: [{ key, type: 'select' \| 'year' \| 'query' \| 'checkbox', label, placeholder, anyLabel, hideEmpty }]`, `filterMode: 'apply' \| 'immediate'`, `scope(record, filters)`, `match(record, filters)`, `narrow(list, filters, helpers)` (a rule over the whole list — a keyword index, say), `dates: { mode, begin, end }`, `sort`, `pageSize`, `variant: 'list' \| 'grid'`, `record(record, helpers)`, `recordRoute`, `summary(context)`, `title`, `filterTitle`, `empty`, `actionLabel`, `pagination` | `before`, `filters`, `actions`, `aside`, `empty`, `after` — each given `{ filters, active, apply, reset, goToPage, matching, pageInfo, options }`, enough to compose the panel in the aside or a second pagination |
-| `RecordView` | `spec` and `id`: `entity`, `translations`, `attribution`, `fields` (viewer-core's `sheetRows` spec, or a function of the context), `sections`, `layout`, `shortDescription`, `media(record, ctx)`, `mediaVariant`, `credits`, `workingNumber`, `citation: { project, permalink: true \| false \| string, heading } \| false` (the permalink is `sourceUrl(currentRoute)` — null, so no address, until the website declares `site.origin` — unless the spec disables it with `false` or overrides it with a string), `related: { variant, heading, record, route } \| false`, `back: { label, to \| href }`, `title(ctx)` | `header`, `before-sheet`, `after-sheet`, `aside`, `source` (under the citation; default `SourceCredit`), `related`, `after`, and one named after every `custom` or `link` row — each given `{ record, text, language, languages, select, dir, glossary, ready, attribution, t, tr }`; `related` also `records` (the rows) and `outside` (the related records the package does not carry) |
+| `CatalogueResultsView` | `spec`: `entity`, `keys`, `facets` (viewer-core's facet spec), `facetScope: 'all' \| 'matching'`, `controls: [{ key, type: 'select' \| 'year' \| 'query' \| 'checkbox', label, placeholder, anyLabel, hideEmpty }]`, `filterMode: 'apply' \| 'immediate'`, `scope(record, filters)`, `match(record, filters)`, `narrow(list, filters, helpers)` (a rule over the whole list — a keyword index, say), `dates: { mode, begin, end }`, `sort`, `pageSize`, `variant: 'list' \| 'grid'`, `boxed: true` (the results in the site's content box: framed by the `.mwnf-panel` tokens, a gap under the filters, narrow year fields), `record(record, helpers)`, `recordRoute`, `summary(context)`, `title`, `filterTitle`, `empty`, `actionLabel`, `pagination` | `before`, `filters`, `actions`, `aside`, `empty`, `after` — each given `{ filters, active, apply, reset, goToPage, matching, pageInfo, options }`, enough to compose the panel in the aside or a second pagination |
+| `RecordView` | `spec` and `id`: `entity`, `translations`, `attribution`, `fields` (viewer-core's `sheetRows` spec, or a function of the context), `sections`, `layout`, `shortDescription`, `media(record, ctx)`, `mediaVariant`, `spaced: true` (a gap under every block of pictures and under the sheet), `credits`, `workingNumber`, `citation: { project, permalink: true \| false \| string, heading } \| false` (the permalink is `sourceUrl(currentRoute)` — null, so no address, until the website declares `site.origin` — unless the spec disables it with `false` or overrides it with a string), `related: { variant, heading, record, route } \| false`, `back: { label, to \| href }`, `title(ctx)` | `header`, `before-sheet`, `after-sheet`, `aside`, `source` (under the citation; default `SourceCredit`), `related`, `after`, and one named after every `custom` or `link` row — each given `{ record, text, language, languages, select, dir, glossary, ready, attribution, t, tr }`; `related` also `records` (the rows) and `outside` (the related records the package does not carry) |
 | `ItemDetailView` (`/dxa`) | Every `RecordView` prop (`spec`, `id`, `entity`) plus `dataGetter(id) => record \| null \| undefined` — a website's own language-subset record lookup (an exhibition's per-build `itemById.get`); omitted, every `id` `RecordView` itself finds is treated as present (the gallery shape); supplied and it reports `id` missing, `NotFoundView` renders before `RecordView` ever mounts (the exhibition shape's per-language-build 404), and it also narrows the related block's `records`/outside-reference split the same way. The DXA gallery/exhibition item sheet's own blocks, on top of `spec`: `sourceDatabase: { label?, chipClass(record, ctx), addToCollection: { label? } \| false } \| false` (the source-database line + `backward_compatibility` code + "add to my collection" link — `chipClass` is a site's own project→colour map, the name comes from `useProjects()`), `notice: { show(record, ctx), label } \| false` (the Explore-partner notice), `museum: { route(partnerId, ctx) } \| false` (the holding-museum row: the item's holder text, then the partner as `PartnerPanel`'s `summary` — "About {name}, {city}, {country}" — linked through `route`; `route` returning null keeps the name without a link, for a hidden partner; `false` keeps the holder text alone; decision D3), and on `spec.related`: `title`, `description` (entries, above the block), `notInPackageLabel`, `outsideChip(ref, ctx)` (an outside reference's chip — `TODO(#1727)`, no `project_id` on a stub yet), `artisticIntroductionLabel` (with `useProjects().links(record.project_id).artisticIntroductionUrl`), `databaseLabel` (ditto, `.relatedDatabaseUrl`), `overallDatabase: { label, linkLabel } \| false` (`mwnfLinks.overallDatabase`), `onDisplayIn: { linkPendingLabel } \| false` (`record.gallery_references`, by `kind`), `download: false` (default on, `record.action.download`/`.downloadPdf`, prints), `glossary: false` (default on, `GlossaryTool`), `dynasties(record, language, ctx) => { records, tr } \| null` (`DynastyList`), `media: false` (default on, `record.media`, a `SheetSection`), `timeline(record, ctx) => TimelineInfo \| null` (`TimelineLookup` — see `docs/slot-catalogue.md`) | Every `RecordView` slot, forwarded straight through by name, unmodified, **except** `before-sheet`/`museum`/`related`: each always has this view's own default content (above), which a website's own slot still replaces entirely — "a slot fills, the default content renders otherwise" |
 | `EssayView` | `spec` and `id`: `tree` (a `useCollectionTree` result, or `{ purpose \| rootId, childType?, entity?, order? }` / `{ themes: true \| 'themes', childType? }` for the view to build one), `entity` (the tree's items — also the tree's own translations entity when `tree` carries none of its own, a pre-built tree or a declarative form with no `entity`/`themes`; falls back to `'collections'`), `route` (a node's own page: a route name or `(node, ctx) => to \| href`), `heading(ctx)`, `placeholder` (a regex a synthesized title matches, falling back to the English title, then the internal name), `quote` / `body` (a field of the node's translation, a dotted path into it such as `'extra.intro_text'`, or a function `(ctx) => Markdown`; default `'quote'`/`'description'`, `false` to drop), `glossary`, `items: { of(node) => ids, caption(item, node, ctx) => override, meta(item, ctx) => [string] (the grid's caption lines), badge(item, ctx) => string, route }`, `panel: { variants(item, ctx) => [{ id, image, alt, caption: { title, justification, fields: [{ label (entry name), value }] } }], fields(item, node, ctx) => [{ label, value }] (the fallback when a variant carries no fields of its own) } \| false`, `navigation: 'tree' \| 'siblings' \| false` (`tree` crosses a branch boundary, `siblings` stays inside the parent), `breadcrumb`, `tabs: true \| 'siblings' \| 'children'` (the strip: `true`/`'siblings'` — the node's own siblings, the default; `'children'` — the node's own children, e.g. a theme's chapters), `about(node) => boolean \| { panel?, navigation? }` (essay only; a plain boolean drops both the picture panel and the navigation, an object keeps the named piece instead), `aboutKeeps: ['panel' \| 'navigation']` (the spec-wide equivalent, when every about page in this spec keeps the same piece), `numbering: 'roman' \| 'decimal' \| false` (counts a node among its true siblings — for a themes-package tree, whose `root` is `null`, that's every node whose own `tree.parents(id)` is also empty, so a themes tree numbers its top-level themes I, II, III); `previous`, `next`, `backTo`, `inThisTheme` (the strip's label), `seeAll` (the panel's link to the selected record) — entry names, defaulting to shared entries every bundle carries: `core.pagination.previous`/`.next`, `record.action.backToResults`, `core.nav.inThisSection`, `catalogue.results.seeDatabaseEntry` | `header`, `before-body`, `after-body`, `panel`, `thumbnails`, `aside`, `justifications`, `navigation`, `after` (default `SourceCredit` — nothing until the website declares `site.origin`) — each given `{ node, text, language, tree, items, selected, select, selectedVariant, selectVariant, breadcrumb, previous, next, t, tr }` |
 | `LinkListView` | `spec`: `title` (entry), `groups: [{ heading (entry), links: [{ label, href \| to, note? }] }] \| (ctx) => groups` (`label`/`note` are Markdown, rendered inline through `mdInline`), `back: { label, to \| href } \| false`, `empty` (entry) | `before`, `group` (given `{ group }`; the default renders the heading and its links — replace it for a citation list that is not link-shaped), `after` |
@@ -557,9 +559,51 @@ every `legacyRoutes` resolver targeting those names) working unmodified.
 Full page-by-page prop/slot/entry table in
 [`docs/slot-catalogue.md`](docs/slot-catalogue.md#dxa-family-pages-museumwnfviewer-layoutdxa).
 
+### The family's stylesheet, theme and smoke test
+
+Since 3.3.0 what every site of a family shared by copy is here once:
+
+- **`@museumwnf/viewer-layout/dxa/gallery.css`** and **`/dxa/exhibition.css`**:
+  the fonts, the page reset, the 1350px page column with its sticky header
+  and menu grid, and the family's theme — every `--mwnf-*` token the family
+  sets, read from the palette. A site imports its family's stylesheet after
+  `style.css` and before its own theme, so that its own values win:
+
+  ```js
+  import '@museumwnf/viewer-layout/style.css'
+  import '@museumwnf/viewer-layout/dxa/gallery.css'
+  import '../theme/tokens.css'
+  import '../theme/overrides.css'
+  ```
+
+  The site's `theme/tokens.css` then holds its palette — legacy's five
+  colours for a gallery (`--theme-dark`, `--theme-medium-dark`,
+  `--theme-medium`, `--theme-light`, `--background-color`), legacy's six for
+  an exhibition (`--main-color`, `--secondary-color`, `--contrast-color` and
+  their `-text-color`s) — and any token that differs from the family's.
+  `theme/overrides.css` stays the escape hatch.
+- **`@museumwnf/viewer-layout/dxa/testing`**: `describeGallerySmoke` and
+  `describeExhibitionSmoke`, the smoke test every site of the family runs.
+  A site's `tests/smoke.test.js` calls its family's with its config, its
+  texts, its package and — for a gallery — the records of its own dataset the
+  tests look for (the function's documentation names each), and may add
+  tests of its own after the call. The suite runs in the site's own Vitest,
+  which processes this package (viewer-core's `defineViewerConfig` inlines
+  it).
+
 ## Theming
 
 Every color, font, spacing, radius comes from a `--mwnf-*` CSS custom property with a neutral fallback. Full list: [`tokens.reference.css`](src/tokens.reference.css) (also exported as `@museumwnf/viewer-layout/tokens.reference.css`) — copy it into your website as `theme/tokens.css` and set values.
+
+**Links read one colour.** Every link takes `--mwnf-link-text`, and
+`--mwnf-link-hover-text` where it changes colour under the pointer. A
+component whose links a site may want different has a token of its own that
+falls back to them — `--mwnf-back-link-color`, `--mwnf-link-list-link-color`,
+`--mwnf-partner-link-color`, `--mwnf-dxa-item-link`,
+`--mwnf-related-media-link-color`, `--mwnf-on-display-link-color`,
+`--mwnf-card-accordion-child-hover-color`. **`--mwnf-color-accent` is a
+surface colour** (active backgrounds, rules, bands) and colours no text: a
+theme can paint its menu or its bands in it without hiding a link.
 
 Below `48rem` the navigation folds its links behind a menu button, the
 `split` banner stacks its two columns, and the banner captions are hidden.

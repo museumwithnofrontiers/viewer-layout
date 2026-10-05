@@ -37,7 +37,8 @@
 
 /* The partner pages render the shared `PartnerPanel` (content.css,
    inventory-app#2034). The family's own colours reach it through its
-   tokens, and legacy's list line keeps its bold name and its logo on the
+   tokens — its links are the site's link colour, PartnerPanel's own
+   default — and legacy's list line keeps its bold name and its logo on the
    right; legacy's partner name was a little larger than the text, not a
    title. */
 
@@ -45,7 +46,6 @@
 .mwnf-dxa-partner-profile,
 .mwnf-dxa-partner-objects {
   --mwnf-partner-name-color: var(--mwnf-dxa-heading-color, #1c1c1c);
-  --mwnf-partner-link-color: var(--mwnf-link-text, #0000ff);
   --mwnf-partner-tab-color: var(--mwnf-dxa-heading-color, #1c1c1c);
   --mwnf-partner-bar-background: var(--mwnf-dxa-band-background, #f0f0f0);
   --mwnf-partner-title-size: 1.1rem;
@@ -317,7 +317,7 @@
 }
 
 .mwnf-dxa-item .mwnf-sheet__value a {
-  color: var(--mwnf-dxa-item-link, var(--mwnf-color-accent, #1c1c1c));
+  color: var(--mwnf-dxa-item-link, var(--mwnf-link-text, #0000ff));
 }
 
 @media only screen and (max-width: 53.0625rem) {
