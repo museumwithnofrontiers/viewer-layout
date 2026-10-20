@@ -125,12 +125,12 @@
   --mwnf-banner-section-title-size: 190%;
 
   /* ---------- Content: the record page ---------- */
-  /* The sheet as the legacy gallery set it: bold labels in the dark tone over
+  /* The sheet as the legacy gallery set it: bold labels in the text colour over
      plain values, no cell borders, the photo gallery on the page ground. */
   --mwnf-sheet-text-size: 0.9375rem;
   --mwnf-sheet-label-size: 0.9375rem;
   --mwnf-sheet-label-weight: 700;
-  --mwnf-sheet-label-color: var(--theme-dark);
+  --mwnf-sheet-label-color: inherit;
   --mwnf-sheet-gap: 0.75rem;
   --mwnf-sheet-toggle-color: var(--theme-dark);
   --mwnf-sheet-term-color: var(--theme-medium-dark);
@@ -223,6 +223,11 @@
      on the page ground. */
   --mwnf-dxa-heading-color: var(--theme-dark);
   --mwnf-dxa-band-background: var(--background-color);
+  /* The item sheet's Related Content sidebar: white on the light tone, its
+     headings underlined in the dark tone (legacy's `$theme-light`). */
+  --mwnf-dxa-related-background: var(--theme-light);
+  --mwnf-dxa-related-text: #ffffff;
+  --mwnf-dxa-related-heading-color: var(--theme-dark);
 }
 
 /* ── Page reset ──────────────────────────────────────────────────────────── */
@@ -339,4 +344,246 @@ a { color: inherit; }
   .mwnf-nav__links { display: none; }
   .mwnf-nav--open .mwnf-nav__links { display: grid; grid-template-columns: 1fr; }
   .mwnf-nav__toggle { width: 100%; justify-content: center; font-size: 20px; }
+}
+
+/* ── The header mark and tools, the footer's icons (inventory-app#2233) ──── */
+
+/* The tools keep to the row's end whether or not a title cell sits between
+   them and the mark (the home page has none). Legacy's logo is drawn at its
+   own size. */
+.mwnf-header__tools {
+  margin-inline-start: auto;
+}
+.mwnf-header__brand-logo {
+  height: auto;
+}
+.mwnf-footer__social-link {
+  color: #ffffff;
+}
+
+/* ── The home page: legacy's FeaturedPartners, LogosComponent and
+   FeaturedGalleries ───────────────────────────────────────────────────── */
+
+/* Featured Partners: white on the medium tone, the picture and the text
+   side by side in the middle 60% of the column, the bullets under them. */
+.mwnf-dxa-home .mwnf-featured-partners {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0;
+  background: var(--theme-medium);
+  color: #ffffff;
+}
+.mwnf-dxa-home .mwnf-featured-partners__heading {
+  width: calc(60% + 20px);
+  margin: 40px 0 20px;
+  font-size: 125%;
+  font-weight: 400;
+  color: inherit;
+}
+.mwnf-dxa-home .mwnf-featured-partners__carousel {
+  width: calc(60% + 20px);
+  height: 32vh;
+  max-height: 275px;
+  min-height: 0;
+}
+.mwnf-dxa-home .mwnf-featured-partners__card {
+  height: 100%;
+  gap: 20px;
+}
+.mwnf-dxa-home .mwnf-featured-partners__image {
+  flex: 0 0 calc(50% - 10px);
+  height: 100%;
+}
+.mwnf-dxa-home .mwnf-featured-partners__logo {
+  height: 100%;
+}
+.mwnf-dxa-home .mwnf-featured-partners__body {
+  flex: 1;
+  gap: 0;
+  height: 100%;
+}
+.mwnf-dxa-home .mwnf-featured-partners__name {
+  font-size: inherit;
+  color: inherit;
+}
+.mwnf-dxa-home .mwnf-featured-partners__location {
+  font-size: inherit;
+  font-style: italic;
+  color: inherit;
+}
+.mwnf-dxa-home .mwnf-featured-partners__description {
+  height: 6em;
+  overflow: hidden;
+  margin-top: 20px;
+  line-height: 1.2em;
+  font-size: inherit;
+}
+.mwnf-dxa-home .mwnf-featured-partners__more {
+  margin-top: 5px;
+  text-align: end;
+  color: #ffffff;
+  text-decoration: none;
+}
+.mwnf-dxa-home .mwnf-featured-partners__more + .mwnf-featured-partners__more {
+  margin-top: 0;
+}
+.mwnf-dxa-home .mwnf-featured-partners__more:hover {
+  text-decoration: underline;
+}
+.mwnf-dxa-home .mwnf-featured-partners__controls {
+  justify-content: flex-start;
+  width: calc(60% + 20px);
+  margin: 20px 0 40px;
+  padding: 0;
+  gap: 18px;
+}
+.mwnf-dxa-home .mwnf-featured-partners__bullet {
+  width: 14px;
+  height: 14px;
+  background: var(--theme-dark);
+}
+.mwnf-dxa-home .mwnf-featured-partners__bullet--active {
+  background: var(--theme-light);
+}
+
+/* The logos strip (Glass's "Set up on the occasion of"). */
+.mwnf-dxa-home-logos {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px 50px;
+  background: #ffffff;
+}
+.mwnf-dxa-home-logos__label {
+  font-weight: 700;
+  color: var(--theme-dark);
+}
+.mwnf-dxa-home-logos__list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  list-style: none;
+}
+.mwnf-dxa-home-logos__logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 90px;
+  min-height: 90px;
+  margin: 10px 20px;
+}
+.mwnf-dxa-home-logos__logo img {
+  max-width: 100%;
+  object-fit: contain;
+}
+
+/* Visit MWNF Galleries and Other Virtual Museums, side by side on white:
+   four tiles named in capitals on a dark band over the picture, and the
+   three virtual museums' picture banners, each named in its colour. */
+.mwnf-dxa-home .mwnf-sibling-galleries {
+  display: grid;
+  grid-template-columns: 75% 25%;
+  background: #ffffff;
+}
+.mwnf-dxa-home .mwnf-sibling-galleries__galleries,
+.mwnf-dxa-home .mwnf-sibling-galleries__museums {
+  display: flex;
+  flex-direction: column;
+  padding: 20px 30px;
+  background: transparent;
+}
+.mwnf-dxa-home .mwnf-sibling-galleries__header {
+  margin-bottom: 12px;
+}
+.mwnf-dxa-home .mwnf-sibling-galleries__heading,
+.mwnf-dxa-home .mwnf-sibling-galleries__see-more {
+  align-self: flex-start;
+  margin-bottom: 12px;
+  padding: 2px 0;
+  border-bottom: 1px solid var(--theme-medium-dark);
+  font-size: 115%;
+  font-weight: 400;
+  color: var(--theme-medium-dark);
+}
+.mwnf-dxa-home .mwnf-sibling-galleries__header .mwnf-sibling-galleries__heading,
+.mwnf-dxa-home .mwnf-sibling-galleries__see-more {
+  margin-bottom: 0;
+}
+.mwnf-dxa-home .mwnf-sibling-galleries__grid {
+  gap: 24px;
+}
+.mwnf-dxa-home .mwnf-sibling-galleries__gallery {
+  position: relative;
+}
+.mwnf-dxa-home .mwnf-sibling-galleries__image {
+  height: auto;
+  aspect-ratio: 1;
+  margin: 0;
+}
+.mwnf-dxa-home .mwnf-sibling-galleries__name {
+  position: absolute;
+  inset-inline: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 3em;
+  padding: 0 4px;
+  background: rgba(0, 0, 0, 0.6);
+  color: #ffffff;
+  font-weight: 400;
+  font-size: inherit;
+  text-align: center;
+  text-transform: uppercase;
+}
+.mwnf-dxa-home .mwnf-sibling-galleries__museums-grid {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  flex: 1;
+  gap: 10px;
+}
+.mwnf-dxa-home .mwnf-sibling-galleries__museum {
+  position: relative;
+  flex: 1;
+}
+.mwnf-dxa-home .mwnf-sibling-galleries__museum-image--picture {
+  height: 100%;
+  background: none;
+}
+.mwnf-dxa-home .mwnf-sibling-galleries__museum-image--picture img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.mwnf-dxa-home .mwnf-sibling-galleries__museum-image--picture + .mwnf-sibling-galleries__museum-name {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  font-size: 150%;
+  font-weight: 700;
+  color: var(--mwnf-museum-bg);
+  text-shadow: 0 0 10px var(--mwnf-museum-text);
+}
+
+@media only screen and (max-width: 974px) {
+  .mwnf-dxa-home .mwnf-sibling-galleries {
+    display: flex;
+    flex-direction: column;
+  }
+  .mwnf-dxa-home .mwnf-sibling-galleries__museums-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    column-gap: 24px;
+  }
+  .mwnf-dxa-home .mwnf-featured-partners__heading,
+  .mwnf-dxa-home .mwnf-featured-partners__carousel,
+  .mwnf-dxa-home .mwnf-featured-partners__controls {
+    width: calc(80% + 20px);
+  }
 }

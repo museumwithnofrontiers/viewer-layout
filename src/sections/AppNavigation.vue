@@ -26,9 +26,11 @@ const normalizedLanguages = computed(() =>
 )
 const switcher = computed(() => props.languageSwitcher && normalizedLanguages.value.length > 1)
 
-const visible = computed(() =>
-  Boolean(slots.default || props.links.length || switcher.value || props.notice),
-)
+// Evaluated at render, not cached: the slots object is not reactive, so a
+// computed would miss a slot that appears after the first render.
+function visible() {
+  return Boolean(slots.default || props.links.length || switcher.value || props.notice)
+}
 
 // On a narrow screen the links fold behind a button; following one closes
 // them again. The button is in the document at every width and shown by the
@@ -37,7 +39,7 @@ const open = ref(false)
 </script>
 
 <template>
-  <nav v-if="visible" class="mwnf-nav" :class="{ 'mwnf-nav--open': open }" :aria-label="t('layout.nav.label')">
+  <nav v-if="visible()" class="mwnf-nav" :class="{ 'mwnf-nav--open': open }" :aria-label="t('layout.nav.label')">
     <div class="mwnf-nav__bar">
       <button
         v-if="links.length"

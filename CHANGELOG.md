@@ -1,3 +1,123 @@
+## 3.4.0 (2026-10-20)
+
+The gallery and exhibition families, and the shared header and footer,
+back to legacy's layout (museumwithnofrontiers/inventory-app#2233, sections
+2–4). Every change is additive for a site that supplies nothing new: it
+renders as it did on 3.3, apart from the fixes below.
+
+### Added
+
+- **A site's own chrome files** (D7): `config.chrome`, the map
+  `import.meta.glob('../theme/assets/**/*.{jpg,jpeg,png,gif,svg}', { eager: true, query: '?url', import: 'default' })`
+  builds, keyed by the path under `theme/assets/`. `chromeAsset`,
+  `chromePicture` and `chromeSource` (package root) read it. The DXA
+  families read `logo.png` / `logo_black.png`, `dia.jpg`, `dba.jpg`,
+  `sh.jpg`, `world.png`, and `chrome/<legacy path>` for every picture the
+  package names by its legacy path (banners, the exhibition home image, the
+  sibling-gallery tiles), falling back to `media.legacyHost` (README, "Site
+  chrome").
+- **The logo image** (A2): `config.brand = { logo, alt }` (SiteShell), drawn
+  in the header's brand cell (AppHeader `brand-logo`, PageShell
+  `header-brand-logo`). `galleryConfig` sets legacy's white `logo.png`,
+  `exhibitionConfig` the black `logo_black.png`; without the file the
+  "MWNF" text mark stays.
+- **The menu above the banner** (S6): PageShell `navigation-placement`
+  (`'after-banner'`, the default, or `'before-banner'`), SiteShell
+  `config.navigation.placement` (a value or a function of the section). The
+  galleries put it under the banner on the home page and above it elsewhere,
+  the exhibitions above it on every page, as legacy did.
+- **The social-network links** (T1): AppFooter `social`, PageShell
+  `footer-social`, SiteShell `config.navigation.socialLinks`, opt-in for any
+  site; `mwnfSocialLinks` (package root) is legacy's six, with Font Awesome
+  Free's brand icons inlined (CC BY 4.0). Both DXA configs set them.
+- Glass's home logo strip: `galleryConfig({ homeLogos })`, under viewer-i18n's
+  `gallery.home.logosLabel`.
+- `config.galleryShell` (`headerEyebrow`, `headerTitle`, `bannerEyebrow`,
+  `bannerTitle`, `bannerImage`, `bannerCaption`): the gallery shell's chrome
+  for a site without a gallery package, the galleries hub.
+- RecordView's `aside` slot also gets `records` and `outside`, the related
+  rows the `related` slot gets.
+- `SocialLinks` (package root, prop `links`): the footer's icon links on their
+  own, for a site that writes its own `#footer`.
+- PageShell `language-placement="none"`: no site-language switcher.
+- `config.footer.rightsHolder: true` (SiteShell): the rights-holder line, now
+  opt-in (below).
+- `exhibitionConfig({ sponsorLogos })`: an exhibition's own list of sponsor
+  logos (`[{ image, href, alt, category_id, display_order }]`); and
+  `withSitePictures(html, resolve)`, which redraws a popup notice's pictures
+  from the site's own copies.
+- `config.galleryShell.notice: false` drops the menu's search tip (the hub).
+
+### Changed
+
+- **The gallery's title is legacy's** (S5): the gallery's own project name
+  where it is one ("Discover Carpet Art", "Discover Glass Art"), the
+  gallery's name elsewhere, on the home banner and in the header of every
+  other page; "Discover MWNF Galleries" is back over the home title (the
+  config's `banner.eyebrow` never reached the banner, which SiteShell
+  doesn't read).
+- **The item sheet's related content is legacy's sidebar** (S7): the
+  `related` block is drawn in RecordView's side column, at the right edge
+  from under the language band, in the family's light tone (galleries) or
+  contrast colour (exhibitions); the photos and the sheet keep legacy's
+  40/60 split beside it. The labels are bold in the text colour, each
+  followed by legacy's colon (drawn by the family stylesheet: the texts carry
+  no punctuation).
+- **The item sheet's labels are legacy's** (S7): a field labelled
+  `sheet.field.<name>` reads `sheet.dxa.<name>` instead when the installed
+  viewer-i18n has it ("Name of Object", "How Object was obtained": legacy's
+  "Galleries common" words, which its galleries and exhibitions both read).
+  A dictionary without those entries keeps today's labels, so this release
+  and viewer-i18n's can land in either order.
+- **The record's internal key is never shown** (S7): the
+  `backward_compatibility` line under the source database, and the same key
+  as an outside reference's fallback name, are gone. The family smoke test
+  checks that no item sheet prints `mwnf3:`.
+- Featured Partners (S4): white on the gallery's medium tone, legacy's
+  centred picture-and-text box, and legacy's "Read more >>" and "View objects
+  >>" links in place of one link over the whole card.
+- The home's "Visit MWNF Galleries" tiles name the gallery in capitals on a
+  dark band over the picture (S8), from legacy's `zoom` size; "Other Virtual
+  Museums" sits beside them and shows legacy's picture banners when the site
+  supplies `dia.jpg` / `dba.jpg` / `sh.jpg` (A3; `SiblingGalleries`'
+  `museums[].image`), the flat blocks without them.
+- The partner page has legacy's 50px side gutter (S9).
+- The exhibition header's "A MWNF Online Exhibition" is bold, in the
+  contrast colour, outlined by legacy's dark shadow (S10).
+- An exhibition's home banner is legacy's composed `homepage_image_path`
+  (`home_image.jpg`), captioned with the home item (A4); every other page
+  keeps the banner.
+- An exhibition's About page shows the About theme's pictures and their
+  captions beside the text (A8; `aboutSpec.aboutKeeps: ['panel']`). The
+  popup notice centres its text and keeps its pictures to legacy's width;
+  legacy's popup pictures had no visible caption, only their title tooltip,
+  which the package keeps.
+
+- **The language switchers are legacy's** (Pascal, 2026-10-20): the
+  galleries have none, only the record's own bar on the item and partner
+  pages; the exhibitions have legacy's small header select, the codes in
+  capitals, plus the record's bar.
+- **The footer is legacy's on every SiteShell site** (Pascal, 2026-10-20):
+  MWNF's five portal links and "© Museum With No Frontiers (MWNF)
+  2004–<year>" by default, `config.navigation.footerLinks` and a `footer-text`
+  still replacing them; the rights-holder line ("Content © Museum With No
+  Frontiers, used under …") no longer shows unless `config.footer.rightsHolder`.
+  The family smoke test checks legacy's footer instead of the attribution.
+- **An exhibition's sponsor logos are the site's** (Pascal, 2026-10-20): the
+  package's `logos[]` draw `chrome/<legacy_path>`, else legacy's media host,
+  never the inventory's `image_url`; `sponsorLogos` replaces the list.
+- `config.galleryShell`: an empty field means no line, and the header fields
+  apply on inner pages only.
+
+### Fixed
+
+- AppBanner's `section` strip shows its caption ("Detail from …", the
+  partner, the place) at the end of the title band (S6). It was drawn
+  inside the picture, where the strip's own rule hid it.
+- A section whose slot appears after the first render shows: every section
+  decided whether to render from `useSlots()` inside a `computed`, which the
+  slots object never invalidates; it now decides at render.
+
 ## 3.3.0 (2026-10-05)
 
 The display review's fixes (museumwithnofrontiers/inventory-app#2197).

@@ -17,6 +17,8 @@ const props = defineProps({
   /** Where the mark links to; the mark itself is the `brand` slot or `brand` text. */
   home: { type: String, default: '' },
   brand: { type: String, default: '' },
+  /** The mark as an image, { src, alt }; the `brand` slot still wins over it. */
+  brandLogo: { type: Object, default: null },
   /** [{ image, alt, href? }] */
   logos: { type: Array, default: () => [] },
   logosTitle: { type: String, default: '' },
@@ -40,20 +42,23 @@ const normalizedLanguages = computed(() =>
 )
 const switcher = computed(() => props.languageStyle && normalizedLanguages.value.length > 1)
 
-const visible = computed(() =>
-  Boolean(
+// Evaluated at render, not cached: the slots object is not reactive, so a
+// computed would miss a slot that appears after the first render.
+function visible() {
+  return Boolean(
     slots.default ||
       slots.brand ||
       props.title ||
       props.subtitle ||
       props.eyebrow ||
       props.brand ||
+      props.brandLogo?.src ||
       props.logos.length ||
       props.links.length ||
       props.search ||
       switcher.value,
-  ),
-)
+  )
+}
 
 const term = ref('')
 function submit() {
@@ -63,17 +68,17 @@ function submit() {
 </script>
 
 <template>
-  <header v-if="visible" class="mwnf-header">
+  <header v-if="visible()" class="mwnf-header">
     <slot>
       <div class="mwnf-header__inner">
-        <div v-if="slots.brand || brand || logos.length" class="mwnf-header__brand">
+        <div v-if="slots.brand || brand || brandLogo?.src || logos.length" class="mwnf-header__brand">
           <component
             :is="home ? 'a' : 'span'"
-            v-if="slots.brand || brand"
+            v-if="slots.brand || brand || brandLogo?.src"
             class="mwnf-header__home"
             :href="home || undefined"
           >
-            <slot name="brand">{{ brand }}</slot>
+            <slot name="brand"><img v-if="brandLogo?.src" class="mwnf-header__brand-logo" :src="brandLogo.src" :alt="brandLogo.alt ?? ''" /><template v-else>{{ brand }}</template></slot>
           </component>
           <div v-if="logos.length" class="mwnf-header__logos">
             <p v-if="logosTitle" class="mwnf-header__logos-title">{{ logosTitle }}</p>

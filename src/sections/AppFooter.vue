@@ -1,5 +1,7 @@
 <script setup>
 import { computed, useSlots } from 'vue'
+import SocialLinks from './SocialLinks.vue'
+import { SOCIAL_ICONS } from './socialLinks.js'
 
 const props = defineProps({
   text: { type: String, default: '' },
@@ -12,14 +14,21 @@ const props = defineProps({
   attributionText: { type: String, default: '' },
   termsHref: { type: String, default: '' },
   termsLabel: { type: String, default: '' },
+  /** [{ label, href, icon }] — the social-network icons after the text; `icon` a key of SOCIAL_ICONS. */
+  social: { type: Array, default: () => [] },
 })
 
 const slots = useSlots()
-const visible = computed(() => Boolean(slots.default || props.text || props.links.length || props.attributionText))
+const socialLinks = computed(() => props.social.filter((link) => SOCIAL_ICONS[link.icon]))
+// Evaluated at render, not cached: the slots object is not reactive, so a
+// computed would miss a slot that appears after the first render.
+function visible() {
+  return Boolean(slots.default || props.text || props.links.length || props.attributionText || socialLinks.value.length)
+}
 </script>
 
 <template>
-  <footer v-if="visible" class="mwnf-footer">
+  <footer v-if="visible()" class="mwnf-footer">
     <slot>
       <ul v-if="links.length" class="mwnf-footer__links">
         <li v-for="link in links" :key="link.href ?? link.label">
@@ -37,6 +46,7 @@ const visible = computed(() => Boolean(slots.default || props.text || props.link
         {{ attributionText }}
         <a v-if="termsHref" class="mwnf-footer__terms" :href="termsHref">{{ termsLabel }}</a>
       </p>
+      <SocialLinks :links="socialLinks" />
     </slot>
   </footer>
 </template>

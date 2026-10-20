@@ -18,7 +18,9 @@ import { themes } from './data.js'
 //     its Previous/Next are the shared ones word for word.
 //
 // `aboutSpec` is `about: () => true` because it is only ever mounted at the
-// About theme; `themeSpec` is `about: () => false` because a legacy
+// About theme, and keeps the picture panel (`aboutKeeps`): legacy's About page
+// showed the About theme's pictures and their captions beside its text, and
+// dropped only the tour; `themeSpec` is `about: () => false` because a legacy
 // `/theme/0` link (the About theme's own route id) must still render as an
 // ordinary theme page, panel and all.
 
@@ -51,4 +53,4 @@ const shared = {
 }
 
 export const themeSpec = { ...shared, about: () => false }
-export const aboutSpec = { ...shared, about: () => true }
+export const aboutSpec = { ...shared, about: () => true, aboutKeeps: ['panel'] }

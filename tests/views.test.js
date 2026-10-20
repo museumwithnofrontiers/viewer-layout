@@ -635,13 +635,13 @@ describe('ItemDetailView', () => {
     expect(wrapper.find('.vc-not-found').exists()).toBe(false)
   })
 
-  it('renders the source-database chip, the backward-compatibility code and the add-to-collection link — spec.sourceDatabase', async () => {
+  it('renders the source-database chip and the add-to-collection link, never the internal key — spec.sourceDatabase', async () => {
     const { wrapper } = await mountView(ItemDetailView, { props: { spec: sheetSpec, id: 'o1' }, route: '/objects/o1' })
     await settle(() => wrapper.find('.mwnf-sheet-source').exists())
     const source = wrapper.find('.mwnf-sheet-source')
     expect(source.find('.mwnf-chip').classes()).toContain('mwnf-chip--ISLandEPM')
     expect(source.find('.mwnf-sheet-source__line').text()).toContain('Discover Islamic Art (package)')
-    expect(source.find('.mwnf-sheet-source__uid code').text()).toBe('mwnf3:objects:o1')
+    expect(wrapper.text()).not.toContain('mwnf3:objects:o1')
     const collectionLink = source.find('.mwnf-sheet-source__collection a')
     expect(collectionLink.text()).toContain('Add to my collection')
     expect(collectionLink.attributes('href')).toBe('https://www.museumwnf.org/mycollection/index.php')
@@ -716,12 +716,35 @@ describe('ItemDetailView', () => {
     printSpy.mockRestore()
   })
 
-  it("falls back to the outside reference's backward-compatibility code when its stub carries no project_id", async () => {
+  it("never shows an outside reference's backward-compatibility key, even when its stub carries no project_id", async () => {
     const { wrapper } = await mountView(ItemDetailView, { props: { spec: sheetSpec, id: 'o4' }, route: '/objects/o4' })
     await settle(() => wrapper.find('.mwnf-sheet-related').exists())
     const reference = wrapper.find('.mwnf-sheet-related__references li')
-    expect(reference.find('code').text()).toBe('mwnf3:objects:x7')
+    expect(reference.exists()).toBe(true)
+    expect(wrapper.text()).not.toContain('mwnf3:objects:x7')
     expect(reference.text()).not.toContain('Discover Islamic Art')
+  })
+
+  it("names a field in the DXA family's own wording when the dictionary has it, and in the shared one otherwise", async () => {
+    texts['sheet.dxa.name'] = 'Name of Object'
+    try {
+      const { wrapper } = await mountView(ItemDetailView, { props: { spec: sheetSpec, id: 'o1' }, route: '/objects/o1' })
+      await settle(() => wrapper.find('.mwnf-sheet__label').exists())
+      const labels = wrapper.findAll('.mwnf-sheet__label').map((l) => l.text())
+      expect(labels).toContain('Name of Object')
+      expect(labels).not.toContain('sheet.dxa.location')
+      expect(labels).toContain(texts['sheet.field.location'])
+    } finally {
+      delete texts['sheet.dxa.name']
+    }
+  })
+
+  it("draws the related block in the side column, legacy's Related Content sidebar, and only there", async () => {
+    const { wrapper } = await mountView(ItemDetailView, { props: { spec: sheetSpec, id: 'o4' }, route: '/objects/o4' })
+    await settle(() => wrapper.find('.mwnf-sheet-related').exists())
+    expect(wrapper.findAll('.mwnf-sheet-related')).toHaveLength(1)
+    expect(wrapper.find('.mwnf-record__aside .mwnf-sheet-related').exists()).toBe(true)
+    expect(wrapper.find('.mwnf-record__main .mwnf-sheet-related').exists()).toBe(false)
   })
 
   it('renders the audio/video section, the glossary tool and the dynasty popouts from spec.related', async () => {

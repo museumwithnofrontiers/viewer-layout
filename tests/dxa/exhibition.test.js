@@ -200,4 +200,10 @@ describe('the theme page specs', () => {
       expect(spec.next).toBeUndefined()
     }
   })
+
+  it("keeps the About page's pictures and drops only its tour, as legacy's About page did", () => {
+    expect(aboutSpec.about()).toBe(true)
+    expect(aboutSpec.aboutKeeps).toEqual(['panel'])
+    expect(themeSpec.about()).toBe(false)
+  })
 })

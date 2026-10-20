@@ -30,9 +30,11 @@ const props = defineProps({
 })
 
 const slots = useSlots()
-const visible = computed(() =>
-  Boolean(slots.default || props.image || props.text || props.title || props.eyebrow || props.headline),
-)
+// Evaluated at render, not cached: the slots object is not reactive, so a
+// computed would miss a slot that appears after the first render.
+function visible() {
+  return Boolean(slots.default || props.image || props.text || props.title || props.eyebrow || props.headline)
+}
 
 const headlineHtml = computed(() => (props.headline ? renderBlock(props.headline) : ''))
 
@@ -54,7 +56,7 @@ const failed = ref(false)
 
 <template>
   <section
-    v-if="visible"
+    v-if="visible()"
     class="mwnf-banner"
     :class="variant ? `mwnf-banner--${variant}` : ''"
   >
@@ -74,7 +76,7 @@ const failed = ref(false)
             @error="failed = true"
           />
           <div v-else class="mwnf-banner__fallback" aria-hidden="true"></div>
-          <p v-if="captionParts" class="mwnf-banner__caption">
+          <p v-if="captionParts && variant !== 'section'" class="mwnf-banner__caption">
             <span class="mwnf-banner__caption-name">{{ captionParts.name }}</span>
             <span v-if="captionParts.rest" class="mwnf-banner__caption-rest">{{ captionParts.rest }}</span>
           </p>
@@ -106,6 +108,11 @@ const failed = ref(false)
           >{{ enter.label }}</a>
           <p v-if="strapline" class="mwnf-banner__strapline">{{ strapline }}</p>
           <p v-if="text" class="mwnf-banner__text">{{ text }}</p>
+          <!-- A section strip carries the caption at the end of its title band. -->
+          <p v-if="captionParts && variant === 'section'" class="mwnf-banner__caption">
+            <span class="mwnf-banner__caption-name">{{ captionParts.name }}</span>
+            <span v-if="captionParts.rest" class="mwnf-banner__caption-rest">{{ captionParts.rest }}</span>
+          </p>
         </div>
       </div>
     </slot>

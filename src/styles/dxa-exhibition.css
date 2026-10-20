@@ -48,7 +48,7 @@
   --mwnf-header-padding: 0;
   --mwnf-header-background: #ffffff;
   --mwnf-header-text: #000000;
-  --mwnf-header-title-size: 1.375rem;
+  --mwnf-header-title-size: 1.875rem;
   --mwnf-header-subtitle-size: 0.875rem;
   --mwnf-header-subtitle-color: #000000;
 
@@ -231,6 +231,10 @@
      box. */
   --mwnf-dxa-heading-color: var(--secondary-text-color);
   --mwnf-dxa-band-background: #e0e0e0;
+  /* The item sheet's Related Content sidebar, in the contrast colour. */
+  --mwnf-dxa-related-background: var(--contrast-color);
+  --mwnf-dxa-related-text: var(--contrast-text-color);
+  --mwnf-dxa-related-heading-color: var(--contrast-text-color);
 
   /* ---------- PartnerListView group heading ---------- */
   --mwnf-partner-list-group-title-size: 1.25rem;
@@ -352,6 +356,15 @@ a { color: inherit; }
   padding-inline: 0;
 }
 
+/* The header's "A MWNF Online Exhibition": bold, in the contrast colour,
+   outlined by legacy's dark shadow. */
+.mwnf-header__title {
+  font-weight: 700;
+  line-height: 1;
+  color: var(--contrast-color);
+  text-shadow: -1px 0 2px #000000;
+}
+
 /* The footer: one centred line of links and the copyright. */
 .mwnf-footer {
   justify-content: center;
@@ -362,4 +375,15 @@ a { color: inherit; }
   .mwnf-nav__links { grid-auto-flow: row; }
   .mwnf-nav--open .mwnf-nav__links { display: grid; }
   .mwnf-nav__toggle { width: 100%; justify-content: center; font-size: 20px; }
+}
+
+/* Legacy's language select in the header: the codes alone, no visible
+   label (it stays for a screen reader). */
+.mwnf-header__language-label {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
 }

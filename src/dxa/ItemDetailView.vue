@@ -1,7 +1,7 @@
 <script setup>
 import { computed, useSlots } from 'vue'
 import {
-  NotFoundView, byId, loadEntities, mdInline, mdStrip, mwnfLinks, partnerView, useDataPackage, useI18n, useProjects,
+  NotFoundView, byId, loadEntities, mdInline, mdStrip, mwnfLinks, partnerView, useDataPackage, useI18n, useProjects, useSiteConfig,
 } from '@museumwnf/viewer-core'
 import DynastyList from '../content/DynastyList.vue'
 import GlossaryTool from '../content/GlossaryTool.vue'
@@ -11,6 +11,7 @@ import RelatedMedia from '../content/RelatedMedia.vue'
 import RelatedRecords from '../content/RelatedRecords.vue'
 import TimelineLookup from '../content/TimelineLookup.vue'
 import RecordView from '../views/RecordView.vue'
+import { chromeAsset } from '../chrome.js'
 
 // The DXA gallery/exhibition item sheet, composed. `RecordView` is still the
 // engine — the field sheet, the credits, the citation, the related records,
@@ -72,14 +73,32 @@ const slots = useSlots()
 // Every slot the website filled that is not one of this view's own three
 // (`before-sheet`, `museum`, `related` — each always gets its own template
 // below, wrapping the website's slot as its fallback content) is forwarded
-// to RecordView by name, unmodified.
-const OWN_SLOTS = new Set(['before-sheet', 'museum', 'related'])
+// to RecordView by name, unmodified. `aside` is this view's too: the related
+// block is drawn there, legacy's Related Content sidebar beside the sheet.
+const OWN_SLOTS = new Set(['before-sheet', 'museum', 'related', 'aside'])
 const passthroughSlots = computed(() => Object.keys(slots).filter((name) => !OWN_SLOTS.has(name)))
 
 const exists = computed(() => !props.dataGetter || props.dataGetter(props.id) != null)
 
 const { t } = useI18n()
-const spec = computed(() => props.spec)
+
+// The field labels in the DXA family's own wording ("Name of Object", "How
+// Object was obtained"): legacy's galleries and exhibitions read their
+// "Galleries common" labels, not the products' that `sheet.field.*` holds.
+// A field whose `sheet.dxa.*` entry the installed dictionary has takes it;
+// any other keeps its `sheet.field.*` label, so a dictionary from before
+// those entries still names every row.
+const FIELD_LABEL = 'sheet.field.'
+function familyLabel(label) {
+  if (typeof label !== 'string' || !label.startsWith(FIELD_LABEL)) return label
+  const own = `sheet.dxa.${label.slice(FIELD_LABEL.length)}`
+  return t(own) === own ? label : own
+}
+const spec = computed(() => (
+  Array.isArray(props.spec.fields)
+    ? { ...props.spec, fields: props.spec.fields.map((field) => ({ ...field, label: familyLabel(field.label) })) }
+    : props.spec
+))
 const projects = useProjects()
 
 const byName = (a, b) => (a.name ?? '').localeCompare(b.name ?? '')
@@ -99,15 +118,16 @@ function beforeSheetInfo(record, ctx) {
     const name = projects.label(record.project_id)
     if (chipClass || name) source = { chipClass, name, label: t(s.label ?? 'record.sheet.sourceDatabase') }
   }
-  // `backwardCompatibility`/`addToCollectionLabel` are part of the same
-  // source-database/collection block, not a block of their own — nothing
-  // here renders unless a site actually declares `spec.sourceDatabase`.
+  // `addToCollectionLabel` is part of the same source-database/collection
+  // block, not a block of its own — nothing here renders unless a site
+  // actually declares `spec.sourceDatabase`. The record's internal key
+  // (`backward_compatibility`) is never shown: it is the inventory's, not
+  // the visitor's.
   const addToCollectionLabel = s && s.addToCollection !== false ? t(s.addToCollection?.label ?? 'record.action.addToCollection') : null
-  const backwardCompatibility = s ? (record.backward_compatibility ?? '') : ''
   const n = spec.value.notice === false ? null : spec.value.notice ?? null
   const notice = n && n.show(record, ctx) ? t(n.label) : null
   return {
-    source, addToCollectionLabel, notice, backwardCompatibility,
+    source, addToCollectionLabel, notice,
   }
 }
 
@@ -170,8 +190,8 @@ function relatedInfo(record, ctx) {
     ...ref,
     // The exporter's `related_items` stub carries a `project_id` since
     // inventory-app#1807; resolve it through `useProjects()` for the chip's
-    // visible text, and fall back to the stub's own `backward_compatibility`
-    // code only when the stub has no `project_id` at all.
+    // visible text. A stub with no `project_id` shows its chip alone: its
+    // `backward_compatibility` key is the inventory's, never the visitor's.
     name: ref.project_id ? projects.label(ref.project_id) : null,
     chipClass: s.outsideChip ? s.outsideChip(ref, ctx) : null,
   }))
@@ -218,13 +238,21 @@ function relatedInfo(record, ctx) {
   }
 }
 
+// The glossary entry's header carries the gallery's own world map, when
+// the site supplies one (`theme/assets/world.png`, legacy's per-gallery file).
+const siteConfig = useSiteConfig()
+const glossaryStyle = computed(() => {
+  const url = chromeAsset(siteConfig.chrome, 'world.png')
+  return url ? { '--mwnf-dxa-glossary-image': `url("${url}")` } : null
+})
+
 function printSheet() {
   window.print()
 }
 </script>
 
 <template>
-  <RecordView v-if="exists" :spec="spec" :id="id" :entity="entity">
+  <RecordView v-if="exists" :spec="spec" :id="id" :entity="entity" :style="glossaryStyle">
     <template v-for="name in passthroughSlots" :key="name" #[name]="slotProps">
       <slot :name="name" v-bind="slotProps" />
     </template>
@@ -232,12 +260,11 @@ function printSheet() {
     <template #before-sheet="beforeCtx">
       <slot name="before-sheet" v-bind="beforeCtx">
         <template v-for="info in [beforeSheetInfo(beforeCtx.record, beforeCtx)]" :key="'before-sheet'">
-          <div v-if="info?.source || info?.backwardCompatibility || info?.addToCollectionLabel" class="mwnf-sheet-source">
+          <div v-if="info?.source || info?.addToCollectionLabel" class="mwnf-sheet-source">
             <p v-if="info.source" class="mwnf-sheet-source__line">
               <span v-if="info.source.chipClass" class="mwnf-chip" :class="info.source.chipClass" aria-hidden="true"></span>
               <template v-if="info.source.name">{{ info.source.label }}: {{ info.source.name }}</template>
             </p>
-            <p v-if="info.backwardCompatibility" class="mwnf-sheet-source__uid"><code>{{ info.backwardCompatibility }}</code></p>
             <p v-if="info.addToCollectionLabel" class="mwnf-sheet-source__collection">
               <a :href="mwnfLinks.myCollection" target="_blank" rel="noopener">↗ {{ info.addToCollectionLabel }}</a>
             </p>
@@ -266,19 +293,21 @@ function printSheet() {
       </slot>
     </template>
 
-    <template #related="relCtx">
+    <!-- RecordView's own related block gives way to the sidebar below. -->
+    <template #related></template>
+
+    <template #aside="relCtx">
       <slot name="related" v-bind="relCtx">
         <template v-for="rel in [relatedInfo(relCtx.record, relCtx)]" :key="relCtx.record?.id ?? 'related'">
           <div v-if="rel" class="mwnf-sheet-related">
             <p v-if="rel.title" class="mwnf-sheet-related__heading mwnf-sheet-related__heading--caps">{{ rel.title }}</p>
             <p v-if="rel.description" class="mwnf-sheet-related__description">{{ rel.description }}</p>
 
-            <RelatedRecords :heading="rel.heading" :records="rel.inPackage" :variant="rel.variant" :action-label="rel.actionLabel">
+            <RelatedRecords v-if="rel.inPackage.length || rel.references.length" :heading="rel.heading" :records="rel.inPackage" :variant="rel.variant" :action-label="rel.actionLabel">
               <ul v-if="rel.references.length" class="mwnf-sheet-related__references">
                 <li v-for="ref in rel.references" :key="ref.id">
                   <span v-if="ref.chipClass" class="mwnf-chip" :class="ref.chipClass" aria-hidden="true"></span>
                   <template v-if="ref.name">{{ ref.name }}</template>
-                  <code v-else>{{ ref.backward_compatibility }}</code>
                   <span v-if="rel.notInPackageLabel" class="mwnf-sheet-related__unresolved">{{ rel.notInPackageLabel }}</span>
                 </li>
               </ul>

@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest'
 import { flushPromises, mount } from '@vue/test-utils'
 import { createMemoryHistory, createRouter } from 'vue-router'
 import { SiteShell } from '../src/components/index.js'
+import { mwnfSocialLinks } from '../src/index.js'
 import { globalWithI18n, layoutTexts, withSiteRights } from './helpers.js'
 
 const texts = {
@@ -144,10 +145,32 @@ describe('SiteShell', () => {
     expect(wrapper.find('.mwnf-footer__text').text()).toBe('© Own footer')
   })
 
-  it('renders the attribution and the terms-of-use link once the loaded package names a rights holder, footerText staying alongside', async () => {
+  it('renders no attribution by default, as legacy, even when the loaded package names a rights holder', async () => {
     const restore = withSiteRights()
     try {
       const wrapper = await mountShell({ props: { config: { navigation }, footerText: '© Own footer' } })
+      expect(wrapper.find('.mwnf-footer__attribution').exists()).toBe(false)
+    } finally {
+      restore()
+    }
+  })
+
+  it("draws legacy's footer by default: the five MWNF links and the 2004–<year> line", async () => {
+    const wrapper = await mountShell({ props: { config: { navigation: {} } } })
+    expect(wrapper.findAll('.mwnf-footer__link').map((a) => a.attributes('href'))).toEqual([
+      'https://www.museumwnf.org/about',
+      'https://www.museumwnf.org/about/contact',
+      'https://www.museumwnf.org/about/legal-notice',
+      'https://www.museumwnf.org/about/credits',
+      'https://www.museumwnf.org/about/cookies',
+    ])
+    expect(wrapper.find('.mwnf-footer__text').text()).toMatch(/2004–\d{4}$/)
+  })
+
+  it('renders the attribution and the terms-of-use link on request (config.footer.rightsHolder), footerText staying alongside', async () => {
+    const restore = withSiteRights()
+    try {
+      const wrapper = await mountShell({ props: { config: { navigation, footer: { rightsHolder: true } }, footerText: '© Own footer' } })
       const attribution = wrapper.find('.mwnf-footer__attribution')
       expect(attribution.find('.mwnf-footer__attribution-label').text()).toBe('Rights holder')
       expect(attribution.text()).toContain('Images © Fixture Museum.')
@@ -188,5 +211,36 @@ describe('SiteShell', () => {
     // The rendered links must show translated text, not the raw entry names
     expect(wrapper.find('.mwnf-header__link').text()).toBe('Home')
     expect(wrapper.find('.mwnf-footer__link').text()).toBe('About MWNF')
+  })
+
+  it('draws config.brand.logo from the site\'s chrome files, and the brand slot when the file is missing', async () => {
+    const chrome = { '../theme/assets/logo.png': '/carpets/assets/logo-abc123.png' }
+    const withLogo = await mountShell({ props: { config: { navigation, chrome, brand: { logo: 'logo.png', alt: 'MWNF Logo' } } } })
+    expect(withLogo.find('img.mwnf-header__brand-logo').attributes('src')).toBe('/carpets/assets/logo-abc123.png')
+    expect(withLogo.find('img.mwnf-header__brand-logo').attributes('alt')).toBe('MWNF Logo')
+
+    const without = await mountShell({
+      props: { config: { navigation, chrome: {}, brand: { logo: 'logo.png' } } },
+      slots: { brand: '<span class="mark">MWNF</span>' },
+    })
+    expect(without.find('img.mwnf-header__brand-logo').exists()).toBe(false)
+    expect(without.find('.mwnf-header__home .mark').text()).toBe('MWNF')
+  })
+
+  it('places the menu where config.navigation.placement says, per section', async () => {
+    const placement = ({ section }) => (section === 'home' ? 'after-banner' : 'before-banner')
+    const order = (wrapper) => Array.from(wrapper.element.querySelectorAll('.mwnf-banner, .mwnf-nav'), (el) => el.className.split(' ')[0])
+    const inner = await mountShell({ props: { config: { navigation: { ...navigation, placement }, banner: { title: 'Welcome' } } }, route: '/collection' })
+    expect(order(inner)).toEqual(['mwnf-nav', 'mwnf-banner'])
+    const home = await mountShell({ props: { config: { navigation: { ...navigation, placement }, banner: { title: 'Welcome' } } }, route: '/' })
+    expect(order(home)).toEqual(['mwnf-banner', 'mwnf-nav'])
+  })
+
+  it('renders config.navigation.socialLinks in the footer, and none without it', async () => {
+    const withLinks = await mountShell({ props: { config: { navigation: { ...navigation, socialLinks: mwnfSocialLinks } } } })
+    expect(withLinks.findAll('.mwnf-footer__social-link').map((a) => a.attributes('aria-label')))
+      .toEqual(['YouTube', 'X', 'Facebook', 'Instagram', 'Weibo', 'LinkedIn'])
+    const without = await mountShell({ props: { config: { navigation } } })
+    expect(without.find('.mwnf-footer__social').exists()).toBe(false)
   })
 })
