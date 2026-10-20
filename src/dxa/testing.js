@@ -29,17 +29,28 @@ function mounter(config, sharedTexts, ownTexts) {
   return { messages, mountSite: (hash = '#/') => mountOn(config, messages, hash) }
 }
 
-// The footer's attribution and terms-of-use link come from the data package's
-// `manifest.rights`, read by the layout's own `SiteShell`.
+// The page's text nodes joined by spaces, for `checkTextsRendered`: a raw
+// entry name sits inside one text node, while the host's `textContent` glues
+// neighbouring blocks together ("… online exhibition." + "The Hijaz
+// Railway" reads as an "exhibition.T…" name).
+function spacedText(host) {
+  const walker = host.ownerDocument.createTreeWalker(host, 4 /* NodeFilter.SHOW_TEXT */)
+  const parts = []
+  for (let node = walker.nextNode(); node; node = walker.nextNode()) parts.push(node.nodeValue)
+  return { textContent: parts.join(' ') }
+}
+
+// The footer is legacy's: the portal links, the 2004–<year> line and the
+// social-network icons, and no rights-holder line, which legacy never printed
+// (inventory-app#2233).
 function rightsTest(mountSite, manifest, messages) {
-  it('renders the rights attribution and the terms link in the footer', async () => {
+  it("renders legacy's footer: the portal links, the copyright line and the social links, no attribution", async () => {
     const { app, host } = await mountSite()
-    const attribution = host.querySelector('.mwnf-footer__attribution')
-    expect(attribution).not.toBeNull()
-    expect(attribution.textContent).toContain(manifest.rights.attribution)
-    const terms = attribution.querySelector('a.mwnf-footer__terms')
-    expect(terms.textContent).toBe(messages.en['record.source.termsOfUse'])
-    expect(terms.getAttribute('href')).toBe(manifest.rights.terms_url)
+    expect(host.querySelector('.mwnf-footer__attribution')).toBeNull()
+    expect(host.querySelector('.mwnf-footer__text').textContent)
+      .toContain(`${messages.en['core.footer.copyright']} 2004–`)
+    expect(host.querySelectorAll('.mwnf-footer__link').length).toBeGreaterThan(0)
+    expect(host.querySelectorAll('.mwnf-footer__social-link')).toHaveLength(6)
     app.unmount()
   }, 20000)
 }
@@ -479,7 +490,7 @@ export function describeGallerySmoke({ config, sharedTexts, ownTexts, manifest, 
       expect(text).toContain('Skip to content')
       expect(text).toContain('All MWNF Galleries')
       expect(text).toContain('Tip:')
-      expect(checkTextsRendered(host, {
+      expect(checkTextsRendered(spacedText(host), {
         namespaces: [namespace, 'core', 'layout', 'catalogue', 'record', 'sheet', 'timeline', 'partner', 'gallery'],
       })).toEqual([])
       app.unmount()
@@ -835,7 +846,7 @@ export function describeExhibitionSmoke({
       expect(text).toContain('Skip to content')
       expect(text).toContain('Themes')
       expect(text).toContain('A MWNF online exhibition.')
-      expect(checkTextsRendered(host, {
+      expect(checkTextsRendered(spacedText(host), {
         namespaces: [namespace, 'core', 'layout', 'catalogue', 'record', 'sheet', 'timeline', 'partner', 'exhibition'],
       })).toEqual([])
       app.unmount()

@@ -42,8 +42,10 @@ const normalizedLanguages = computed(() =>
 )
 const switcher = computed(() => props.languageStyle && normalizedLanguages.value.length > 1)
 
-const visible = computed(() =>
-  Boolean(
+// Evaluated at render, not cached: the slots object is not reactive, so a
+// computed would miss a slot that appears after the first render.
+function visible() {
+  return Boolean(
     slots.default ||
       slots.brand ||
       props.title ||
@@ -55,8 +57,8 @@ const visible = computed(() =>
       props.links.length ||
       props.search ||
       switcher.value,
-  ),
-)
+  )
+}
 
 const term = ref('')
 function submit() {
@@ -66,7 +68,7 @@ function submit() {
 </script>
 
 <template>
-  <header v-if="visible" class="mwnf-header">
+  <header v-if="visible()" class="mwnf-header">
     <slot>
       <div class="mwnf-header__inner">
         <div v-if="slots.brand || brand || brandLogo?.src || logos.length" class="mwnf-header__brand">

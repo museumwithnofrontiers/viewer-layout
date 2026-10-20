@@ -145,10 +145,32 @@ describe('SiteShell', () => {
     expect(wrapper.find('.mwnf-footer__text').text()).toBe('© Own footer')
   })
 
-  it('renders the attribution and the terms-of-use link once the loaded package names a rights holder, footerText staying alongside', async () => {
+  it('renders no attribution by default, as legacy, even when the loaded package names a rights holder', async () => {
     const restore = withSiteRights()
     try {
       const wrapper = await mountShell({ props: { config: { navigation }, footerText: '© Own footer' } })
+      expect(wrapper.find('.mwnf-footer__attribution').exists()).toBe(false)
+    } finally {
+      restore()
+    }
+  })
+
+  it("draws legacy's footer by default: the five MWNF links and the 2004–<year> line", async () => {
+    const wrapper = await mountShell({ props: { config: { navigation: {} } } })
+    expect(wrapper.findAll('.mwnf-footer__link').map((a) => a.attributes('href'))).toEqual([
+      'https://www.museumwnf.org/about',
+      'https://www.museumwnf.org/about/contact',
+      'https://www.museumwnf.org/about/legal-notice',
+      'https://www.museumwnf.org/about/credits',
+      'https://www.museumwnf.org/about/cookies',
+    ])
+    expect(wrapper.find('.mwnf-footer__text').text()).toMatch(/2004–\d{4}$/)
+  })
+
+  it('renders the attribution and the terms-of-use link on request (config.footer.rightsHolder), footerText staying alongside', async () => {
+    const restore = withSiteRights()
+    try {
+      const wrapper = await mountShell({ props: { config: { navigation, footer: { rightsHolder: true } }, footerText: '© Own footer' } })
       const attribution = wrapper.find('.mwnf-footer__attribution')
       expect(attribution.find('.mwnf-footer__attribution-label').text()).toBe('Rights holder')
       expect(attribution.text()).toContain('Images © Fixture Museum.')

@@ -1,3 +1,4 @@
+import { defineComponent, h, nextTick, ref } from 'vue'
 import { describe, expect, it } from 'vitest'
 import { mount } from '@vue/test-utils'
 import { PageShell } from '../src/index.js'
@@ -197,5 +198,21 @@ describe('PageShell', () => {
     expect(links[0].attributes('href')).toBe('https://www.youtube.com/channel/x')
     expect(links[0].attributes('target')).toBe('_blank')
     expect(links[0].find('svg path').attributes('d')).toMatch(/^M/)
+  })
+
+  it('shows a section whose slot appears after the first render', async () => {
+    const withSponsors = ref(false)
+    const Host = defineComponent({
+      setup: () => () => h(PageShell, null, withSponsors.value
+        ? { sponsors: () => h('p', { class: 'late' }, 'Late sponsor'), banner: () => h('p', { class: 'late-banner' }, 'Late banner') }
+        : {}),
+    })
+    const wrapper = mount(Host, { ...globalWithI18n() })
+    expect(wrapper.find('.mwnf-sponsors').exists()).toBe(false)
+    expect(wrapper.find('.mwnf-banner').exists()).toBe(false)
+    withSponsors.value = true
+    await nextTick()
+    expect(wrapper.find('.mwnf-sponsors .late').text()).toBe('Late sponsor')
+    expect(wrapper.find('.mwnf-banner .late-banner').text()).toBe('Late banner')
   })
 })

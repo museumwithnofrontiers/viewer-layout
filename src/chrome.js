@@ -53,3 +53,23 @@ export function chromeSource(chrome, value) {
   if (/^(?:[a-z][a-z0-9+.-]*:|\/\/|\/)/i.test(value)) return value
   return chromeAsset(chrome, value)
 }
+
+/**
+ * HTML whose pictures `resolve(src)` maps to a site's own file: each `<img>`
+ * whose source it answers is redrawn from that file, every other one is left
+ * as it is. Parsed as a document, never by pattern; where no DOM parser
+ * exists (a non-browser build step), the HTML is returned unchanged.
+ */
+export function withSitePictures(html, resolve) {
+  if (!html || typeof DOMParser === 'undefined') return html
+  const doc = new DOMParser().parseFromString(`<body>${html}</body>`, 'text/html')
+  let changed = false
+  for (const img of doc.body.querySelectorAll('img[src]')) {
+    const own = resolve(img.getAttribute('src'))
+    if (own) {
+      img.setAttribute('src', own)
+      changed = true
+    }
+  }
+  return changed ? doc.body.innerHTML : html
+}

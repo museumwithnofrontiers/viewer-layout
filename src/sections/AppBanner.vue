@@ -30,9 +30,11 @@ const props = defineProps({
 })
 
 const slots = useSlots()
-const visible = computed(() =>
-  Boolean(slots.default || props.image || props.text || props.title || props.eyebrow || props.headline),
-)
+// Evaluated at render, not cached: the slots object is not reactive, so a
+// computed would miss a slot that appears after the first render.
+function visible() {
+  return Boolean(slots.default || props.image || props.text || props.title || props.eyebrow || props.headline)
+}
 
 const headlineHtml = computed(() => (props.headline ? renderBlock(props.headline) : ''))
 
@@ -54,7 +56,7 @@ const failed = ref(false)
 
 <template>
   <section
-    v-if="visible"
+    v-if="visible()"
     class="mwnf-banner"
     :class="variant ? `mwnf-banner--${variant}` : ''"
   >

@@ -25,6 +25,7 @@
 //   }
 //   config.chrome = { [path]: url }               // the site's own chrome files, `import.meta.glob` over theme/assets/ (src/chrome.js)
 //   config.brand = { logo, alt }                  // the header mark as an image: `logo` a chrome key or a URL, `alt` an entry name
+//   config.footer = { rightsHolder }              // `true` adds the package's rights-holder attribution under the footer line
 //   config.logos = {
 //     header: (logo) => boolean,                    // which of the `logos` prop (below) show beside the brand
 //     sponsorGroups: (logos, t) => [{ title, sponsors }],  // the rest, bucketed for AppSponsors
@@ -63,11 +64,14 @@
 // guards them, so an unused slot does not blank out its section's
 // props-driven content.
 //
-// The footer also carries the rights holder's attribution and a terms-of-use
-// link once `useSiteRights()` names a holder — read from the loaded
-// package's `manifest.rights`, so a package built before that block existed
-// leaves `footerText` as the only thing in the footer, same as today.
-import { computed } from 'vue'
+// The footer is legacy's on every site unless the site says otherwise:
+// MWNF's five portal links and "© Museum With No Frontiers (MWNF)
+// 2004–<year>". `config.navigation.footerLinks` replaces the links, a
+// `footer-text` the caller passes replaces the line. The rights holder's
+// attribution and terms-of-use link (`useSiteRights()`, the package's
+// `manifest.rights`) are opt-in, `config.footer.rightsHolder: true`:
+// legacy printed no such line (inventory-app#2233, Pascal 2026-10-20).
+import { computed, useAttrs } from 'vue'
 
 defineOptions({
   // Disable automatic attribute fallthrough so the root's raw navigation
@@ -76,7 +80,7 @@ defineOptions({
   // (translated via t()) get through.
   inheritAttrs: false,
 })
-import { useI18n, useSection, useSiteConfig, useSiteRights } from '@museumwnf/viewer-core'
+import { mwnfLinks, useI18n, useSection, useSiteConfig, useSiteRights } from '@museumwnf/viewer-core'
 import { useRouter } from 'vue-router'
 import PageShell from '../PageShell.vue'
 import { chromeSource } from '../chrome.js'
@@ -101,12 +105,26 @@ const nav = computed(() => config.value.navigation ?? {})
 const logosConfig = computed(() => config.value.logos ?? null)
 const bannerConfig = computed(() => config.value.banner ?? null)
 
-// ── Footer attribution: only once the loaded package names a rights holder,
-// so a package built before the block existed leaves the footer as it was ──
+// ── The footer: legacy's links and line, the attribution only on request ──
+
+const attrs = useAttrs()
+const LEGACY_FOOTER_LINKS = [
+  { label: 'core.footer.aboutMwnf', href: mwnfLinks.about, external: true },
+  { label: 'core.footer.contact', href: mwnfLinks.contact, external: true },
+  { label: 'core.footer.legalNotice', href: mwnfLinks.legalNotice, external: true },
+  { label: 'core.footer.credits', href: mwnfLinks.credits, external: true },
+  { label: 'core.footer.cookies', href: mwnfLinks.cookies, external: true },
+]
+const currentYear = new Date().getFullYear()
+const footerText = computed(() => (
+  attrs.footerText === undefined && attrs['footer-text'] === undefined
+    ? `${t('core.footer.copyright')} 2004–${currentYear}`
+    : null
+))
 
 const rights = useSiteRights()
 const footerAttribution = computed(() => {
-  if (!rights.holder) return null
+  if (config.value.footer?.rightsHolder !== true || !rights.holder) return null
   return { label: t('record.source.rightsHolder'), text: rights.attribution ?? rights.holder, termsHref: rights.termsUrl, termsLabel: t('record.source.termsOfUse') }
 })
 
@@ -140,8 +158,8 @@ const headerLinks = computed(() => (
   Array.isArray(nav.value.headerLinks) ? nav.value.headerLinks.map((link) => toLink(link)) : null
 ))
 const footerLinks = computed(() => (
-  Array.isArray(nav.value.footerLinks) ? nav.value.footerLinks.map((link) => toLink(link)) : null
-))
+  Array.isArray(nav.value.footerLinks) ? nav.value.footerLinks : LEGACY_FOOTER_LINKS
+).map((link) => toLink(link)))
 
 // ── Search: the header's form, and where a submit goes ──────────────────────
 
@@ -224,6 +242,7 @@ const shellProps = computed(() => {
   if (navLinks.value) out.navLinks = navLinks.value
   if (headerLinks.value) out.headerLinks = headerLinks.value
   if (footerLinks.value) out.footerLinks = footerLinks.value
+  if (footerText.value) out.footerText = footerText.value
   if (search.value) out.search = search.value
   if (headerLogos.value) {
     out.headerLogos = headerLogos.value

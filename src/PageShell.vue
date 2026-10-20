@@ -32,7 +32,7 @@ const props = defineProps({
   // Languages
   languages: { type: Array, default: () => [] },
   language: { type: String, default: '' },
-  /** 'navigation' | 'header' */
+  /** 'navigation' | 'header' | 'none' (no site-language switcher) */
   languagePlacement: { type: String, default: 'navigation' },
   /** 'select' | 'buttons' */
   languageStyle: { type: String, default: 'select' },
@@ -138,7 +138,7 @@ const middle = computed(() => (
         :links="navLinks"
         :languages="languages"
         :language="language"
-        :language-switcher="languagePlacement !== 'header'"
+        :language-switcher="languagePlacement === 'navigation'"
         :notice="notice"
         @update:language="emit('update:language', $event)"
       >

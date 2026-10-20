@@ -31,13 +31,15 @@ const chrome = {
   '../theme/assets/chrome/thg/banner.jpg': '/site/assets/banner.jpg',
   '../theme/assets/chrome/thg/home_image.jpg': '/site/assets/home_image.jpg',
   '../theme/assets/chrome/thg/logos/1.jpg': '/site/assets/iyog.jpg',
+  '../theme/assets/chrome/thg/logo/42/1.jpg': '/site/assets/unaoc.jpg',
+  '../theme/assets/chrome/upload/a.jpg': '/site/assets/popup-a.jpg',
 }
 
 // The shells read the site's config through `useSiteConfig()`, which hands
 // out one object outside a viewer: each test sets the keys it needs on it.
 // `banner` is the variant every gallery config sets (galleryConfig).
 const siteConfig = useSiteConfig()
-const SET = ['chrome', 'brand', 'galleryShell', 'homeLogos', 'links', 'banner']
+const SET = ['chrome', 'brand', 'galleryShell', 'homeLogos', 'links', 'banner', 'sponsorLogos', 'logos', 'media', 'navigation']
 beforeEach(() => { siteConfig.banner = { variant: ({ section }) => (section === 'home' ? 'strip' : 'section') } })
 afterEach(() => { for (const key of SET) delete siteConfig[key] })
 
@@ -125,6 +127,26 @@ describe('GalleryShell', () => {
   })
 })
 
+describe('GalleryShell, as legacy', () => {
+  it("offers no site-language switcher: the record's own bar is the only one", async () => {
+    siteConfig.navigation = { languages: [{ code: 'en', label: 'English' }, { code: 'fr', label: 'Français' }] }
+    const wrapper = await mountChrome(GalleryShell)
+    expect(wrapper.find('.mwnf-header__languages').exists()).toBe(false)
+    expect(wrapper.find('.mwnf-nav__languages, .mwnf-nav select').exists()).toBe(false)
+  })
+
+  it('reads an empty galleryShell line as no line, keeps the header title off the home page, and drops the tip on request', async () => {
+    siteConfig.galleryShell = { bannerEyebrow: '', headerEyebrow: '', headerTitle: 'Partners', notice: false }
+    const home = await mountChrome(GalleryShell, { section: 'home' })
+    expect(home.find('.mwnf-banner__eyebrow').exists()).toBe(false)
+    expect(home.find('.mwnf-header__title').exists()).toBe(false)
+    expect(home.find('.mwnf-nav__notice').exists()).toBe(false)
+    const inner = await mountChrome(GalleryShell)
+    expect(inner.find('.mwnf-header__eyebrow').exists()).toBe(false)
+    expect(inner.find('.mwnf-header__title').text()).toBe('Partners')
+  })
+})
+
 describe('GalleryHome', () => {
   it('names the other virtual museums over their picture banners when the site supplies them', async () => {
     siteConfig.chrome = chrome
@@ -153,6 +175,46 @@ describe('GalleryHome', () => {
 })
 
 describe('ExhibitionShell', () => {
+  it("offers legacy's header select, the codes in capitals", async () => {
+    siteConfig.navigation = { languages: [{ code: 'en', label: 'EN' }, { code: 'fr', label: 'FR' }] }
+    const wrapper = await mountChrome(ExhibitionShell)
+    expect(wrapper.findAll('.mwnf-header__language-select option').map((o) => o.text())).toEqual(['EN', 'FR'])
+  })
+
+  it("draws the sponsors' logos from the site's files, never the inventory's image_url", async () => {
+    siteConfig.chrome = chrome
+    siteConfig.logos = { sponsorGroups: (logos) => [{ title: 'Support', sponsors: logos.map((l) => ({ name: l.alt, href: l.href, logo: l.image })) }] }
+    exhibition.value.logos = [
+      { image_url: 'https://inventory.example/pub/1.jpg', legacy_path: 'thg/logo/42/1.jpg', labels: { en: 'UNAOC' }, url: 'https://www.unaoc.org/', category_id: 1 },
+    ]
+    try {
+      const fromPackage = await mountChrome(ExhibitionShell)
+      expect(fromPackage.find('.mwnf-sponsors img').attributes('src')).toBe('/site/assets/unaoc.jpg')
+      expect(fromPackage.html()).not.toContain('inventory.example/pub')
+
+      siteConfig.sponsorLogos = [{ image: 'dia.jpg', alt: 'Own sponsor', href: 'https://own.example' }]
+      const own = await mountChrome(ExhibitionShell)
+      expect(own.findAll('.mwnf-sponsors img').map((i) => i.attributes('src'))).toEqual(['/site/assets/dia.jpg'])
+    } finally {
+      delete exhibition.value.logos
+    }
+  })
+
+  it("draws the popup notice's pictures from the site's files when it keeps them", async () => {
+    siteConfig.chrome = chrome
+    siteConfig.media = { legacyHost: 'https://images.example' }
+    exhibition.value.popup_logos = { en: '![](https://images.example/full/upload/a.jpg) ![](https://images.example/full/upload/b.jpg)' }
+    exhibition.value.popup_logo_show = true
+    try {
+      const wrapper = await mountChrome(ExhibitionShell)
+      const sources = wrapper.findAll('.mwnf-popup-logo img').map((i) => i.attributes('src'))
+      expect(sources).toEqual(['/site/assets/popup-a.jpg', 'https://images.example/full/upload/b.jpg'])
+    } finally {
+      delete exhibition.value.popup_logos
+      delete exhibition.value.popup_logo_show
+    }
+  })
+
   it("shows legacy's composed home image on the home page, and the banner on the others", async () => {
     siteConfig.chrome = chrome
     exhibition.value.banner_image_path = 'thg/banner.jpg'

@@ -3,7 +3,7 @@ import { computed } from 'vue'
 import { useI18n, useSection, useSiteConfig } from '@museumwnf/viewer-core'
 import SiteShell from '../../components/SiteShell.vue'
 import PopupLogo from '../PopupLogo.vue'
-import { chromeSource } from '../../chrome.js'
+import { chromePicture, chromeSource, withSitePictures } from '../../chrome.js'
 import {
   bannerCaption, chromeImage, defaultLang, exhibition, exhibitionHeadline, exhibitionSubtitle,
   exhibitionTitle, itemById, labelOf, md, tr,
@@ -71,30 +71,53 @@ const bottomLinks = computed(() => [
 
 // The exhibition's logo records, in the `logos` shape `config.logos.header`
 // and `.sponsorGroups` bucket by: the header-logo fields plus the legacy
-// category, visibility and order.
+// category, visibility and order. The sponsors' logos are the site's, not the
+// inventory's (inventory-app#2233, Pascal 2026-10-20): a site's own
+// `sponsorLogos` list replaces the package's; otherwise each package entry
+// draws the site's file at `chrome/<legacy_path>`, else legacy's media host —
+// never the inventory's `image_url`.
 function logoCaption(logo) {
   return logo.labels?.[locale.value] ?? logo.labels?.en ?? logo.alt_text ?? ''
 }
-const exhibitionLogos = computed(() =>
-  (exhibition.value?.logos ?? []).map((logo) => ({
-    image: logo.image_url,
-    alt: logoCaption(logo),
-    href: logo.url || undefined,
-    category_id: logo.category_id,
-    category: logo.category,
-    visible: logo.visible,
-    display_order: logo.display_order,
-  })),
-)
+const exhibitionLogos = computed(() => {
+  const own = siteConfig.sponsorLogos
+  if (Array.isArray(own)) {
+    return own
+      .map((logo) => ({ ...logo, image: chromeSource(siteConfig.chrome, logo.image), alt: logo.alt ? t(logo.alt) : '' }))
+      .filter((logo) => logo.image)
+  }
+  return (exhibition.value?.logos ?? [])
+    .map((logo) => ({
+      image: logo.legacy_path ? chromeImage(logo.legacy_path, 'full') : null,
+      alt: logoCaption(logo),
+      href: logo.url || undefined,
+      category_id: logo.category_id,
+      category: logo.category,
+      visible: logo.visible,
+      display_order: logo.display_order,
+    }))
+    .filter((logo) => logo.image)
+})
+
+// A picture in the popup notice that the site keeps a copy of
+// (`theme/assets/chrome/<path>`, the path after legacy's size segment) is
+// drawn from the site's file.
+function popupPicture(src) {
+  const host = siteConfig.media?.legacyHost
+  if (!host || !src.startsWith(`${host.replace(/\/+$/, '')}/`)) return null
+  const path = src.slice(host.replace(/\/+$/, '').length + 1).split('/').slice(1).join('/')
+  return chromePicture(siteConfig.chrome, path)
+}
 
 // Legacy showed its popup notice once per page load when the exhibition set
 // it, per language (a language's instance may suppress the notice another
 // shows). The body is Markdown, rendered through the package's block
 // pipeline and passed as HTML: the component's inline rendering drops the
 // paragraphs a notice needs.
-const popupContent = computed(() =>
+const popupContent = computed(() => withSitePictures(
   md(exhibition.value?.popup_logos?.[locale.value] ?? exhibition.value?.popup_logos?.en ?? ''),
-)
+  popupPicture,
+))
 const popupEnabled = computed(() => {
   const show = exhibition.value?.popup_logo_show
   if (show === null || show === undefined) return false
@@ -108,7 +131,7 @@ const popupEnabled = computed(() => {
     :languages="props.languages"
     :language="props.language"
     language-placement="header"
-    language-style="buttons"
+    language-style="select"
     :header-home="links.portal"
     :header-title="t('exhibition.identity.tagline')"
     header-title-href="#/about"

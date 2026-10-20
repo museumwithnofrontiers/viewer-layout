@@ -154,7 +154,9 @@ Sections render top to bottom in this fixed order, except that `navigation-place
 
 `languages` is `['en']` or `[{ code, label }]`, `language` the active code.
 `language-placement` says where the switcher renders: `navigation` (the
-default, a select at the end of the navigation bar) or `header`;
+default, a select at the end of the navigation bar), `header`, or `none` (no
+site-language switcher at all: legacy's galleries had only the record's own
+bar);
 `language-style` says how, `select` or `buttons`. Whichever renders emits
 `update:language` with the code chosen.
 
@@ -241,13 +243,15 @@ renders before the routed content, `#after-content` after it (a dismissible
 sponsor notice next to the router-view, say); `#header`, `#navigation`,
 `#hyperlinks`, `#sponsors`, `#footer` pass straight through to `PageShell`.
 
-Once the loaded package's `manifest.rights` names a holder (`useSiteRights()`),
-the footer also renders the attribution sentence — `rights.attribution`, or
+The footer is legacy's unless the site says otherwise: MWNF's five portal
+links and "© Museum With No Frontiers (MWNF) 2004–<year>" (since 3.4.0). With
+`config.footer.rightsHolder: true`, and once the loaded package's
+`manifest.rights` names a holder (`useSiteRights()`), it also renders the
+attribution sentence — `rights.attribution`, or
 the holder's name when the package carries no separate attribution text —
 labelled `record.source.rightsHolder`, with a link labelled
-`record.source.termsOfUse` to `rights.termsUrl`. A package built before the
-`rights` block existed carries no holder, so the footer renders exactly as
-it did before: `footer-text` alone.
+`record.source.termsOfUse` to `rights.termsUrl`. Legacy printed no such line,
+so it is off by default.
 
 ### Site chrome: the logo, the chrome pictures, the social links
 
@@ -287,6 +291,11 @@ it did on 3.3.
 | `config.brand` | `{ logo, alt }` | `logo` a key of `chrome` (or a URL), drawn in the header's brand cell; `alt` an entry name or text. The DXA configs set it (below) |
 | `config.navigation.placement` | `'after-banner'` (default) \| `'before-banner'` \| `({ section }) => …` | where the menu goes: PageShell's `navigation-placement` |
 | `config.navigation.socialLinks` | `[{ label, href, icon }]` | the footer's social-network icons, opt-in for any site; `mwnfSocialLinks` (package root) is legacy's six. `icon` is one of `youtube`, `x`, `facebook`, `instagram`, `weibo`, `linkedin` |
+| `config.footer` | `{ rightsHolder }` | the footer is legacy's by default on every site: MWNF's five portal links (`config.navigation.footerLinks` replaces them) and "© Museum With No Frontiers (MWNF) 2004–<year>" (a `footer-text` the caller passes replaces it). `rightsHolder: true` adds the package's rights-holder attribution, which legacy never printed |
+
+`SocialLinks` (package root, prop `links`) draws the icon links on their own,
+for a site that writes its own `#footer`:
+`<SocialLinks :links="mwnfSocialLinks" />`.
 
 The favicon is not the layout's: every site ships `public/favicon.ico` and
 declares it in its own `index.html` (`<link rel="icon" href="%BASE_URL%favicon.ico">`).
@@ -305,7 +314,18 @@ the logo, the family reads:
 | `chrome/<sibling_galleries[].image_path>` | gallery | the "Visit MWNF Galleries" tiles | `images.museumwnf.org/zoom/<path>` (legacy's tile size) |
 | `chrome/<exhibition.banner_image_path>` | exhibition | the banner on inner pages | `images.museumwnf.org/hi_res/<path>` |
 | `chrome/<exhibition.homepage_image_path>` | exhibition | the home banner (`home_image.jpg`) | `images.museumwnf.org/full/<path>` |
+| `chrome/<exhibition.logos[].legacy_path>` | exhibition | the sponsors' logos (header and footer strip), unless `sponsorLogos` lists the site's own | `images.museumwnf.org/full/<path>` |
 | `chrome/<homeLogos[].image>` | gallery (Glass) | the home's "Set up on the occasion of" logos | `images.museumwnf.org/gallery_logo/<path>` |
+
+**Exhibition sponsors.** The sponsors' logos are the site's, not the
+inventory's. `exhibitionConfig({ sponsorLogos })` takes the site's own list,
+`[{ image, href, alt, category_id, display_order }]` (`image` a chrome key or a
+URL, `alt` an entry name or text), in place of the package's. Without it each
+entry of `exhibition.json`'s `logos` draws `chrome/<legacy_path>`, else legacy's
+media host at that path; never the inventory's `image_url`. A picture in the
+popup notice whose legacy address the site keeps a copy of
+(`chrome/<the path after legacy's size segment>`, e.g. `chrome/upload/toronto.jpg`
+for `…/full/upload/toronto.jpg`) is drawn from that copy.
 
 Glass's home logo slot is the one gallery-specific block, declared by the
 site because no package carries it:
@@ -334,6 +354,11 @@ each field optional and each winning over the package:
 | `bannerEyebrow`, `bannerTitle` | entry name or text: the line over the home banner's title ("Welcome to") and the title ("MWNF Galleries") |
 | `bannerImage` | a `chrome` key or a URL |
 | `bannerCaption` | `{ name, partner, location, country }` or a string, after "Detail from" |
+| `notice` | `false` drops the menu's tip about the search bar (a site with no search) |
+
+An empty string is "no line" (`bannerEyebrow: ''` drops "Discover MWNF
+Galleries"); a field left out keeps the gallery's own. The header fields
+apply on inner pages only, as the home page's header has no title.
 
 ## Sections (standalone use)
 

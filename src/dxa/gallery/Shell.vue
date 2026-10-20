@@ -13,6 +13,9 @@ import {
 // gallery's title — and the MWNF mark. Each gallery carried this as its
 // own `SiteShell.vue`, the same code in all 37.
 //
+// Legacy's galleries had no site-language switcher: the record's own
+// language bar, on the item and partner pages, is the only one.
+//
 // A site with no gallery package of its own (the galleries hub, legacy's
 // gallery 45) names its chrome in `config.galleryShell` instead; each field
 // it sets wins over the package (README, "Site chrome").
@@ -50,14 +53,15 @@ const galleryTitle = computed(() => {
     || named(gallery.value?.names)
 })
 
-const headerEyebrow = computed(() => {
-  if (overrides.value.headerEyebrow) return t(overrides.value.headerEyebrow)
-  return isHome.value ? '' : t('core.project.galleries')
-})
-const headerTitle = computed(() => {
-  if (overrides.value.headerTitle) return t(overrides.value.headerTitle)
-  return isHome.value ? '' : galleryTitle.value
-})
+// A field `config.galleryShell` names wins, an empty one meaning "no line";
+// the header's title cell is an inner page's only, as legacy's was.
+function override(name, fallback) {
+  if (!(name in overrides.value)) return fallback()
+  const value = overrides.value[name]
+  return value ? t(value) : ''
+}
+const headerEyebrow = computed(() => (isHome.value ? '' : override('headerEyebrow', () => t('core.project.galleries'))))
+const headerTitle = computed(() => (isHome.value ? '' : override('headerTitle', () => galleryTitle.value)))
 
 // The banner: the gallery's image, captioned with the banner item's sheet.
 // A `config.banner` function sees only the section and the language, never
@@ -80,14 +84,14 @@ const bannerCaption = computed(() => {
   }
 })
 // Over the home banner, legacy's "Discover MWNF Galleries" line and the title.
-const bannerEyebrow = computed(() => {
-  if (!isHome.value) return ''
-  return t(overrides.value.bannerEyebrow || 'gallery.banner.discoverGalleries')
-})
-const bannerTitle = computed(() => {
-  if (!isHome.value) return undefined
-  return overrides.value.bannerTitle ? t(overrides.value.bannerTitle) : galleryTitle.value
-})
+const bannerEyebrow = computed(() => (isHome.value ? override('bannerEyebrow', () => t('gallery.banner.discoverGalleries')) : ''))
+const bannerTitle = computed(() => (isHome.value ? override('bannerTitle', () => galleryTitle.value) : undefined))
+
+// The menu's standing tip about the search bar; a site without the search
+// (the hub) sets `galleryShell.notice: false`.
+const notice = computed(() => (
+  overrides.value.notice === false ? null : { title: t('gallery.notice.tip'), text: t('gallery.notice.databaseReplaced') }
+))
 
 // The header mark: the site's own logo file (`config.brand`), else the text.
 const hasLogo = computed(() => Boolean(chromeSource(siteConfig.chrome, siteConfig.brand?.logo)))
@@ -99,8 +103,7 @@ const hasLogo = computed(() => Boolean(chromeSource(siteConfig.chrome, siteConfi
     :class="{ 'mwnf-dxa-gallery-shell--home': isHome }"
     :languages="props.languages"
     :language="props.language"
-    language-placement="header"
-    language-style="buttons"
+    language-placement="none"
     :header-home="links.portal"
     :header-eyebrow="headerEyebrow"
     :header-title="headerTitle"
@@ -109,7 +112,7 @@ const hasLogo = computed(() => Boolean(chromeSource(siteConfig.chrome, siteConfi
     :banner-caption="bannerCaption"
     :banner-eyebrow="bannerEyebrow"
     :banner-title="bannerTitle"
-    :notice="{ title: t('gallery.notice.tip'), text: t('gallery.notice.databaseReplaced') }"
+    :notice="notice"
     :footer-text="`${t('core.footer.copyright')} 2004–${currentYear}`"
     @update:language="emit('update:language', $event)"
   >

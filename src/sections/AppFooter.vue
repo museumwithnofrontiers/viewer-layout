@@ -1,5 +1,6 @@
 <script setup>
 import { computed, useSlots } from 'vue'
+import SocialLinks from './SocialLinks.vue'
 import { SOCIAL_ICONS } from './socialLinks.js'
 
 const props = defineProps({
@@ -19,11 +20,15 @@ const props = defineProps({
 
 const slots = useSlots()
 const socialLinks = computed(() => props.social.filter((link) => SOCIAL_ICONS[link.icon]))
-const visible = computed(() => Boolean(slots.default || props.text || props.links.length || props.attributionText || socialLinks.value.length))
+// Evaluated at render, not cached: the slots object is not reactive, so a
+// computed would miss a slot that appears after the first render.
+function visible() {
+  return Boolean(slots.default || props.text || props.links.length || props.attributionText || socialLinks.value.length)
+}
 </script>
 
 <template>
-  <footer v-if="visible" class="mwnf-footer">
+  <footer v-if="visible()" class="mwnf-footer">
     <slot>
       <ul v-if="links.length" class="mwnf-footer__links">
         <li v-for="link in links" :key="link.href ?? link.label">
@@ -41,15 +46,7 @@ const visible = computed(() => Boolean(slots.default || props.text || props.link
         {{ attributionText }}
         <a v-if="termsHref" class="mwnf-footer__terms" :href="termsHref">{{ termsLabel }}</a>
       </p>
-      <ul v-if="socialLinks.length" class="mwnf-footer__social">
-        <li v-for="link in socialLinks" :key="link.href">
-          <a class="mwnf-footer__social-link" :href="link.href" target="_blank" rel="noopener" :aria-label="link.label" :title="link.label">
-            <svg class="mwnf-footer__social-icon" :viewBox="SOCIAL_ICONS[link.icon].viewBox" aria-hidden="true" focusable="false">
-              <path fill="currentColor" :d="SOCIAL_ICONS[link.icon].path" />
-            </svg>
-          </a>
-        </li>
-      </ul>
+      <SocialLinks :links="socialLinks" />
     </slot>
   </footer>
 </template>

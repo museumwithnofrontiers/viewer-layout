@@ -13,13 +13,15 @@ const props = defineProps({
 const slots = useSlots()
 const { t } = useI18n()
 const groupsWithSponsors = computed(() => props.groups.filter((group) => group?.sponsors?.length))
-const visible = computed(() =>
-  Boolean(slots.default || props.sponsors.length || groupsWithSponsors.value.length),
-)
+// Evaluated at render, not cached: the slots object is not reactive, so a
+// computed would miss a slot that appears after the first render.
+function visible() {
+  return Boolean(slots.default || props.sponsors.length || groupsWithSponsors.value.length)
+}
 </script>
 
 <template>
-  <section v-if="visible" class="mwnf-sponsors" :aria-label="title || t('layout.sponsors.label')">
+  <section v-if="visible()" class="mwnf-sponsors" :aria-label="title || t('layout.sponsors.label')">
     <p v-if="title" class="mwnf-sponsors__title">{{ title }}</p>
     <slot>
       <ul v-if="sponsors.length" class="mwnf-sponsors__list">

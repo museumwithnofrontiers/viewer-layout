@@ -166,10 +166,12 @@ export function galleryConfig({
  * An exhibition's config: `galleryConfig`'s values, `creditsBody` the
  * credits page's entry. The partner-objects texts are the shared
  * `exhibition.partnerObjects.*` entries; `partnerObjects` still overrides them;
- * `chrome` is the site's own chrome files (README, "Site chrome").
+ * `chrome` is the site's own chrome files and `sponsorLogos` its own list of
+ * sponsor logos (README, "Site chrome").
  */
 export function exhibitionConfig({
   datasetPackage, siteName, origin, projectColors = {}, noticeProjects = [], creditsBody, partnerObjects, chrome = {},
+  sponsorLogos,
 }) {
   const { manifest } = useDataPackage()
   const languages = offeredLanguages()
@@ -187,7 +189,8 @@ export function exhibitionConfig({
     // /related. Timeline is dropped when the exhibition reports neither
     // chronology: the flags gate the entry, not the data.
     navigation: {
-      languages: languageLabels(languages),
+      // Legacy's header select names each language by its code, in capitals.
+      languages: languages.map((code) => ({ code, label: String(code).toUpperCase() })),
       links: [
         { section: 'about', label: 'core.nav.about', to: { name: 'about' } },
         { section: 'themes', label: 'exhibition.nav.themes', to: { name: 'themes' } },
@@ -235,6 +238,9 @@ export function exhibitionConfig({
     // legacy exhibitions-client's black logo, `theme/assets/logo_black.png`.
     chrome,
     brand: { logo: 'logo_black.png', alt: 'MWNF Logo' },
+    // The sponsors' logos, when the site lists its own; left out, the
+    // package's list draws the site's files (README, "Site chrome").
+    sponsorLogos,
     // Legacy's header shows category 0 ("Header") beside the MWNF mark and
     // leaves the other categories to the footer strip. Only categories 1 and
     // 2 carry real copy; 3 and 4 hold legacy placeholders, which fall back to

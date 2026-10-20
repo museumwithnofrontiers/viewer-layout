@@ -1,5 +1,5 @@
 <script setup>
-import { computed, useSlots } from 'vue'
+import { useSlots } from 'vue'
 import { useI18n } from '@museumwnf/viewer-core/i18n'
 
 const props = defineProps({
@@ -14,12 +14,16 @@ const props = defineProps({
 
 const slots = useSlots()
 const { t } = useI18n()
-const visible = computed(() => Boolean(slots.default || props.links.length))
+// Evaluated at render, not cached: the slots object is not reactive, so a
+// computed would miss a slot that appears after the first render.
+function visible() {
+  return Boolean(slots.default || props.links.length)
+}
 </script>
 
 <template>
   <section
-    v-if="visible"
+    v-if="visible()"
     class="mwnf-hyperlinks"
     :class="variant ? `mwnf-hyperlinks--${variant}` : ''"
     :aria-label="title || t('layout.hyperlinks.label')"

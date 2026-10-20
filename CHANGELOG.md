@@ -37,6 +37,16 @@ renders as it did on 3.3, apart from the fixes below.
   for a site without a gallery package, the galleries hub.
 - RecordView's `aside` slot also gets `records` and `outside`, the related
   rows the `related` slot gets.
+- `SocialLinks` (package root, prop `links`): the footer's icon links on their
+  own, for a site that writes its own `#footer`.
+- PageShell `language-placement="none"`: no site-language switcher.
+- `config.footer.rightsHolder: true` (SiteShell): the rights-holder line, now
+  opt-in (below).
+- `exhibitionConfig({ sponsorLogos })`: an exhibition's own list of sponsor
+  logos (`[{ image, href, alt, category_id, display_order }]`); and
+  `withSitePictures(html, resolve)`, which redraws a popup notice's pictures
+  from the site's own copies.
+- `config.galleryShell.notice: false` drops the menu's search tip (the hub).
 
 ### Changed
 
@@ -83,11 +93,30 @@ renders as it did on 3.3, apart from the fixes below.
   legacy's popup pictures had no visible caption, only their title tooltip,
   which the package keeps.
 
+- **The language switchers are legacy's** (Pascal, 2026-10-20): the
+  galleries have none, only the record's own bar on the item and partner
+  pages; the exhibitions have legacy's small header select, the codes in
+  capitals, plus the record's bar.
+- **The footer is legacy's on every SiteShell site** (Pascal, 2026-10-20):
+  MWNF's five portal links and "© Museum With No Frontiers (MWNF)
+  2004–<year>" by default, `config.navigation.footerLinks` and a `footer-text`
+  still replacing them; the rights-holder line ("Content © Museum With No
+  Frontiers, used under …") no longer shows unless `config.footer.rightsHolder`.
+  The family smoke test checks legacy's footer instead of the attribution.
+- **An exhibition's sponsor logos are the site's** (Pascal, 2026-10-20): the
+  package's `logos[]` draw `chrome/<legacy_path>`, else legacy's media host,
+  never the inventory's `image_url`; `sponsorLogos` replaces the list.
+- `config.galleryShell`: an empty field means no line, and the header fields
+  apply on inner pages only.
+
 ### Fixed
 
 - AppBanner's `section` strip shows its caption ("Detail from …", the
   partner, the place) at the end of the title band (S6). It was drawn
   inside the picture, where the strip's own rule hid it.
+- A section whose slot appears after the first render shows: every section
+  decided whether to render from `useSlots()` inside a `computed`, which the
+  slots object never invalidates; it now decides at render.
 
 ## 3.3.0 (2026-10-05)
 
