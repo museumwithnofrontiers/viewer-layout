@@ -87,13 +87,6 @@ const shellConfig = computed(() => ({
   ...(brand.value ? { brand: brand.value } : {}),
 }))
 
-// The sections decide whether to draw a slot once, when they are created
-// (AppSponsors' and AppBanner's `visible` read `useSlots()` in a computed,
-// which does not track a slot that comes or goes). So the shell is drawn anew
-// whenever the set of slots it passes changes: the first route resolves after
-// the shell exists, and home ↔ inner page swaps the banner and the band.
-const slotSet = computed(() => [isHome.value, Boolean(sponsors.value), innerBanner.value].join('-'))
-
 const currentYear = new Date().getFullYear()
 const footerText = computed(() => (standalone.value.copyright ? `${t(standalone.value.copyright)} ${currentYear}` : ''))
 
@@ -106,7 +99,6 @@ const pageClass = computed(() => [
 
 <template>
   <SiteShell
-    :key="slotSet"
     :class="pageClass"
     :config="shellConfig"
     :languages="standalone.languages === false ? [] : props.languages"
