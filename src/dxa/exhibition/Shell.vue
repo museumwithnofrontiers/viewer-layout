@@ -3,6 +3,7 @@ import { computed } from 'vue'
 import { useI18n, useSection, useSiteConfig } from '@museumwnf/viewer-core'
 import SiteShell from '../../components/SiteShell.vue'
 import PopupLogo from '../PopupLogo.vue'
+import { chromeSource } from '../../chrome.js'
 import {
   bannerCaption, chromeImage, defaultLang, exhibition, exhibitionHeadline, exhibitionSubtitle,
   exhibitionTitle, itemById, labelOf, md, tr,
@@ -26,19 +27,31 @@ const props = defineProps({
 const emit = defineEmits(['update:language'])
 
 const { t, locale } = useI18n()
-const { links } = useSiteConfig()
+const siteConfig = useSiteConfig()
+const links = computed(() => siteConfig.links ?? {})
+
+// The header mark: the site's own logo file (`config.brand`), else the text.
+const hasLogo = computed(() => Boolean(chromeSource(siteConfig.chrome, siteConfig.brand?.logo)))
 
 const section = useSection()
 const isHome = computed(() => section.value === 'home')
 const currentYear = new Date().getFullYear()
 
-// The banner: the exhibition's image, captioned with the curator's own line
-// where there is one, and with the banner item's sheet where there is not.
-const bannerImage = computed(() => chromeImage(exhibition.value?.banner_image_path, 'hi_res'))
+// The banner: on the home page legacy's composed home image, captioned with
+// the home item's sheet; on every other page the exhibition's banner,
+// captioned with the curator's own line where there is one, and with the
+// banner item's sheet where there is not.
+const homeImage = computed(() => (isHome.value ? exhibition.value?.homepage_image_path : null))
+const bannerImage = computed(() => (
+  homeImage.value
+    ? chromeImage(homeImage.value, 'hi_res')
+    : chromeImage(exhibition.value?.banner_image_path, 'hi_res')
+))
 const banner = computed(() => {
-  const curated = bannerCaption(locale.value)
+  const curated = homeImage.value ? '' : bannerCaption(locale.value)
   if (curated) return curated
-  const item = itemById.value.get(exhibition.value?.banner_item_id)
+  const itemId = homeImage.value ? exhibition.value?.homepage_item_id : exhibition.value?.banner_item_id
+  const item = itemById.value.get(itemId)
   if (!item) return ''
   const sheet = tr('items', item.id, defaultLang)
   return {
@@ -116,7 +129,7 @@ const popupEnabled = computed(() => {
     :logos="exhibitionLogos"
     @update:language="emit('update:language', $event)"
   >
-    <template #brand><span class="mwnf-dxa-logo-mark">MWNF</span></template>
+    <template v-if="!hasLogo" #brand><span class="mwnf-dxa-logo-mark">MWNF</span></template>
     <template #notice><PopupLogo :content="popupContent" :enabled="popupEnabled" raw-html /></template>
     <slot />
   </SiteShell>

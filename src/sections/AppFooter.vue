@@ -1,5 +1,6 @@
 <script setup>
 import { computed, useSlots } from 'vue'
+import { SOCIAL_ICONS } from './socialLinks.js'
 
 const props = defineProps({
   text: { type: String, default: '' },
@@ -12,10 +13,13 @@ const props = defineProps({
   attributionText: { type: String, default: '' },
   termsHref: { type: String, default: '' },
   termsLabel: { type: String, default: '' },
+  /** [{ label, href, icon }] — the social-network icons after the text; `icon` a key of SOCIAL_ICONS. */
+  social: { type: Array, default: () => [] },
 })
 
 const slots = useSlots()
-const visible = computed(() => Boolean(slots.default || props.text || props.links.length || props.attributionText))
+const socialLinks = computed(() => props.social.filter((link) => SOCIAL_ICONS[link.icon]))
+const visible = computed(() => Boolean(slots.default || props.text || props.links.length || props.attributionText || socialLinks.value.length))
 </script>
 
 <template>
@@ -37,6 +41,15 @@ const visible = computed(() => Boolean(slots.default || props.text || props.link
         {{ attributionText }}
         <a v-if="termsHref" class="mwnf-footer__terms" :href="termsHref">{{ termsLabel }}</a>
       </p>
+      <ul v-if="socialLinks.length" class="mwnf-footer__social">
+        <li v-for="link in socialLinks" :key="link.href">
+          <a class="mwnf-footer__social-link" :href="link.href" target="_blank" rel="noopener" :aria-label="link.label" :title="link.label">
+            <svg class="mwnf-footer__social-icon" :viewBox="SOCIAL_ICONS[link.icon].viewBox" aria-hidden="true" focusable="false">
+              <path fill="currentColor" :d="SOCIAL_ICONS[link.icon].path" />
+            </svg>
+          </a>
+        </li>
+      </ul>
     </slot>
   </footer>
 </template>

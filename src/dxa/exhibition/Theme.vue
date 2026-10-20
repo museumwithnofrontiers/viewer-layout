@@ -14,8 +14,8 @@ import { aboutSpec, themeNodeRoute, themeSpec } from './themeSpecs.js'
 // the glossary, the tour's previous/next. The picture panel and the
 // narrative are PictureGallery/PictureNarrative (docs/theme-components.md).
 // `aboutMode` serves /about: the About theme under the exhibition's own
-// title and subtitle, with no picture apparatus — EssayView's `about` mode
-// drops the side column.
+// title and subtitle, its pictures in the side column as legacy's, but without
+// the tour (EssayView's `about` mode, keeping the panel).
 //
 // The address keeps legacy's shape, so a legacy link still resolves:
 //   /theme/:id/:subtheme?/:image?

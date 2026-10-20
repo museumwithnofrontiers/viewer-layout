@@ -74,7 +74,7 @@ const failed = ref(false)
             @error="failed = true"
           />
           <div v-else class="mwnf-banner__fallback" aria-hidden="true"></div>
-          <p v-if="captionParts" class="mwnf-banner__caption">
+          <p v-if="captionParts && variant !== 'section'" class="mwnf-banner__caption">
             <span class="mwnf-banner__caption-name">{{ captionParts.name }}</span>
             <span v-if="captionParts.rest" class="mwnf-banner__caption-rest">{{ captionParts.rest }}</span>
           </p>
@@ -106,6 +106,11 @@ const failed = ref(false)
           >{{ enter.label }}</a>
           <p v-if="strapline" class="mwnf-banner__strapline">{{ strapline }}</p>
           <p v-if="text" class="mwnf-banner__text">{{ text }}</p>
+          <!-- A section strip carries the caption at the end of its title band. -->
+          <p v-if="captionParts && variant === 'section'" class="mwnf-banner__caption">
+            <span class="mwnf-banner__caption-name">{{ captionParts.name }}</span>
+            <span v-if="captionParts.rest" class="mwnf-banner__caption-rest">{{ captionParts.rest }}</span>
+          </p>
         </div>
       </div>
     </slot>

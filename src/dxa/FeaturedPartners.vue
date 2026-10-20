@@ -20,6 +20,11 @@ const props = defineProps({
   partners: { type: Array, default: () => [] },
   descriptionLength: { type: Number, default: 420 },
   headingEntry: { type: String, default: 'partner.list.featured' },
+  // Legacy's two links under the text, each shown when the card has its
+  // route: the partner's page (`route`) and the objects it holds
+  // (`objectsRoute`, a `partnerView()`'s own).
+  readMoreEntry: { type: String, default: 'partner.action.readMore' },
+  viewObjectsEntry: { type: String, default: 'partner.action.viewObjects' },
 })
 
 function plainText(html) {
@@ -42,6 +47,7 @@ const cards = computed(() =>
       country: partner.country,
       description: cut(plainText(partner.description), props.descriptionLength),
       route: partner.route,
+      objectsRoute: partner.objectsRoute ?? null,
     }))
     : props.records,
 )
@@ -71,11 +77,10 @@ onBeforeUnmount(() => timer && clearInterval(timer))
   <section v-if="cards.length" class="mwnf-featured-partners">
     <h2 class="mwnf-featured-partners__heading">{{ $t(headingEntry) }}</h2>
     <div class="mwnf-featured-partners__carousel">
-      <SmartLink
+      <div
         v-for="(record, index) in cards"
         v-show="index === current"
         :key="record.id"
-        :to="record.route"
         class="mwnf-featured-partners__card"
       >
         <span v-if="record.logo" class="mwnf-featured-partners__image">
@@ -87,8 +92,10 @@ onBeforeUnmount(() => timer && clearInterval(timer))
             <span v-if="record.city">{{ record.city }}, </span>{{ record.country }}
           </span>
           <span class="mwnf-featured-partners__description">{{ record.description }}</span>
+          <SmartLink v-if="record.route" :to="record.route" class="mwnf-featured-partners__more">{{ $t(readMoreEntry) }} &gt;&gt;</SmartLink>
+          <SmartLink v-if="record.objectsRoute" :to="record.objectsRoute" class="mwnf-featured-partners__more">{{ $t(viewObjectsEntry) }} &gt;&gt;</SmartLink>
         </span>
-      </SmartLink>
+      </div>
     </div>
     <div v-if="cards.length > 1" class="mwnf-featured-partners__controls">
       <button

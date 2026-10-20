@@ -155,4 +155,47 @@ describe('PageShell', () => {
     expect(wrapper.find('.mwnf-sponsors__group-title').text()).toBe('Under the patronage of')
     expect(wrapper.find('footer .mwnf-footer__link').attributes('target')).toBe('_blank')
   })
+
+  it('puts the menu before the banner with navigation-placement="before-banner", and after it by default', () => {
+    const order = (placement) => {
+      const wrapper = mount(PageShell, {
+        props: { bannerText: 'Welcome', navLinks: [{ label: 'Items', href: '#/items' }], ...(placement ? { navigationPlacement: placement } : {}) },
+        ...globalWithI18n(),
+      })
+      return Array.from(wrapper.element.querySelectorAll('.mwnf-banner, .mwnf-nav'), (el) => el.className.split(' ')[0])
+    }
+    expect(order()).toEqual(['mwnf-banner', 'mwnf-nav'])
+    expect(order('after-banner')).toEqual(['mwnf-banner', 'mwnf-nav'])
+    expect(order('before-banner')).toEqual(['mwnf-nav', 'mwnf-banner'])
+  })
+
+  it('draws the header mark as an image from header-brand-logo, linked home', () => {
+    const wrapper = mount(PageShell, {
+      props: { headerHome: 'https://www.museumwnf.org', headerBrandLogo: { src: '/assets/logo.png', alt: 'MWNF Logo' } },
+      ...globalWithI18n(),
+    })
+    const home = wrapper.find('.mwnf-header__home')
+    expect(home.attributes('href')).toBe('https://www.museumwnf.org')
+    expect(home.find('img.mwnf-header__brand-logo').attributes('src')).toBe('/assets/logo.png')
+    expect(home.find('img').attributes('alt')).toBe('MWNF Logo')
+  })
+
+  it('renders the footer social links as icon links, skipping an unknown icon', () => {
+    const wrapper = mount(PageShell, {
+      props: {
+        footerText: '© MWNF',
+        footerSocial: [
+          { label: 'YouTube', href: 'https://www.youtube.com/channel/x', icon: 'youtube' },
+          { label: 'Nowhere', href: 'https://nowhere.example', icon: 'nowhere' },
+          { label: 'LinkedIn', href: 'https://www.linkedin.com/company/x/', icon: 'linkedin' },
+        ],
+      },
+      ...globalWithI18n(),
+    })
+    const links = wrapper.findAll('.mwnf-footer__social-link')
+    expect(links.map((a) => a.attributes('aria-label'))).toEqual(['YouTube', 'LinkedIn'])
+    expect(links[0].attributes('href')).toBe('https://www.youtube.com/channel/x')
+    expect(links[0].attributes('target')).toBe('_blank')
+    expect(links[0].find('svg path').attributes('d')).toMatch(/^M/)
+  })
 })

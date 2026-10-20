@@ -138,17 +138,17 @@ section — the mark in the header, the active view — not for rebuilding the
 section. A website that needs something no prop expresses adds the prop
 here, so the next website has it too.
 
-Sections render top to bottom in this fixed order. Every section is optional: it renders nothing unless its slot or driving props are set. The default slot (→ `AppContent`) is where the router-view goes.
+Sections render top to bottom in this fixed order, except that `navigation-placement="before-banner"` puts the navigation above the banner. Every section is optional: it renders nothing unless its slot or driving props are set. The default slot (→ `AppContent`) is where the router-view goes.
 
 | Section | Slot | Props (on PageShell) | Events |
 |---|---|---|---|
-| `AppHeader` | `#header`, `#header-brand` | `header-home`, `header-brand`, `header-eyebrow`, `header-title`, `header-title-href`, `header-subtitle`, `header-logos`, `header-logos-title`, `header-links`, `search`, `languages`, `language`, `language-placement`, `language-style` | `search`, `update:language` |
+| `AppHeader` | `#header`, `#header-brand` | `header-home`, `header-brand`, `header-brand-logo`, `header-eyebrow`, `header-title`, `header-title-href`, `header-subtitle`, `header-logos`, `header-logos-title`, `header-links`, `search`, `languages`, `language`, `language-placement`, `language-style` | `search`, `update:language` |
 | `AppBanner` | `#banner` | `banner-variant`, `banner-image`, `banner-image-alt`, `banner-text`, `banner-caption`, `banner-caption-label`, `banner-eyebrow`, `banner-title`, `banner-title-href`, `banner-subtitle`, `banner-headline`, `banner-enter`, `banner-strapline` | — |
-| `AppNavigation` | `#navigation` | `nav-links`, `notice`, `languages`, `language` | `update:language` |
+| `AppNavigation` | `#navigation` | `nav-links`, `notice`, `languages`, `language`, `navigation-placement` | `update:language` |
 | `AppContent` | default | — | — |
 | `AppHyperlinks` | `#hyperlinks` | `hyperlinks-variant`, `hyperlinks-title`, `hyperlinks-title-href`, `hyperlinks-subtitle`, `hyperlinks` | — |
 | `AppSponsors` | `#sponsors` | `sponsors-title`, `sponsors`, `sponsor-groups` | — |
-| `AppFooter` | `#footer` | `footer-text`, `footer-links`, `footer-attribution-label`, `footer-attribution-text`, `footer-terms-href`, `footer-terms-label` | — |
+| `AppFooter` | `#footer` | `footer-text`, `footer-links`, `footer-social`, `footer-attribution-label`, `footer-attribution-text`, `footer-terms-href`, `footer-terms-label` | — |
 
 ### The language switcher
 
@@ -248,6 +248,92 @@ labelled `record.source.rightsHolder`, with a link labelled
 `record.source.termsOfUse` to `rights.termsUrl`. A package built before the
 `rights` block existed carries no holder, so the footer renders exactly as
 it did before: `footer-text` alone.
+
+### Site chrome: the logo, the chrome pictures, the social links
+
+Since 3.4.0 a site supplies its own chrome files (decision D7 of
+inventory-app#2233: logos, banners, tiles and backgrounds belong to their
+website, not to the inventory nor to `images.museumwnf.org`). It keeps them
+in its repository under `theme/assets/` and hands the layout one map of
+them, built by Vite so every file is fingerprinted with the build:
+
+```js
+// src/dataset.config.js
+const chrome = import.meta.glob('../theme/assets/**/*.{jpg,jpeg,png,gif,svg}', {
+  eager: true, query: '?url', import: 'default',
+})
+
+export default { /* … */ chrome, brand: { logo: 'logo.png', alt: 'MWNF Logo' } }
+// a DXA site: galleryConfig({ …, chrome }) / exhibitionConfig({ …, chrome })
+```
+
+The map's keys are normalised to the path after `theme/assets/`, so
+`'../theme/assets/chrome/thematic_gallery/thg_galleries/9/banner.jpg'` is
+`chrome/thematic_gallery/thg_galleries/9/banner.jpg`. Two kinds of key:
+
+| Key | What reads it |
+| --- | --- |
+| a file name at the root (`logo.png`, `dia.jpg`, …) | the part of the layout that names it (`brand.logo`, the DXA keys below) |
+| `chrome/<path>` | an image the data package names by its legacy path (`banner_image_path`, `image_path`, `homepage_image_path`, a sibling gallery's `image_path`): the file is the package's path under `theme/assets/chrome/`. One file per path, whatever size the layout asks for |
+
+A key a site doesn't supply falls back to what the layout drew before:
+the package path on `config.media.legacyHost`, the "MWNF" text mark for the
+logo, nothing for a background. So a site that supplies nothing renders as
+it did on 3.3.
+
+| Config | Shape | Notes |
+| --- | --- | --- |
+| `config.chrome` | `{ [path]: url }` | the map above |
+| `config.brand` | `{ logo, alt }` | `logo` a key of `chrome` (or a URL), drawn in the header's brand cell; `alt` an entry name or text. The DXA configs set it (below) |
+| `config.navigation.placement` | `'after-banner'` (default) \| `'before-banner'` \| `({ section }) => …` | where the menu goes: PageShell's `navigation-placement` |
+| `config.navigation.socialLinks` | `[{ label, href, icon }]` | the footer's social-network icons, opt-in for any site; `mwnfSocialLinks` (package root) is legacy's six. `icon` is one of `youtube`, `x`, `facebook`, `instagram`, `weibo`, `linkedin` |
+
+The favicon is not the layout's: every site ships `public/favicon.ico` and
+declares it in its own `index.html` (`<link rel="icon" href="%BASE_URL%favicon.ico">`).
+
+**DXA families.** `galleryConfig` sets `brand.logo` to `logo.png` (legacy
+dxa-client's white mark), `exhibitionConfig` to `logo_black.png`. Besides
+the logo, the family reads:
+
+| Key | Family | Where | Legacy source |
+| --- | --- | --- | --- |
+| `logo.png` | gallery (and the hub) | the header | `dxa-client/src/assets/logo.png` |
+| `logo_black.png` | exhibition | the header | `exhibitions-client/src/assets/logo_black.png` |
+| `dia.jpg`, `dba.jpg`, `sh.jpg` | gallery | the home's Other Virtual Museums banners (flat colour blocks without them) | `dxa-client/src/assets/` |
+| `world.png` | gallery | the glossary entry's header on the item sheet | `dxa-client/src/sites/<site>/world.png` (one per gallery) |
+| `chrome/<gallery.banner_image_path>` | gallery | the banner, every page | `images.museumwnf.org/hi_res/<path>` |
+| `chrome/<sibling_galleries[].image_path>` | gallery | the "Visit MWNF Galleries" tiles | `images.museumwnf.org/zoom/<path>` (legacy's tile size) |
+| `chrome/<exhibition.banner_image_path>` | exhibition | the banner on inner pages | `images.museumwnf.org/hi_res/<path>` |
+| `chrome/<exhibition.homepage_image_path>` | exhibition | the home banner (`home_image.jpg`) | `images.museumwnf.org/full/<path>` |
+| `chrome/<homeLogos[].image>` | gallery (Glass) | the home's "Set up on the occasion of" logos | `images.museumwnf.org/gallery_logo/<path>` |
+
+Glass's home logo slot is the one gallery-specific block, declared by the
+site because no package carries it:
+
+```js
+galleryConfig({
+  // …
+  homeLogos: [
+    { image: 'thematic_gallery/thg_logos/dga/1.jpg', href: 'https://iyog2022.org/', alt: 'glass.home.iyogLogo' },
+  ],
+})
+```
+
+`image` is a `chrome/` path (the file at
+`theme/assets/chrome/thematic_gallery/thg_logos/dga/1.jpg`), `alt` an entry
+name in the site's own locales; the strip's heading is viewer-i18n's
+`gallery.home.logosLabel` ("Set up on the occasion of").
+
+A gallery shell for a site without a gallery package (the galleries hub,
+legacy's gallery 45) takes its chrome from `config.galleryShell` instead,
+each field optional and each winning over the package:
+
+| `config.galleryShell` field | Shape |
+| --- | --- |
+| `headerEyebrow`, `headerTitle` | entry name or text: the header's title cell on inner pages |
+| `bannerEyebrow`, `bannerTitle` | entry name or text: the line over the home banner's title ("Welcome to") and the title ("MWNF Galleries") |
+| `bannerImage` | a `chrome` key or a URL |
+| `bannerCaption` | `{ name, partner, location, country }` or a string, after "Detail from" |
 
 ## Sections (standalone use)
 

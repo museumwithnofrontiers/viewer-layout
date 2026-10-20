@@ -7,6 +7,7 @@ import ExhibitionShell from './exhibition/Shell.vue'
 import { itemFromUidPath, partnerFromKey } from './gallery/data.js'
 import { countries, hasTimeline, items, visiblePartners } from './exhibition/data.js'
 import { standardRoutes } from './routes.js'
+import { mwnfSocialLinks } from '../sections/socialLinks.js'
 
 // A DXA site's whole declaration (inventory-app#2053/#2054). Every gallery's
 // `dataset.config.js` was the same code apart from six values, and every
@@ -47,9 +48,13 @@ function timelineGalleryRedirect({ country, start, end, page }) {
  * A gallery's config. `siteName` is the fallback for a package that predates
  * `manifest.site`; `projectColors` maps a project id to one of the
  * `mwnf-chip--*` classes; `noticeProjects` lists the projects whose sheets
- * carry the Explore-partner notice; `creditsBody` is the credits page's entry.
+ * carry the Explore-partner notice; `creditsBody` is the credits page's entry;
+ * `chrome` is the site's own chrome files and `homeLogos` the home page's
+ * logo strip (README, "Site chrome").
  */
-export function galleryConfig({ datasetPackage, siteName, origin, projectColors = {}, noticeProjects = [], creditsBody }) {
+export function galleryConfig({
+  datasetPackage, siteName, origin, projectColors = {}, noticeProjects = [], creditsBody, chrome = {}, homeLogos = [],
+}) {
   const { manifest } = useDataPackage()
   const languages = offeredLanguages()
   return {
@@ -96,19 +101,27 @@ export function galleryConfig({ datasetPackage, siteName, origin, projectColors 
         '': 'gallery.section.error',
       },
       search: { route: 'search-results', key: 'q', placeholder: 'catalogue.search.placeholder', submitLabel: 'catalogue.search.submit', empty: 'all-objects' },
+      // Legacy put the menu under the banner on the home page and above it
+      // on every other page.
+      placement: ({ section }) => (section === 'home' ? 'after-banner' : 'before-banner'),
+      socialLinks: mwnfSocialLinks,
     },
-    // What depends on the section alone; the banner's image and caption depend
-    // on the loaded gallery, so the shell passes them.
+    // What depends on the section alone; the banner's image, caption, line
+    // and title depend on the loaded gallery, so the shell passes them.
     banner: {
       variant: ({ section }) => (section === 'home' ? 'strip' : 'section'),
-      eyebrow: ({ section, t }) => (section === 'home' ? t('gallery.banner.discoverGalleries') : ''),
       captionLabel: 'layout.banner.detailFrom',
       enter: ({ section, t }) => (section === 'home'
         ? { label: '»', href: '#/collection', ariaLabel: t('gallery.action.goToCollection') }
         : null),
     },
-    // The chrome images live on the legacy media server; the package ships
-    // the path.
+    // The site's own chrome files (inventory-app#2233 D7); the header mark is
+    // legacy dxa-client's white logo, `theme/assets/logo.png`.
+    chrome,
+    brand: { logo: 'logo.png', alt: 'MWNF Logo' },
+    homeLogos,
+    // A chrome image the site doesn't supply still comes from the legacy
+    // media server; the package ships the path.
     media: { legacyHost: 'https://images.museumwnf.org' },
     links: { ...mwnfLinks },
     projectColors,
@@ -152,10 +165,11 @@ export function galleryConfig({ datasetPackage, siteName, origin, projectColors 
 /**
  * An exhibition's config: `galleryConfig`'s values, `creditsBody` the
  * credits page's entry. The partner-objects texts are the shared
- * `exhibition.partnerObjects.*` entries; `partnerObjects` still overrides them.
+ * `exhibition.partnerObjects.*` entries; `partnerObjects` still overrides them;
+ * `chrome` is the site's own chrome files (README, "Site chrome").
  */
 export function exhibitionConfig({
-  datasetPackage, siteName, origin, projectColors = {}, noticeProjects = [], creditsBody, partnerObjects,
+  datasetPackage, siteName, origin, projectColors = {}, noticeProjects = [], creditsBody, partnerObjects, chrome = {},
 }) {
   const { manifest } = useDataPackage()
   const languages = offeredLanguages()
@@ -210,10 +224,17 @@ export function exhibitionConfig({
       // `all-objects` is legacy's sentinel for an empty search, and the value
       // the results page matches on.
       search: { route: 'search-results', key: 'q', placeholder: 'catalogue.search.placeholder', submitLabel: 'catalogue.search.submit', empty: 'all-objects' },
+      // Legacy's exhibitions put the menu above the banner on every page.
+      placement: 'before-banner',
+      socialLinks: mwnfSocialLinks,
     },
     banner: {
       variant: ({ section }) => (section === 'home' ? 'split' : 'section'),
     },
+    // The site's own chrome files (inventory-app#2233 D7); the header mark is
+    // legacy exhibitions-client's black logo, `theme/assets/logo_black.png`.
+    chrome,
+    brand: { logo: 'logo_black.png', alt: 'MWNF Logo' },
     // Legacy's header shows category 0 ("Header") beside the MWNF mark and
     // leaves the other categories to the footer strip. Only categories 1 and
     // 2 carry real copy; 3 and 4 hold legacy placeholders, which fall back to

@@ -90,6 +90,21 @@ describe('galleryConfig', () => {
     expect(config.legacyRoutes[3].resolve({ country: 'eg', start: '900', end: 'any', page: '2' }))
       .toEqual({ name: 'timeline-gallery', query: { country: 'eg', begin: '900', page: '2' } })
   })
+
+  it("carries the site's chrome files, legacy's white mark, its menu placement and its social links", () => {
+    const chrome = { '../theme/assets/logo.png': '/logo.png' }
+    const homeLogos = [{ image: 'thematic_gallery/thg_logos/dga/1.jpg', href: 'https://iyog2022.org/', alt: 'glass.home.iyogLogo' }]
+    const withChrome = galleryConfig({ datasetPackage: '@museumwnf/glass-data', siteName: 'Glass', origin: 'https://example.org/glass', chrome, homeLogos })
+    expect(withChrome.chrome).toBe(chrome)
+    expect(withChrome.homeLogos).toBe(homeLogos)
+    expect(withChrome.brand.logo).toBe('logo.png')
+    expect(config.chrome).toEqual({})
+    expect(config.homeLogos).toEqual([])
+    // Legacy put the menu under the banner on the home page only.
+    expect(config.navigation.placement({ section: 'home' })).toBe('after-banner')
+    expect(config.navigation.placement({ section: 'collection' })).toBe('before-banner')
+    expect(config.navigation.socialLinks.map((link) => link.icon)).toEqual(['youtube', 'x', 'facebook', 'instagram', 'weibo', 'linkedin'])
+  })
 })
 
 describe('exhibitionConfig', () => {
@@ -107,6 +122,13 @@ describe('exhibitionConfig', () => {
     expect(routes.theme && routes.about && routes.related && routes.credits).toBeTruthy()
     expect(config.shell).toBe(dxa.ExhibitionShell)
     expect(config.legacyRoutes.map((route) => route.path)).toContain('/institution-monuments/:country/:id/:page')
+  })
+
+  it("carries the site's chrome files, legacy's black mark, the menu above the banner and the social links", () => {
+    expect(config.chrome).toEqual({})
+    expect(config.brand.logo).toBe('logo_black.png')
+    expect(config.navigation.placement).toBe('before-banner')
+    expect(config.navigation.socialLinks).toHaveLength(6)
   })
 
   it('offers the Timeline menu entry only when the exhibition has a chronology', () => {

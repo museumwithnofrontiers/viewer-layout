@@ -674,16 +674,18 @@ describe('FeaturedPartners', () => {
 
   it('takes the partners as partnerView() builds them: first picture, "city, country", plain description cut short', () => {
     const view = partnerView(
-      { id: 'p1', country_id: 'c-fr', images: [{ url: 'hall.jpg', alt_text: 'Hall' }], logos: [{ url: 'logo.png' }] },
+      { id: 'p1', country_id: 'c-fr', item_count: 3, images: [{ url: 'hall.jpg', alt_text: 'Hall' }], logos: [{ url: 'logo.png' }] },
       { name: 'Partner *One*', city: 'Paris', description: 'A **grand** museum by the river, with a long history.' },
-      { countryLabel: () => 'France', route: () => '#/partner/p1' },
+      { countryLabel: () => 'France', route: () => '#/partner/p1', objectsRoute: () => '#/partner-objects/p1' },
     )
     const wrapper = mount(FeaturedPartners, { props: { partners: [view], descriptionLength: 20 }, ...globalWithI18n() })
     expect(wrapper.find('.mwnf-featured-partners__name').text()).toBe('Partner One')
     expect(wrapper.find('.mwnf-featured-partners__logo').attributes('src')).toBe('hall.jpg')
     expect(wrapper.find('.mwnf-featured-partners__location').text()).toBe('Paris, France')
     expect(wrapper.find('.mwnf-featured-partners__description').text()).toBe('A grand museum by...')
-    expect(wrapper.find('.mwnf-featured-partners__card').attributes('href')).toBe('#/partner/p1')
+    // Legacy's two links under the text, not one link over the whole card.
+    expect(wrapper.find('.mwnf-featured-partners__card').attributes('href')).toBeUndefined()
+    expect(wrapper.findAll('.mwnf-featured-partners__more').map((a) => a.attributes('href'))).toEqual(['#/partner/p1', '#/partner-objects/p1'])
   })
 
   it('renders nothing when no records', () => {

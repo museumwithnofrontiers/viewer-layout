@@ -20,7 +20,11 @@
 //     sectionTitles: { [section]: entryName },                  // the banner title over a section page, when `banner.title` sets none
 //     search: { route, key, placeholder, submitLabel, empty },  // `route`/`key` (default 'q') power the submit; `placeholder`/`submitLabel`
 //                                                                // are entry names; `empty` is written for a blank submit (legacy's 'all-objects')
+//     placement: 'after-banner' | 'before-banner' | (ctx) => …,  // where the menu goes (PageShell's `navigationPlacement`)
+//     socialLinks: [{ label, href, icon }],                     // the footer's social-network icons (`mwnfSocialLinks`)
 //   }
+//   config.chrome = { [path]: url }               // the site's own chrome files, `import.meta.glob` over theme/assets/ (src/chrome.js)
+//   config.brand = { logo, alt }                  // the header mark as an image: `logo` a chrome key or a URL, `alt` an entry name
 //   config.logos = {
 //     header: (logo) => boolean,                    // which of the `logos` prop (below) show beside the brand
 //     sponsorGroups: (logos, t) => [{ title, sponsors }],  // the rest, bucketed for AppSponsors
@@ -75,6 +79,7 @@ defineOptions({
 import { useI18n, useSection, useSiteConfig, useSiteRights } from '@museumwnf/viewer-core'
 import { useRouter } from 'vue-router'
 import PageShell from '../PageShell.vue'
+import { chromeSource } from '../chrome.js'
 
 const props = defineProps({
   // Overrides/extends `useSiteConfig()` — set only the keys you need. Mainly
@@ -180,6 +185,21 @@ const bannerProps = computed(() => {
   return out
 })
 
+// ── The mark, the menu's place and the social links ────────────────────────
+
+const brandLogo = computed(() => {
+  const brand = config.value.brand
+  const src = brand ? chromeSource(config.value.chrome, brand.logo) : null
+  return src ? { src, alt: brand.alt ? t(brand.alt) : '' } : null
+})
+
+const placement = computed(() => {
+  const value = nav.value.placement
+  return typeof value === 'function' ? value({ section: section.value, locale: locale.value }) : value
+})
+
+const socialLinks = computed(() => (Array.isArray(nav.value.socialLinks) ? nav.value.socialLinks : null))
+
 // ── Logos: the page's own list, bucketed by the site's mapper ───────────────
 
 const headerLogos = computed(() => {
@@ -210,6 +230,9 @@ const shellProps = computed(() => {
     if (headerLogosTitle.value) out.headerLogosTitle = headerLogosTitle.value
   }
   if (sponsorGroups.value) out.sponsorGroups = sponsorGroups.value
+  if (brandLogo.value) out.headerBrandLogo = brandLogo.value
+  if (placement.value) out.navigationPlacement = placement.value
+  if (socialLinks.value) out.footerSocial = socialLinks.value
   if (footerAttribution.value) {
     out.footerAttributionLabel = footerAttribution.value.label
     out.footerAttributionText = footerAttribution.value.text

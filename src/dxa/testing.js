@@ -179,7 +179,10 @@ export function describeGallerySmoke({ config, sharedTexts, ownTexts, manifest, 
   describe('gallery smoke test', () => {
     it('mounts against the configured data package', async () => {
       const { app, host } = await mountSite()
-      expect(host.textContent).toContain(config.siteName)
+      // The home banner's title is legacy's: the gallery's own project name
+      // where the gallery is one ("Discover Carpet Art"), its name elsewhere.
+      const title = manifest.projects?.[manifest.gallery?.project_id]?.name?.en ?? config.siteName
+      await vi.waitFor(() => expect(host.querySelector('.mwnf-banner__title')?.textContent ?? '').toContain(title), WAIT)
       expect(host.querySelector('.mwnf-page')).not.toBeNull()
       // The family's Home view replaces viewer-core's generic one.
       expect(host.querySelector('.vc-home')).toBeNull()
@@ -224,6 +227,10 @@ export function describeGallerySmoke({ config, sharedTexts, ownTexts, manifest, 
       expect(host.querySelector('.mwnf-record')).not.toBeNull()
       expect(host.querySelector('.mwnf-dxa-item__languages')).not.toBeNull()
       expect(host.querySelector('.mwnf-sheet-related')).not.toBeNull()
+      // Related content is legacy's sidebar, and the record's internal key
+      // is never shown.
+      expect(host.querySelector('.mwnf-record__aside .mwnf-sheet-related')).not.toBeNull()
+      expect(host.textContent).not.toContain('mwnf3:')
       // The "Source database" line names the item's project from the manifest.
       const projectName = manifest.projects[items[0].project_id]?.name?.en ?? ''
       expect(host.querySelector('.mwnf-sheet-source').textContent).toContain(projectName)
@@ -529,6 +536,10 @@ export function describeExhibitionSmoke({
       expect(host.querySelector('.mwnf-record')).not.toBeNull()
       expect(host.querySelector('.mwnf-dxa-item__languages')).not.toBeNull()
       expect(host.querySelector('.mwnf-sheet-related')).not.toBeNull()
+      // Related content is legacy's sidebar, and the record's internal key
+      // is never shown.
+      expect(host.querySelector('.mwnf-record__aside .mwnf-sheet-related')).not.toBeNull()
+      expect(host.textContent).not.toContain('mwnf3:')
       const projectName = manifest.projects?.[item.project_id]?.name?.en
       if (projectName) expect(host.querySelector('.mwnf-sheet-source__line').textContent).toContain(projectName)
       // The glossary tool is the layout's own, on every sheet.
@@ -748,8 +759,9 @@ export function describeExhibitionSmoke({
       const { app, host } = await mountSite('#/about')
       await vi.waitFor(() => expect(host.querySelector('.mwnf-essay')).not.toBeNull(), WAIT)
       expect(host.querySelector('.mwnf-essay').className).toContain('mwnf-essay--about')
-      // About mode drops the side column and the picture narrative.
-      expect(host.querySelector('.mwnf-essay__side')).toBeNull()
+      // About mode keeps legacy's picture column (the About theme's pictures
+      // and their captions) and drops the tour and the picture narrative.
+      expect(host.querySelector('.mwnf-essay__side .mwnf-picture-gallery')).not.toBeNull()
       expect(host.querySelector('.mwnf-picture-narrative')).toBeNull()
       expect(host.textContent).toContain(config.siteName)
       app.unmount()

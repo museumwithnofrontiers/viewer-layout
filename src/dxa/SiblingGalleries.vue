@@ -11,7 +11,9 @@ import SmartLink from '../content/SmartLink.vue'
 const props = defineProps({
   // Array of { id, name, image?, route } where route is a router location or link prop
   galleries: { type: Array, default: () => [] },
-  // Array of { name, to | href, accent?, textColor? } for other MWNF museums
+  // Array of { name, to | href, image?, accent?, textColor? } for other MWNF
+  // museums: `image` is legacy's picture banner (the site's own file), the
+  // flat `accent` block standing in without one.
   museums: { type: Array, default: () => [] },
   galleriesHeadingEntry: { type: String, default: 'sibling.galleries' },
   seeMoreGalleriesEntry: { type: String, default: 'sibling.seeMoreGalleries' },
@@ -69,7 +71,10 @@ const props = defineProps({
             '--mwnf-museum-text': museum.textColor || 'inherit',
           }"
         >
-          <div class="mwnf-sibling-galleries__museum-image">
+          <div v-if="museum.image" class="mwnf-sibling-galleries__museum-image mwnf-sibling-galleries__museum-image--picture">
+            <img :src="museum.image" alt="" />
+          </div>
+          <div v-else class="mwnf-sibling-galleries__museum-image">
             {{ museum.name.split(' ').map(w => w[0]).join('') }}
           </div>
           <p class="mwnf-sibling-galleries__museum-name">{{ museum.name }}</p>

@@ -276,15 +276,34 @@
   width: 100%;
 }
 
-/* The item page: legacy's two columns — the photos on the left, the field
-   sheet on the right, the related content spanning both — over
-   ItemDetailView's single column, a narrow screen returning to one. Its
-   ground is white on a gallery's tinted page; an exhibition sets its own. */
+/* The item page: legacy's three columns — the photos, the field sheet, and
+   the Related Content sidebar in the family's light tone at the page's right
+   edge, from under the language band down — over ItemDetailView, a narrow
+   screen stacking them. Its ground is white on a gallery's tinted page; an
+   exhibition sets its own. The record's body is laid out by the page's own
+   grid (`display: contents`), so the sidebar starts beside the back link,
+   as legacy's did. */
 
 .mwnf-dxa-item {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) var(--mwnf-dxa-related-width, 25%);
+  align-items: start;
   background: var(--mwnf-dxa-item-background, #ffffff);
   width: 100%;
   min-height: 25rem;
+}
+
+.mwnf-dxa-item > *,
+.mwnf-dxa-item .mwnf-record__main {
+  grid-column: 1;
+}
+
+.mwnf-dxa-item > .mwnf-dxa-item__languages {
+  grid-column: 1 / -1;
+}
+
+.mwnf-dxa-item > .mwnf-record__body {
+  display: contents;
 }
 
 .mwnf-dxa-item__languages {
@@ -292,15 +311,17 @@
   padding: 0.375rem 1.25rem;
 }
 
-.mwnf-dxa-item .mwnf-record__body {
-  padding: 0 1.25rem 1.875rem;
+.mwnf-dxa-item > .mwnf-back-link,
+.mwnf-dxa-item .mwnf-record__main {
+  padding-inline: var(--mwnf-dxa-item-padding, 3.125rem 1.25rem);
 }
 
 .mwnf-dxa-item .mwnf-record__main {
   display: grid;
-  grid-template-columns: 42% minmax(0, 1fr);
-  column-gap: 1.625rem;
+  grid-template-columns: 40% minmax(0, 1fr);
+  column-gap: 1.25rem;
   align-items: start;
+  padding-bottom: 3.125rem;
 }
 
 .mwnf-dxa-item .mwnf-record__main > * {
@@ -312,17 +333,75 @@
   grid-row: 1 / span 12;
 }
 
-.mwnf-dxa-item .mwnf-record__main > .mwnf-sheet-related {
-  grid-column: 1 / -1;
-}
-
 .mwnf-dxa-item .mwnf-sheet__value a {
   color: var(--mwnf-dxa-item-link, var(--mwnf-link-text, #0000ff));
 }
 
+/* Legacy's labels end in a colon; the texts carry none (viewer-i18n leaves
+   punctuation to the page). The short-description toggle is a button, not a
+   label. */
+.mwnf-dxa-item .mwnf-sheet__label:not(.mwnf-sheet__label--short)::after {
+  content: ':';
+}
+
+/* The sidebar. */
+.mwnf-dxa-item .mwnf-record__aside {
+  grid-column: 2;
+  grid-row: 2 / span 2;
+  align-self: start;
+  padding: 1.25rem 1.25rem 2.5rem;
+  background: var(--mwnf-dxa-related-background, #f0f0f0);
+  color: var(--mwnf-dxa-related-text, inherit);
+}
+
+.mwnf-dxa-item .mwnf-record__aside .mwnf-sheet-related {
+  padding-top: 0;
+  border-top: none;
+}
+
+.mwnf-dxa-item .mwnf-record__aside .mwnf-sheet-related__heading {
+  margin-top: 1.875rem;
+  margin-bottom: 0.625rem;
+  padding-bottom: 0;
+  border-bottom: none;
+  font-size: 110%;
+  font-weight: 700;
+  text-decoration: underline;
+  color: var(--mwnf-dxa-related-heading-color, inherit);
+}
+
+.mwnf-dxa-item .mwnf-record__aside .mwnf-sheet-related__description {
+  font-style: italic;
+  color: inherit;
+}
+
+.mwnf-dxa-item .mwnf-record__aside a,
+.mwnf-dxa-item .mwnf-record__aside summary {
+  color: inherit;
+  text-decoration: none;
+}
+
+.mwnf-dxa-item .mwnf-record__aside a:hover {
+  text-decoration: underline;
+}
+
+/* The glossary entry's header: the gallery's own world map on its right
+   (`theme/assets/world.png`, ItemDetailView's `--mwnf-dxa-glossary-image`). */
+.mwnf-dxa-item .mwnf-popover__title {
+  background-image: var(--mwnf-dxa-glossary-image, none);
+  background-repeat: no-repeat;
+  background-position: right;
+  background-size: contain;
+}
+
 @media only screen and (max-width: 53.0625rem) {
+  .mwnf-dxa-item {
+    display: block;
+  }
+
   .mwnf-dxa-item .mwnf-record__main {
     display: block;
+    padding-inline: 1.25rem;
   }
 }
 
@@ -499,5 +578,32 @@
     width: 100%;
     max-width: none;
     padding: 1.875rem;
+  }
+}
+/* An exhibition's popup notice: legacy centred its text and sized each
+   picture in the notice's own HTML (191 to 211px wide), a size the Markdown
+   the package carries no longer holds; the pictures keep legacy's width
+   instead of filling the notice. */
+
+.mwnf-popup-logo__content {
+  text-align: center;
+}
+
+.mwnf-popup-logo__content img {
+  max-width: min(100%, var(--mwnf-dxa-popup-image-width, 13.25rem));
+  height: auto;
+  vertical-align: middle;
+}
+
+/* The partner page keeps legacy's 50px side gutter (both families). */
+.mwnf-dxa-partner-profile > .mwnf-back-link,
+.mwnf-dxa-partner-profile .mwnf-record__body {
+  padding-inline: 3.125rem;
+}
+
+@media only screen and (max-width: 37.4375rem) {
+  .mwnf-dxa-partner-profile > .mwnf-back-link,
+  .mwnf-dxa-partner-profile .mwnf-record__body {
+    padding-inline: 1.25rem;
   }
 }

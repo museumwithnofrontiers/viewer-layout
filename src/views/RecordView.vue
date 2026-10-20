@@ -268,7 +268,7 @@ const rowSlots = computed(() => Object.keys(slots).filter((name) => !OWN_SLOTS.h
         </slot>
       </div>
 
-      <aside v-if="$slots.aside" class="mwnf-record__aside"><slot name="aside" v-bind="ctx" /></aside>
+      <aside v-if="$slots.aside" class="mwnf-record__aside"><slot name="aside" v-bind="{ ...ctx, records: relatedRows, outside: related.outside }" /></aside>
     </div>
 
     <slot name="after" v-bind="ctx" />

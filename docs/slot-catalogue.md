@@ -189,7 +189,7 @@ language, languages, select, dir, glossary, ready, attribution, t, tr }`.
 | `after-sheet` | Below the sheet, above the credits block | `ctx` |
 | `source` | The "Source: `<address>`" line under the citation (default: `SourceCredit`, nothing until the site declares `site.origin`) | `ctx` |
 | `related` | The whole related-records block | `{ ...ctx, records, outside }` — `records` is the spec-built rows, `outside` the related records the package doesn't carry |
-| `aside` | Beside the sheet (only rendered if filled) | `ctx` |
+| `aside` | Beside the sheet (only rendered if filled) | `{ ...ctx, records, outside }` — the same related rows `related` gets, for a page that draws them in the side column |
 | `after` | Below everything, outside the two-column body | `ctx` |
 
 ### ItemDetailView (was RecordSheetView)
@@ -251,8 +251,8 @@ unchanged, plus:
 |---|---|---|
 | `before-sheet` | The source-database/collection block and the notice (above) | `ctx` |
 | `museum` | The holding-museum row (above) | `{ row, ...ctx }` |
-| `related` | The whole related-content block (above) | `{ ...ctx, records, outside }` |
-| *(every other `RecordView` slot: `header`, one per other dynamic row, `after-sheet`, `source`, `aside`, `after`)* | Forwarded straight to `RecordView` by name, unmodified | Whatever `RecordView` hands that same slot |
+| `related` | The whole related-content block (above), drawn in `RecordView`'s side column since 3.4.0, as legacy's Related Content sidebar | `{ ...ctx, records, outside }` |
+| *(every other `RecordView` slot: `header`, one per other dynamic row, `after-sheet`, `source`, `after`)* | Forwarded straight to `RecordView` by name, unmodified | Whatever `RecordView` hands that same slot |
 
 Every slot above still follows "a slot fills, the default content renders
 otherwise" — a site that fills `before-sheet`/`museum`/`related` itself keeps

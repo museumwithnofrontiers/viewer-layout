@@ -1,4 +1,5 @@
-import { partnerView } from '@museumwnf/viewer-core'
+import { partnerView, useSiteConfig } from '@museumwnf/viewer-core'
+import { chromePicture } from '../../chrome.js'
 import {
   useExhibitionData, useExhibitionCollection, useExhibitionTimeline, useExhibitionPartner,
   useExhibitionItemDetail, useExhibitionThemes,
@@ -27,9 +28,16 @@ export const {
   exhibition, relatedContent, items, itemById, countries, timelines, visiblePartners,
   visiblePartnerById, isHiddenPartner,
   itemRoute, partnerRoute, partnerObjectsRoute,
-  chromeImage, countryLabelFromCode,
+  countryLabelFromCode,
   exhibitionTitle, exhibitionSubtitle, exhibitionHeadline, bannerCaption,
 } = data
+
+// A chrome picture the package names by its legacy path: the site's own copy
+// under `theme/assets/chrome/` (`config.chrome`, inventory-app#2233 D7)
+// when it supplies one, else the legacy media host, at `size`.
+export function chromeImage(path, size = 'hi_res') {
+  return chromePicture(useSiteConfig().chrome, path) ?? data.chromeImage(path, size)
+}
 
 export const {
   FACETS, haystack, tile, collectionResults, countryIdForCode,
