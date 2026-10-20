@@ -2,19 +2,21 @@
 import { computed } from 'vue'
 import { useI18n } from '@museumwnf/viewer-core'
 import SmartLink from '../content/SmartLink.vue'
+import { useChromePicture } from './chrome.js'
 
 // A grid of picture tiles under a caption band: Sharing History's home page,
 // one tile per exhibition, each with its own picture from the site's assets
 // (legacy's `homeImg<n>.jpg`), not from the data package.
 //
 //   caption: entry,
-//   items: [{ image, label: entry, to | href }]
+//   items: [{ image, label: entry, to | href }]   // `image`: a chrome key or URL
 const props = defineProps({
   caption: { type: String, default: '' },
   items: { type: Array, default: () => [] },
 })
 const { t } = useI18n()
-const tiles = computed(() => props.items.map((item) => ({ ...item, label: item.label ? t(item.label) : '' })))
+const picture = useChromePicture()
+const tiles = computed(() => props.items.map((item) => ({ ...item, image: picture(item.image) ?? '', label: item.label ? t(item.label) : '' })))
 </script>
 
 <template>

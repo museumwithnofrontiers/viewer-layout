@@ -1,6 +1,17 @@
 // What the standalone family's chrome reads from a site's config, as plain
-// functions: a value given per language, and the record legacy's home page
-// shows on a given day.
+// functions: a value given per language, a picture given as a key of the
+// site's chrome map, and the record legacy's home page shows on a given day.
+import { useSiteConfig } from '@museumwnf/viewer-core'
+import { chromeSource } from '../chrome.js'
+
+/**
+ * A picture a config names: a key of the site's chrome map (its files under
+ * theme/assets/, src/chrome.js) or a URL. Null when the map has no such file.
+ */
+export function useChromePicture() {
+  const config = useSiteConfig()
+  return (value) => chromeSource(config.chrome, value)
+}
 
 /**
  * A value given once or per language (`{ en: …, ar: … }`): the one for

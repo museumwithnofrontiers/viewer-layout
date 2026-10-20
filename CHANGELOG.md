@@ -9,11 +9,13 @@ decision D1). Islamic Art adopts it first; Baroque Art and Sharing History follo
 - `@museumwnf/viewer-layout/standalone`, the standalone family layer, beside
   `/dxa`:
   - `StandaloneShell`: `SiteShell` with legacy's chrome, read from
-    `config.standalone` — the logo per language and a print-only logo, the
-    inner pages' centred heading and "Portal | Home" links, the home page's
-    picture banner, the inner pages' titled band, the menu above or below the
-    banner, the band above the footer, the copyright line with the year, and a
-    one-language option with no switcher.
+    `config.standalone` on 3.4.0's site chrome contract (`chrome`, `brand`,
+    `navigation.placement`, `navigation.socialLinks`) — the logo per language
+    and a print-only logo, the inner pages' centred heading and "Portal |
+    Home" links, the home page's picture banner, the inner pages' titled band,
+    the band above the footer, the copyright line with the year, and a
+    one-language option with no switcher. Pictures are keys of the site's
+    chrome map.
   - `StandaloneHome` and `TodayHighlight`: the side links and legacy's
     "Today's highlight", the record of the day from legacy's own list, or a
     tile grid.
@@ -36,6 +38,7 @@ decision D1). Islamic Art adopts it first; Baroque Art and Sharing History follo
 - The `@museumwnf/viewer-core` peer range is `^2.6.0` (the record of the day
   prints its lines with `removeEndingPoint`). Every website already installs
   2.6.0.
+
 ## 3.4.0 (2026-10-20)
 
 The gallery and exhibition families, and the shared header and footer,
