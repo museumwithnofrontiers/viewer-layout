@@ -20,6 +20,7 @@ all the packages:
 | `@museumwnf/viewer-layout/dxa` | DXA family layer | the gallery and exhibition pages and shells, the family-only blocks, `standardRoutes`, `galleryConfig` / `exhibitionConfig` | the entries above, `@museumwnf/viewer-core` and `@museumwnf/viewer-core/dxa` |
 | `@museumwnf/viewer-layout/dxa/gallery.css`, `/dxa/exhibition.css` | DXA family layer | each family's stylesheet: its fonts, page reset and page column, and its theme as a function of the palette | the palette a site's `theme/tokens.css` sets |
 | `@museumwnf/viewer-layout/dxa/testing` | DXA family layer | each family's smoke test, `describeGallerySmoke` / `describeExhibitionSmoke` | the site's config, texts and package, in the site's own Vitest |
+| `@museumwnf/viewer-layout/standalone` | standalone family layer | the chrome, home page, item sheet, text page and blocks of Discover Islamic Art, Discover Baroque Art and Sharing History | the entries above and `@museumwnf/viewer-core` |
 | `@museumwnf/viewer-layout/style.css` | — | one stylesheet for every entry, the family styles included | — |
 | `@museumwnf/viewer-layout/tokens.reference.css` | — | every token the package reads, with its fallback | — |
 
@@ -35,7 +36,8 @@ view does.
 1. **Into the lowest layer that fits.** A block comes before a composed view,
    and a composed view before a family page. A block is promoted here when
    several websites need the same thing; a whole page is shared only inside
-   the DXA family, under `/dxa`.
+   a family: the DXA family under `/dxa`, the standalone family under
+   `/standalone`.
 2. **A generic component never defaults to one family's texts.** A block or a
    composed view defaults to a shared entry (`core.*`, `record.*`,
    `partner.*`, …) or takes the entry name as a prop; it never defaults to a
@@ -43,7 +45,8 @@ view does.
 3. **A component only the DXA family uses belongs under `/dxa`.**
 
 **The dependency runs one way.** The root, `/content`, `/views` and
-`/components` never import from `/dxa`. `/dxa` imports only what the other
+`/components` never import from `/dxa` or `/standalone`, and the two
+families never import from each other. Each imports only what the other
 entries publish, and `@museumwnf/viewer-core`. A component that moves
 between entries keeps its old export as an alias until the websites have
 moved; a major release then removes the alias.
@@ -701,6 +704,65 @@ Since 3.3.0 what every site of a family shared by copy is here once:
   tests of its own after the call. The suite runs in the site's own Vitest,
   which processes this package (viewer-core's `defineViewerConfig` inlines
   it).
+
+## Standalone family pages
+
+`@museumwnf/viewer-layout/standalone` is the family layer of Discover Islamic
+Art, Discover Baroque Art and Sharing History: three sites legacy built from
+one PHP template family, whose layouts match legacy's
+(inventory-app#2233, decision D1). What they share is here once; what
+differs is a config value, a token or a slot.
+
+A site names the shell in its `dataset.config.js` and sets
+`config.standalone` beside its `navigation` (every key optional):
+
+```js
+import { StandaloneShell } from '@museumwnf/viewer-layout/standalone'
+import logoEn from '../theme/assets/legacy/logo_isl_en.png'
+import banner from '../theme/assets/legacy/banner.jpg'
+import bannerInside from '../theme/assets/legacy/banner_inside.jpg'
+
+export default {
+  shell: StandaloneShell,
+  navigation: { languages, links, footerLinks, sectionTitles },   // as on every site
+  standalone: {
+    logo: { src: { en: logoEn, ar: logoAr }, alt: 'islamicart.identity.title', href: mwnfLinks.portal, print: logoPrint },
+    heading: 'islamicart.identity.heading',      // the header's title on every page but the home page
+    headerLinks: [{ label, href | to, on: 'home' | 'inner' | 'all' }],
+    banner: { home: banner, inner: bannerInside },
+    menu: { home: 'after-banner', inner: 'before-banner' },
+    languages: true,                             // false: chrome in one language, no switcher
+    copyright: 'islamicart.footer.copyright',    // the footer line; the year follows it
+    sponsors: { on: 'home' | 'all', columns: [{ lead, text, break, title, logos, links, width }] },
+    home: { links: [...], highlight: { list, heading, alsoKnownAs, action, route }, tiles: { caption, items } },
+    areas: { [section]: { logo, banner, class } },   // a section with chrome of its own
+  },
+}
+```
+
+The chrome assets are the site's own (decision D7): it imports them, so Vite
+fingerprints them and a missing file fails its build.
+
+| Export | What it is |
+| --- | --- |
+| `StandaloneShell` | `SiteShell` with legacy's chrome: the logo per language, the inner pages' centred heading and "Portal \| Home" links, the home page's picture banner, the inner pages' titled band (`navigation.sectionTitles`), the menu above or below the banner, the band above the footer on the home page, the copyright line with the year, a print-only logo. The page gets `.mwnf-standalone`, the scope of the family stylesheet |
+| `StandaloneHome` | the home page's content: the side links and the record of the day, or a tile grid |
+| `TodayHighlight` | legacy's "Today's highlight": the record for the day of the year from legacy's own list (`home_items_img.txt`), its picture and legacy's lines |
+| `StandaloneItemSheet` | `RecordView` in legacy's three columns: the way back and the pictures; the sheet with its short-description toggle; the coloured Related Content column (`RelatedContent`), which takes the site's own blocks in its `sidebar` slot |
+| `StandaloneTextPage` | a text page in legacy's centred column: a Markdown entry, an optional drop cap, a "→" link and Print |
+| `StandaloneSponsors` | the band above the footer, in columns of text, logos and links |
+| `StandaloneSubNav`, `StandaloneTileGrid`, `StandaloneSlider` | Sharing History's tab strip, picture tiles and slider |
+| `byLanguage`, `dayOfYear`, `pickForDay`, `legacyHomeItemKey` | the plain functions the chrome reads with |
+
+Every rule of the family's stylesheet is scoped to `.mwnf-standalone`, and
+every value is a `--mwnf-standalone-*` token with a neutral fallback
+(`tokens.reference.css`); a site's `theme/tokens.css` sets legacy's. It ships
+in `style.css`, so a site imports nothing more.
+
+The menu above an inner page's banner uses PageShell's `navigationPlacement`
+when the PageShell of the installed release has it; before that, the shell
+opens the page's content with the banner, which puts it in the same place on
+the screen.
 
 ## Theming
 

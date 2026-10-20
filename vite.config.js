@@ -6,21 +6,22 @@ export default defineConfig({
   plugins: [vue()],
   build: {
     lib: {
-      // Five entry points: the whole package; the content components on
+      // Six entry points: the whole package; the content components on
       // their own, so a page that composes a list and a pagination does not
       // carry the shell with them; the composed views, which a website names
       // in its configuration; `SiteShell`, which — like the composed
       // views — reads `@museumwnf/viewer-core` itself and so cannot be part
-      // of the package root (see `src/components/index.js`); and the DXA
+      // of the package root (see `src/components/index.js`); the DXA
       // family pages (epic inventory-app#1731) plus `standardRoutes`, which
-      // read `@museumwnf/viewer-core/dxa` the same way. What they share is
-      // emitted once.
+      // read `@museumwnf/viewer-core/dxa` the same way; and the standalone
+      // family's pages (inventory-app#2233). What they share is emitted once.
       entry: {
         index: 'src/index.js',
         content: 'src/content/index.js',
         views: 'src/views/index.js',
         components: 'src/components/index.js',
         dxa: 'src/dxa/index.js',
+        standalone: 'src/standalone/index.js',
       },
       formats: ['es'],
       fileName: (format, name) => `${name}.js`,
