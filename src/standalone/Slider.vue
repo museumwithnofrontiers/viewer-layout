@@ -2,12 +2,13 @@
 import { computed, ref } from 'vue'
 import { useI18n } from '@museumwnf/viewer-core'
 import SmartLink from '../content/SmartLink.vue'
+import { useChromePicture } from './chrome.js'
 
 // A row of pictures that moves by one: Sharing History's Historical
 // Background slider (legacy's `hb_slider`, one row of pictures per strip).
 // The pictures come from the site's assets.
 //
-//   slides: [{ image, label: entry, to | href }],
+//   slides: [{ image, label: entry, to | href }],   // `image`: a chrome key or URL
 //   visible: how many show at once
 const props = defineProps({
   slides: { type: Array, default: () => [] },
@@ -16,10 +17,11 @@ const props = defineProps({
   nextLabel: { type: String, default: 'core.pagination.next' },
 })
 const { t } = useI18n()
+const picture = useChromePicture()
 const start = ref(0)
 const last = computed(() => Math.max(0, props.slides.length - props.visible))
 const shown = computed(() => props.slides.slice(start.value, start.value + props.visible)
-  .map((slide) => ({ ...slide, label: slide.label ? t(slide.label) : '' })))
+  .map((slide) => ({ ...slide, image: picture(slide.image) ?? '', label: slide.label ? t(slide.label) : '' })))
 </script>
 
 <template>

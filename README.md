@@ -713,24 +713,35 @@ one PHP template family, whose layouts match legacy's
 (inventory-app#2233, decision D1). What they share is here once; what
 differs is a config value, a token or a slot.
 
-A site names the shell in its `dataset.config.js` and sets
-`config.standalone` beside its `navigation` (every key optional):
+The shell is a `SiteShell`, so everything the site chrome contract above
+reads works as on any site: `chrome` (the site's files under `theme/assets/`),
+`navigation.placement` (legacy's menu sits under the home page's picture and
+above every other page's band) and `navigation.socialLinks`. A site names
+the shell in its `dataset.config.js` and sets `config.standalone` beside its
+`navigation` (every key optional). Every picture is a key of the chrome map,
+or a URL:
 
 ```js
+import { mwnfSocialLinks } from '@museumwnf/viewer-layout'
 import { StandaloneShell } from '@museumwnf/viewer-layout/standalone'
-import logoEn from '../theme/assets/legacy/logo_isl_en.png'
-import banner from '../theme/assets/legacy/banner.jpg'
-import bannerInside from '../theme/assets/legacy/banner_inside.jpg'
+
+const chrome = import.meta.glob('../theme/assets/**/*.{jpg,jpeg,png,gif,svg}', {
+  eager: true, query: '?url', import: 'default',
+})
 
 export default {
   shell: StandaloneShell,
-  navigation: { languages, links, footerLinks, sectionTitles },   // as on every site
+  chrome,
+  navigation: {
+    languages, links, footerLinks, sectionTitles,              // as on every site
+    placement: ({ section }) => (section === 'home' ? 'after-banner' : 'before-banner'),
+    socialLinks: mwnfSocialLinks,
+  },
   standalone: {
-    logo: { src: { en: logoEn, ar: logoAr }, alt: 'islamicart.identity.title', href: mwnfLinks.portal, print: logoPrint },
+    logo: { src: 'legacy/logo_isl_en.png', alt: 'islamicart.identity.title', href: mwnfLinks.portal, print: { en: 'legacy/logo_print.gif', fr: 'legacy/logo_print_fr.gif' } },
     heading: 'islamicart.identity.heading',      // the header's title on every page but the home page
     headerLinks: [{ label, href | to, on: 'home' | 'inner' | 'all' }],
-    banner: { home: banner, inner: bannerInside },
-    menu: { home: 'after-banner', inner: 'before-banner' },
+    banner: { home: 'legacy/banner.jpg', inner: 'legacy/banner_inside.jpg' },
     languages: true,                             // false: chrome in one language, no switcher
     copyright: 'islamicart.footer.copyright',    // the footer line; the year follows it
     sponsors: { on: 'home' | 'all', columns: [{ lead, text, break, title, logos, links, width }] },
@@ -740,8 +751,8 @@ export default {
 }
 ```
 
-The chrome assets are the site's own (decision D7): it imports them, so Vite
-fingerprints them and a missing file fails its build.
+The shell hands the logo to SiteShell's `brand`. The logo, the print logo and
+the banners may each be given once or per language (`{ en, ar }`).
 
 | Export | What it is |
 | --- | --- |
@@ -758,11 +769,6 @@ Every rule of the family's stylesheet is scoped to `.mwnf-standalone`, and
 every value is a `--mwnf-standalone-*` token with a neutral fallback
 (`tokens.reference.css`); a site's `theme/tokens.css` sets legacy's. It ships
 in `style.css`, so a site imports nothing more.
-
-The menu above an inner page's banner uses PageShell's `navigationPlacement`
-when the PageShell of the installed release has it; before that, the shell
-opens the page's content with the banner, which puts it in the same place on
-the screen.
 
 ## Theming
 

@@ -10,12 +10,6 @@
 
 /* ── Page: legacy's pages run the full width; the content keeps a column ─── */
 
-/* The inner banner leaves the content's column for the full width
-   (100vw counts the scrollbar): nothing may scroll sideways for it. */
-.mwnf-page.mwnf-standalone {
-  overflow-x: clip;
-}
-
 .mwnf-standalone .mwnf-header,
 .mwnf-standalone .mwnf-banner,
 .mwnf-standalone .mwnf-nav {
@@ -86,7 +80,7 @@
   padding: 0 0.4rem;
 }
 
-.mwnf-standalone__logo {
+.mwnf-standalone .mwnf-header__brand-logo {
   display: block;
   max-height: var(--mwnf-standalone-logo-height, 3.125rem);
 }
@@ -120,14 +114,6 @@
   font-weight: 400;
   line-height: 1.1;
   color: var(--mwnf-standalone-banner-title-color, inherit);
-}
-
-/* Without PageShell's navigationPlacement, the inner banner opens the
-   content: it leaves the content's column to run the full width. */
-.mwnf-standalone .mwnf-standalone-banner--in-content {
-  margin-inline: calc(50% - 50vw);
-  margin-block-start: calc(-1 * var(--mwnf-content-padding-block, 1.25rem));
-  margin-block-end: var(--mwnf-content-padding-block, 1.25rem);
 }
 
 /* ── Menu: equal cells, every other one in the second colour ──────────────── */
@@ -637,7 +623,7 @@
     display: none;
   }
 
-  .mwnf-standalone__logo {
+  .mwnf-standalone .mwnf-header__brand-logo {
     display: none;
   }
 

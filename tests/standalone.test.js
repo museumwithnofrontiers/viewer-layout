@@ -53,7 +53,14 @@ const texts = {
   'sheet.field.location': 'Location',
 }
 
+// The site's chrome files, as Vite's import.meta.glob over theme/assets/ hands them over.
+const chrome = Object.fromEntries(
+  ['logo_en.png', 'logo_fr.png', 'logo_print.gif', 'banner.jpg', 'banner_inside.jpg', 'euromed.jpg', 'homeImg1.jpg']
+    .map((file) => [`../theme/assets/legacy/${file}`, `/assets/${file}`]),
+)
+
 const config = {
+  chrome,
   navigation: {
     languages: [{ code: 'en', label: 'English' }, { code: 'fr', label: 'Français' }],
     links: [
@@ -62,22 +69,32 @@ const config = {
     ],
     footerLinks: [{ label: 'site.footer.aboutMwnf', href: 'https://www.museumwnf.org/about', external: true }],
     sectionTitles: { database: 'site.section.database' },
+    placement: ({ section }) => (section === 'home' ? 'after-banner' : 'before-banner'),
   },
   standalone: {
-    logo: { src: { en: 'logo_en.png', fr: 'logo_fr.png' }, alt: 'site.logo', href: 'https://www.museumwnf.org', print: 'logo_print.gif' },
+    logo: {
+      src: { en: 'legacy/logo_en.png', fr: 'legacy/logo_fr.png' },
+      alt: 'site.logo',
+      href: 'https://www.museumwnf.org',
+      print: 'legacy/logo_print.gif',
+    },
     heading: 'site.identity.heading',
     headerLinks: [
       { label: 'site.nav.portal', href: 'https://www.museumwnf.org' },
       { label: 'site.nav.home', to: { name: 'home' }, on: 'inner' },
     ],
-    banner: { home: 'banner.jpg', inner: 'banner_inside.jpg' },
-    menu: { home: 'after-banner', inner: 'before-banner' },
+    banner: { home: 'legacy/banner.jpg', inner: 'legacy/banner_inside.jpg' },
     copyright: 'site.footer.copyright',
     sponsors: {
       on: 'home',
       columns: [
         { lead: 'site.sponsors.supportHead', text: 'site.sponsors.supportText' },
-        { logos: [{ src: 'euromed.jpg', alt: 'site.logo', note: 'site.sponsors.europeanUnion' }, { src: 'calouste.png', href: 'http://www.gulbenkian.pt' }] },
+        {
+          logos: [
+            { src: 'legacy/euromed.jpg', alt: 'site.logo', note: 'site.sponsors.europeanUnion' },
+            { src: 'https://example.org/calouste.png', href: 'http://www.gulbenkian.pt' },
+          ],
+        },
       ],
     },
   },
@@ -140,11 +157,15 @@ describe('StandaloneShell', () => {
     const wrapper = await mountWith(StandaloneShell, { props: { languages: ['en', 'fr'], language: 'en' }, slots: { default: '<p class="page">page</p>' } })
     const page = wrapper.find('.mwnf-page')
     expect(page.classes()).toEqual(expect.arrayContaining(['mwnf-standalone', 'mwnf-standalone--home']))
-    expect(wrapper.find('.mwnf-standalone__logo').attributes('src')).toBe('logo_en.png')
+    expect(wrapper.find('.mwnf-header__brand-logo').attributes('src')).toBe('/assets/logo_en.png')
+    expect(wrapper.find('.mwnf-header__brand-logo').attributes('alt')).toBe('Museum With No Frontiers')
+    expect(wrapper.find('.mwnf-standalone__print-logo').attributes('src')).toBe('/assets/logo_print.gif')
     expect(wrapper.find('.mwnf-header__home').attributes('href')).toBe('https://www.museumwnf.org')
     expect(wrapper.find('.mwnf-header__title').exists()).toBe(false)
     expect(wrapper.findAll('.mwnf-header__link').map((l) => l.text())).toEqual(['MWNF Portal'])
-    expect(wrapper.find('.mwnf-banner__image').attributes('src')).toBe('banner.jpg')
+    expect(wrapper.find('.mwnf-banner__image').attributes('src')).toBe('/assets/banner.jpg')
+    // The menu comes after the home page's picture.
+    expect(wrapper.html().indexOf('mwnf-banner')).toBeLessThan(wrapper.html().indexOf('mwnf-nav'))
     expect(wrapper.find('.mwnf-standalone-banner').exists()).toBe(false)
     expect(wrapper.find('.mwnf-sponsors').text()).toContain('Discover Islamic Art was set up with the support of:')
     expect(wrapper.find('.mwnf-footer').text()).toContain(`© Museum With No Frontiers (MWNF) 2004 – ${new Date().getFullYear()}`)
@@ -182,7 +203,7 @@ describe('StandaloneShell', () => {
 
   it('reads the logo in the language the site is in', async () => {
     const wrapper = await mountWith(StandaloneShell, { locale: 'fr', props: { languages: ['en', 'fr'], language: 'fr' } })
-    expect(wrapper.find('.mwnf-standalone__logo').attributes('src')).toBe('logo_fr.png')
+    expect(wrapper.find('.mwnf-header__brand-logo').attributes('src')).toBe('/assets/logo_fr.png')
   })
 
   it('offers no language switcher when the chrome has one language', async () => {
@@ -201,6 +222,7 @@ describe('StandaloneSponsors', () => {
     expect(columns[0].text()).toBe('Discover Islamic Art was set up with the support of:')
     expect(columns[1].find('a').attributes('href')).toBe('http://www.gulbenkian.pt')
     expect(columns[1].find('details').text()).toContain('The European Commission is the EU’s executive body.')
+    expect(columns[1].findAll('img').map((img) => img.attributes('src'))).toEqual(['/assets/euromed.jpg', 'https://example.org/calouste.png'])
   })
 })
 
@@ -331,10 +353,10 @@ describe('Sharing History blocks', () => {
 
   it('draws a tile per collection, each with its own picture, under the caption', async () => {
     const wrapper = await mountWith(StandaloneTileGrid, {
-      props: { caption: 'site.tiles.caption', items: [{ image: 'homeImg1.jpg', label: 'site.tiles.one', to: { name: 'database' } }] },
+      props: { caption: 'site.tiles.caption', items: [{ image: 'legacy/homeImg1.jpg', label: 'site.tiles.one', to: { name: 'database' } }] },
     })
     expect(wrapper.find('.mwnf-standalone-tiles__caption').text()).toBe('Ten Virtual Exhibitions')
-    expect(wrapper.find('.mwnf-standalone-tiles__image').attributes('src')).toBe('homeImg1.jpg')
+    expect(wrapper.find('.mwnf-standalone-tiles__image').attributes('src')).toBe('/assets/homeImg1.jpg')
     expect(wrapper.find('.mwnf-standalone-tiles__label').text()).toBe('Lives of the Mighty')
   })
 })

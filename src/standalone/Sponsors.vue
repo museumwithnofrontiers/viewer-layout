@@ -2,6 +2,7 @@
 import { computed } from 'vue'
 import { renderBlock, renderInline, useI18n } from '@museumwnf/viewer-core'
 import SmartLink from '../content/SmartLink.vue'
+import { useChromePicture } from './chrome.js'
 
 // The standalone family's band above the footer, in columns, as legacy laid
 // out its `section.sponsors` / `section.cooperation`: Islamic Art's "set up
@@ -12,7 +13,7 @@ import SmartLink from '../content/SmartLink.vue'
 //     width: 1–12,                             // legacy's grid share (default: an equal share)
 //     lead: entry, text: entry, break: true,   // an italic lead, then Markdown; `break` puts the text on its own line
 //     title: entry,                            // a heading over the column's logos or links
-//     logos: [{ src, alt: entry, href, note: entry }],   // `note`: Markdown shown under the band when the mark is chosen
+//     logos: [{ src, alt: entry, href, note: entry }],   // `src`: a chrome key or URL; `note`: Markdown shown when the mark is chosen
 //     links: [{ label: entry, to | href, external }],
 //   }]
 //
@@ -21,6 +22,7 @@ const props = defineProps({
   columns: { type: Array, default: () => [] },
 })
 const { t } = useI18n()
+const picture = useChromePicture()
 
 const view = computed(() => props.columns.map((column, index) => ({
   key: index,
@@ -30,7 +32,7 @@ const view = computed(() => props.columns.map((column, index) => ({
   break: Boolean(column.break),
   title: column.title ? t(column.title) : '',
   logos: (column.logos ?? []).map((logo) => ({
-    src: logo.src,
+    src: picture(logo.src) ?? '',
     alt: logo.alt ? t(logo.alt) : '',
     href: logo.href ?? '',
     note: logo.note ? renderBlock(t(logo.note)) : '',
