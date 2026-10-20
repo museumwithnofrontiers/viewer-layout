@@ -812,4 +812,70 @@
   /* --mwnf-dxa-theme-contrast: #64bfd9;             The heading band and link hover (contrast colour) */
   /* --mwnf-dxa-theme-contrast-text: #000000;        The heading band's text (contrast text colour) */
   /* --mwnf-dxa-theme-main: #000000;                 The themes page's left half (main colour) */
+
+
+  /* ---------- Standalone family pages (src/standalone/, styles/standalone.css) ---------- */
+  /* Scoped to .mwnf-standalone: Discover Islamic Art, Discover Baroque Art, Sharing History. */
+  /* --mwnf-standalone-header-height: 5rem;          Header row height (legacy: 81px) */
+  /* --mwnf-standalone-header-inset: 4rem;           Header side inset of the logo and the links */
+  /* --mwnf-standalone-header-tools-gap: 0.25rem;    Gap between the header links and the language select */
+  /* --mwnf-standalone-header-link-color: inherit;   Header links ("MWNF Portal | Home") */
+  /* --mwnf-standalone-header-links-gap: 0.5rem;     Space around the "|" between header links */
+  /* --mwnf-standalone-heading-size: 2.125rem;       Inner pages' header heading size */
+  /* --mwnf-standalone-heading-weight: 400;          Its weight */
+  /* --mwnf-standalone-heading-color: inherit;       Its colour */
+  /* --mwnf-standalone-heading-shadow: none;         Its text shadow */
+  /* --mwnf-standalone-language-size: 0.75rem;       Header language select text size */
+  /* --mwnf-standalone-logo-height: 3.125rem;        Header logo maximum height */
+  /* --mwnf-standalone-banner-height: 10rem;         Inner pages' banner band height */
+  /* --mwnf-standalone-banner-background: transparent;  Band colour under its picture */
+  /* --mwnf-standalone-banner-title-size: 1.875rem;  Band title size */
+  /* --mwnf-standalone-banner-title-color: inherit;  Band title colour */
+  /* --mwnf-standalone-banner-title-padding: 0.5rem 0 0.875rem 4rem;  Band title padding */
+  /* --mwnf-standalone-menu-background: transparent; Menu cells */
+  /* --mwnf-standalone-menu-alt-background: var(--mwnf-standalone-menu-background);  Every other menu cell */
+  /* --mwnf-standalone-menu-link: inherit;           Menu link colour */
+  /* --mwnf-standalone-menu-hover: inherit;          Menu link colour under the pointer and when active */
+  /* --mwnf-standalone-menu-size: 0.9375rem;         Menu text size */
+  /* --mwnf-standalone-menu-weight: 500;             Menu text weight */
+  /* --mwnf-standalone-menu-padding: 0.3125rem 0;    Menu cell padding */
+  /* --mwnf-standalone-bullet: none;                 The arrow before a side link (a url() to the site's picture) */
+  /* --mwnf-standalone-back-arrow: none;             The arrow before a "Back" link (a url()) */
+  /* --mwnf-standalone-home-gap: 2rem;               Gap between the home page's two columns */
+  /* --mwnf-standalone-home-padding: 1.25rem 2.25rem;   Home content padding (top, bottom) */
+  /* --mwnf-standalone-home-links-margin: 3.5rem 0 0;   Side links' margin */
+  /* --mwnf-standalone-home-link: inherit;           Side link colour */
+  /* --mwnf-standalone-home-text-size: inherit;      The home page's text size (side links, record of the day) */
+  /* --mwnf-standalone-highlight-offset: 3.5rem;     Space above the record of the day */
+  /* --mwnf-standalone-highlight-gap: 1.25rem;       Gap between its picture and its text */
+  /* --mwnf-standalone-highlight-image-width: 18rem; Its picture's maximum width */
+  /* --mwnf-standalone-sponsors-background: transparent;  The band above the footer */
+  /* --mwnf-standalone-sponsors-padding: 1.25rem;    Its padding (top and bottom) */
+  /* --mwnf-standalone-sponsors-gap: 1.5rem;         Gap between its columns */
+  /* --mwnf-standalone-sponsors-text-size: 0.875rem; Its text size */
+  /* --mwnf-standalone-sponsors-logo-gap: 1.25rem;   Gap between its logos */
+  /* --mwnf-standalone-sponsors-logo-height: 4.5rem; Logo maximum height */
+  /* --mwnf-standalone-item-gap: 1.875rem;           Gap between the item sheet's three columns */
+  /* --mwnf-standalone-related-background: transparent;  Related Content column */
+  /* --mwnf-standalone-related-text: inherit;        Its text */
+  /* --mwnf-standalone-related-link: inherit;        Its links */
+  /* --mwnf-standalone-related-padding: 0 1.25rem 1.875rem;  Its padding */
+  /* --mwnf-standalone-related-heading-offset: 1.75rem;  Space above its heading */
+  /* --mwnf-standalone-related-thumb-size: 3.75rem;  Related record thumbnail size */
+  /* --mwnf-standalone-page-width: 42rem;            Text page column width */
+  /* --mwnf-standalone-page-inset: 16.666%;          Text page column inset */
+  /* --mwnf-standalone-page-padding: 1.25rem 1.875rem;  Text page padding (top, bottom) */
+  /* --mwnf-standalone-page-heading-size: 1.1875rem; Text page headings */
+  /* --mwnf-standalone-page-subheading-size: 1rem;   Text page subheadings */
+  /* --mwnf-standalone-drop-cap-size: 3.5em;         Drop cap size */
+  /* --mwnf-standalone-drop-cap-color: inherit;      Drop cap colour */
+  /* --mwnf-standalone-subnav-border: 1px solid currentColor;  Tab strip rule */
+  /* --mwnf-standalone-subnav-active-background: transparent;  Active tab */
+  /* --mwnf-standalone-subnav-active-text: inherit;  Active tab text */
+  /* --mwnf-standalone-tiles-columns: 5;             Tile grid columns */
+  /* --mwnf-standalone-tiles-caption-background: transparent;  Tile grid caption band */
+  /* --mwnf-standalone-tiles-caption-text: inherit;  Its text */
+  /* --mwnf-standalone-tiles-label-background: rgba(0, 0, 0, 0.5);  A tile's name band */
+  /* --mwnf-standalone-tiles-label-text: #ffffff;    A tile's name */
+  /* --mwnf-standalone-slider-count: 5;              Slides shown at once (set by the component) */
 }

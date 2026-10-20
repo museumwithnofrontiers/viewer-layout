@@ -11,6 +11,7 @@ const layoutCss = readFileSync(resolve('src/styles/layout.css'), 'utf8')
 // The content components follow the same rule, in their own stylesheet.
 const contentCss = readFileSync(resolve('src/styles/content.css'), 'utf8')
 const dxaCss = readFileSync(resolve('src/styles/dxa.css'), 'utf8')
+const standaloneCss = readFileSync(resolve('src/styles/standalone.css'), 'utf8')
 const tokensReference = readFileSync(resolve('src/tokens.reference.css'), 'utf8')
 
 // Every rule of a stylesheet, as jsdom's own parser reads it.
@@ -56,7 +57,7 @@ describe('token styling', () => {
 
   it('every token a stylesheet reads is in the reference file', () => {
     const declared = new Set(tokensReference.match(/--mwnf-[a-z0-9-]+/g))
-    const read = new Set(`${layoutCss}\n${contentCss}\n${dxaCss}`.match(/--mwnf-[a-z0-9-]+/g))
+    const read = new Set(`${layoutCss}\n${contentCss}\n${dxaCss}\n${standaloneCss}`.match(/--mwnf-[a-z0-9-]+/g))
     const missing = [...read].filter((token) => !declared.has(token))
     expect(missing, `tokens read but not documented:\n${missing.join('\n')}`).toEqual([])
   })
