@@ -1,3 +1,44 @@
+## 3.5.0 (unreleased)
+
+The standalone family: Discover Islamic Art, Discover Baroque Art and Sharing
+History, whose layouts match legacy's (museumwithnofrontiers/inventory-app#2233,
+decision D1). Islamic Art adopts it first; Baroque Art and Sharing History follow.
+
+### Added
+
+- `@museumwnf/viewer-layout/standalone`, the standalone family layer, beside
+  `/dxa`:
+  - `StandaloneShell`: `SiteShell` with legacy's chrome, read from
+    `config.standalone` on 3.4.0's site chrome contract (`chrome`, `brand`,
+    `navigation.placement`, `navigation.socialLinks`) — the logo per language
+    and a print-only logo, the inner pages' centred heading and "Portal |
+    Home" links, the home page's picture banner, the inner pages' titled band,
+    the band above the footer, the copyright line with the year, and a
+    one-language option with no switcher. Pictures are keys of the site's
+    chrome map.
+  - `StandaloneHome` and `TodayHighlight`: the side links and legacy's
+    "Today's highlight", the record of the day from legacy's own list, or a
+    tile grid.
+  - `StandaloneItemSheet` and `RelatedContent`: `RecordView` in legacy's three
+    columns — the way back and the pictures, the sheet with its
+    short-description toggle, the coloured Related Content column with the
+    related records by type, the site's own blocks and Download.
+  - `StandaloneTextPage`: a text page in legacy's centred column, with an
+    optional drop cap, a "→" link and Print.
+  - `StandaloneSponsors`, `StandaloneSubNav`, `StandaloneTileGrid`,
+    `StandaloneSlider`: the band in columns of text, logos and links; and
+    Sharing History's tab strip, picture tiles and slider.
+  - `byLanguage`, `dayOfYear`, `pickForDay`, `legacyHomeItemKey`.
+- The family's stylesheet, scoped to `.mwnf-standalone` and shipped in
+  `style.css`; its `--mwnf-standalone-*` tokens in `tokens.reference.css`.
+  No other site changes.
+
+### Changed
+
+- The `@museumwnf/viewer-core` peer range is `^2.6.0` (the record of the day
+  prints its lines with `removeEndingPoint`). Every website already installs
+  2.6.0.
+
 ## 3.4.0 (2026-10-20)
 
 The gallery and exhibition families, and the shared header and footer,
