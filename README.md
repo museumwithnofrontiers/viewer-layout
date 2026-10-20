@@ -1,0 +1,1 @@
+Screenshots for museumwithnofrontiers/viewer-layout#116 (3.4.0), 1366px full page: legacy (live legacy site), before (live site on 3.3.0), after (site built against the 3.4.0 tarball, legacy chrome files added locally). Not for merging.
