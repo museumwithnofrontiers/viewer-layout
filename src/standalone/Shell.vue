@@ -136,8 +136,12 @@ const pageClass = computed(() => [
       <img class="mwnf-standalone__print-logo" :src="printLogo" alt="" />
     </template>
     <slot />
-    <template v-if="sponsors" #sponsors>
+    <!-- A site with a band or a footer of its own (Sharing History's, on the
+         pages legacy shows it on) passes it in; else the config's. -->
+    <template v-if="$slots.sponsors" #sponsors><slot name="sponsors" /></template>
+    <template v-else-if="sponsors" #sponsors>
       <Sponsors :columns="sponsors.columns" />
     </template>
+    <template v-if="$slots.footer" #footer><slot name="footer" /></template>
   </SiteShell>
 </template>

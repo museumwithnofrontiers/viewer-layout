@@ -18,6 +18,7 @@ Every addition is optional; a site that declares none of it renders as before.
 - `standalone.home.highlight.pictures`: legacy's own picture of the day
   (`random_image/<site>/<n>.jpg`), picked in its own cycle by the day of the
   year, in place of the record's first picture.
+- `StandaloneShell` passes a site's own `#sponsors` and `#footer` slots through, in place of `standalone.sponsors` and the configured footer.
 - Tokens for the drop-down (`--mwnf-nav-sublink*`) and for the home banner's
   text (`--mwnf-standalone-home-banner-*`), in `tokens.reference.css`.
 

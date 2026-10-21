@@ -239,6 +239,15 @@ describe('StandaloneShell', () => {
     expect(parents[1].find('.mwnf-nav__sublink').attributes('href')).toBe('/partners')
   })
 
+  it("draws a site's own band and footer in place of the configured ones", async () => {
+    const wrapper = await mountWith(StandaloneShell, {
+      slots: { default: '<p>page</p>', sponsors: '<div class="own-band">band</div>', footer: '<p class="own-footer">footer</p>' },
+    })
+    expect(wrapper.find('.own-band').exists()).toBe(true)
+    expect(wrapper.find('.mwnf-standalone-sponsors').exists()).toBe(false)
+    expect(wrapper.find('.own-footer').exists()).toBe(true)
+  })
+
   it('offers no language switcher when the chrome has one language', async () => {
     const site = { ...config, standalone: { ...config.standalone, languages: false } }
     const wrapper = await mountWith(StandaloneShell, { site, props: { languages: ['en', 'fr'], language: 'en' } })
