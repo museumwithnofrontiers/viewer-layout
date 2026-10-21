@@ -4,7 +4,7 @@ import { byId, loadEntities, useDataPackage, useI18n, useSiteConfig } from '@mus
 import SmartLink from '../content/SmartLink.vue'
 import TodayHighlight from './TodayHighlight.vue'
 import TileGrid from './TileGrid.vue'
-import { legacyHomeItemKey, pickForDay } from './chrome.js'
+import { legacyHomeItemKey, pickForDay, useChromePicture } from './chrome.js'
 
 // A standalone site's home page content, under the banner and the menu the
 // shell draws: legacy's two columns (`diaTemplates/leftLink.php` and
@@ -17,12 +17,14 @@ import { legacyHomeItemKey, pickForDay } from './chrome.js'
 //     highlight: {
 //       list: ['object;ISL;uk;Mus02;6;en*1', …],   // legacy's home_items_img.txt, in order
 //       heading: entry, alsoKnownAs: entry, action: entry, route: 'item',
+//       pictures: ['random_image/DBA_new/1.jpg', …],  // chrome keys: legacy's own picture of the day, in its cycle
 //     },
-//     tiles: { caption: entry, items: [{ image, label: entry, to | href }] },
+//     tiles: { caption: entry, items: [{ image, label: entry | text, to | href }] | () => […] },
 //   }
 //
 // The highlight is legacy's pick: the list's line for the day of the year,
-// shown with the record's own first picture.
+// shown with legacy's picture of the day when the site keeps them (`pictures`,
+// a cycle of its own), else with the record's own first picture.
 const props = defineProps({
   home: { type: Object, default: null },
 })
@@ -66,6 +68,16 @@ const country = computed(() => {
   return id ? (pkg.tr('countries', id, locale.value, 'en').name ?? '') : ''
 })
 const to = computed(() => (record.value ? { name: highlight.value.route ?? 'item', params: { id: record.value.id } } : null))
+const chromePicture = useChromePicture()
+const picture = computed(() => {
+  const pictures = highlight.value?.pictures ?? []
+  return pictures.length ? (chromePicture(pickForDay(pictures)) ?? '') : ''
+})
+// The tiles: a list, or a function of the loaded data returning one.
+const tileItems = computed(() => {
+  const items = spec.value.tiles?.items
+  return (typeof items === 'function' ? items() : items) ?? []
+})
 </script>
 
 <template>
@@ -84,11 +96,12 @@ const to = computed(() => (record.value ? { name: highlight.value.route ?? 'item
       :text="text"
       :country="country"
       :to="to"
+      :picture="picture"
       :heading="highlight.heading ?? ''"
       :also-known-as="highlight.alsoKnownAs ?? ''"
       :action="highlight.action ?? ''"
     />
-    <TileGrid v-if="spec.tiles" :caption="spec.tiles.caption ?? ''" :items="spec.tiles.items ?? []" />
+    <TileGrid v-if="spec.tiles" :caption="spec.tiles.caption ?? ''" :items="tileItems" />
     <slot />
   </div>
 </template>

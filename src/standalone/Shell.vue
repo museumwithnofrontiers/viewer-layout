@@ -20,7 +20,8 @@ import { byLanguage } from './chrome.js'
 //     logo: { src, alt: entry, href, print },  // `src`, `print`: a chrome key or URL, or one per language ({ en, ar })
 //     heading: entry,                         // the header's title, on every page but the home page
 //     headerLinks: [{ label, href | to, external, on: 'home' | 'inner' | 'all' }],
-//     banner: { home, inner },                // chrome keys or URLs: the home page's picture; the inner pages' band
+//     banner: { home, inner, homeTitle, homeText },  // chrome keys or URLs: the home page's picture; the inner pages' band;
+//                                             // entries printed over the home page's picture (Sharing History's bannerText.php)
 //     languages: true,                        // false: chrome in one language, no switcher
 //     copyright: entry,                       // the footer line; the current year follows it
 //     sponsors: { on: 'home' | 'all', columns: [...] },   // see Sponsors.vue
@@ -66,6 +67,11 @@ const bannerTitle = computed(() => {
   return entry ? t(entry) : ''
 })
 const innerBanner = computed(() => !isHome.value && Boolean(bannerImage.value || bannerTitle.value))
+// The home page's words over its picture, when legacy printed any.
+const homeBanner = computed(() => {
+  const { homeTitle, homeText } = standalone.value.banner ?? {}
+  return isHome.value && (homeTitle || homeText) ? { title: homeTitle ? t(homeTitle) : '', text: homeText ? t(homeText) : '' } : null
+})
 
 const sponsors = computed(() => {
   const band = standalone.value.sponsors
@@ -108,12 +114,21 @@ const pageClass = computed(() => [
     :header-home="standalone.logo?.href ?? ''"
     :header-title="isHome ? '' : (standalone.heading ? t(standalone.heading) : '')"
     header-title-href="#/"
-    :banner-image="isHome ? bannerImage : ''"
+    :banner-image="isHome && !homeBanner ? bannerImage : ''"
     :footer-text="footerText || undefined"
     @update:language="emit('update:language', $event)"
   >
     <template v-if="innerBanner" #banner>
       <Banner :image="bannerImage" :title="bannerTitle" />
+    </template>
+    <template v-else-if="homeBanner" #banner>
+      <section class="mwnf-banner mwnf-standalone-home-banner">
+        <img v-if="bannerImage" class="mwnf-banner__image" :src="bannerImage" alt="" />
+        <div class="mwnf-standalone-home-banner__text">
+          <h2 v-if="homeBanner.title" class="mwnf-standalone-home-banner__title"><i>{{ homeBanner.title }}</i></h2>
+          <p v-if="homeBanner.text" class="mwnf-standalone-home-banner__line"><span>{{ homeBanner.text }}</span></p>
+        </div>
+      </section>
     </template>
     <template v-if="printLogo" #notice>
       <img class="mwnf-standalone__print-logo" :src="printLogo" alt="" />
