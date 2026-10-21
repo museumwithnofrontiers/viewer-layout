@@ -10,7 +10,7 @@
 //
 //   config.navigation = {
 //     languages,                                                // offered languages — PageShell's `languages` prop; already there today
-//     links: [{ section, label, to | href, external, when }],   // the main nav; `label` an entry name, resolved through t();
+//     links: [{ section, label, to | href, external, when, children }],   // the main nav; `label` an entry name, resolved through t(), or `text`, a label in the page's words; `children` (or a function returning them) drops down;
 //                                                                // `to` a route name/location, resolved through the router; `href` used as-is;
 //                                                                // `when(ctx)` — ctx is `{ section, locale }` — optionally hides the entry
 //                                                                // (a link whose visibility depends on loaded data closes over its own
@@ -143,9 +143,14 @@ function isShown(link) {
     : true
 }
 
+// `text` is a label already in the page's words (a name from the data
+// package); `label` an entry name. `children`, an array or a function
+// returning one, drops down under the entry.
 function toLink(link, { active = false } = {}) {
-  const out = { label: t(link.label), href: resolveHref(link), external: Boolean(link.external) }
+  const out = { label: link.text ?? t(link.label), href: resolveHref(link), external: Boolean(link.external) }
   if (active) out.active = link.section === section.value
+  const children = typeof link.children === 'function' ? link.children() : link.children
+  if (Array.isArray(children) && children.length) out.children = children.filter(isShown).map((child) => toLink(child))
   return out
 }
 

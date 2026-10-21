@@ -3,9 +3,10 @@ import { computed, ref, useSlots } from 'vue'
 import { useI18n } from '@museumwnf/viewer-core/i18n'
 
 const props = defineProps({
-  // Plain links: { label, href, active?, external? }. No router coupling —
-  // websites pass hrefs produced by their own router (hash URLs work as plain
-  // hrefs).
+  // Plain links: { label, href, active?, external?, children? }. No router
+  // coupling — websites pass hrefs produced by their own router (hash URLs
+  // work as plain hrefs). `children`, links of the same shape, drop down
+  // under their entry, as legacy's menus did.
   links: { type: Array, default: () => [] },
   // Languages: 'en' or { code, label }.
   languages: { type: Array, default: () => [] },
@@ -54,16 +55,32 @@ const open = ref(false)
       </button>
       <slot>
         <ul v-if="links.length" id="mwnf-nav-links" class="mwnf-nav__links">
-          <li v-for="link in links" :key="link.href ?? link.label">
+          <li
+            v-for="link in links"
+            :key="link.href ?? link.label"
+            :class="{ 'mwnf-nav__item--parent': link.children?.length }"
+          >
             <a
               class="mwnf-nav__link"
               :class="{ 'mwnf-nav__link--active': link.active }"
               :href="link.href"
               :aria-current="link.active ? 'page' : undefined"
+              :aria-haspopup="link.children?.length ? 'true' : undefined"
               :target="link.external ? '_blank' : undefined"
               :rel="link.external ? 'noopener' : undefined"
               @click="open = false"
             >{{ link.label }}</a>
+            <ul v-if="link.children?.length" class="mwnf-nav__sublinks">
+              <li v-for="child in link.children" :key="child.href ?? child.label">
+                <a
+                  class="mwnf-nav__sublink"
+                  :href="child.href"
+                  :target="child.external ? '_blank' : undefined"
+                  :rel="child.external ? 'noopener' : undefined"
+                  @click="open = false"
+                >{{ child.label }}</a>
+              </li>
+            </ul>
           </li>
         </ul>
       </slot>

@@ -1,3 +1,27 @@
+## 3.7.0 (2026-10-21)
+
+Part of the legacy-parity story museumwithnofrontiers/inventory-app#2233: what
+Sharing History's legacy home page and menu need to be drawn as legacy drew
+them, and the picture of the day legacy shows on Islamic Art and Baroque Art.
+Every addition is optional; a site that declares none of it renders as before.
+
+### Added
+
+- The menu's entries take `children` (an array, or a function returning one):
+  links that drop down under the entry, on hover or keyboard focus, and sit
+  open under it on a narrow screen. A link's label may be `text`, a name in the
+  page's words from the data package, in place of an entry name (`label`).
+- `standalone.subheading`: a line under the inner pages' heading. `standalone.banner.homeTitle` / `homeText`: legacy's words over the home
+  page's picture, its title in italics (Sharing History's `bannerText.php`).
+- `standalone.home.tiles.items` may be a function of the loaded data, and a
+  tile's `text`, a name from the data package, stands in for `label`.
+- `standalone.home.highlight.pictures`: legacy's own picture of the day
+  (`random_image/<site>/<n>.jpg`), picked in its own cycle by the day of the
+  year, in place of the record's first picture.
+- `StandaloneShell` passes a site's own `#sponsors` and `#footer` slots through, in place of `standalone.sponsors` and the configured footer.
+- Tokens for the drop-down (`--mwnf-nav-sublink*`) and for the home banner's
+  text (`--mwnf-standalone-home-banner-*`), in `tokens.reference.css`.
+
 ## 3.6.0 (2026-10-21)
 
 Part of the legacy-parity story museumwithnofrontiers/inventory-app#2233. Rule

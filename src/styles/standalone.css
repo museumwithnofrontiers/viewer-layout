@@ -631,3 +631,29 @@
     display: block;
   }
 }
+
+
+/* ── The home page's words over its picture (Sharing History's bannerText.php) ── */
+
+.mwnf-standalone-home-banner {
+  position: relative;
+  padding-inline: 0;
+}
+
+.mwnf-standalone-home-banner__text {
+  position: absolute;
+  inset-inline-start: var(--mwnf-standalone-home-banner-inset, 4rem);
+  bottom: var(--mwnf-standalone-home-banner-bottom, 2rem);
+  color: var(--mwnf-standalone-home-banner-color, inherit);
+}
+
+.mwnf-standalone-home-banner__title {
+  margin: 0;
+  font-size: var(--mwnf-standalone-home-banner-title-size, 2.5rem);
+  font-weight: var(--mwnf-standalone-home-banner-title-weight, 400);
+}
+
+.mwnf-standalone-home-banner__line {
+  margin: 0;
+  font-size: var(--mwnf-standalone-home-banner-line-size, 1.125rem);
+}

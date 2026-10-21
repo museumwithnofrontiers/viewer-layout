@@ -1,6 +1,6 @@
 <script setup>
 import { computed } from 'vue'
-import { useI18n } from '@museumwnf/viewer-core'
+import { renderPlain, useI18n } from '@museumwnf/viewer-core'
 import SmartLink from '../content/SmartLink.vue'
 import { useChromePicture } from './chrome.js'
 
@@ -9,14 +9,14 @@ import { useChromePicture } from './chrome.js'
 // (legacy's `homeImg<n>.jpg`), not from the data package.
 //
 //   caption: entry,
-//   items: [{ image, label: entry, to | href }]   // `image`: a chrome key or URL
+//   items: [{ image, label: entry, to | href }]   // `image`: a chrome key or URL; `text` in place of `label`: a name from the data package, Markdown
 const props = defineProps({
   caption: { type: String, default: '' },
   items: { type: Array, default: () => [] },
 })
 const { t } = useI18n()
 const picture = useChromePicture()
-const tiles = computed(() => props.items.map((item) => ({ ...item, image: picture(item.image) ?? '', label: item.label ? t(item.label) : '' })))
+const tiles = computed(() => props.items.map((item) => ({ ...item, image: picture(item.image) ?? '', label: item.text ? renderPlain(item.text) : item.label ? t(item.label) : '' })))
 </script>
 
 <template>

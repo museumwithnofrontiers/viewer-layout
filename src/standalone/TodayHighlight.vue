@@ -17,6 +17,8 @@ const props = defineProps({
   text: { type: Object, default: () => ({}) },
   country: { type: String, default: '' },
   to: { type: [String, Object], default: null },
+  /** Legacy's picture of the day, in place of the record's own first picture. */
+  picture: { type: String, default: '' },
   heading: { type: String, default: '' },
   alsoKnownAs: { type: String, default: '' },
   action: { type: String, default: '' },
@@ -41,7 +43,7 @@ const lines = computed(() => {
   return out
 })
 const place = computed(() => [clean(props.text?.location), props.country].filter(Boolean).join(', '))
-const image = computed(() => props.record?.images?.[0]?.url ?? '')
+const image = computed(() => props.picture || (props.record?.images?.[0]?.url ?? ''))
 const alt = computed(() => renderPlain(String(props.text?.name ?? props.record?.internal_name ?? '')))
 </script>
 

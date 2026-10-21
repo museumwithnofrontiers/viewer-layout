@@ -47,6 +47,9 @@ const texts = {
   'site.tiles.caption': 'Ten Virtual Exhibitions',
   'site.tiles.one': 'Lives of the Mighty',
   'site.about.team': 'The Team',
+  'site.banner.title': 'Sharing History',
+  'site.banner.text': 'Arab World – Europe | 1815 – 1918',
+  'site.nav.introduction': 'Introduction',
   'site.about.project': 'The Project',
   'site.about.background': 'See also Historical Background',
   'sheet.field.name': 'Name',
@@ -206,6 +209,45 @@ describe('StandaloneShell', () => {
     expect(wrapper.find('.mwnf-header__brand-logo').attributes('src')).toBe('/assets/logo_fr.png')
   })
 
+  it("prints legacy's words over the home page's picture, and none over an inner page's", async () => {
+    const site = { ...config, standalone: { ...config.standalone, banner: { ...config.standalone.banner, homeTitle: 'site.banner.title', homeText: 'site.banner.text' }, subheading: 'site.banner.text' } }
+    const home = await mountWith(StandaloneShell, { site, slots: { default: '<p>page</p>' } })
+    expect(home.find('.mwnf-standalone-home-banner__title').text()).toBe('Sharing History')
+    expect(home.find('.mwnf-standalone-home-banner__line').text()).toBe('Arab World – Europe | 1815 – 1918')
+    const inner = await mountWith(StandaloneShell, { site, route: '/database', slots: { default: '<p>page</p>' } })
+    expect(inner.find('.mwnf-standalone-home-banner').exists()).toBe(false)
+    // An inner page's header: the heading and the line under it.
+    expect(inner.find('.mwnf-header__subtitle').text()).toBe('Arab World – Europe | 1815 – 1918')
+  })
+
+  it("drops a menu entry's own links down under it, named by entry or by the data", async () => {
+    const site = {
+      ...config,
+      navigation: {
+        ...config.navigation,
+        links: [
+          { section: 'database', label: 'site.nav.introduction', to: { name: 'database' }, children: [{ label: 'site.about.project', to: { name: 'database' } }] },
+          { section: 'partners', label: 'site.nav.partners', to: { name: 'partners' }, children: () => [{ text: 'Algeria', to: { name: 'partners' } }, { text: 'Austria', to: { name: 'partners' } }] },
+        ],
+      },
+    }
+    const wrapper = await mountWith(StandaloneShell, { site, slots: { default: '<p>page</p>' } })
+    const parents = wrapper.findAll('.mwnf-nav__item--parent')
+    expect(parents).toHaveLength(2)
+    expect(parents[0].findAll('.mwnf-nav__sublink').map((a) => a.text())).toEqual(['The Project'])
+    expect(parents[1].findAll('.mwnf-nav__sublink').map((a) => a.text())).toEqual(['Algeria', 'Austria'])
+    expect(parents[1].find('.mwnf-nav__sublink').attributes('href')).toBe('/partners')
+  })
+
+  it("draws a site's own band and footer in place of the configured ones", async () => {
+    const wrapper = await mountWith(StandaloneShell, {
+      slots: { default: '<p>page</p>', sponsors: '<div class="own-band">band</div>', footer: '<p class="own-footer">footer</p>' },
+    })
+    expect(wrapper.find('.own-band').exists()).toBe(true)
+    expect(wrapper.find('.mwnf-standalone-sponsors').exists()).toBe(false)
+    expect(wrapper.find('.own-footer').exists()).toBe(true)
+  })
+
   it('offers no language switcher when the chrome has one language', async () => {
     const site = { ...config, standalone: { ...config.standalone, languages: false } }
     const wrapper = await mountWith(StandaloneShell, { site, props: { languages: ['en', 'fr'], language: 'en' } })
@@ -268,6 +310,9 @@ describe('TodayHighlight', () => {
     ])
     expect(wrapper.find('.mwnf-standalone-highlight__place').text()).toBe('London, England, United Kingdom')
     expect(wrapper.find('.mwnf-standalone-highlight__image').attributes('src')).toBe('casket.jpg')
+    // Legacy's own picture of the day, when the site keeps them, in place of the record's.
+    await wrapper.setProps({ picture: '/assets/123.jpg' })
+    expect(wrapper.find('.mwnf-standalone-highlight__image').attributes('src')).toBe('/assets/123.jpg')
     expect(wrapper.find('.mwnf-standalone-highlight__action a').attributes('href')).toBe('/item/i1')
   })
 })
@@ -358,5 +403,12 @@ describe('Sharing History blocks', () => {
     expect(wrapper.find('.mwnf-standalone-tiles__caption').text()).toBe('Ten Virtual Exhibitions')
     expect(wrapper.find('.mwnf-standalone-tiles__image').attributes('src')).toBe('/assets/homeImg1.jpg')
     expect(wrapper.find('.mwnf-standalone-tiles__label').text()).toBe('Lives of the Mighty')
+  })
+
+  it("labels a tile with a name from the data package, in place of an entry", async () => {
+    const wrapper = await mountWith(StandaloneTileGrid, {
+      props: { items: [{ image: 'legacy/homeImg1.jpg', text: 'The *Hospitality* of Sultans', to: { name: 'database' } }] },
+    })
+    expect(wrapper.find('.mwnf-standalone-tiles__label').text()).toBe('The Hospitality of Sultans')
   })
 })

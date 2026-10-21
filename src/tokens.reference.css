@@ -123,6 +123,16 @@
   /* --mwnf-nav-notice-size: 0.9rem;                 Notice text size */
   /* --mwnf-nav-notice-background: #dddddd;          Notice bar background */
   /* --mwnf-nav-notice-color: inherit;               Notice text color */
+  /* --mwnf-nav-sublinks-width: 12rem;               A menu entry's drop-down: minimum width */
+  /* --mwnf-nav-sublinks-padding: 0.25rem 0;         Its padding */
+  /* --mwnf-nav-sublinks-background: #ffffff;        Its background */
+  /* --mwnf-nav-sublinks-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);  Its shadow */
+  /* --mwnf-nav-sublinks-indent: 1rem;               Its indent when open on a narrow screen */
+  /* --mwnf-nav-sublink-padding: 0.375rem 0.75rem;   A drop-down link's padding */
+  /* --mwnf-nav-sublink-size: 0.875rem;              Its text size */
+  /* --mwnf-nav-sublink-color: #1c1c1c;              Its colour */
+  /* --mwnf-nav-sublink-hover-color: inherit;        Its colour on hover */
+  /* --mwnf-nav-sublink-hover-background: transparent;  Its background on hover */
 
   /* ---------- AppContent ---------- */
   /* --mwnf-content-padding-block: 1.5rem;           Vertical padding */
@@ -828,6 +838,12 @@
   /* --mwnf-standalone-language-size: 0.75rem;       Header language select text size */
   /* --mwnf-standalone-logo-height: 3.125rem;        Header logo maximum height */
   /* --mwnf-standalone-banner-height: 10rem;         Inner pages' banner band height */
+  /* --mwnf-standalone-home-banner-inset: 4rem;      The home banner text: its start inset */
+  /* --mwnf-standalone-home-banner-bottom: 2rem;     Its distance from the picture's bottom */
+  /* --mwnf-standalone-home-banner-color: inherit;   Its colour */
+  /* --mwnf-standalone-home-banner-title-size: 2.5rem;  Its title size */
+  /* --mwnf-standalone-home-banner-title-weight: 400;  Its title weight */
+  /* --mwnf-standalone-home-banner-line-size: 1.125rem;  Its line under the title: size */
   /* --mwnf-standalone-banner-background: transparent;  Band colour under its picture */
   /* --mwnf-standalone-banner-title-size: 1.875rem;  Band title size */
   /* --mwnf-standalone-banner-title-color: inherit;  Band title colour */
