@@ -19,6 +19,7 @@ import { byLanguage } from './chrome.js'
 //   standalone: {
 //     logo: { src, alt: entry, href, print },  // `src`, `print`: a chrome key or URL, or one per language ({ en, ar })
 //     heading: entry,                         // the header's title, on every page but the home page
+//     subheading: entry,                      // a line under it (Sharing History's "Arab World – Europe | 1815 – 1918")
 //     headerLinks: [{ label, href | to, external, on: 'home' | 'inner' | 'all' }],
 //     banner: { home, inner, homeTitle, homeText },  // chrome keys or URLs: the home page's picture; the inner pages' band;
 //                                             // entries printed over the home page's picture (Sharing History's bannerText.php)
@@ -113,6 +114,7 @@ const pageClass = computed(() => [
     language-style="select"
     :header-home="standalone.logo?.href ?? ''"
     :header-title="isHome ? '' : (standalone.heading ? t(standalone.heading) : '')"
+    :header-subtitle="isHome ? '' : (standalone.subheading ? t(standalone.subheading) : '')"
     header-title-href="#/"
     :banner-image="isHome && !homeBanner ? bannerImage : ''"
     :footer-text="footerText || undefined"

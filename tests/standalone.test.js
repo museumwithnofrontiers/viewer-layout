@@ -210,12 +210,14 @@ describe('StandaloneShell', () => {
   })
 
   it("prints legacy's words over the home page's picture, and none over an inner page's", async () => {
-    const site = { ...config, standalone: { ...config.standalone, banner: { ...config.standalone.banner, homeTitle: 'site.banner.title', homeText: 'site.banner.text' } } }
+    const site = { ...config, standalone: { ...config.standalone, banner: { ...config.standalone.banner, homeTitle: 'site.banner.title', homeText: 'site.banner.text' }, subheading: 'site.banner.text' } }
     const home = await mountWith(StandaloneShell, { site, slots: { default: '<p>page</p>' } })
     expect(home.find('.mwnf-standalone-home-banner__title').text()).toBe('Sharing History')
     expect(home.find('.mwnf-standalone-home-banner__line').text()).toBe('Arab World – Europe | 1815 – 1918')
     const inner = await mountWith(StandaloneShell, { site, route: '/database', slots: { default: '<p>page</p>' } })
     expect(inner.find('.mwnf-standalone-home-banner').exists()).toBe(false)
+    // An inner page's header: the heading and the line under it.
+    expect(inner.find('.mwnf-header__subtitle').text()).toBe('Arab World – Europe | 1815 – 1918')
   })
 
   it("drops a menu entry's own links down under it, named by entry or by the data", async () => {

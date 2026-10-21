@@ -11,7 +11,7 @@ Every addition is optional; a site that declares none of it renders as before.
   links that drop down under the entry, on hover or keyboard focus, and sit
   open under it on a narrow screen. A link's label may be `text`, a name in the
   page's words from the data package, in place of an entry name (`label`).
-- `standalone.banner.homeTitle` / `homeText`: legacy's words over the home
+- `standalone.subheading`: a line under the inner pages' heading. `standalone.banner.homeTitle` / `homeText`: legacy's words over the home
   page's picture, its title in italics (Sharing History's `bannerText.php`).
 - `standalone.home.tiles.items` may be a function of the loaded data, and a
   tile's `text`, a name from the data package, stands in for `label`.
