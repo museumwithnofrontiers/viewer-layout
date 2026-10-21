@@ -1,4 +1,24 @@
-## 3.5.0 (unreleased)
+## 3.6.0 (2026-10-21)
+
+Part of the legacy-parity story museumwithnofrontiers/inventory-app#2233. Rule
+of 2026-10-21: a site displays a value only where legacy displayed it. Legacy
+showed a picture's caption and credits in the page's language only. Needs
+@museumwnf/viewer-core 2.8.0 (`pictureCredits`).
+
+### Changed
+
+- `RecordView` and `StandaloneItemSheet`, the default picture list: the
+  caption in the record's language only, never the English one, and the
+  photographer and copyright in it too (`pictureCredits`, from the packages'
+  per-language `photographers` / `copyrights`).
+
+### Added
+
+- `RecordView`'s context carries `translations(entity)`: one entity's rows in
+  the record's language and no other, for a value legacy printed in that
+  language only, such as a dynasty's name. `tr` still falls back to English.
+
+## 3.5.0 (2026-10-20)
 
 The standalone family: Discover Islamic Art, Discover Baroque Art and Sharing
 History, whose layouts match legacy's (museumwithnofrontiers/inventory-app#2233,
