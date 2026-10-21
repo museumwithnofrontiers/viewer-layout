@@ -371,6 +371,16 @@ describe('RecordView', () => {
     expect(wrapper.find('.mwnf-media').exists()).toBe(true)
   })
 
+  it("hands the slots a strict `translations`: the record language's rows, no English behind them", async () => {
+    const { wrapper } = await mountView(RecordView, {
+      props: { spec, id: 'o1' },
+      slots: { after: '<template #after="{ translations, language }"><i class="own-tr">{{ language }}:{{ Object.keys(translations(\'objects\')).length > 0 }}:{{ Object.keys(translations(\'nothing\')).length }}</i></template>' },
+      route: '/objects/o1',
+    })
+    await settle(() => wrapper.find('.own-tr').exists() && wrapper.find('.own-tr').text().includes('true'))
+    expect(wrapper.find('.own-tr').text()).toBe('en:true:0')
+  })
+
   it('spaces its blocks when the spec asks for it', async () => {
     const { wrapper } = await mountView(RecordView, { props: { spec: { ...spec, spaced: true }, id: 'o1' }, route: '/objects/o1' })
     await settle(() => wrapper.find('.mwnf-record').exists())

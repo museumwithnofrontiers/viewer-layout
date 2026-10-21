@@ -2,7 +2,7 @@
 import { computed, useSlots } from 'vue'
 import { useRoute } from 'vue-router'
 import {
-  NotFoundView, byId, citation, entityRef, languageLabels, renderBlock, renderInline,
+  NotFoundView, byId, citation, entityRef, languageLabels, pictureCredits, renderBlock, renderInline,
   renderPlain, sheetRows, sourceUrl, useDataPackage, useGlossaryPopup, useI18n, useProjects, useRecordSheet,
   useRelatedRecords,
 } from '@museumwnf/viewer-core'
@@ -44,7 +44,7 @@ import SourceCredit from '../content/SourceCredit.vue'
 // object read different fields on the standalone sites). Slots — `header`,
 // `before-sheet`, `after-sheet`, `aside`, `source`, `related`, `after` —
 // receive the context `{ record, text, language, languages, select, dir,
-// glossary, ready, attribution, t, tr }` (`languages` and `select` so a
+// glossary, ready, attribution, t, tr, translations }` (`languages` and `select` so a
 // `header` of the site's own can still offer the record's languages);
 // `related` also receives `records` (the rows the spec made) and `outside`
 // (the related records the package does not carry), so a website can
@@ -86,6 +86,9 @@ const { active, onClick, close } = useGlossaryPopup(terms)
 const activeHtml = computed(() => (active.value ? renderBlock(active.value.definition, { breaks: true }) : ''))
 
 const tr = (name, id) => pkg.tr(name, id, language.value, 'en')
+// One entity's rows in the record's language and no other, for a value legacy
+// printed in that language only (a dynasty's name): `tr` falls back to English.
+const translations = (name) => pkg.translations(name, language.value)
 const ctx = computed(() => ({
   record: record.value,
   text: text.value,
@@ -98,6 +101,7 @@ const ctx = computed(() => ({
   attribution: attribution.value,
   t,
   tr,
+  translations,
 }))
 
 // ── The sheet ──────────────────────────────────────────────────────────────
@@ -136,9 +140,8 @@ const images = computed(() => {
   return (record.value.images ?? []).map((image) => ({
     url: image.url,
     alt: image.captions?.[language.value] ?? name,
-    caption: image.captions?.[language.value] ?? image.captions?.en ?? '',
-    photographer: image.photographer ?? '',
-    copyright: image.copyright ?? '',
+    caption: image.captions?.[language.value] ?? '',
+    ...pictureCredits(image, language.value),
   }))
 })
 

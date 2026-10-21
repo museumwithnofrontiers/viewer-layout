@@ -1,6 +1,6 @@
 <script setup>
 import { computed, useSlots } from 'vue'
-import { renderPlain, useI18n } from '@museumwnf/viewer-core'
+import { pictureCredits, renderPlain, useI18n } from '@museumwnf/viewer-core'
 import RecordView from '../views/RecordView.vue'
 import MediaGallery from '../content/MediaGallery.vue'
 import RecordLanguages from '../content/RecordLanguages.vue'
@@ -38,9 +38,8 @@ function imagesOf({ record, text, language }) {
   return (record?.images ?? []).map((image) => ({
     url: image.url,
     alt: image.captions?.[language] ?? name,
-    caption: image.captions?.[language] ?? image.captions?.en ?? '',
-    photographer: image.photographer ?? '',
-    copyright: image.copyright ?? '',
+    caption: image.captions?.[language] ?? '',
+    ...pictureCredits(image, language),
   }))
 }
 
