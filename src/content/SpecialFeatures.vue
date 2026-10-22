@@ -14,7 +14,10 @@ import SheetSection from './SheetSection.vue'
 const props = defineProps({
   /** The record's `details`: `{ id, internal_name, display_order, images, artist_names }`. */
   features: { type: Array, default: () => [] },
-  /** A feature → its translation in the record's language: `name`, `location`, `dates`, `description`. */
+  /**
+   * A feature → its translation in the record's language: `name`, `location`, `dates`,
+   * `description`, and `artist`, the artist line as that language prints it (Markdown).
+   */
   tr: { type: Function, default: () => ({}) },
   /** The record's language, for the pictures' captions. */
   language: { type: String, default: '' },
@@ -33,7 +36,10 @@ const rows = computed(() =>
       return {
         id: feature.id,
         name: mdInline(text.name ?? feature.internal_name ?? feature.id),
-        meta: [text.location, text.dates, (feature.artist_names ?? []).join(', ')].filter(Boolean),
+        meta: [text.location, text.dates].filter(Boolean),
+        // The language's own artist line; `artist_names` merges every language's names, so it
+        // is only the fallback for a package that has no line.
+        artist: mdInline(text.artist || (feature.artist_names ?? []).join(', ')),
         description: md(text.description, { glossary: props.glossary }),
         images: (feature.images ?? []).map((image) => ({ url: image.url, alt: image.captions?.[props.language] ?? '' })),
       }
@@ -46,6 +52,7 @@ const rows = computed(() =>
     <div v-for="row in rows" :key="row.id" class="mwnf-special-features__item">
       <h3 class="mwnf-special-features__name" v-html="row.name"></h3>
       <p v-for="(line, i) in row.meta" :key="i" class="mwnf-special-features__meta">{{ line }}</p>
+      <p v-if="row.artist" class="mwnf-special-features__meta" v-html="row.artist"></p>
       <div v-if="row.description" class="mwnf-special-features__description mwnf-sheet__block" v-html="row.description"></div>
       <MediaGallery v-if="row.images.length" :images="row.images" variant="row" />
     </div>

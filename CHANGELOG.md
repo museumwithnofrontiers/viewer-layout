@@ -1,3 +1,14 @@
+## 3.8.0 (2026-10-22)
+
+Part of the legacy-parity story museumwithnofrontiers/inventory-app#2233. Optional: a package
+without the new field renders as before.
+
+### Changed
+
+- `SpecialFeatures` prints a feature's artist line from its translation's `artist`, as that
+  language prints it (Markdown, so its line breaks survive), and falls back to the feature's
+  `artist_names`. Those merge every language's line, so a Baroque Art special feature showed
+  each artist once per spelling (museumwithnofrontiers/inventory-app#2332 ships the line).
 ## 3.7.0 (2026-10-21)
 
 Part of the legacy-parity story museumwithnofrontiers/inventory-app#2233: what
