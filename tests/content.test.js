@@ -970,6 +970,14 @@ describe('SpecialFeatures', () => {
     expect(items[1].find('.mwnf-media').exists()).toBe(false)
   })
 
+  it("prints the language's own artist line, with its line breaks, over the merged artist names", () => {
+    const tr = (feature) => (feature.id === 'd1' ? { ...texts.d1, artist: 'Architekt: G. Gumpp  \nFresken: C. D. Asam' } : texts[feature.id])
+    const meta = mountFeatures({ tr }).findAll('.mwnf-special-features__item')[0].findAll('.mwnf-special-features__meta')
+    expect(meta).toHaveLength(3)
+    expect(meta[2].html()).toContain('Architekt: G. Gumpp<br>')
+    expect(meta[2].text()).not.toContain('Carlone')
+  })
+
   it("highlights the record's glossary terms in a description, as the sheet does", () => {
     const glossary = [{ id: 'g1', spelling: 'stucco', word: 'Stucco', definition: 'Fine plaster.' }]
     const description = mountFeatures({ glossary }).find('.mwnf-special-features__description')
