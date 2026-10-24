@@ -5,7 +5,8 @@ import SheetSection from './SheetSection.vue'
 
 // A record's audio and video: the package's `media` entries, each a link to
 // where it plays, opening elsewhere. With `language`, the entries in that
-// language when there are any, and every entry otherwise; without it, every
+// language and those that name none: legacy kept them per language and a
+// page showed its own, none when its language had none. Without it, every
 // entry.
 const props = defineProps({
   /** The record's `media`: `{ type, title, description, url, language }`. */
@@ -21,8 +22,7 @@ const { t } = useI18n()
 const entries = computed(() => {
   const all = props.media.filter((entry) => entry?.url)
   if (!props.language) return all
-  const inLanguage = all.filter((entry) => entry.language === props.language)
-  return inLanguage.length ? inLanguage : all
+  return all.filter((entry) => !entry.language || entry.language === props.language)
 })
 </script>
 

@@ -688,6 +688,16 @@ describe('FeaturedPartners', () => {
     expect(wrapper.findAll('.mwnf-featured-partners__more').map((a) => a.attributes('href'))).toEqual(['#/partner/p1', '#/partner-objects/p1'])
   })
 
+  it("prints the description's characters, never their references", () => {
+    const view = partnerView(
+      { id: 'p1', country_id: 'c-fr' },
+      { name: 'Partner', description: "The museum's \"Hall\" & garden" },
+      { countryLabel: () => 'France', route: () => '#/partner/p1' },
+    )
+    const wrapper = mount(FeaturedPartners, { props: { partners: [view] }, ...globalWithI18n() })
+    expect(wrapper.find('.mwnf-featured-partners__description').text()).toBe('The museum\'s "Hall" & garden')
+  })
+
   it('renders nothing when no records', () => {
     const wrapper = mount(FeaturedPartners, { props: { records: [] }, ...globalWithI18n() })
     expect(wrapper.find('.mwnf-featured-partners').exists()).toBe(false)
@@ -938,14 +948,17 @@ describe('BackLink', () => {
 
 describe('SpecialFeatures', () => {
   const texts = {
-    d1: { name: 'The *hall*', location: 'East wing', dates: 'c. 1700', description: 'Gilded stucco work.' },
+    d1: { name: 'The *hall*', location: 'East wing', dates: 'c. 1700', artist: 'B. Carlone', description: 'Gilded stucco work.' },
     d2: { name: 'The chapel' },
   }
   const features = [
     { id: 'd2', internal_name: 'chapel', display_order: 2, images: [], artist_names: [] },
     {
       id: 'd1', internal_name: 'hall', display_order: 1, artist_names: ['B. Carlone', 'C. Carlone'],
-      images: [{ url: 'https://example.org/hall.jpg', captions: { en: 'The hall', de: 'Der Saal' } }],
+      images: [
+        { url: 'https://example.org/hall.jpg', captions: { en: 'The hall', de: 'Der Saal' } },
+        { url: 'https://example.org/hall-2.jpg', captions: {} },
+      ],
     },
     { id: 'd3', internal_name: 'Untranslated room', display_order: null },
   ]
@@ -964,7 +977,7 @@ describe('SpecialFeatures', () => {
     const items = wrapper.findAll('.mwnf-special-features__item')
     expect(items.map((item) => item.find('.mwnf-special-features__name').text())).toEqual(['The hall', 'The chapel', 'Untranslated room'])
     expect(items[0].find('.mwnf-special-features__name').html()).toContain('<em>hall</em>')
-    expect(items[0].findAll('.mwnf-special-features__meta').map((m) => m.text())).toEqual(['East wing', 'c. 1700', 'B. Carlone, C. Carlone'])
+    expect(items[0].findAll('.mwnf-special-features__meta').map((m) => m.text())).toEqual(['East wing', 'c. 1700', 'B. Carlone'])
     expect(items[0].find('.mwnf-media img').attributes()).toMatchObject({ src: 'https://example.org/hall.jpg', alt: 'Der Saal' })
     expect(items[1].find('.mwnf-special-features__meta').exists()).toBe(false)
     expect(items[1].find('.mwnf-media').exists()).toBe(false)
@@ -976,6 +989,18 @@ describe('SpecialFeatures', () => {
     expect(meta).toHaveLength(3)
     expect(meta[2].html()).toContain('Architekt: G. Gumpp<br>')
     expect(meta[2].text()).not.toContain('Carlone')
+  })
+
+  it('prints no artist line for a language that has none, whatever the merged artist names hold', () => {
+    const tr = (feature) => (feature.id === 'd1' ? { ...texts.d1, artist: undefined } : texts[feature.id])
+    const meta = mountFeatures({ tr }).findAll('.mwnf-special-features__item')[0].findAll('.mwnf-special-features__meta')
+    expect(meta.map((m) => m.text())).toEqual(['East wing', 'c. 1700'])
+  })
+
+  it('shows at most `pictureLimit` pictures per feature, and every picture without one', () => {
+    const pictures = (props) => mountFeatures(props).findAll('.mwnf-special-features__item')[0].findAll('.mwnf-media img')
+    expect(pictures()).toHaveLength(2)
+    expect(pictures({ pictureLimit: 1 }).map((img) => img.attributes('src'))).toEqual(['https://example.org/hall.jpg'])
   })
 
   it("highlights the record's glossary terms in a description, as the sheet does", () => {
@@ -1003,11 +1028,11 @@ describe('RelatedMedia', () => {
     expect(wrapper.find('.mwnf-related-media__description').text()).toBe('Filmed in the museum.')
   })
 
-  it("keeps the language's own entries when it has any, and every entry otherwise", () => {
-    const fr = mount(RelatedMedia, { props: { media, language: 'fr' }, ...globalWithI18n(texts) })
-    expect(fr.findAll('.mwnf-related-media__link').map((a) => a.attributes('href'))).toEqual(['https://example.org/fr'])
-    const de = mount(RelatedMedia, { props: { media, language: 'de' }, ...globalWithI18n(texts) })
-    expect(de.findAll('.mwnf-related-media__link')).toHaveLength(3)
+  it("keeps the language's own entries and those that name none, never another language's", () => {
+    const hrefs = (language) => mount(RelatedMedia, { props: { media, language }, ...globalWithI18n(texts) })
+      .findAll('.mwnf-related-media__link').map((a) => a.attributes('href'))
+    expect(hrefs('fr')).toEqual(['https://example.org/fr', 'https://example.org/untitled.mp3'])
+    expect(hrefs('de')).toEqual(['https://example.org/untitled.mp3'])
   })
 
   it('takes its heading, leaves the descriptions out when asked, and renders nothing with no entry', () => {

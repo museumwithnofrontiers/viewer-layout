@@ -20,7 +20,9 @@ const { t, locale } = useI18n()
 const siteConfig = useSiteConfig()
 const links = computed(() => siteConfig.links ?? {})
 
-const CAROUSEL_SIZE = 8
+// Legacy's home drew this many featured partners on each visit
+// (dxa-api DXA_NUMBER_OF_FEATURED_PARTNERS).
+const CAROUSEL_SIZE = 3
 const SIBLING_COUNT = 4
 
 const partners = computed(() => featuredPartners(CAROUSEL_SIZE))
