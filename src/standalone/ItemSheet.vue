@@ -6,6 +6,7 @@ import MediaGallery from '../content/MediaGallery.vue'
 import RecordLanguages from '../content/RecordLanguages.vue'
 import SmartLink from '../content/SmartLink.vue'
 import RelatedContent from './RelatedContent.vue'
+import { limitPictures } from '../views/pictureLimit.js'
 
 // The standalone family's item sheet, `database_item.php` in its three
 // columns: the way back and the pictures; the sheet; the coloured Related
@@ -32,7 +33,11 @@ const slots = useSlots()
 // RecordView draws no pictures here: the left column does.
 const sheetSpec = computed(() => ({ ...props.spec, media: () => [] }))
 
-function imagesOf({ record, text, language }) {
+function imagesOf(ctx) {
+  return limitPictures(allImagesOf(ctx), props.spec.pictureLimit, ctx)
+}
+
+function allImagesOf({ record, text, language }) {
   if (props.spec.media) return props.spec.media(record, { record, text, language })
   const name = renderPlain(String(text?.name ?? record?.internal_name ?? ''))
   return (record?.images ?? []).map((image) => ({

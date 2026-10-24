@@ -27,8 +27,15 @@ const props = defineProps({
   viewObjectsEntry: { type: String, default: 'partner.action.viewObjects' },
 })
 
+// The description's text as the reader sees it: tags dropped and character
+// references decoded, since the card prints it as text ("museum's", never
+// "museum&#39;s").
 function plainText(html) {
-  return String(html ?? '').replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim()
+  const source = String(html ?? '').replace(/<[^>]*>/g, ' ')
+  const text = typeof DOMParser === 'undefined'
+    ? source
+    : new DOMParser().parseFromString(source, 'text/html').documentElement.textContent ?? ''
+  return text.replace(/\s+/g, ' ').trim()
 }
 
 function cut(text, chars) {

@@ -329,7 +329,7 @@ function printSheet() {
               :dir="relCtx.dir"
             />
 
-            <RelatedMedia :media="rel.media" :descriptions="false" :dir="relCtx.dir" />
+            <RelatedMedia :media="rel.media" :language="relCtx.language" :descriptions="false" :dir="relCtx.dir" />
 
             <div v-if="rel.onDisplayIn?.groups.length">
               <p class="mwnf-sheet-related__heading">{{ t('record.related.onDisplayIn') }}</p>
