@@ -9,6 +9,7 @@ import {
 } from '../src/views/index.js'
 import ItemDetailView from '../src/dxa/ItemDetailView.vue'
 import { layoutTexts, withSiteRights } from './helpers.js'
+import { limitPictures } from '../src/views/pictureLimit.js'
 
 // The composed views render a real page out of the fixture package behind
 // `@inventory-data`: an `objects` entity with dates, a country, tags and
@@ -1974,5 +1975,20 @@ describe('the views entry point', () => {
       'CatalogueResultsView', 'EssayView', 'HomeView', 'LinkListView', 'PartnerListView', 'RecordView', 'SearchFormView', 'TextPageView', 'TimelineResultsView',
     ])
     vi.restoreAllMocks()
+  })
+})
+
+describe('limitPictures', () => {
+  const pictures = ['a', 'b', 'c']
+
+  it('keeps at most the limit, read from the page context when it is a function', () => {
+    expect(limitPictures(pictures, 2)).toEqual(['a', 'b'])
+    expect(limitPictures(pictures, (ctx) => (ctx.monument ? 1 : 0), { monument: true })).toEqual(['a'])
+  })
+
+  it('keeps every picture for no limit, 0 or a negative number', () => {
+    for (const limit of [undefined, 0, -1, (ctx) => (ctx.monument ? 1 : 0)]) {
+      expect(limitPictures(pictures, limit, { monument: false })).toEqual(pictures)
+    }
   })
 })

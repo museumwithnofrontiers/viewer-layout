@@ -15,6 +15,7 @@ import RelatedRecords from '../content/RelatedRecords.vue'
 import SheetSection from '../content/SheetSection.vue'
 import SmartLink from '../content/SmartLink.vue'
 import SourceCredit from '../content/SourceCredit.vue'
+import { limitPictures } from './pictureLimit.js'
 
 // The record page, composed. The engine is viewer-core's — the record's
 // language and loads, the glossary terms and the click on one, the field
@@ -31,6 +32,7 @@ import SourceCredit from '../content/SourceCredit.vue'
 //     shortDescription: 'short_description' | false,   // the field folded behind the toggle, after `shortDescriptionAfter`
 //     media: (record, ctx) => [{ url, alt, caption, photographer }],   // default: the record's `images`
 //     mediaVariant: '' | 'row',
+//     pictureLimit: 15 | (ctx) => number,              // at most this many pictures, as legacy's query fetched; 0 or absent: all
 //     spaced: true,                                    // a gap under the pictures and under the sheet
 //     credits: [{ field: 'author', label: 'sheet.field.preparedBy' }, …],
 //     workingNumber: 'mwnf_reference',
@@ -135,6 +137,10 @@ const titleHtml = computed(() => {
 
 const images = computed(() => {
   if (!record.value) return []
+  return limitPictures(allImages(), spec.value.pictureLimit, ctx.value)
+})
+
+function allImages() {
   if (spec.value.media) return spec.value.media(record.value, ctx.value)
   const name = renderPlain(String(text.value.name ?? record.value.internal_name ?? ''))
   return (record.value.images ?? []).map((image) => ({
@@ -143,7 +149,7 @@ const images = computed(() => {
     caption: image.captions?.[language.value] ?? '',
     ...pictureCredits(image, language.value),
   }))
-})
+}
 
 // ── Credits and citation ───────────────────────────────────────────────────
 

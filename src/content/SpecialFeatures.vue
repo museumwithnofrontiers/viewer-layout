@@ -25,6 +25,8 @@ const props = defineProps({
   glossary: { default: undefined },
   heading: { type: String, default: 'sheet.field.specialFeatures' },
   dir: { type: String, default: '' },
+  /** At most this many pictures per feature (legacy's pages showed 6); 0 shows them all. */
+  pictureLimit: { type: Number, default: 0 },
 })
 const { t } = useI18n()
 
@@ -37,11 +39,13 @@ const rows = computed(() =>
         id: feature.id,
         name: mdInline(text.name ?? feature.internal_name ?? feature.id),
         meta: [text.location, text.dates].filter(Boolean),
-        // The language's own artist line; `artist_names` merges every language's names, so it
-        // is only the fallback for a package that has no line.
-        artist: mdInline(text.artist || (feature.artist_names ?? []).join(', ')),
+        // The language's own artist line, or none: legacy printed nothing for a language
+        // without one, and `artist_names` merges every language's names.
+        artist: mdInline(text.artist ?? ''),
         description: md(text.description, { glossary: props.glossary }),
-        images: (feature.images ?? []).map((image) => ({ url: image.url, alt: image.captions?.[props.language] ?? '' })),
+        images: (feature.images ?? [])
+          .slice(0, props.pictureLimit > 0 ? props.pictureLimit : undefined)
+          .map((image) => ({ url: image.url, alt: image.captions?.[props.language] ?? '' })),
       }
     }),
 )
