@@ -54,10 +54,14 @@ const banner = computed(() => {
   const item = itemById.value.get(itemId)
   if (!item) return ''
   const sheet = tr('items', item.id, defaultLang)
+  // Legacy's caption: the item's own holding museum (a monument has none, and
+  // its institution is not printed), the location, on every page but the home
+  // page the province, and the country.
   return {
     name: labelOf('items', item.id),
-    partner: labelOf('partners', item.partner_id),
+    holder: sheet.holder ?? '',
     location: sheet.location ?? '',
+    province: homeImage.value ? '' : (sheet.province ?? ''),
     country: labelOf('countries', item.country_id),
   }
 })

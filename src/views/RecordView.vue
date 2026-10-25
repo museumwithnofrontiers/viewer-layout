@@ -2,7 +2,7 @@
 import { computed, useSlots } from 'vue'
 import { useRoute } from 'vue-router'
 import {
-  NotFoundView, byId, citation, entityRef, languageLabels, pictureCredits, renderBlock, renderInline,
+  NotFoundView, byId, citation, creditLine, entityRef, languageLabels, pictureCredits, picturesInLanguage, renderBlock, renderInline,
   renderPlain, sheetRows, sourceUrl, useDataPackage, useGlossaryPopup, useI18n, useProjects, useRecordSheet,
   useRelatedRecords,
 } from '@museumwnf/viewer-core'
@@ -143,7 +143,8 @@ const images = computed(() => {
 function allImages() {
   if (spec.value.media) return spec.value.media(record.value, ctx.value)
   const name = renderPlain(String(text.value.name ?? record.value.internal_name ?? ''))
-  return (record.value.images ?? []).map((image) => ({
+  // Only the pictures with a row in the page's language, as legacy listed them.
+  return picturesInLanguage(record.value.images, language.value).map((image) => ({
     url: image.url,
     alt: image.captions?.[language.value] ?? name,
     caption: image.captions?.[language.value] ?? '',
@@ -160,9 +161,18 @@ const DEFAULT_CREDITS = [
   { field: 'translation_copy_editor', label: 'sheet.field.translationCopyeditedBy' },
 ]
 
+// A spec with `creditNames` prints each credited person apart, from the
+// package's `credit_names` ("Firstname LASTNAME", as the galleries did); the
+// joined line otherwise.
+function creditValue(field) {
+  const names = spec.value.creditNames ? text.value.credit_names?.[field] : null
+  if (names?.length) return creditLine(names)
+  return text.value[field] ?? attribution.value[field] ?? ''
+}
+
 const credits = computed(() =>
   (spec.value.credits ?? DEFAULT_CREDITS)
-    .map(({ field, label }) => ({ label: t(label), value: text.value[field] ?? attribution.value[field] ?? '' }))
+    .map(({ field, label }) => ({ label: t(label), value: creditValue(field) }))
     .filter((entry) => entry.value),
 )
 
@@ -186,7 +196,7 @@ const citationText = computed(() => {
       ? s.permalink
       : sourceUrl(route) ?? undefined
   return citation({
-    author: text.value.author ?? attribution.value.author,
+    author: creditValue('author') || undefined,
     name: text.value.name ?? record.value.internal_name ?? '',
     project,
     permalink,

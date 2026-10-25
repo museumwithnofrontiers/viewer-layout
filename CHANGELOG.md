@@ -1,3 +1,24 @@
+## 3.10.0 (unreleased)
+
+Part of the legacy-parity check of 2026-10-25 (museumwithnofrontiers/inventory-app#2338). Needs
+viewer-core 2.10.
+
+### Changed
+
+- The record sheet (`RecordView`, the standalone `ItemSheet`) shows only the pictures with a
+  row in the page's language (`picturesInLanguage`), as every legacy sheet listed them; a
+  package without per-picture `languages` shows them all, as before.
+- A sheet spec with `creditNames` prints each credited person from the package's
+  `credit_names` (`creditLine`: "Firstname LASTNAME", as the galleries did), in the credits
+  and the citation.
+- `AppBanner`'s caption reads `{ name, holder, location, province, country }` (`partner` is
+  still read as the holder). The exhibition shell captions an item with its own holding museum,
+  never its partner, and adds the province on every page but the home page, as legacy did.
+
+## 3.9.0 (2026-10-25)
+
+- Picture caps per site (`pictureLimit`), the artist line per language, videos in the page's
+  language, the featured partners' text decoded and three of them shown (#121).
 ## 3.8.0 (2026-10-22)
 
 Part of the legacy-parity story museumwithnofrontiers/inventory-app#2233. Optional: a package

@@ -14,7 +14,7 @@ const props = defineProps({
   image: { type: String, default: '' },
   imageAlt: { type: String, default: '' },
   text: { type: String, default: '' },
-  /** A string, or { name, partner, location, country }. */
+  /** A string, or { name, holder, location, province, country } (`partner` read as the holder). */
   caption: { type: [String, Object], default: '' },
   /** The words before the caption's name ("Detail from"). */
   captionLabel: { type: String, default: '' },
@@ -45,7 +45,7 @@ const captionParts = computed(() => {
   const rest =
     typeof caption === 'string'
       ? ''
-      : [caption.partner, caption.location, caption.country].filter(Boolean).join(', ')
+      : [caption.holder ?? caption.partner, caption.location, caption.province, caption.country].filter(Boolean).join(', ')
   return { name: [props.captionLabel, name].filter(Boolean).join(' '), rest }
 })
 
