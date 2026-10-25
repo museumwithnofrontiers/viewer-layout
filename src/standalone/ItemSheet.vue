@@ -1,6 +1,6 @@
 <script setup>
 import { computed, useSlots } from 'vue'
-import { pictureCredits, renderPlain, useI18n } from '@museumwnf/viewer-core'
+import { pictureCredits, picturesInLanguage, renderPlain, useI18n } from '@museumwnf/viewer-core'
 import RecordView from '../views/RecordView.vue'
 import MediaGallery from '../content/MediaGallery.vue'
 import RecordLanguages from '../content/RecordLanguages.vue'
@@ -40,7 +40,8 @@ function imagesOf(ctx) {
 function allImagesOf({ record, text, language }) {
   if (props.spec.media) return props.spec.media(record, { record, text, language })
   const name = renderPlain(String(text?.name ?? record?.internal_name ?? ''))
-  return (record?.images ?? []).map((image) => ({
+  // Only the pictures with a row in the page's language, as legacy listed them.
+  return picturesInLanguage(record?.images, language).map((image) => ({
     url: image.url,
     alt: image.captions?.[language] ?? name,
     caption: image.captions?.[language] ?? '',

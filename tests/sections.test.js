@@ -312,6 +312,16 @@ describe('AppBanner', () => {
     expect(enter.attributes('aria-label')).toBe('Go to the collection')
   })
 
+  // An exhibition's caption: the item's own holding museum, never its partner,
+  // and the province where legacy printed it ("Marija Bistrica, North-West
+  // Croatia, Croatia" for a monument, which has no holding museum).
+  it('composes the caption from holder, location, province and country', () => {
+    const wrapper = mount(AppBanner, {
+      props: { variant: 'strip', image: 'banner.jpg', caption: { name: 'Hellenbach Manor', holder: '', location: 'Marija Bistrica', province: 'North-West Croatia', country: 'Croatia' } },
+      ...globalWithI18n(),
+    })
+    expect(wrapper.find('.mwnf-banner__caption-rest').text()).toBe('Marija Bistrica, North-West Croatia, Croatia')
+  })
   it('renders the split variant with a Markdown headline through the shared pipeline', () => {
     const wrapper = mount(AppBanner, {
       props: {
