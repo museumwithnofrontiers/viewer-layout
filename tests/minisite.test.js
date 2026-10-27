@@ -5,7 +5,7 @@ import { useSiteConfig } from '@museumwnf/viewer-core'
 import { createI18n } from '@museumwnf/viewer-core/i18n'
 import {
   cleanText, curatorLabel, curatorLink, introCaption, ISLAMICART_NO_COUNTRY, MinisiteShell, minisiteNavigation, minisiteRoutes, minisiteSettings,
-  pageWithNeighbours, placementCaption, PLACEHOLDER_TITLE, quoteHasItalics, readingOrder, slotsOf, withFirstView,
+  pageWithNeighbours, placementCaption, PLACEHOLDER_TITLE, quoteHasItalics, readingOrder, slotsOf, viewPicture, withFirstView,
 } from '../src/minisite/index.js'
 import { settle } from './dxa/helpers.js'
 
@@ -84,6 +84,13 @@ describe('slotsOf', () => {
     expect(slots.map((s) => s.n)).toEqual([1, 2])
     expect(slots[0].variants.map((v) => v.image)).toEqual(['/a1.jpg', '/a2.jpg'])
     expect(slots[1].variants[0].image).toBe('/custom.jpg')
+  })
+
+  it('shows the first view’s picture for a view that has none, as legacy did', () => {
+    const slot = { variants: [{ image: '/a1.jpg' }, { image: '/a2.jpg' }, { image: null }] }
+    expect(viewPicture(slot, 1)).toBe('/a2.jpg')
+    expect(viewPicture(slot, 2)).toBe('/a1.jpg')
+    expect(viewPicture(null, 0)).toBeNull()
   })
 })
 

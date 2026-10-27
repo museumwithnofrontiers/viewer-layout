@@ -1,3 +1,12 @@
+## 3.11.1 (2026-10-27)
+
+### Fixed
+
+- **Mini-sites: a view without a picture shows the first view's**, as legacy's
+  `showDetail()` did (`Detail.picture || Detail0.picture`): an exhibition page
+  showed no picture there (The Muslim West, Defence, the Castle of Moura's third
+  view). `viewPicture(slot, index)` in `./minisite`'s rules.
+
 ## 3.11.0 (2026-10-27)
 
 The mini-sites: legacy's virtual exhibitions, each a website of its own
