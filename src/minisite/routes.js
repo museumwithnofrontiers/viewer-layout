@@ -98,8 +98,10 @@ export function minisiteNavigation({ languages, parent, menu = islamicartMenu(pa
  *   curator's page (`partnerHref`) are there, unless given;
  * - `menuSecondColumnFrom` — the home menu's second column starts at this
  *   position ($_HOME_MENU_COL2); none when omitted;
- * - `curators` — `[{ partner, logo, space }]`, the home page's band (HOMELOGOS):
- *   the partner's id, its logo (a chrome path) and the space after it;
+ * - `curators` — the home page's band (HOMELOGOS), each curator's logo (a chrome
+ *   path) and the space after it, and either `partner` (its id: the name,
+ *   country and page come from its record) or `name`, `country` (a country id)
+ *   and `href`, as legacy wrote them for a curator that is no partner;
  * - `map` — `{ thumbnail, picture(lang, n), count }`, the introduction's map;
  * - `noCountry` — the records legacy names no country for (ISLAMICART_NO_COUNTRY);
  * - `documentTitle` — the Word document's title, legacy's own.

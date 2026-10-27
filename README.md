@@ -832,7 +832,7 @@ export default {
   menus and links on its pictures, the Arabic ones under `[dir='rtl']`.
   inventory-app's `scripts/minisites/legacy-theme.mjs` writes a site's
   `tokens.css` from its legacy stylesheets.
-- **The texts** are viewer-i18n's `minisite` bundle (class `minisite`).
+- **The curators' band** on the home page is drawn here; which curators, their\n  logos and their links are the site's own (`minisite.curators`): a partner\n  (`{ partner, logo, space }`, its name, country and page from its record) or a\n  curator legacy named itself (`{ name, country, href, logo, space }`).\n- **The texts** are viewer-i18n's `minisite` bundle (class `minisite`).
 ## Theming
 
 Every color, font, spacing, radius comes from a `--mwnf-*` CSS custom property with a neutral fallback. Full list: [`tokens.reference.css`](src/tokens.reference.css) (also exported as `@museumwnf/viewer-layout/tokens.reference.css`) — copy it into your website as `theme/tokens.css` and set values.

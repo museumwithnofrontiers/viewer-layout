@@ -22,6 +22,6 @@ export { default as MinisiteZoom } from './Zoom.vue'
 export { EXHIBITION_ENTITIES, exhibitionData, useExhibition } from './exhibition.js'
 export { islamicartMenu, minisiteNavigation, minisiteRoutes, minisiteSettings } from './routes.js'
 export {
-  cleanText, introCaption, ISLAMICART_NO_COUNTRY, pageWithNeighbours, placementCaption, PLACEHOLDER_TITLE,
+  cleanText, curatorLabel, curatorLink, introCaption, ISLAMICART_NO_COUNTRY, pageWithNeighbours, placementCaption, PLACEHOLDER_TITLE,
   quoteHasItalics, readingOrder, slotsOf, withFirstView,
 } from './rules.js'

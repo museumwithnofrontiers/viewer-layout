@@ -150,6 +150,25 @@ export function introCaption({ item, own, caption = {}, countryName, noCountry }
   ]
 }
 
+/**
+ * A curator's tooltip on the home page's band: the partner's name and its
+ * country (MuseumTool::getMuseumName), or, for a curator that is no partner,
+ * the name and country (`country`, an id) the site's settings give.
+ */
+export function curatorLabel(curator, { partnerName, partnerCountry, countryName }) {
+  const country = (id) => (id ? countryName(id) : '')
+  if (!curator.partner) return [curator.name, country(curator.country)].filter(Boolean).join(', ')
+  return [partnerName(curator.partner), country(partnerCountry(curator.partner))].filter(Boolean).join(', ')
+}
+
+/**
+ * Where a curator's logo leads: the address the settings give (legacy wrote
+ * "#" or nothing for some), else the partner's page on the parent site.
+ */
+export function curatorLink(curator, partnerHref) {
+  return 'href' in curator ? curator.href : partnerHref?.(curator.partner)
+}
+
 /** Legacy set a quote in italics unless the quote marked its own. */
 export function quoteHasItalics(quote) {
   return /(^|[^*])\*[^*\s][^*]*\*/.test(quote ?? '') || /\b_[^_]+_\b/.test(quote ?? '')

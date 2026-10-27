@@ -4,7 +4,7 @@ import { createMemoryHistory, createRouter } from 'vue-router'
 import { useSiteConfig } from '@museumwnf/viewer-core'
 import { createI18n } from '@museumwnf/viewer-core/i18n'
 import {
-  cleanText, introCaption, ISLAMICART_NO_COUNTRY, MinisiteShell, minisiteNavigation, minisiteRoutes, minisiteSettings,
+  cleanText, curatorLabel, curatorLink, introCaption, ISLAMICART_NO_COUNTRY, MinisiteShell, minisiteNavigation, minisiteRoutes, minisiteSettings,
   pageWithNeighbours, placementCaption, PLACEHOLDER_TITLE, quoteHasItalics, readingOrder, slotsOf, withFirstView,
 } from '../src/minisite/index.js'
 import { settle } from './dxa/helpers.js'
@@ -113,6 +113,26 @@ describe('texts legacy printed or did not', () => {
   it('sets a quote in italics unless it marks its own', () => {
     expect(quoteHasItalics('‘Each province continued.’')).toBe(false)
     expect(quoteHasItalics('The *minaret* and the mosque')).toBe(true)
+  })
+})
+
+describe('the curators’ band', () => {
+  const lookups = {
+    partnerName: (id) => ({ p1: 'Jordan Archaeological Museum' })[id],
+    partnerCountry: (id) => ({ p1: 'jor' })[id],
+    countryName: (id) => ({ jor: 'Jordan', tur: 'Turkey' })[id],
+  }
+
+  it('names a partner and its country, and leads to its page on the parent site', () => {
+    expect(curatorLabel({ partner: 'p1', logo: 'legacy/JO-10.gif' }, lookups)).toBe('Jordan Archaeological Museum, Jordan')
+    expect(curatorLink({ partner: 'p1' }, (id) => `/#/partner/${id}`)).toBe('/#/partner/p1')
+  })
+
+  it('names a curator that is no partner as the site gives it, and keeps legacy’s own link', () => {
+    const curator = { name: 'EGE University, Izmir', country: 'tur', href: '#', logo: 'legacy/TU-28.gif' }
+    expect(curatorLabel(curator, lookups)).toBe('EGE University, Izmir, Turkey')
+    expect(curatorLink(curator, (id) => `/#/partner/${id}`)).toBe('#')
+    expect(curatorLink({ name: 'University of Palermo', href: '' }, () => 'x')).toBe('')
   })
 })
 

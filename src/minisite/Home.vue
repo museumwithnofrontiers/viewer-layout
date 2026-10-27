@@ -2,10 +2,12 @@
 // The exhibition's home page (generic_index.php, generic_homelogo.php): its
 // title and line over legacy's picture, the menu — the introduction and every
 // theme, the later ones in a second column (`minisite.menuSecondColumnFrom`) —
-// and the band crediting the curators (`minisite.curators`), whose line opens
-// the credits.
+// and the band crediting the curators, whose line opens the credits. Which
+// curators, their logos and their links are the site's own (`minisite.curators`);
+// how the band shows them is here.
 import { computed, watch } from 'vue'
 import { openWindow, useExhibition, WINDOWS } from './exhibition.js'
+import { curatorLabel, curatorLink } from './rules.js'
 import { vTip } from './tip.js'
 
 const { t, lang, data, root, themes, text, title, settings, picture, href, glossaryFor } = useExhibition()
@@ -22,12 +24,13 @@ const secondColumn = computed(() => themes.value.slice(split.value).map((theme, 
 
 const curators = computed(() => settings.curators ?? [])
 
-// A curator's tooltip: the museum's name and its country (MuseumTool::getMuseumName).
-function curatorName(id) {
-  const partner = data.partnerById.value.get(id)
-  const country = partner?.country_id ? data.tr('countries', partner.country_id, lang.value).name : ''
-  return [data.tr('partners', id, lang.value).name, country].filter(Boolean).join(', ')
-}
+const curatorName = (curator) =>
+  curatorLabel(curator, {
+    partnerName: (id) => data.tr('partners', id, lang.value).name,
+    partnerCountry: (id) => data.partnerById.value.get(id)?.country_id,
+    countryName: (id) => data.tr('countries', id, lang.value).name,
+  })
+const curatorHref = (curator) => curatorLink(curator, settings.partnerHref)
 
 const background = computed(() => picture(lang.value === 'ar' ? 'legacy/home_bg_ar.jpg' : 'legacy/home_bg.jpg'))
 
@@ -60,8 +63,8 @@ watch([title, lang], () => {
       <a :href="href({ name: 'credits' })" @click.prevent="openWindow(href({ name: 'credits' }), WINDOWS.credits)">{{ t('minisite.home.curatedBy') }}</a>
     </div>
     <div class="mwnf-minisite-partners__logos">
-      <template v-for="(curator, i) in curators" :key="curator.partner">
-        <a v-tip="{ text: curatorName(curator.partner), width: 280 }" :href="settings.partnerHref?.(curator.partner)">
+      <template v-for="(curator, i) in curators" :key="curator.logo">
+        <a v-tip="{ text: curatorName(curator), width: 280 }" :href="curatorHref(curator)">
           <img :src="picture(curator.logo)" alt="" height="74">
         </a>
         <span v-if="i < curators.length - 1" class="mwnf-minisite-partners__space" :style="{ width: `${curator.space ?? 0}px` }" />
