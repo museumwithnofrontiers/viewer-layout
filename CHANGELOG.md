@@ -1,3 +1,19 @@
+## 3.11.0 (2026-10-27)
+
+The mini-sites: legacy's virtual exhibitions, each a website of its own
+(museumwithnofrontiers/inventory-app#2359). Additive. Reads viewer-i18n 6.2's
+`minisite` bundle.
+
+### Added
+
+- **`@museumwnf/viewer-layout/minisite`**, the mini-site family layer: the
+  frame (`MinisiteShell`), the home page, the introduction, the exhibition
+  page, and legacy's credits, map and zoom windows; legacy's caption, view and
+  page-order rules as plain functions (`placementCaption`, `introCaption`,
+  `slotsOf`, `readingOrder`, `pageWithNeighbours`, `cleanText`); and what a
+  site declares, built once (`minisiteRoutes`, `minisiteNavigation`,
+  `minisiteSettings`). Its stylesheet is scoped to its own classes and reads
+  `--minisite-*` tokens, every value an exhibition's legacy stylesheet set.
 ## 3.10.0 (unreleased)
 
 Part of the legacy-parity check of 2026-10-25 (museumwithnofrontiers/inventory-app#2338). Needs

@@ -1,0 +1,27 @@
+// The mini-site family layer: legacy's virtual exhibitions, each a website of
+// its own (inventory-app#2359), every one built on the same pages
+// (exhibitions/ISL/generic_*.php), so what they share lives here once and a
+// change to how a page is drawn reaches all of them. A mini-site keeps its own
+// exhibition settings (`minisite`), its theme (tokens.css, every value its
+// legacy stylesheet set), its legacy pictures and its texts. Like `/dxa` and
+// `/standalone`, it imports only what the other entries publish and
+// `@museumwnf/viewer-core`, and nothing imports from it.
+//
+// A site's `dataset.config.js` names `MinisiteShell` as its shell,
+// `minisiteNavigation()` as its navigation, `minisiteSettings()` as its
+// `minisite`, and `minisiteRoutes()` as its routes.
+import '../styles/minisite.css'
+
+export { default as MinisiteShell } from './Shell.vue'
+export { default as MinisiteHome } from './Home.vue'
+export { default as MinisiteIntroduction } from './Introduction.vue'
+export { default as MinisitePage } from './Page.vue'
+export { default as MinisiteCredits } from './Credits.vue'
+export { default as MinisiteMap } from './Map.vue'
+export { default as MinisiteZoom } from './Zoom.vue'
+export { EXHIBITION_ENTITIES, exhibitionData, useExhibition } from './exhibition.js'
+export { islamicartMenu, minisiteNavigation, minisiteRoutes, minisiteSettings } from './routes.js'
+export {
+  cleanText, introCaption, ISLAMICART_NO_COUNTRY, pageWithNeighbours, placementCaption, PLACEHOLDER_TITLE,
+  quoteHasItalics, readingOrder, slotsOf, withFirstView,
+} from './rules.js'

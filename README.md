@@ -21,6 +21,7 @@ all the packages:
 | `@museumwnf/viewer-layout/dxa/gallery.css`, `/dxa/exhibition.css` | DXA family layer | each family's stylesheet: its fonts, page reset and page column, and its theme as a function of the palette | the palette a site's `theme/tokens.css` sets |
 | `@museumwnf/viewer-layout/dxa/testing` | DXA family layer | each family's smoke test, `describeGallerySmoke` / `describeExhibitionSmoke` | the site's config, texts and package, in the site's own Vitest |
 | `@museumwnf/viewer-layout/standalone` | standalone family layer | the chrome, home page, item sheet, text page and blocks of Discover Islamic Art, Discover Baroque Art and Sharing History | the entries above and `@museumwnf/viewer-core` |
+| `@museumwnf/viewer-layout/minisite` | mini-site family layer | legacy's virtual exhibitions, one website each: the frame, the home page, the introduction, the exhibition pages, legacy's three windows, the caption rules, `minisiteRoutes` / `minisiteNavigation` / `minisiteSettings` | the entries above and `@museumwnf/viewer-core` |
 | `@museumwnf/viewer-layout/style.css` | — | one stylesheet for every entry, the family styles included | — |
 | `@museumwnf/viewer-layout/tokens.reference.css` | — | every token the package reads, with its fallback | — |
 
@@ -770,6 +771,68 @@ every value is a `--mwnf-standalone-*` token with a neutral fallback
 (`tokens.reference.css`); a site's `theme/tokens.css` sets legacy's. It ships
 in `style.css`, so a site imports nothing more.
 
+## Mini-site family pages
+
+`@museumwnf/viewer-layout/minisite` is the family layer of the mini-sites:
+legacy's virtual exhibitions, each a website of its own (inventory-app#2359).
+Every one ran on the same pages (Discover Islamic Art's
+`exhibitions/ISL/generic_*.php`), so every page, rule and window is here once,
+and a change to how a page is drawn reaches every mini-site. What is an
+exhibition's own stays in its repository: its settings (`minisite`), its
+theme (`theme/tokens.css`), its legacy pictures and its texts.
+
+```js
+import { languageLabels, offeredLanguages, sectionMeta } from '@museumwnf/viewer-core'
+import {
+  ISLAMICART_NO_COUNTRY, MinisiteHome, MinisiteShell, minisiteNavigation, minisiteRoutes, minisiteSettings,
+} from '@museumwnf/viewer-layout/minisite'
+
+const languages = offeredLanguages()
+const parent = 'https://museumwithnofrontiers.github.io/islamicart'
+
+export default {
+  // …datasetPackage, siteName, site, features, languages…
+  shell: MinisiteShell,
+  chrome: import.meta.glob('../theme/assets/**/*.{jpg,jpeg,png,gif,svg}', { eager: true, query: '?url', import: 'default' }),
+  navigation: minisiteNavigation({ languages: languageLabels(languages), parent }),
+  minisite: minisiteSettings({
+    parent,
+    menuSecondColumnFrom: 7,
+    curators: [{ partner: '<uuid>', logo: 'legacy/JO-10.gif', space: 35 }],
+    map: {
+      thumbnail: 'legacy/intro_map_thumb.jpg',
+      picture: (lang, n) => (n ? `legacy/map${n}_${lang}.jpg` : `legacy/map_${lang}.jpg`),
+      count: 1,
+    },
+    noCountry: ISLAMICART_NO_COUNTRY,
+    documentTitle: 'MWNF DISCOVER ISLAMIC ART: Exhibition',
+  }),
+  views: { home: MinisiteHome },
+  extraViews: minisiteRoutes(sectionMeta()),
+}
+```
+
+- **Routes** (`minisiteRoutes`): `home`, `introduction`,
+  `exhibition` (`/exhibition/<theme>/<page>`, 1-based as legacy's addresses),
+  and legacy's windows `credits`, `map` and `zoom`, marked `meta.bare` and drawn
+  without the frame.
+- **The data**: the exhibition is the package's
+  `manifest.site.root_collection_id` — its themes under it, their pages under
+  them, and the placements of each page, grouped by position into views
+  (`slotsOf`). A caption is composed by legacy's rules (`placementCaption`,
+  `introCaption`): the page's own text first, the record's own otherwise.
+- **The pictures** are the site's chrome files under the names legacy gave them
+  (`legacy/logo_<lang>.gif`, `legacy/home_bg.jpg`, `legacy/home_bg_ar.jpg`,
+  `legacy/intro_bg(_ar).jpg`, `legacy/exhibition_bg(_ar).jpg`,
+  `legacy/bg_fading_left.gif`, `legacy/bg_fading_right.gif`,
+  `legacy/ico_item(_selected).gif`, `legacy/print_dark.gif`,
+  `legacy/arrow_inner_black.gif`), plus the logos and maps the settings name.
+- **The theme**: `minisite.css` reads `--minisite-*` tokens for every value an
+  exhibition's stylesheet set — colours, fonts and the positions of its titles,
+  menus and links on its pictures, the Arabic ones under `[dir='rtl']`.
+  inventory-app's `scripts/minisites/legacy-theme.mjs` writes a site's
+  `tokens.css` from its legacy stylesheets.
+- **The texts** are viewer-i18n's `minisite` bundle (class `minisite`).
 ## Theming
 
 Every color, font, spacing, radius comes from a `--mwnf-*` CSS custom property with a neutral fallback. Full list: [`tokens.reference.css`](src/tokens.reference.css) (also exported as `@museumwnf/viewer-layout/tokens.reference.css`) — copy it into your website as `theme/tokens.css` and set values.

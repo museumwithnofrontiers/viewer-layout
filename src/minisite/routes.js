@@ -1,0 +1,114 @@
+// What a mini-site's `dataset.config.js` declares, built once here: its
+// routes, the frame's links and its exhibition settings.
+import { mwnfLinks } from '@museumwnf/viewer-core'
+import Credits from './Credits.vue'
+import Home from './Home.vue'
+import Introduction from './Introduction.vue'
+import Map from './Map.vue'
+import Page from './Page.vue'
+import Zoom from './Zoom.vue'
+import { EXHIBITION_ENTITIES } from './exhibition.js'
+
+/**
+ * The routes of a mini-site: the home page, the introduction, the exhibition
+ * pages (`/exhibition/<theme>/<page>`, 1-based like legacy's addresses), and
+ * legacy's three windows, drawn without the frame (`meta.bare`). `meta` is the
+ * site's `sectionMeta()`.
+ */
+export function minisiteRoutes(meta) {
+  return [
+    { path: '/', name: 'home', component: Home, meta: meta('home', 'collections', 'partners', 'countries') },
+    {
+      path: '/introduction',
+      name: 'introduction',
+      component: Introduction,
+      meta: meta('introduction', ...EXHIBITION_ENTITIES),
+    },
+    {
+      path: '/exhibition/:theme(\\d+)/:page(\\d+)?',
+      name: 'exhibition',
+      component: Page,
+      props: (route) => ({ theme: Number(route.params.theme), page: Number(route.params.page || 1) }),
+      meta: meta('exhibition', ...EXHIBITION_ENTITIES),
+    },
+    {
+      path: '/credits',
+      name: 'credits',
+      component: Credits,
+      meta: { ...meta('credits', 'collections'), bare: 'credits' },
+    },
+    { path: '/map', name: 'map', component: Map, meta: { ...meta('map'), bare: 'map' } },
+    {
+      path: '/zoom',
+      name: 'zoom',
+      component: Zoom,
+      props: (route) => ({ image: String(route.query.img ?? '') }),
+      meta: { ...meta('zoom', 'collections'), bare: 'zoom' },
+    },
+  ]
+}
+
+/**
+ * The menu over the footer of Discover Islamic Art's exhibitions
+ * (generic_footerTop.php), in its order, on the parent site at `parent`.
+ * The Artistic Introduction opened in a window of its own.
+ */
+export function islamicartMenu(parent) {
+  return [
+    { label: 'minisite.menu.permanentCollection', href: `${parent}/#/permanent-collection` },
+    { label: 'minisite.menu.database', href: `${parent}/#/database` },
+    { label: 'minisite.menu.exhibitions', href: `${parent}/#/exhibitions` },
+    { label: 'minisite.menu.artisticIntroduction', href: `${parent}/#/artistic-introduction`, window: true },
+    { label: 'minisite.menu.timeline', href: `${parent}/#/timeline` },
+    { label: 'minisite.menu.partners', href: `${parent}/#/partners` },
+    { label: 'minisite.menu.myCollection', href: mwnfLinks.myCollection },
+  ]
+}
+
+/**
+ * The frame's links — what the shell reads from `navigation`: the logo to the
+ * MWNF portal, the header's two links to the parent site (`parent`, its
+ * address), the menu over the footer (`menu`, Discover Islamic Art's by
+ * default) and the footer. `languages` is `languageLabels(languages)`.
+ */
+export function minisiteNavigation({ languages, parent, menu = islamicartMenu(parent) }) {
+  return {
+    languages,
+    logoHref: mwnfLinks.portal,
+    headerLinks: [
+      { label: 'minisite.header.exhibitionsList', href: `${parent}/#/exhibitions` },
+      { label: 'minisite.header.home', href: `${parent}/#/`, tip: 'minisite.header.homeTip' },
+    ],
+    menu,
+    footerLinks: [
+      { label: 'minisite.footer.aboutMwnf', href: mwnfLinks.about },
+      { label: 'minisite.footer.contact', href: mwnfLinks.contact },
+      { label: 'minisite.footer.legalNotice', href: mwnfLinks.legalNotice },
+      { label: 'minisite.footer.credits', href: mwnfLinks.credits },
+      { label: 'minisite.footer.cookies', href: mwnfLinks.cookies },
+    ],
+    copyright: 'minisite.footer.copyright',
+  }
+}
+
+/**
+ * A mini-site's `minisite` settings, what legacy configured for one
+ * exhibition, with the parent site's addresses filled in:
+ * - `parent` — the parent site's address; a record's sheet (`itemHref`) and a
+ *   curator's page (`partnerHref`) are there, unless given;
+ * - `menuSecondColumnFrom` — the home menu's second column starts at this
+ *   position ($_HOME_MENU_COL2); none when omitted;
+ * - `curators` — `[{ partner, logo, space }]`, the home page's band (HOMELOGOS):
+ *   the partner's id, its logo (a chrome path) and the space after it;
+ * - `map` — `{ thumbnail, picture(lang, n), count }`, the introduction's map;
+ * - `noCountry` — the records legacy names no country for (ISLAMICART_NO_COUNTRY);
+ * - `documentTitle` — the Word document's title, legacy's own.
+ */
+export function minisiteSettings({ parent, ...settings }) {
+  return {
+    parent,
+    itemHref: (id) => `${parent}/#/item/${encodeURIComponent(id)}`,
+    partnerHref: (id) => `${parent}/#/partner/${encodeURIComponent(id)}`,
+    ...settings,
+  }
+}

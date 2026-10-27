@@ -1,0 +1,497 @@
+/*
+ * The mini-sites' pages, laid out as legacy's virtual exhibition pages laid
+ * them out (exhibitions/ISL/generic_*.php and _mainpage.css): a 763px frame
+ * between two fading strips, each page's texts placed on its picture. Every
+ * value an exhibition's own stylesheet set is a `--minisite-*` token of the
+ * site's theme/tokens.css (inventory-app's scripts/minisites/legacy-theme.mjs
+ * writes it from that stylesheet); what this file writes itself is what every
+ * exhibition shared. Positions are legacy's own, from the left in every
+ * language, as its Arabic stylesheet wrote them; what flows — the columns, the
+ * logos, the menu — mirrors in Arabic, as legacy's right-to-left tables did.
+ * Every rule is scoped to the mini-site's own classes: this stylesheet ships in
+ * every website's style.css.
+ */
+
+body:has(.mwnf-minisite, .mwnf-minisite-window) {
+  margin: 0;
+  background: var(--minisite-page);
+}
+
+.mwnf-minisite,
+.mwnf-minisite-window {
+  --mwnf-font-body: verdana, arial, helvetica, sans-serif;
+  --mwnf-color-text: #000000;
+  --mwnf-color-background: var(--minisite-exhibition-text-paper);
+  --mwnf-color-accent: var(--minisite-link);
+  --mwnf-color-border: var(--minisite-header);
+}
+
+.mwnf-minisite a,
+.mwnf-minisite-window a {
+  color: var(--minisite-link);
+  text-decoration: none;
+}
+.mwnf-minisite a:hover {
+  text-decoration: underline;
+}
+
+/* ---------- The frame (_mainpage.css) ---------- */
+
+.mwnf-minisite {
+  display: flex;
+  justify-content: center;
+  min-height: 100vh;
+  background: var(--minisite-page);
+  font: var(--minisite-font);
+  color: #000000;
+}
+.mwnf-minisite__column {
+  width: 763px;
+  flex: none;
+}
+.mwnf-minisite__strip {
+  width: 5px;
+  flex: none;
+  background-repeat: repeat-y;
+}
+
+/* ---------- The header ---------- */
+
+.mwnf-minisite-header {
+  position: relative;
+  height: 71px;
+  background: var(--minisite-header);
+}
+.mwnf-minisite-header__logo {
+  position: absolute;
+  left: var(--minisite-header-logo-left, 0);
+  top: 0;
+  width: 300px;
+  text-align: start;
+}
+.mwnf-minisite-header__logo img {
+  display: inline-block;
+  vertical-align: top;
+}
+.mwnf-minisite-header__nav {
+  position: absolute;
+  left: var(--minisite-header-nav-left, 400px);
+  top: 0;
+  width: var(--minisite-header-nav-width, 350px);
+  text-align: var(--minisite-header-nav-align, right);
+}
+.mwnf-minisite-header__back {
+  margin: 12px 0;
+  color: var(--minisite-header-text);
+}
+.mwnf-minisite .mwnf-minisite-header__link,
+.mwnf-minisite .mwnf-minisite-header__link:hover {
+  font: var(--minisite-header-link-font);
+  color: var(--minisite-header-link);
+}
+.mwnf-minisite-header__select {
+  border: none;
+  padding: 1px;
+  font: var(--minisite-select-font);
+  background: var(--minisite-select);
+  color: var(--minisite-select-text, #000000);
+}
+
+/* ---------- The menu over the footer, and the footer ---------- */
+
+.mwnf-minisite-menu {
+  padding: 5px 0 6px;
+  height: 12px;
+  background: var(--minisite-menu);
+  text-align: center;
+  font: var(--minisite-menu-font);
+  color: var(--minisite-menu-text);
+}
+.mwnf-minisite-menu__list {
+  margin: 0;
+  padding: 0;
+}
+.mwnf-minisite-menu__list li {
+  display: inline;
+  padding: var(--minisite-menu-item-padding);
+}
+.mwnf-minisite .mwnf-minisite-menu a,
+.mwnf-minisite .mwnf-minisite-menu a:hover {
+  font-size: 10px;
+  color: var(--minisite-menu-link);
+  text-decoration: none;
+}
+.mwnf-minisite-menu__line {
+  height: 1px;
+  background: var(--minisite-strip);
+}
+.mwnf-minisite-footer {
+  height: 18px;
+  padding-top: 5px;
+  background: var(--minisite-footer);
+  text-align: center;
+  font: var(--minisite-footer-font);
+  color: var(--minisite-footer-text);
+}
+.mwnf-minisite .mwnf-minisite-footer a {
+  color: var(--minisite-footer-link);
+}
+
+/* ---------- Legacy's tooltip ---------- */
+
+.mwnf-minisite-tip {
+  position: absolute;
+  z-index: 100;
+  padding: 6px;
+  border: var(--minisite-tip-border);
+  background: var(--minisite-tip);
+  color: var(--minisite-tip-text);
+  font: var(--minisite-tip-font);
+  text-align: start;
+  opacity: 0.9;
+  pointer-events: none;
+}
+
+/* ---------- The home page ---------- */
+
+.mwnf-minisite-home {
+  position: relative;
+  height: var(--minisite-home-height);
+  background: var(--minisite-home-paper);
+}
+.mwnf-minisite-home__bg1 {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 763px;
+  height: var(--minisite-home-bg1-height);
+  background: var(--minisite-home-bg1);
+}
+.mwnf-minisite-home__bg2 {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 763px;
+  height: var(--minisite-home-bg2-height);
+  background-repeat: no-repeat;
+}
+.mwnf-minisite-home__title {
+  position: absolute;
+  left: var(--minisite-home-title-left);
+  top: var(--minisite-home-title-top);
+  width: var(--minisite-home-title-width, auto);
+  font: var(--minisite-home-title-font);
+  color: var(--minisite-home-title-color);
+}
+.mwnf-minisite-home__description {
+  position: absolute;
+  left: var(--minisite-home-description-left);
+  top: var(--minisite-home-description-top);
+  width: var(--minisite-home-description-width, auto);
+  font: var(--minisite-home-description-font);
+  color: var(--minisite-home-description-color);
+}
+.mwnf-minisite .mwnf-minisite-home__description a {
+  color: var(--minisite-home-description-link);
+}
+.mwnf-minisite-home__menu {
+  position: absolute;
+  left: var(--minisite-home-menu-left);
+  top: var(--minisite-home-menu-top);
+  width: var(--minisite-home-menu-width, auto);
+  font: var(--minisite-home-menu-font);
+}
+.mwnf-minisite-home__menu2 {
+  position: absolute;
+  left: var(--minisite-home-menu2-left);
+  top: var(--minisite-home-menu2-top);
+  width: var(--minisite-home-menu2-width, auto);
+  font: var(--minisite-home-menu2-font);
+}
+.mwnf-minisite .mwnf-minisite-home__menu a,
+.mwnf-minisite .mwnf-minisite-home__menu2 a {
+  font: var(--minisite-home-menu-link-font);
+  color: var(--minisite-home-menu-link);
+}
+.mwnf-minisite .mwnf-minisite-home__menu a:visited,
+.mwnf-minisite .mwnf-minisite-home__menu2 a:visited {
+  color: var(--minisite-home-menu-link-visited, var(--minisite-home-menu-link));
+}
+.mwnf-minisite .mwnf-minisite-home__menu a:hover,
+.mwnf-minisite .mwnf-minisite-home__menu2 a:hover {
+  color: var(--minisite-home-menu-link-hover, var(--minisite-home-menu-link));
+  font-weight: var(--minisite-home-menu-link-hover-weight, inherit);
+}
+
+.mwnf-minisite-partners {
+  height: var(--minisite-partners-height);
+  padding: 10px 0;
+  background: var(--minisite-partners);
+  text-align: center;
+  font: var(--minisite-partners-font);
+}
+.mwnf-minisite-partners__line {
+  margin: var(--minisite-partners-line-margin-top) 0 var(--minisite-partners-line-margin-bottom);
+  font: var(--minisite-partners-line-font);
+}
+.mwnf-minisite .mwnf-minisite-partners a {
+  color: var(--minisite-partners-link);
+}
+.mwnf-minisite-partners__logos {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.mwnf-minisite-partners__logos img {
+  display: block;
+}
+.mwnf-minisite-partners__space {
+  display: block;
+  height: 74px;
+}
+
+/* ---------- The introduction ---------- */
+
+.mwnf-minisite-intro {
+  position: relative;
+  padding: 200px 0 30px;
+  background-color: var(--minisite-intro-paper);
+  background-repeat: no-repeat;
+}
+.mwnf-minisite-intro__title {
+  position: absolute;
+  left: var(--minisite-intro-title-left, auto);
+  right: var(--minisite-intro-title-right, auto);
+  top: var(--minisite-intro-title-top);
+  width: var(--minisite-intro-title-width, auto);
+  font: var(--minisite-intro-title-font);
+  color: var(--minisite-intro-title-color);
+}
+.mwnf-minisite-intro__nav {
+  position: absolute;
+  color: var(--minisite-intro-nav-color);
+}
+.mwnf-minisite-intro__nav--start {
+  left: var(--minisite-intro-nav-start-left);
+  top: var(--minisite-intro-nav-start-top);
+  width: var(--minisite-intro-nav-start-width);
+  text-align: var(--minisite-intro-nav-start-align, start);
+  font: var(--minisite-intro-nav-start-font);
+}
+.mwnf-minisite-intro__nav--end {
+  left: var(--minisite-intro-nav-end-left);
+  top: var(--minisite-intro-nav-end-top);
+  width: var(--minisite-intro-nav-end-width);
+  text-align: var(--minisite-intro-nav-end-align, end);
+  font: var(--minisite-intro-nav-end-font);
+}
+.mwnf-minisite .mwnf-minisite-intro__nav a {
+  font: var(--minisite-intro-nav-link-font);
+  color: var(--minisite-intro-nav-link-color);
+}
+.mwnf-minisite-intro__table {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  margin: var(--minisite-intro-table-margin);
+}
+.mwnf-minisite-intro__header {
+  margin-bottom: 15px;
+  font: var(--minisite-intro-header-font);
+}
+.mwnf-minisite-intro__header:empty {
+  display: none;
+}
+.mwnf-minisite-intro__content {
+  font: var(--minisite-intro-text-font);
+  text-align: justify;
+}
+.mwnf-minisite-intro__content p {
+  margin: 0;
+}
+.mwnf-minisite-intro-item {
+  margin: 10px 0 20px;
+  padding-inline: 25px 15px;
+  font: var(--minisite-intro-item-font);
+  color: var(--minisite-intro-item-color);
+}
+.mwnf-minisite .mwnf-minisite-intro-item a {
+  color: var(--minisite-intro-item-link);
+}
+.mwnf-minisite .mwnf-minisite-intro-item .mwnf-minisite-intro-item__map {
+  color: #333333;
+}
+.mwnf-minisite-intro-item img {
+  margin-bottom: 3px;
+  vertical-align: top;
+}
+.mwnf-minisite-intro-item__image {
+  max-width: 180px;
+  max-height: 135px;
+}
+
+/* ---------- An exhibition page ---------- */
+
+.mwnf-minisite-page {
+  background-color: var(--minisite-exhibition-paper);
+  background-repeat: no-repeat;
+}
+.mwnf-minisite-page__head {
+  position: relative;
+  height: var(--minisite-exhibition-head-height);
+}
+.mwnf-minisite-page__title {
+  position: absolute;
+  left: var(--minisite-exhibition-title-left, auto);
+  right: var(--minisite-exhibition-title-right, auto);
+  top: var(--minisite-exhibition-title-top);
+  width: var(--minisite-exhibition-title-width, auto);
+  font: var(--minisite-exhibition-title-font);
+  color: var(--minisite-exhibition-title-color);
+}
+.mwnf-minisite-page__nav {
+  position: absolute;
+  color: var(--minisite-exhibition-nav-color);
+}
+.mwnf-minisite-page__nav--start {
+  left: var(--minisite-exhibition-nav-start-left);
+  top: var(--minisite-exhibition-nav-start-top);
+  width: var(--minisite-exhibition-nav-start-width);
+  text-align: var(--minisite-exhibition-nav-start-align, start);
+  font: var(--minisite-exhibition-nav-start-font);
+}
+.mwnf-minisite-page__nav--end {
+  left: var(--minisite-exhibition-nav-end-left);
+  top: var(--minisite-exhibition-nav-end-top);
+  width: var(--minisite-exhibition-nav-end-width);
+  text-align: var(--minisite-exhibition-nav-end-align, end);
+  font: var(--minisite-exhibition-nav-end-font);
+}
+.mwnf-minisite .mwnf-minisite-page__nav a {
+  font: var(--minisite-exhibition-nav-link-font);
+  color: var(--minisite-exhibition-nav-link-color);
+}
+.mwnf-minisite-page__body {
+  display: grid;
+  grid-template-columns: var(--minisite-exhibition-text-width) 1fr;
+}
+.mwnf-minisite-page__text {
+  padding: 10px;
+  background: var(--minisite-exhibition-text-paper);
+}
+.mwnf-minisite-page__page-title {
+  margin: 10px 0 15px;
+  font: var(--minisite-exhibition-page-title-font);
+  color: var(--minisite-exhibition-page-title-color, #000000);
+}
+.mwnf-minisite-page__thumbs {
+  margin: 15px 0;
+  border-top: var(--minisite-exhibition-thumbs-top);
+  border-bottom: var(--minisite-exhibition-thumbs-bottom);
+}
+.mwnf-minisite-page__thumbs img {
+  width: auto;
+  max-width: none;
+  height: 36px;
+  margin: var(--minisite-exhibition-thumb-margin);
+  border: var(--minisite-exhibition-thumb-border);
+  vertical-align: top;
+}
+.mwnf-minisite-page__quote {
+  margin: 15px 0;
+  text-align: start;
+  font: var(--minisite-exhibition-quote-font);
+}
+.mwnf-minisite-page__quote--own-italics {
+  font-style: normal;
+}
+.mwnf-minisite-page__content {
+  min-height: 180px;
+  margin: 15px 0 25px;
+  font: var(--minisite-exhibition-text-font);
+}
+.mwnf-minisite-page__content p {
+  margin: 0 0 15px;
+}
+.mwnf-minisite-page__item {
+  padding: 10px;
+  background: var(--minisite-exhibition-item-paper);
+}
+.mwnf-minisite-page__image {
+  width: 340px;
+  height: 255px;
+  margin-bottom: 15px;
+}
+.mwnf-minisite-page__image img {
+  max-width: 340px;
+  max-height: 255px;
+}
+.mwnf-minisite-page__caption div {
+  margin-bottom: 8px;
+  font: var(--minisite-exhibition-caption-font);
+}
+.mwnf-minisite-page__caption img {
+  vertical-align: top;
+}
+.mwnf-minisite .mwnf-minisite-page__caption a {
+  color: var(--minisite-exhibition-caption-link);
+}
+.mwnf-minisite-page__justification {
+  font-weight: bold;
+}
+.mwnf-minisite .mwnf-minisite-page__caption .mwnf-minisite-page__more {
+  color: var(--minisite-exhibition-more, var(--minisite-exhibition-caption-link));
+}
+
+/* ---------- Under every text ---------- */
+
+.mwnf-minisite-download {
+  font: normal 11px/15px verdana, arial, helvetica;
+}
+
+/* ---------- Glossary terms, as legacy linked them ---------- */
+
+.mwnf-minisite .gloss-term {
+  cursor: pointer;
+  font-weight: bold;
+  font-style: italic;
+  text-decoration: underline;
+}
+
+/* ---------- Legacy's windows ---------- */
+
+.mwnf-minisite-window--credits {
+  min-height: 100vh;
+  background: var(--minisite-page);
+}
+.mwnf-minisite-credits {
+  padding: 20px;
+  color: var(--minisite-credits-color);
+  font: var(--minisite-credits-font);
+}
+.mwnf-minisite-credits h1 {
+  margin: 0 0 1em;
+  font: var(--minisite-credits-title-font);
+}
+.mwnf-minisite-credits p {
+  margin: 0 0 1em;
+}
+.mwnf-minisite-window--map,
+.mwnf-minisite-window--zoom {
+  min-height: 100vh;
+  background: #000000;
+}
+.mwnf-minisite-map img {
+  display: block;
+}
+.mwnf-minisite-zoom {
+  display: flex;
+  height: 100vh;
+  align-items: center;
+  justify-content: center;
+}
+.mwnf-minisite-zoom img {
+  max-width: 90%;
+  max-height: 90%;
+  border: 2px solid #ffffff;
+  object-fit: contain;
+}
