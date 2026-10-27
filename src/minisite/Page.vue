@@ -8,7 +8,7 @@ import { computed, ref, watch } from 'vue'
 import { useGlossaryPopup } from '@museumwnf/viewer-core'
 import GlossaryPopover from '../content/GlossaryPopover.vue'
 import { openWindow, useExhibition, WINDOWS } from './exhibition.js'
-import { quoteHasItalics, withFirstView } from './rules.js'
+import { quoteHasItalics, viewPicture, withFirstView } from './rules.js'
 import { pageDocument } from './wordDocument.js'
 import DownloadBlock from './DownloadBlock.vue'
 import { vTip } from './tip.js'
@@ -32,6 +32,7 @@ watch(() => [props.theme, props.page], () => (selected.value = { slot: 0, varian
 
 const slot = computed(() => pageSlots.value[selected.value.slot] ?? null)
 const variant = computed(() => slot.value?.variants[selected.value.variant] ?? null)
+const image = computed(() => viewPicture(slot.value, selected.value.variant))
 
 const caption = computed(() => {
   if (!slot.value || !variant.value) return null
@@ -48,7 +49,7 @@ function showView(variantIndex) {
   selected.value = { ...selected.value, variant: variantIndex }
 }
 function zoom() {
-  if (variant.value?.image) openWindow(href({ name: 'zoom', query: { img: variant.value.image } }), WINDOWS.zoom)
+  if (image.value) openWindow(href({ name: 'zoom', query: { img: image.value } }), WINDOWS.zoom)
 }
 
 const popup = useGlossaryPopup(glossary)
@@ -116,8 +117,8 @@ const background = computed(() => picture(lang.value === 'ar' ? 'legacy/exhibiti
 
       <div class="mwnf-minisite-page__item">
         <div class="mwnf-minisite-page__image">
-          <a v-if="variant?.image" v-tip="{ text: t('minisite.item.showZoom') }" href="#" @click.prevent="zoom">
-            <img :src="variant.image" alt="">
+          <a v-if="image" v-tip="{ text: t('minisite.item.showZoom') }" href="#" @click.prevent="zoom">
+            <img :src="image" alt="">
           </a>
         </div>
         <div v-if="caption" class="mwnf-minisite-page__caption">

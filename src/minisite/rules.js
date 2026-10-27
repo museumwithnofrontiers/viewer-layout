@@ -133,6 +133,11 @@ export function withFirstView(mine, first) {
   }
 }
 
+/** The picture a view shows: its own, or the first view's where it has none (showDetail()). */
+export function viewPicture(slot, index) {
+  return slot?.variants[index]?.image || slot?.variants[0]?.image || null
+}
+
 /**
  * An introduction picture's caption lines: the item's name, date, dynasty,
  * museum (an object's) and place, each replaced by the exhibition's own text
