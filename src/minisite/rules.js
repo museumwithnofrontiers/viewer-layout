@@ -133,6 +133,20 @@ export function withFirstView(mine, first) {
   }
 }
 
+/**
+ * The record a view's "More information" opens: its own, or the first view's
+ * where it has none (showDetail()); none when neither has one. A custom
+ * exhibition photo legacy placed with no record is a picture of its own,
+ * with no sheet.
+ */
+export function sheetItemId(slot, index, itemOf) {
+  const record = (variant) => {
+    const item = variant ? itemOf(variant.entry.id) : null
+    return item && item.type !== 'picture' ? item.id : null
+  }
+  return record(slot?.variants[index]) ?? record(slot?.variants[0]) ?? null
+}
+
 /** The picture a view shows: its own, or the first view's where it has none (showDetail()). */
 export function viewPicture(slot, index) {
   return slot?.variants[index]?.image || slot?.variants[0]?.image || null
