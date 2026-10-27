@@ -8,7 +8,7 @@ import { computed, ref, watch } from 'vue'
 import { useGlossaryPopup } from '@museumwnf/viewer-core'
 import GlossaryPopover from '../content/GlossaryPopover.vue'
 import { openWindow, useExhibition, WINDOWS } from './exhibition.js'
-import { quoteHasItalics, viewPicture, withFirstView } from './rules.js'
+import { quoteHasItalics, sheetItemId, viewPicture, withFirstView } from './rules.js'
 import { pageDocument } from './wordDocument.js'
 import DownloadBlock from './DownloadBlock.vue'
 import { vTip } from './tip.js'
@@ -38,7 +38,7 @@ const caption = computed(() => {
   if (!slot.value || !variant.value) return null
   return {
     ...withFirstView(placementCaption(variant.value.entry), placementCaption(slot.value.variants[0].entry)),
-    itemId: variant.value.entry.id,
+    sheetId: sheetItemId(slot.value, selected.value.variant, (id) => data.itemById.value.get(id)),
   }
 })
 
@@ -142,8 +142,8 @@ const background = computed(() => picture(lang.value === 'ar' ? 'legacy/exhibiti
           </div>
           <div class="mwnf-minisite-page__justification" v-html="data.mdInline(caption.justification)" />
           <!-- eslint-enable vue/no-v-html -->
-          <div>
-            <a class="mwnf-minisite-page__more" :href="settings.itemHref?.(caption.itemId)" target="_blank">&gt; {{ t('minisite.item.moreInfo') }}</a>
+          <div v-if="caption.sheetId">
+            <a class="mwnf-minisite-page__more" :href="settings.itemHref?.(caption.sheetId)" target="_blank">&gt; {{ t('minisite.item.moreInfo') }}</a>
           </div>
         </div>
       </div>

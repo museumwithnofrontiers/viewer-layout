@@ -5,7 +5,8 @@ import { useSiteConfig } from '@museumwnf/viewer-core'
 import { createI18n } from '@museumwnf/viewer-core/i18n'
 import {
   cleanText, curatorLabel, curatorLink, introCaption, ISLAMICART_NO_COUNTRY, MinisiteShell, minisiteNavigation, minisiteRoutes, minisiteSettings,
-  pageWithNeighbours, placementCaption, PLACEHOLDER_TITLE, quoteHasItalics, readingOrder, slotsOf, viewPicture, withFirstView,
+  pageWithNeighbours, placementCaption, PLACEHOLDER_TITLE, quoteHasItalics, readingOrder, sheetItemId, slotsOf, viewPicture,
+  withFirstView,
 } from '../src/minisite/index.js'
 import { settle } from './dxa/helpers.js'
 
@@ -91,6 +92,15 @@ describe('slotsOf', () => {
     expect(viewPicture(slot, 1)).toBe('/a2.jpg')
     expect(viewPicture(slot, 2)).toBe('/a1.jpg')
     expect(viewPicture(null, 0)).toBeNull()
+  })
+
+  it('opens the view’s record, else the first view’s, and none for a photo legacy placed with no record', () => {
+    const items = { o1: { id: 'o1', type: 'object' }, p1: { id: 'p1', type: 'picture' }, p2: { id: 'p2', type: 'picture' } }
+    const itemOf = (id) => items[id]
+    const slot = (...ids) => ({ variants: ids.map((id) => ({ entry: { id } })) })
+    expect(sheetItemId(slot('o1', 'p1'), 1, itemOf)).toBe('o1')
+    expect(sheetItemId(slot('p1', 'o1'), 1, itemOf)).toBe('o1')
+    expect(sheetItemId(slot('p1', 'p2'), 1, itemOf)).toBeNull()
   })
 })
 

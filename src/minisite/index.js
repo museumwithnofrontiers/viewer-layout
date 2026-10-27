@@ -23,5 +23,5 @@ export { EXHIBITION_ENTITIES, exhibitionData, useExhibition } from './exhibition
 export { islamicartMenu, minisiteNavigation, minisiteRoutes, minisiteSettings } from './routes.js'
 export {
   cleanText, curatorLabel, curatorLink, introCaption, ISLAMICART_NO_COUNTRY, pageWithNeighbours, placementCaption, PLACEHOLDER_TITLE,
-  quoteHasItalics, readingOrder, slotsOf, viewPicture, withFirstView,
+  quoteHasItalics, readingOrder, sheetItemId, slotsOf, viewPicture, withFirstView,
 } from './rules.js'

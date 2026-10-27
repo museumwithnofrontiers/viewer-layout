@@ -1,3 +1,14 @@
+## 3.11.2 (2026-10-27)
+
+### Fixed
+
+- **Mini-sites: no "More information" for a photo legacy placed with no record.**
+  Legacy's `showDetail()` linked the view's record, or the first view's
+  (`Detail.ref_item || Detail0.ref_item`), and nothing when neither had one. A
+  custom exhibition photo placed with no record is now an item of its own, a
+  picture with no parent (inventory-app#2359), which has no sheet.
+  `sheetItemId(slot, index, itemOf)` in `./minisite`'s rules.
+
 ## 3.11.1 (2026-10-27)
 
 ### Fixed
