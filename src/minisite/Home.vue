@@ -37,6 +37,8 @@ const curatorHref = (curator) => curatorLink(curator, settings.partnerHref)
 // list, each curator named over its logo, and beside them the designer.
 const credits = computed(() => (root.value ? text(root.value.id).extra?.credits ?? '' : ''))
 const design = computed(() => settings.design ?? null)
+// Its home picture (#banner), drawn in the frame's footer as legacy placed it there.
+const banner = computed(() => (family === 'BAR' ? picture(settings.banner) : null))
 
 const background = computed(() => picture(lang.value === 'ar' ? 'legacy/home_bg_ar.jpg' : 'legacy/home_bg.jpg'))
 
@@ -101,4 +103,7 @@ watch([title, lang], () => {
       </template>
     </div>
   </div>
+  <Teleport v-if="banner" defer to=".mwnf-minisite-footer">
+    <div class="mwnf-minisite-home__banner" :style="{ backgroundImage: `url(${banner})` }" aria-hidden="true" />
+  </Teleport>
 </template>

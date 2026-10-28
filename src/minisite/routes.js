@@ -136,7 +136,8 @@ export function minisiteNavigation({ languages, parent, family = 'ISL', texts = 
  *   (a country id) and `href`, as legacy wrote them for a curator that is no
  *   partner;
  * - `design` — Discover Baroque Art's designer: `name`, `logo` (a chrome
- *   path) and `href`;
+ *   path) and `href`; `banner` — its home picture (a chrome path), drawn in
+ *   the frame's footer where the exhibition's stylesheet placed it;
  * - `map` — `{ thumbnail, picture(lang, n), count }`, the introduction's map;
  * - `noCountry` — the records legacy names no country for (ISLAMICART_NO_COUNTRY);
  * - `documentTitle` — the Word document's title, legacy's own.
