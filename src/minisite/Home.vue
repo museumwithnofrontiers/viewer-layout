@@ -75,7 +75,7 @@ watch([title, lang], () => {
       <div class="mwnf-minisite-partners__tab">
         <template v-for="(curator, i) in curators" :key="curator.logo">
           {{ curatorName(curator) }}<br>
-          <a v-tip="{ text: curatorName(curator), width: 220 }" :href="curatorHref(curator)"><img :src="picture(curator.logo)" alt=""></a>
+          <a v-tip="{ text: curatorName(curator), width: 220 }" class="mwnf-minisite-partners__curator" :href="curatorHref(curator)"><img :src="picture(curator.logo)" alt=""></a>
           <span v-if="i < curators.length - 1" class="mwnf-minisite-partners__gap" :style="{ width: `${curator.space ?? 0}px` }" />
         </template>
       </div>
@@ -94,7 +94,7 @@ watch([title, lang], () => {
     </div>
     <div class="mwnf-minisite-partners__logos">
       <template v-for="(curator, i) in curators" :key="curator.logo">
-        <a v-tip="{ text: curatorName(curator), width: 280 }" :href="curatorHref(curator)">
+        <a v-tip="{ text: curatorName(curator), width: 280 }" class="mwnf-minisite-partners__curator" :href="curatorHref(curator)">
           <img :src="picture(curator.logo)" alt="" height="74">
         </a>
         <span v-if="i < curators.length - 1" class="mwnf-minisite-partners__space" :style="{ width: `${curator.space ?? 0}px` }" />
