@@ -373,7 +373,9 @@ body:has(.mwnf-minisite, .mwnf-minisite-window) {
 }
 .mwnf-minisite-intro__table {
   display: grid;
-  grid-template-columns: 1fr auto;
+  /* legacy's #IntroPageTableTD2 is 180px wide (an inline style): a long caption
+     wraps in it rather than widening it */
+  grid-template-columns: minmax(0, 1fr) 180px;
   margin: var(--minisite-intro-table-margin);
 }
 .mwnf-minisite-intro__header {
@@ -518,7 +520,8 @@ body:has(.mwnf-minisite, .mwnf-minisite-window) {
 .mwnf-minisite .mwnf-minisite-page__caption a {
   color: var(--minisite-exhibition-caption-link);
 }
-.mwnf-minisite-page__justification {
+/* Legacy's bold was an inline style: it wins over the caption's font. */
+.mwnf-minisite-page__caption .mwnf-minisite-page__justification {
   font-weight: bold;
 }
 .mwnf-minisite .mwnf-minisite-page__caption .mwnf-minisite-page__more {
