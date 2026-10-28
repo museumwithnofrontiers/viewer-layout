@@ -250,6 +250,79 @@ body:has(.mwnf-minisite, .mwnf-minisite-window) {
   height: 74px;
 }
 
+/* Discover Baroque Art's band (exhibitions/BAR/generic_homelogo.php): the
+   curators' column, ruled off from the designer's, every value its stylesheet
+   set (#homePartners, .homePartners_tab*). */
+.mwnf-minisite-partners--baroque {
+  display: flow-root;
+  box-sizing: content-box;
+  width: var(--minisite-partners-width, auto);
+  margin: 0 auto;
+  padding: var(--minisite-partners-padding, 0);
+  color: var(--minisite-partners-color, inherit);
+  text-align: left;
+}
+.mwnf-minisite-partners--baroque .mwnf-minisite-partners__line {
+  margin: var(--minisite-partners-line-margin-top) 0 var(--minisite-partners-line-margin-bottom);
+  color: var(--minisite-partners-line-color, inherit);
+  font: var(--minisite-partners-line-font);
+  line-height: var(--minisite-partners-line-height, normal);
+}
+.mwnf-minisite-partners__curators {
+  float: left;
+  width: var(--minisite-partners-curators-width, auto);
+  margin-right: var(--minisite-partners-curators-margin-right, 0);
+  padding: var(--minisite-partners-curators-padding, 0);
+  border-right: var(--minisite-partners-curators-rule, none);
+}
+.mwnf-minisite-partners__tab {
+  float: left;
+  width: var(--minisite-partners-tab-width, auto);
+  color: var(--minisite-partners-tab-color, inherit);
+  font: var(--minisite-partners-tab-font, inherit);
+  letter-spacing: var(--minisite-partners-tab-spacing, normal);
+}
+.mwnf-minisite-partners__tab img {
+  padding-top: var(--minisite-partners-tab-logo-padding-top, 0);
+  border: 0;
+}
+.mwnf-minisite-partners__gap {
+  display: inline-block;
+}
+.mwnf-minisite-partners__cooperation {
+  float: left;
+  width: var(--minisite-partners-cooperation-width, auto);
+  padding-right: var(--minisite-partners-cooperation-padding-right, 0);
+  padding-left: var(--minisite-partners-cooperation-padding-left, 0);
+  color: var(--minisite-partners-cooperation-color, inherit);
+  font: var(--minisite-partners-cooperation-font, inherit);
+  letter-spacing: var(--minisite-partners-cooperation-spacing, normal);
+}
+.mwnf-minisite-partners__cooperation a {
+  text-decoration: var(--minisite-partners-cooperation-decoration, none);
+}
+.mwnf-minisite-partners__design {
+  float: left;
+  width: var(--minisite-partners-design-width, auto);
+  padding: var(--minisite-partners-design-padding, 0);
+  color: var(--minisite-partners-design-color, inherit);
+  font-size: var(--minisite-partners-design-font-size, inherit);
+  letter-spacing: var(--minisite-partners-design-spacing, normal);
+  line-height: var(--minisite-partners-design-line-height, normal);
+}
+.mwnf-minisite-partners__design-tab {
+  float: left;
+  width: 100%;
+  padding: var(--minisite-partners-design-tab-padding, 0);
+  color: var(--minisite-partners-design-tab-color, inherit);
+  font-size: var(--minisite-partners-design-tab-font-size, inherit);
+  letter-spacing: var(--minisite-partners-design-tab-spacing, normal);
+  line-height: var(--minisite-partners-design-tab-line-height, normal);
+}
+.mwnf-minisite-partners__design-tab img {
+  border: 0;
+}
+
 /* ---------- The introduction ---------- */
 
 .mwnf-minisite-intro {

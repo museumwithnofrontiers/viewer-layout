@@ -62,7 +62,10 @@ export function pageWithNeighbours(pages, theme, page) {
 /**
  * The slots of a page: its placements by position, each with its views
  * (legacy's `n` and `n2`). A view shows the picture its placement links, or
- * the page's own picture at that position.
+ * the page's own picture at that position. A placement that carries detail
+ * views (`details`, Discover Baroque Art's exhibition_page_image_details)
+ * shows those instead, in their order, each with its own picture: legacy
+ * wrote them into the placement's place, one view each.
  */
 export function slotsOf(node) {
   const byPosition = new Map()
@@ -78,7 +81,11 @@ export function slotsOf(node) {
       n,
       variants: [...entries]
         .sort((a, b) => (a.variant_order ?? 0) - (b.variant_order ?? 0))
-        .map((entry) => ({ entry, image: entry.image_url ?? pagePicture(n) })),
+        .flatMap((entry) =>
+          entry.details?.length
+            ? entry.details.map((view) => ({ entry, view, image: view.image_url ?? null }))
+            : [{ entry, image: entry.image_url ?? pagePicture(n) }],
+        ),
     }))
 }
 
@@ -100,17 +107,37 @@ function ownPlace(item, own, countryName, noCountry) {
     .join(', ')
 }
 
+/** The place printed under a placement: the page's own place and the record's country, or the record's own place. */
+function placementPlace({ item, own, caption = {}, countryName, noCountry }) {
+  return caption.location
+    ? [caption.location, item ? countryName(item) : ''].filter(Boolean).join(', ')
+    : ownPlace(item, own, countryName, noCountry)
+}
+
+/**
+ * The artist and material lines Discover Baroque Art's pages print under the
+ * place: the page's own, else the record's — an object's artist, a
+ * monument's architects — and its materials.
+ */
+function baroqueLines(item, own, caption) {
+  const record = item?.type === 'object' ? own.artist : own.architects
+  const materials = [].concat(own.materials ?? []).filter(Boolean).join(', ')
+  return {
+    artist: cleanText(caption.artist || removeEndingPoint(record ?? '')),
+    material: cleanText(caption.material || removeEndingPoint(materials)),
+  }
+}
+
 /**
  * One view's caption on an exhibition page: each field the page's own text
  * (`caption`, in the page language) first, the item's own (`own`) otherwise;
  * the museum for an object only; the country after the page's own place
- * whatever the record, as legacy wrote it.
+ * whatever the record, as legacy wrote it. Discover Baroque Art's pages
+ * (`family` "BAR") add the artist and material lines.
  */
-export function placementCaption({ item, own, caption = {}, countryName, noCountry }) {
+export function placementCaption({ item, own, caption = {}, countryName, noCountry, family }) {
   const museum = item?.type === 'object' ? caption.museum || removeEndingPoint(own.holder ?? '') : ''
-  const place = caption.location
-    ? [caption.location, item ? countryName(item) : ''].filter(Boolean).join(', ')
-    : ownPlace(item, own, countryName, noCountry)
+  const place = placementPlace({ item, own, caption, countryName, noCountry })
   return {
     name: cleanText(caption.name ? removeEndingPoint(caption.name) : removeEndingPoint(own.name ?? '')),
     detailName: cleanText(caption.detail_name),
@@ -118,7 +145,30 @@ export function placementCaption({ item, own, caption = {}, countryName, noCount
       .filter(Boolean)
       .map(cleanText),
     details: [museum, place].filter(Boolean).map(cleanText),
+    ...(family === 'BAR' ? baroqueLines(item, own, caption) : {}),
     justification: cleanText(caption.justification),
+  }
+}
+
+/**
+ * A Discover Baroque Art detail view's caption (class.exhibition.inc.php):
+ * each field the view's own text, else the first view's (`first`), else —
+ * for its name, date, location and artist — the monument detail it shows
+ * (`record`, that detail's own texts). Its date lines are the dynasty, the
+ * date, the museum and the location, in that order; under them the
+ * placement's place, as the placement's own caption composes it
+ * (`placement`).
+ */
+export function detailViewCaption({ caption = {}, first = {}, record = {}, placement }) {
+  const pick = (field, recordValue = '') => caption[field] || first[field] || recordValue || ''
+  return {
+    name: removeEndingPoint(pick('name', record.name)),
+    detailName: caption.detail_name ?? '',
+    dateLines: [pick('dynasty'), pick('date', record.dates), pick('museum'), pick('location', record.location)].filter(Boolean),
+    details: placement ? [placementPlace(placement)].filter(Boolean).map(cleanText) : [],
+    artist: pick('artist', record.artist),
+    material: pick('material'),
+    justification: caption.justification || first.justification || '',
   }
 }
 
@@ -129,6 +179,8 @@ export function withFirstView(mine, first) {
     detailName: mine.detailName || first.detailName,
     dateLines: mine.dateLines.length ? mine.dateLines : first.dateLines,
     details: mine.details.length ? mine.details : first.details,
+    ...('artist' in mine || 'artist' in first ? { artist: mine.artist || first.artist || '' } : {}),
+    ...('material' in mine || 'material' in first ? { material: mine.material || first.material || '' } : {}),
     justification: mine.justification || first.justification,
   }
 }
@@ -172,11 +224,14 @@ export function introCaption({ item, own, caption = {}, countryName, noCountry }
 /**
  * A curator's tooltip on the home page's band: the partner's name and its
  * country (MuseumTool::getMuseumName), or, for a curator that is no partner,
- * the name and country (`country`, an id) the site's settings give.
+ * the name and country (`country`, an id) the site's settings give. Discover
+ * Baroque Art named a partner with the city legacy wrote out after it and the
+ * country it gave (`place`, `country`).
  */
 export function curatorLabel(curator, { partnerName, partnerCountry, countryName }) {
   const country = (id) => (id ? countryName(id) : '')
   if (!curator.partner) return [curator.name, country(curator.country)].filter(Boolean).join(', ')
+  if (curator.place) return [partnerName(curator.partner), curator.place, country(curator.country)].filter(Boolean).join(', ')
   return [partnerName(curator.partner), country(partnerCountry(curator.partner))].filter(Boolean).join(', ')
 }
 

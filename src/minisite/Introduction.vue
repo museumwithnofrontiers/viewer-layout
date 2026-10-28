@@ -10,7 +10,7 @@ import { openWindow, useExhibition, WINDOWS } from './exhibition.js'
 import { introductionDocument } from './wordDocument.js'
 import DownloadBlock from './DownloadBlock.vue'
 
-const { t, lang, data, root, text, title, settings, picture, href, introCaption, slots, glossaryFor } = useExhibition()
+const { label, lang, data, root, text, title, settings, picture, href, introCaption, slots, glossaryFor } = useExhibition()
 
 const own = computed(() => (root.value ? text(root.value.id) : {}))
 const glossary = computed(() => (root.value ? glossaryFor(root.value.id) : []))
@@ -38,7 +38,7 @@ function word() {
 const background = computed(() => picture(lang.value === 'ar' ? 'legacy/intro_bg_ar.jpg' : 'legacy/intro_bg.jpg'))
 
 watch([title, lang], () => {
-  document.title = [t('minisite.identity.windowTitle'), title.value].filter(Boolean).join(' | ')
+  document.title = [label('identity.windowTitle'), title.value].filter(Boolean).join(' | ')
 }, { immediate: true })
 </script>
 
@@ -46,11 +46,11 @@ watch([title, lang], () => {
   <div class="mwnf-minisite-intro" :style="{ backgroundImage: background ? `url(${background})` : 'none' }">
     <div class="mwnf-minisite-intro__title">{{ title }}</div>
     <div class="mwnf-minisite-intro__nav mwnf-minisite-intro__nav--start">
-      &lt; <router-link :to="{ name: 'home' }">{{ t('minisite.nav.entrance') }}</router-link>
+      &lt; <router-link :to="{ name: 'home' }">{{ label('nav.entrance') }}</router-link>
     </div>
     <div class="mwnf-minisite-intro__nav mwnf-minisite-intro__nav--end">
-      &lt; <router-link :to="{ name: 'home' }">{{ t('minisite.nav.previous') }}</router-link> |
-      <router-link :to="{ name: 'exhibition', params: { theme: 1, page: 1 } }">{{ t('minisite.nav.next') }}</router-link> &gt;
+      &lt; <router-link :to="{ name: 'home' }">{{ label('nav.previous') }}</router-link> |
+      <router-link :to="{ name: 'exhibition', params: { theme: 1, page: 1 } }">{{ label('nav.next') }}</router-link> &gt;
     </div>
     <div class="mwnf-minisite-intro__table">
       <div class="mwnf-minisite-intro__text" @click="popup.onClick">
@@ -65,7 +65,7 @@ watch([title, lang], () => {
           <a :href="href({ name: 'map' })" @click.prevent="openWindow(href({ name: 'map' }), WINDOWS.map)">
             <img :src="picture(map.thumbnail)" alt="" width="178" height="93">
           </a><br>
-          <a class="mwnf-minisite-intro-item__map" :href="href({ name: 'map' })" @click.prevent="openWindow(href({ name: 'map' }), WINDOWS.map)">{{ t('minisite.intro.enlargeMap') }}</a>
+          <a class="mwnf-minisite-intro-item__map" :href="href({ name: 'map' })" @click.prevent="openWindow(href({ name: 'map' }), WINDOWS.map)">{{ label('intro.enlargeMap') }}</a>
         </div>
         <div v-for="item in pictures" :key="`${item.entry.id}-${item.entry.variant_order}`" class="mwnf-minisite-intro-item">
           <img v-if="item.image" class="mwnf-minisite-intro-item__image" :src="item.image" alt=""><br>

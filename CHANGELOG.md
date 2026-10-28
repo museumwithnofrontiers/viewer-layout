@@ -1,3 +1,32 @@
+## 3.12.0 (2026-10-28)
+
+Discover Baroque Art's mini-sites (museumwithnofrontiers/inventory-app#2390).
+Additive: a Discover Islamic Art mini-site is drawn as before. Reads
+viewer-i18n 6.3's `minisiteBaroque` bundle.
+
+### Added
+
+- **Families.** `minisiteSettings({ family })` and
+  `minisiteNavigation({ family })`: "ISL" (the default) or "BAR", Discover
+  Baroque Art's exhibitions (exhibitions/BAR/generic_*.php). Each family reads
+  a label set of its own (`LABELS`, `labelSet()`; `texts` to name another):
+  every page reads its labels through it.
+- **Baroque Art's captions**: the artist and material lines under the place,
+  the page's own text first, else an object's artist or a monument's
+  architects and the record's materials; a placement's detail views
+  (`details`) are its views, each with its own picture, captioned from its
+  own text, the first view's, then the monument detail it shows
+  (`detailViewCaption()`, class.exhibition.inc.php's rules).
+- **Baroque Art's home band**: "Exhibition curated by" and the exhibition's
+  credits, the cooperation line and its link to the partner institutions
+  (`partnerListHref`, the parent site's list by default), each curator named
+  over its logo with the city and country legacy printed (`place`,
+  `country`), and the designer (`design`), styled by the `--minisite-partners-*`
+  tokens its stylesheet set.
+- **Baroque Art's frame**: its menu (`baroqueartMenu()`: no Artistic
+  Introduction, Exhibitions leads to the exhibition's home, no bars between
+  links: `menuSeparator`), the footer's language-policy link, and the logo's
+  tooltip in the family's labels (`logoTip`).
 ## 3.11.2 (2026-10-27)
 
 ### Fixed

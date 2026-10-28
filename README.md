@@ -775,8 +775,8 @@ in `style.css`, so a site imports nothing more.
 
 `@museumwnf/viewer-layout/minisite` is the family layer of the mini-sites:
 legacy's virtual exhibitions, each a website of its own (inventory-app#2359).
-Every one ran on the same pages (Discover Islamic Art's
-`exhibitions/ISL/generic_*.php`), so every page, rule and window is here once,
+Every one of a family ran on the same pages (Discover Islamic Art's
+`exhibitions/ISL/generic_*.php`, Discover Baroque Art's `exhibitions/BAR/`), so every page, rule and window is here once,
 and a change to how a page is drawn reaches every mini-site. What is an
 exhibition's own stays in its repository: its settings (`minisite`), its
 theme (`theme/tokens.css`), its legacy pictures and its texts.
@@ -827,6 +827,17 @@ export default {
   `legacy/bg_fading_left.gif`, `legacy/bg_fading_right.gif`,
   `legacy/ico_item(_selected).gif`, `legacy/print_dark.gif`,
   `legacy/arrow_inner_black.gif`), plus the logos and maps the settings name.
+- **Two families**: Discover Islamic Art's exhibitions (the default) and
+  Discover Baroque Art's (`family: 'BAR'`, given to both `minisiteNavigation`
+  and `minisiteSettings`). Each family reads a label set of its own from
+  viewer-i18n — `minisite`, and `minisiteBaroque` (viewer-i18n 6.3) — named
+  alike. Baroque Art's pages print an artist and a material line, show a
+  placement's detail views (`details`) as its views, captioned from their own
+  text, the first view's and the detail they show (`detailViewCaption`), and
+  draw its home band: who curated the exhibition (its `credits` text), the
+  partner institutions (`partnerListHref`), each curator named over its logo
+  (`place`, `country`), and the designer (`design`). Its menu has no Artistic
+  Introduction and no bars, and its footer links the language policy.
 - **The theme**: `minisite.css` reads `--minisite-*` tokens for every value an
   exhibition's stylesheet set — colours, fonts and the positions of its titles,
   menus and links on its pictures, the Arabic ones under `[dir='rtl']`.

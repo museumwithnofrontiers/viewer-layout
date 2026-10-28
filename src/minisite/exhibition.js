@@ -10,8 +10,25 @@ import {
 } from '@museumwnf/viewer-core'
 import { chromeSource } from '../chrome.js'
 import {
-  introCaption, pageWithNeighbours, placementCaption, PLACEHOLDER_TITLE, readingOrder, slotsOf,
+  detailViewCaption, introCaption, pageWithNeighbours, placementCaption, PLACEHOLDER_TITLE, readingOrder, slotsOf,
+  withFirstView,
 } from './rules.js'
+
+/**
+ * The label set each family's mini-sites read (viewer-i18n): Discover Islamic
+ * Art's and Discover Baroque Art's are sets of their own, named alike.
+ */
+export const LABELS = { ISL: 'minisite', BAR: 'minisiteBaroque' }
+
+/** The family a site's settings name (`minisite.family`): Discover Islamic Art's unless another. */
+export function familyOf(settings) {
+  return settings?.family ?? 'ISL'
+}
+
+/** The label set a site reads: its settings' own (`minisite.texts`), else its family's. */
+export function labelSet(settings) {
+  return settings?.texts ?? LABELS[familyOf(settings)] ?? LABELS.ISL
+}
 
 const TRANSLATED = ['collections', 'items', 'countries', 'partners', 'glossary']
 
@@ -42,6 +59,9 @@ export function useExhibition() {
   const { locale, t } = useI18n()
   const config = useSiteConfig()
   const settings = config.minisite ?? {}
+  const family = familyOf(settings)
+  const texts = labelSet(settings)
+  const label = (key) => t(`${texts}.${key}`)
   const router = useRouter()
   const lang = computed(() => locale.value)
 
@@ -72,7 +92,30 @@ export function useExhibition() {
       caption: entry.caption?.[lang.value] ?? {},
       countryName,
       noCountry: settings.noCountry,
+      family,
     }
+  }
+
+  /**
+   * A view's caption as legacy printed it: a detail view's from its own text,
+   * the slot's first view's and the record it shows; any other view's from
+   * its placement; each field then the first view's where its own is empty
+   * (showDetail()).
+   */
+  function viewCaption(slot, index) {
+    const of = (variant) => {
+      if (!variant.view) return placementCaption(captionInput(variant.entry))
+      const first = slot.variants[0]
+      return detailViewCaption({
+        caption: variant.view.caption?.[lang.value] ?? {},
+        first: first.view ? first.view.caption?.[lang.value] ?? {} : {},
+        record: variant.view.id ? data.tr('items', variant.view.id, lang.value) : {},
+        placement: captionInput(variant.entry),
+      })
+    }
+    const mine = slot?.variants[index]
+    if (!mine) return null
+    return withFirstView(of(mine), of(slot.variants[0]))
   }
 
   /** The glossary terms a collection's text links in the page language, as the renderers take them. */
@@ -96,6 +139,8 @@ export function useExhibition() {
 
   return {
     t,
+    label,
+    family,
     lang,
     data,
     root,
@@ -109,6 +154,7 @@ export function useExhibition() {
     pageAt: (theme, page) => pageWithNeighbours(pages.value, theme, page),
     slots: slotsOf,
     placementCaption: (entry) => placementCaption(captionInput(entry)),
+    viewCaption,
     introCaption: (entry) => introCaption(captionInput(entry)),
     title: computed(() => (root.value ? text(root.value.id).title ?? '' : '')),
   }
