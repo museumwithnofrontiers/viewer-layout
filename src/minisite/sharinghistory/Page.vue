@@ -5,7 +5,7 @@
 // theme, the download block; the item panel beside them; under both, the
 // exhibition's pages, Related Content and the windows.
 import { computed, ref, watch } from 'vue'
-import { NotFoundView } from '@museumwnf/viewer-core'
+import { mdStrip, NotFoundView } from '@museumwnf/viewer-core'
 import { useSharingHistoryExhibition } from './exhibition.js'
 import Banner from './Banner.vue'
 import Download from './Download.vue'
@@ -39,7 +39,9 @@ const choose = (index) => {
   view.value = 0
 }
 
-const pageName = computed(() => (props.page === 0 ? label('home.overview') : own.value.title ?? ''))
+// Legacy's pages printed the titles with their tags stripped (its home menu kept their italics).
+const titleOf = (id) => mdStrip(text(id).title ?? '')
+const pageName = computed(() => (props.page === 0 ? label('home.overview') : mdStrip(own.value.title ?? '')))
 const blocks = computed(() => [
   { heading: text(themeNode.value?.id).title },
   { heading: pageName.value },
@@ -54,7 +56,7 @@ const blocks = computed(() => [
     <Banner :next="current.next" />
     <div class="mwnf-sh-page">
       <div class="mwnf-sh-page__text">
-        <div class="mwnf-sh-page__theme">{{ text(themeNode.id).title }}</div>
+        <div class="mwnf-sh-page__theme">{{ titleOf(themeNode.id) }}</div>
         <div class="mwnf-sh-page__name">&nbsp;{{ pageName }}</div>
         <div v-if="pageSlots.length" class="mwnf-sh-page__thumbs">
           <button v-for="(slot, i) in pageSlots" :key="`${slot.n}-${slot.variants[0].id}`" type="button" @click="choose(i)">
@@ -69,7 +71,7 @@ const blocks = computed(() => [
           <!-- eslint-enable vue/no-v-html -->
         </div>
         <div class="mwnf-sh-more">
-          <b><span class="mwnf-sh-more__label">{{ label('page.moreAbout') }}</span><br><span class="mwnf-sh-more__theme">{{ text(themeNode.id).title }}</span></b>
+          <b><span class="mwnf-sh-more__label">{{ label('page.moreAbout') }}</span><br><span class="mwnf-sh-more__theme">{{ titleOf(themeNode.id) }}</span></b>
           <ul>
             <li>
               <img :src="picture('legacy/arrow_inner_black.gif')" alt="" class="mwnf-sh-arrow" width="11" height="8">
@@ -78,8 +80,8 @@ const blocks = computed(() => [
             </li>
             <li v-for="(sub, si) in subthemes" :key="sub.id">
               <img :src="picture('legacy/arrow_inner_black.gif')" alt="" class="mwnf-sh-arrow" width="11" height="8">
-              <span v-if="page === si + 1" class="mwnf-sh-more__current">{{ text(sub.id).title }}</span>
-              <router-link v-else :to="{ name: 'subtheme', params: { theme, page: si + 1 } }">{{ text(sub.id).title }}</router-link>
+              <span v-if="page === si + 1" class="mwnf-sh-more__current">{{ titleOf(sub.id) }}</span>
+              <router-link v-else :to="{ name: 'subtheme', params: { theme, page: si + 1 } }">{{ titleOf(sub.id) }}</router-link>
             </li>
           </ul>
         </div>
@@ -97,8 +99,8 @@ const blocks = computed(() => [
           </li>
           <li v-for="(t, ti) in themes" :key="t.id">
             <img :src="picture('legacy/arrow.gif')" alt="" width="10" height="9">
-            <span v-if="ti + 1 === theme" class="mwnf-sh-bottom__current">{{ text(t.id).title }}</span>
-            <router-link v-else :to="{ name: 'theme', params: { theme: ti + 1 } }">{{ text(t.id).title }}</router-link>
+            <span v-if="ti + 1 === theme" class="mwnf-sh-bottom__current">{{ titleOf(t.id) }}</span>
+            <router-link v-else :to="{ name: 'theme', params: { theme: ti + 1 } }">{{ titleOf(t.id) }}</router-link>
           </li>
         </ul>
       </div>
