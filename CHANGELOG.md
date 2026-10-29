@@ -1,3 +1,36 @@
+## 3.13.0 (2026-10-29)
+
+Sharing History's mini-sites (museumwithnofrontiers/inventory-app#2393).
+Reads viewer-i18n 6.4's `minisiteSharingHistory` bundle. Additive: Discover
+Islamic Art's and Discover Baroque Art's mini-sites do not change.
+
+### Added
+
+- **Sharing History's mini-site pages**, in `./minisite`, a family of their
+  own (legacy's `exhibitions/AWE/`), compared page by page with legacy's
+  Travelling: `SharingHistoryShell` (the Sharing History frame: the header
+  with About, Home and the portal, the text-size buttons over a page of text,
+  the menu over the footer with the parent's country profiles),
+  `SharingHistoryHome` (the home picture with the title and the quote, the
+  theme menu, Related Content, the band with the windows and the partners'
+  logos), the introduction (the exhibition's pictures, first five, with the
+  zoom), a theme's overview and its subthemes (the thumbnails, the quote and
+  the text, More about, the item panel with its Related views), Further
+  Reading (the language tabs, Close, the bibliography in the order the data
+  keeps), and the curators, cover-image and zoom windows. Routes, navigation
+  and settings: `sharinghistoryRoutes`, `sharinghistoryNavigation`,
+  `sharinghistorySettings`; legacy's rules: `sharinghistorySlotsOf` (a view
+  only when the curator approved its relation, a position only with its main
+  view), `sharinghistoryPlacementCaption`, `sharinghistoryRelatedLinks` (the
+  gallery narrowed to the page's theme and subtheme), `sharinghistoryReadingOrder`.
+  Themed by `--sh-*` tokens (`minisite-sharinghistory.css`). Exported under
+  `SharingHistory*` / `sharinghistory*` names, apart from the other families'.
+- `LABELS.SH`: the family's label set, `minisiteSharingHistory`.
+
+### Fixed
+
+- The README's mini-site section printed literal `\n` in one paragraph.
+
 ## 3.12.1 (2026-10-29)
 
 ### Fixed
