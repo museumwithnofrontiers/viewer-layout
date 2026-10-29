@@ -280,6 +280,13 @@ describe('Discover Baroque Art', () => {
     expect(viewPicture(slot, 1)).toBe('altar.jpg')
   })
 
+  it('never gives a view the first view’s detail name, which legacy wrote as a space', () => {
+    const first = { name: 'Library', detailName: 'Triumphal arches', dateLines: ['1728'], details: [], justification: 'Wisdom.' }
+    const second = { name: 'Detail of ceiling painting', detailName: '', dateLines: ['1723'], details: [], justification: '' }
+    expect(withFirstView(second, first, 'BAR')).toMatchObject({ detailName: '', justification: 'Wisdom.' })
+    expect(withFirstView(second, first)).toMatchObject({ detailName: 'Triumphal arches' })
+  })
+
   it('captions a detail view from its own text, the first view’s, then the detail it shows', () => {
     const fields = detailViewCaption({
       caption: { detail_name: 'Pulpit' },

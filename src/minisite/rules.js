@@ -172,11 +172,16 @@ export function detailViewCaption({ caption = {}, first = {}, record = {}, place
   }
 }
 
-/** A view's caption with each field the first view's where its own is empty (showDetail()). */
-export function withFirstView(mine, first) {
+/**
+ * A view's caption with each field the first view's where its own is empty
+ * (showDetail()). Discover Baroque Art's pages wrote a space for an empty
+ * detail name (class.exhibition.inc.php), so a view there never took the
+ * first view's (`family`).
+ */
+export function withFirstView(mine, first, family = 'ISL') {
   return {
     name: mine.name || first.name,
-    detailName: mine.detailName || first.detailName,
+    detailName: family === 'BAR' ? mine.detailName : mine.detailName || first.detailName,
     dateLines: mine.dateLines.length ? mine.dateLines : first.dateLines,
     details: mine.details.length ? mine.details : first.details,
     ...('artist' in mine || 'artist' in first ? { artist: mine.artist || first.artist || '' } : {}),

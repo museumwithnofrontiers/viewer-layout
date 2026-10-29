@@ -115,7 +115,7 @@ export function useExhibition() {
     }
     const mine = slot?.variants[index]
     if (!mine) return null
-    return withFirstView(of(mine), of(slot.variants[0]))
+    return withFirstView(of(mine), of(slot.variants[0]), family)
   }
 
   /** The glossary terms a collection's text links in the page language, as the renderers take them. */
