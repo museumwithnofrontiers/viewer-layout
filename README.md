@@ -879,12 +879,14 @@ export default {
 - **Routes**: `home`, `introduction`, `theme` (`/theme/<theme>`, a theme's
   overview), `subtheme` (`/theme/<theme>/<page>`), `further-reading`, and the
   bare windows `credits`, `cover-image` and `zoom`. Next Page walks each
-  theme's overview, then its subthemes (`sharinghistoryReadingOrder`).
+  theme's overview, then its subthemes (`sharinghistoryReadingOrder`); a theme or
+  subtheme with no title is not a page, as legacy listed only titled ones
+  (`sharinghistoryListedThemes`, `sharinghistoryListedSubthemes`).
 - **Legacy's rules**: a page shows a view only when the curator approved its
   relation, and a position only with its main view
   (`sharinghistorySlotsOf`); the item panel's "Related" lists the other views
   at that position; the caption is `showItem()`'s
-  (`sharinghistoryPlacementCaption`), the curator's justification only when
+  (`sharinghistoryCaption`), the curator's justification only when
   its status is "Y". The introduction shows the exhibition's own pictures,
   the first five. Related Content leads to the parent's timelines and its
   gallery, narrowed to the page's theme and subtheme

@@ -1,3 +1,16 @@
+## 3.13.1 (2026-10-29)
+
+### Fixed
+
+- **Sharing History's mini-sites list only titled themes and subthemes**, as
+  legacy's LoadListByExId and LoadListByThId did (an inner join on their
+  names): a theme with no title in the page language — none of them, in
+  English — or a subtheme with none in the page language is not a page.
+  Economy and Trade has such a theme. `sharinghistoryListedThemes`,
+  `sharinghistoryListedSubthemes`; the composable's `subthemesOf`.
+- The 3.13.0 notes named the caption rule `sharinghistoryPlacementCaption`;
+  it is exported as `sharinghistoryCaption`.
+
 ## 3.13.0 (2026-10-29)
 
 Sharing History's mini-sites (museumwithnofrontiers/inventory-app#2393).

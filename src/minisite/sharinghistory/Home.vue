@@ -9,7 +9,7 @@ import Related from './Related.vue'
 import Windows from './Windows.vue'
 import { vTip } from '../tip.js'
 
-const { data, imagesOf, label, picture, root, settings, text, themes, title, tree } = useSharingHistoryExhibition()
+const { data, imagesOf, label, picture, root, settings, subthemesOf, text, themes, title } = useSharingHistoryExhibition()
 
 // A logo led to its partner's page on legacy; the parent site rebuilt those
 // pages (`partnerLinks`, by legacy's address).
@@ -47,7 +47,7 @@ const open = ref(-1)
               <img :src="picture('legacy/arrow_inner_black.gif')" alt="" class="mwnf-sh-arrow" width="11" height="8">
               <router-link :to="{ name: 'theme', params: { theme: ti + 1 } }">{{ label('home.overview') }}</router-link>
             </li>
-            <li v-for="(sub, si) in tree.children(theme.id)" :key="sub.id">
+            <li v-for="(sub, si) in subthemesOf(theme.id)" :key="sub.id">
               <img :src="picture('legacy/arrow_inner_black.gif')" alt="" class="mwnf-sh-arrow" width="11" height="8">
               <router-link :to="{ name: 'subtheme', params: { theme: ti + 1, page: si + 1 } }">{{ text(sub.id).title }}</router-link>
             </li>
