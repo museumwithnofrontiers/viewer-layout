@@ -39,7 +39,8 @@ const open = ref(-1)
         </router-link>
         <div v-for="(theme, ti) in themes" :key="theme.id">
           <button type="button" class="mwnf-sh-home__theme" :aria-expanded="open === ti" @click="open = open === ti ? -1 : ti">
-            {{ text(theme.id).title }}
+            <!-- eslint-disable-next-line vue/no-v-html -- the exhibition's own Markdown, rendered and escaped by viewer-core; legacy's menu printed the titles' italics -->
+            <span v-html="data.mdInline(text(theme.id).title ?? '')" />
             <img :src="picture('legacy/arrow_black_down.gif')" alt="" width="15" height="9">
           </button>
           <ul v-if="open === ti" class="mwnf-sh-home__pages">
@@ -49,7 +50,8 @@ const open = ref(-1)
             </li>
             <li v-for="(sub, si) in subthemesOf(theme.id)" :key="sub.id">
               <img :src="picture('legacy/arrow_inner_black.gif')" alt="" class="mwnf-sh-arrow" width="11" height="8">
-              <router-link :to="{ name: 'subtheme', params: { theme: ti + 1, page: si + 1 } }">{{ text(sub.id).title }}</router-link>
+              <!-- eslint-disable-next-line vue/no-v-html -- as above -->
+              <router-link :to="{ name: 'subtheme', params: { theme: ti + 1, page: si + 1 } }" v-html="data.mdInline(text(sub.id).title ?? '')" />
             </li>
           </ul>
         </div>

@@ -5,6 +5,7 @@
 // caption and the link to its record's sheet, the others as thumbnails; under
 // both, the exhibition's pages, Related Content and the windows.
 import { computed, ref } from 'vue'
+import { mdStrip } from '@museumwnf/viewer-core'
 import { openWindow } from '../exhibition.js'
 import { SHARINGHISTORY_WINDOWS, useSharingHistoryExhibition } from './exhibition.js'
 import { vTip } from '../tip.js'
@@ -95,7 +96,7 @@ function zoom() {
           </li>
           <li v-for="(t, ti) in themes" :key="t.id">
             <img :src="picture('legacy/arrow.gif')" alt="" width="10" height="9">
-            <router-link :to="{ name: 'theme', params: { theme: ti + 1 } }">{{ text(t.id).title }}</router-link>
+            <router-link :to="{ name: 'theme', params: { theme: ti + 1 } }">{{ mdStrip(text(t.id).title ?? '') }}</router-link>
           </li>
         </ul>
       </div>

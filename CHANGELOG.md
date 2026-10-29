@@ -1,3 +1,20 @@
+## 3.13.2 (2026-10-29)
+
+### Fixed
+
+- **A Sharing History page draws every record of a shared position.**
+  Legacy's image table gives two records the same position now and then, and
+  legacy drew a thumbnail for each. The mini-site drew one and showed the
+  other as its related view. Each main view is now a slot of its own, with
+  the position's other views as its related ones (`sharinghistorySlotsOf`).
+  International Exhibitions has two such pages, Music, Literature, Dance and
+  Fashion one.
+- **A Sharing History title's Markdown no longer shows as text.** The home
+  menu renders a theme's or a subtheme's italics, as legacy's menu printed
+  them; the page's name, its lists of themes and subthemes and the
+  introduction's print the title with them stripped, as legacy's pages did.
+  Music, Literature, Dance and Fashion has such a title.
+
 ## 3.13.1 (2026-10-29)
 
 ### Fixed

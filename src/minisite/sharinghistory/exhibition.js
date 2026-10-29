@@ -64,6 +64,9 @@ export function pageWithNext(pages, theme, page) {
  * no picture of its own is a relation only (the rel_* tables): legacy's pages
  * never drew it. Legacy drew a view only when the curator had approved its
  * relation (curator_status 'Y'), and a position only when its main view was.
+ * Legacy's image table gives two records the same position now and then; it
+ * drew a thumbnail for each main view, so each is a slot of its own, with the
+ * position's other views as its related ones.
  */
 export function slotsOf(node) {
   const byPosition = new Map()
@@ -73,13 +76,13 @@ export function slotsOf(node) {
     if (!byPosition.has(n)) byPosition.set(n, [])
     byPosition.get(n).push(entry)
   }
+  const isMain = (entry) => (entry.variant_order ?? 1) === 1
   return [...byPosition.entries()]
     .sort(([a], [b]) => a - b)
-    .map(([n, entries]) => ({
-      n,
-      variants: [...entries].sort((a, b) => (a.variant_order ?? 0) - (b.variant_order ?? 0)),
-    }))
-    .filter((slot) => (slot.variants[0].variant_order ?? 1) === 1)
+    .flatMap(([n, entries]) => {
+      const related = entries.filter((entry) => !isMain(entry)).sort((a, b) => a.variant_order - b.variant_order)
+      return entries.filter(isMain).map((main) => ({ n, variants: [main, ...related] }))
+    })
 }
 
 /**
