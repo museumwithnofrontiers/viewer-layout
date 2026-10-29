@@ -1,3 +1,12 @@
+## 3.12.1 (2026-10-29)
+
+### Fixed
+
+- **Mini-sites: a detail view with no picture of its own shows the page's
+  picture at its position**, as legacy showed the "Awaiting Image"
+  placeholder there (inventory-app#2390); it showed the first view's picture.
+  `slotsOf()` in `./minisite`'s rules.
+
 ## 3.12.0 (2026-10-29)
 
 Discover Baroque Art's mini-sites (museumwithnofrontiers/inventory-app#2390).

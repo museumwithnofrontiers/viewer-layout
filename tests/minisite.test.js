@@ -280,6 +280,15 @@ describe('Discover Baroque Art', () => {
     expect(viewPicture(slot, 1)).toBe('altar.jpg')
   })
 
+  it('shows the page’s picture at its position for a detail view that has none of its own, as legacy showed its placeholder', () => {
+    const node = {
+      images: [{ url: 'awaiting.jpg', display_order: 1 }],
+      items: [{ id: 'abbey', display_order: 1, variant_order: 2, details: [{ image_url: null }, { image_url: 'fresco.jpg' }] }],
+    }
+    const [slot] = slotsOf(node)
+    expect(slot.variants.map((v) => v.image)).toEqual(['awaiting.jpg', 'fresco.jpg'])
+  })
+
   it('never gives a view the first view’s detail name, which legacy wrote as a space', () => {
     const first = { name: 'Library', detailName: 'Triumphal arches', dateLines: ['1728'], details: [], justification: 'Wisdom.' }
     const second = { name: 'Detail of ceiling painting', detailName: '', dateLines: ['1723'], details: [], justification: '' }
