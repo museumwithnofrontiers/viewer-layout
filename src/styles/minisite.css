@@ -100,6 +100,8 @@ body:has(.mwnf-minisite, .mwnf-minisite-window) {
 /* ---------- The menu over the footer, and the footer ---------- */
 
 .mwnf-minisite-menu {
+  /* legacy's height excludes its padding (viewer-core's base sets border-box) */
+  box-sizing: content-box;
   padding: 5px 0 6px;
   height: 12px;
   background: var(--minisite-menu);
@@ -126,6 +128,8 @@ body:has(.mwnf-minisite, .mwnf-minisite-window) {
   background: var(--minisite-strip);
 }
 .mwnf-minisite-footer {
+  box-sizing: content-box;
+  position: relative;
   height: 18px;
   padding-top: 5px;
   background: var(--minisite-footer);
@@ -196,7 +200,8 @@ body:has(.mwnf-minisite, .mwnf-minisite-window) {
 }
 .mwnf-minisite-home__menu {
   position: absolute;
-  left: var(--minisite-home-menu-left);
+  left: var(--minisite-home-menu-left, auto);
+  right: var(--minisite-home-menu-right, auto);
   top: var(--minisite-home-menu-top);
   width: var(--minisite-home-menu-width, auto);
   font: var(--minisite-home-menu-font);
@@ -250,6 +255,82 @@ body:has(.mwnf-minisite, .mwnf-minisite-window) {
   height: 74px;
 }
 
+/* Discover Baroque Art's band (exhibitions/BAR/generic_homelogo.php): the
+   curators' column, ruled off from the designer's, every value its stylesheet
+   set (#homePartners, .homePartners_tab*). */
+.mwnf-minisite-partners--baroque,
+.mwnf-minisite-partners--baroque * {
+  box-sizing: content-box;
+}
+.mwnf-minisite-partners--baroque {
+  display: flow-root;
+  width: var(--minisite-partners-width, auto);
+  margin: 0 auto;
+  padding: var(--minisite-partners-padding, 0);
+  color: var(--minisite-partners-color, inherit);
+  text-align: left;
+}
+.mwnf-minisite-partners--baroque .mwnf-minisite-partners__line {
+  margin: var(--minisite-partners-line-margin-top) 0 var(--minisite-partners-line-margin-bottom);
+  color: var(--minisite-partners-line-color, inherit);
+  font: var(--minisite-partners-line-font);
+  line-height: var(--minisite-partners-line-height, normal);
+}
+.mwnf-minisite-partners__curators {
+  float: left;
+  width: var(--minisite-partners-curators-width, auto);
+  margin-right: var(--minisite-partners-curators-margin-right, 0);
+  padding: var(--minisite-partners-curators-padding, 0);
+  border-right: var(--minisite-partners-curators-rule, none);
+}
+.mwnf-minisite-partners__tab {
+  float: left;
+  width: var(--minisite-partners-tab-width, auto);
+  color: var(--minisite-partners-tab-color, inherit);
+  font: var(--minisite-partners-tab-font, inherit);
+  letter-spacing: var(--minisite-partners-tab-spacing, normal);
+}
+.mwnf-minisite-partners__tab img {
+  padding-top: var(--minisite-partners-tab-logo-padding-top, 0);
+  border: 0;
+}
+.mwnf-minisite-partners__gap {
+  display: inline-block;
+}
+.mwnf-minisite-partners__cooperation {
+  float: left;
+  width: var(--minisite-partners-cooperation-width, auto);
+  padding-right: var(--minisite-partners-cooperation-padding-right, 0);
+  padding-left: var(--minisite-partners-cooperation-padding-left, 0);
+  color: var(--minisite-partners-cooperation-color, inherit);
+  font: var(--minisite-partners-cooperation-font, inherit);
+  letter-spacing: var(--minisite-partners-cooperation-spacing, normal);
+}
+.mwnf-minisite-partners__cooperation a {
+  text-decoration: var(--minisite-partners-cooperation-decoration, none);
+}
+.mwnf-minisite-partners__design {
+  float: left;
+  width: var(--minisite-partners-design-width, auto);
+  padding: var(--minisite-partners-design-padding, 0);
+  color: var(--minisite-partners-design-color, inherit);
+  font-size: var(--minisite-partners-design-font-size, inherit);
+  letter-spacing: var(--minisite-partners-design-spacing, normal);
+  line-height: var(--minisite-partners-design-line-height, normal);
+}
+.mwnf-minisite-partners__design-tab {
+  float: left;
+  width: 100%;
+  padding: var(--minisite-partners-design-tab-padding, 0);
+  color: var(--minisite-partners-design-tab-color, inherit);
+  font-size: var(--minisite-partners-design-tab-font-size, inherit);
+  letter-spacing: var(--minisite-partners-design-tab-spacing, normal);
+  line-height: var(--minisite-partners-design-tab-line-height, normal);
+}
+.mwnf-minisite-partners__design-tab img {
+  border: 0;
+}
+
 /* ---------- The introduction ---------- */
 
 .mwnf-minisite-intro {
@@ -266,6 +347,7 @@ body:has(.mwnf-minisite, .mwnf-minisite-window) {
   width: var(--minisite-intro-title-width, auto);
   font: var(--minisite-intro-title-font);
   color: var(--minisite-intro-title-color);
+  text-align: var(--minisite-intro-title-align);
 }
 .mwnf-minisite-intro__nav {
   position: absolute;
@@ -291,7 +373,9 @@ body:has(.mwnf-minisite, .mwnf-minisite-window) {
 }
 .mwnf-minisite-intro__table {
   display: grid;
-  grid-template-columns: 1fr auto;
+  /* legacy's #IntroPageTableTD2 is 180px wide (an inline style): a long caption
+     wraps in it rather than widening it */
+  grid-template-columns: minmax(0, 1fr) 180px;
   margin: var(--minisite-intro-table-margin);
 }
 .mwnf-minisite-intro__header {
@@ -347,6 +431,7 @@ body:has(.mwnf-minisite, .mwnf-minisite-window) {
   width: var(--minisite-exhibition-title-width, auto);
   font: var(--minisite-exhibition-title-font);
   color: var(--minisite-exhibition-title-color);
+  text-align: var(--minisite-exhibition-title-align);
 }
 .mwnf-minisite-page__nav {
   position: absolute;
@@ -435,7 +520,8 @@ body:has(.mwnf-minisite, .mwnf-minisite-window) {
 .mwnf-minisite .mwnf-minisite-page__caption a {
   color: var(--minisite-exhibition-caption-link);
 }
-.mwnf-minisite-page__justification {
+/* Legacy's bold was an inline style: it wins over the caption's font. */
+.mwnf-minisite-page__caption .mwnf-minisite-page__justification {
   font-weight: bold;
 }
 .mwnf-minisite .mwnf-minisite-page__caption .mwnf-minisite-page__more {
@@ -494,4 +580,18 @@ body:has(.mwnf-minisite, .mwnf-minisite-window) {
   max-height: 90%;
   border: 2px solid #ffffff;
   object-fit: contain;
+}
+
+/* Discover Baroque Art's home picture (#banner), placed against the footer
+   where each exhibition's stylesheet set it. */
+.mwnf-minisite-home__banner {
+  position: absolute;
+  top: var(--minisite-banner-top, auto);
+  bottom: var(--minisite-banner-bottom, auto);
+  left: var(--minisite-banner-left, auto);
+  right: var(--minisite-banner-right, auto);
+  width: var(--minisite-banner-width, auto);
+  height: var(--minisite-banner-height, auto);
+  background-repeat: no-repeat;
+  background-position: var(--minisite-banner-position, top);
 }

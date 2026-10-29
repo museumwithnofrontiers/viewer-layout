@@ -1,3 +1,51 @@
+## 3.12.0 (2026-10-29)
+
+Discover Baroque Art's mini-sites (museumwithnofrontiers/inventory-app#2390).
+Reads viewer-i18n 6.3's `minisiteBaroque` bundle. A Discover Islamic Art
+mini-site changes only by the three fixes below, each now drawn as legacy did.
+
+### Fixed
+
+- **Mini-sites: the menu over the footer and the footer are legacy's height.**
+  viewer-core's base stylesheet counts padding inside a box's height
+  (`border-box`), which legacy's stylesheets did not: both bars were drawn
+  shorter than legacy's. They are drawn `content-box` again.
+- **Mini-sites: a caption's justification is bold**, as legacy's
+  `showDetail()` wrote it; the caption's font shorthand had reset it.
+- **Mini-sites: the introduction's pictures keep legacy's 180px column**
+  (`IntroPageTableTD2`); a long caption widened it and narrowed the text.
+
+### Added
+
+- **Families.** `minisiteSettings({ family })` and
+  `minisiteNavigation({ family })`: "ISL" (the default) or "BAR", Discover
+  Baroque Art's exhibitions (exhibitions/BAR/generic_*.php). Each family reads
+  a label set of its own (`LABELS`, `labelSet()`; `texts` to name another):
+  every page reads its labels through it.
+- **Baroque Art's captions**: the artist and material lines under the place,
+  the page's own text first, else an object's artist or a monument's
+  architects and the record's materials; a placement's detail views
+  (`details`) are its views, each with its own picture, captioned from its
+  own text, the first view's, then the monument detail it shows
+  (`detailViewCaption()`, class.exhibition.inc.php's rules).
+- **Baroque Art's home band**: "Exhibition curated by" and the exhibition's
+  credits, the cooperation line and its link to the partner institutions
+  (`partnerListHref`, the parent site's list by default), each curator named
+  over its logo with the city and country legacy printed (`place`,
+  `country`), and the designer (`design`), styled by the `--minisite-partners-*`
+  tokens its stylesheet set.
+- **Baroque Art's frame**: its menu (`baroqueartMenu()`: no Artistic
+  Introduction, Exhibitions leads to the exhibition's home, no bars between
+  links: `menuSeparator`), the footer's language-policy link, and the logo's
+  tooltip in the family's labels (`logoTip`).
+- **Baroque Art's pages**: the home picture (`banner`) placed against the
+  footer by the `--minisite-banner-*` tokens, the home menu placed from the
+  right (`--minisite-home-menu-right`), the titles' alignment
+  (`--minisite-intro-title-align`, `--minisite-exhibition-title-align`), the
+  introduction's pictures opening in the zoom window (zoomImage.php), and a
+  view that never takes the first view's detail name, which legacy wrote as a
+  space (`withFirstView(mine, first, family)`).
+
 ## 3.11.2 (2026-10-27)
 
 ### Fixed

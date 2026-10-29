@@ -1,6 +1,6 @@
 // The mini-site family layer: legacy's virtual exhibitions, each a website of
 // its own (inventory-app#2359), every one built on the same pages
-// (exhibitions/ISL/generic_*.php), so what they share lives here once and a
+// (exhibitions/ISL/ or exhibitions/BAR/generic_*.php), so what they share lives here once and a
 // change to how a page is drawn reaches all of them. A mini-site keeps its own
 // exhibition settings (`minisite`), its theme (tokens.css, every value its
 // legacy stylesheet set), its legacy pictures and its texts. Like `/dxa` and
@@ -19,9 +19,9 @@ export { default as MinisitePage } from './Page.vue'
 export { default as MinisiteCredits } from './Credits.vue'
 export { default as MinisiteMap } from './Map.vue'
 export { default as MinisiteZoom } from './Zoom.vue'
-export { EXHIBITION_ENTITIES, exhibitionData, useExhibition } from './exhibition.js'
-export { islamicartMenu, minisiteNavigation, minisiteRoutes, minisiteSettings } from './routes.js'
+export { EXHIBITION_ENTITIES, exhibitionData, familyOf, LABELS, labelSet, useExhibition } from './exhibition.js'
+export { baroqueartMenu, islamicartMenu, minisiteNavigation, minisiteRoutes, minisiteSettings } from './routes.js'
 export {
-  cleanText, curatorLabel, curatorLink, introCaption, ISLAMICART_NO_COUNTRY, pageWithNeighbours, placementCaption, PLACEHOLDER_TITLE,
+  cleanText, curatorLabel, curatorLink, detailViewCaption, introCaption, ISLAMICART_NO_COUNTRY, pageWithNeighbours, placementCaption, PLACEHOLDER_TITLE,
   quoteHasItalics, readingOrder, sheetItemId, slotsOf, viewPicture, withFirstView,
 } from './rules.js'

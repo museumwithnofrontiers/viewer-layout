@@ -8,7 +8,7 @@ import { computed, ref, watch } from 'vue'
 import { useGlossaryPopup } from '@museumwnf/viewer-core'
 import GlossaryPopover from '../content/GlossaryPopover.vue'
 import { openWindow, useExhibition, WINDOWS } from './exhibition.js'
-import { quoteHasItalics, sheetItemId, viewPicture, withFirstView } from './rules.js'
+import { quoteHasItalics, sheetItemId, viewPicture } from './rules.js'
 import { pageDocument } from './wordDocument.js'
 import DownloadBlock from './DownloadBlock.vue'
 import { vTip } from './tip.js'
@@ -18,7 +18,7 @@ const props = defineProps({
   page: { type: Number, required: true },
 })
 
-const { t, lang, data, title, text, settings, picture, href, pageAt, slots, placementCaption, glossaryFor } = useExhibition()
+const { label, family, lang, data, title, text, settings, picture, href, pageAt, slots, placementCaption, viewCaption, glossaryFor } = useExhibition()
 
 const current = computed(() => pageAt(props.theme, props.page))
 const own = computed(() => (current.value ? text(current.value.node.id) : {}))
@@ -37,7 +37,7 @@ const image = computed(() => viewPicture(slot.value, selected.value.variant))
 const caption = computed(() => {
   if (!slot.value || !variant.value) return null
   return {
-    ...withFirstView(placementCaption(variant.value.entry), placementCaption(slot.value.variants[0].entry)),
+    ...viewCaption(slot.value, selected.value.variant),
     sheetId: sheetItemId(slot.value, selected.value.variant, (id) => data.itemById.value.get(id)),
   }
 })
@@ -61,7 +61,7 @@ function word() {
     pageTitle: own.value.title ?? '',
     quote: quote.value,
     text: own.value.description ?? '',
-    slots: pageSlots.value.map((s) => s.variants.map((v) => placementCaption(v.entry))),
+    slots: pageSlots.value.map((s) => s.variants.map((v, i) => (v.view ? viewCaption(s, i) : placementCaption(v.entry)))),
   })
 }
 
@@ -69,7 +69,7 @@ function word() {
 watch(
   () => [own.value.title, title.value, lang.value],
   () => {
-    document.title = [t('minisite.identity.windowTitle'), title.value, own.value.title, props.page].filter(Boolean).join(' | ')
+    document.title = [label('identity.windowTitle'), title.value, own.value.title, props.page].filter(Boolean).join(' | ')
   },
   { immediate: true },
 )
@@ -82,12 +82,12 @@ const background = computed(() => picture(lang.value === 'ar' ? 'legacy/exhibiti
     <div class="mwnf-minisite-page__head">
       <div class="mwnf-minisite-page__title">{{ title }}</div>
       <div class="mwnf-minisite-page__nav mwnf-minisite-page__nav--start">
-        &lt; <router-link :to="{ name: 'home' }">{{ t('minisite.nav.entrance') }}</router-link>
+        &lt; <router-link :to="{ name: 'home' }">{{ label('nav.entrance') }}</router-link>
       </div>
       <div class="mwnf-minisite-page__nav mwnf-minisite-page__nav--end">
-        &lt; <router-link :to="current.previous">{{ t('minisite.nav.previous') }}</router-link>
+        &lt; <router-link :to="current.previous">{{ label('nav.previous') }}</router-link>
         <template v-if="current.next">
-          | <router-link :to="current.next">{{ t('minisite.nav.next') }}</router-link> &gt;
+          | <router-link :to="current.next">{{ label('nav.next') }}</router-link> &gt;
         </template>
       </div>
     </div>
@@ -100,7 +100,7 @@ const background = computed(() => picture(lang.value === 'ar' ? 'legacy/exhibiti
           <a
             v-for="(s, i) in pageSlots"
             :key="s.n"
-            v-tip="{ text: data.mdStrip(placementCaption(s.variants[0].entry).name), width: 160 }"
+            v-tip="{ text: data.mdStrip(viewCaption(s, 0).name), width: 160 }"
             href="#"
             @click.prevent="show(i)"
           ><img v-if="s.variants[0].image" :src="s.variants[0].image" alt="" height="36"></a>
@@ -117,7 +117,7 @@ const background = computed(() => picture(lang.value === 'ar' ? 'legacy/exhibiti
 
       <div class="mwnf-minisite-page__item">
         <div class="mwnf-minisite-page__image">
-          <a v-if="image" v-tip="{ text: t('minisite.item.showZoom') }" href="#" @click.prevent="zoom">
+          <a v-if="image" v-tip="{ text: label('item.showZoom') }" href="#" @click.prevent="zoom">
             <img :src="image" alt="">
           </a>
         </div>
@@ -131,11 +131,15 @@ const background = computed(() => picture(lang.value === 'ar' ? 'legacy/exhibiti
           <div>
             <template v-for="(line, i) in caption.details" :key="i"><span v-html="data.mdInline(line)" /><br></template>
           </div>
+          <template v-if="family === 'BAR'">
+            <div v-html="data.mdInline(caption.artist)" />
+            <div v-html="data.mdInline(caption.material)" />
+          </template>
           <div v-if="slot.variants.length > 1">
             <a
               v-for="(v, i) in slot.variants"
               :key="i"
-              v-tip="{ text: t('minisite.item.showDetail') }"
+              v-tip="{ text: label('item.showDetail') }"
               href="#"
               @click.prevent="showView(i)"
             ><img :src="picture(i === selected.variant ? 'legacy/ico_item_selected.gif' : 'legacy/ico_item.gif')" alt=""></a>
@@ -143,7 +147,7 @@ const background = computed(() => picture(lang.value === 'ar' ? 'legacy/exhibiti
           <div class="mwnf-minisite-page__justification" v-html="data.mdInline(caption.justification)" />
           <!-- eslint-enable vue/no-v-html -->
           <div v-if="caption.sheetId">
-            <a class="mwnf-minisite-page__more" :href="settings.itemHref?.(caption.sheetId)" target="_blank">&gt; {{ t('minisite.item.moreInfo') }}</a>
+            <a class="mwnf-minisite-page__more" :href="settings.itemHref?.(caption.sheetId)" target="_blank">&gt; {{ label('item.moreInfo') }}</a>
           </div>
         </div>
       </div>

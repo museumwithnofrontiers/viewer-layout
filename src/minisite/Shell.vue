@@ -17,8 +17,11 @@ const props = defineProps({
   languages: { type: Array, default: () => [] },
   language: { type: String, required: true },
   logoHref: { type: String, required: true },
+  logoTip: { type: String, default: 'minisite.header.logoTip' },
   headerLinks: { type: Array, default: () => [] },
   menu: { type: Array, default: () => [] },
+  // Discover Islamic Art's menu put a bar between its links; Discover Baroque Art's did not.
+  menuSeparator: { type: Boolean, default: true },
   footerLinks: { type: Array, default: () => [] },
   copyright: { type: String, required: true },
 })
@@ -59,7 +62,7 @@ function openWindow(link) {
     <div class="mwnf-minisite__column">
       <header class="mwnf-minisite-header">
         <div class="mwnf-minisite-header__logo">
-          <a v-tip="{ text: t('minisite.header.logoTip') }" :href="logoHref">
+          <a v-tip="{ text: t(logoTip) }" :href="logoHref">
             <img :src="asset(`legacy/logo_${language}.gif`)" alt="" height="60">
           </a>
         </div>
@@ -90,7 +93,7 @@ function openWindow(link) {
       <nav class="mwnf-minisite-menu">
         <ul class="mwnf-minisite-menu__list">
           <template v-for="(link, i) in menu" :key="link.label">
-            <template v-if="i > 0">|</template>
+            <template v-if="i > 0 && menuSeparator">|</template>
             <li>
               <a v-if="link.window" :href="link.href" @click.prevent="openWindow(link)">{{ t(link.label) }}</a>
               <a v-else :href="link.href">{{ t(link.label) }}</a>
