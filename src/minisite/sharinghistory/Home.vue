@@ -9,7 +9,11 @@ import Related from './Related.vue'
 import Windows from './Windows.vue'
 import { vTip } from '../tip.js'
 
-const { data, imagesOf, label, picture, root, text, themes, title, tree } = useSharingHistoryExhibition()
+const { data, imagesOf, label, picture, root, settings, text, themes, title, tree } = useSharingHistoryExhibition()
+
+// A logo led to its partner's page on legacy; the parent site rebuilt those
+// pages (`partnerLinks`, by legacy's address).
+const logoHref = (logo) => settings.partnerLinks?.[logo.link] ?? logo.link
 
 const quote = computed(() => (root.value ? text(root.value.id).extra?.subtitle ?? '' : ''))
 const logos = computed(() => imagesOf('logo'))
@@ -58,7 +62,7 @@ const open = ref(0)
       <div class="mwnf-sh-band__logos">
         <template v-for="(logo, i) in logos" :key="logo.url">
           <span v-if="i > 0" class="mwnf-sh-band__gap" />
-          <a v-if="logo.link" v-tip="{ text: logo.alt_text ?? '' }" :href="logo.link"><img :src="logo.url" alt=""></a>
+          <a v-if="logo.link" v-tip="{ text: logo.alt_text ?? '' }" :href="logoHref(logo)"><img :src="logo.url" alt=""></a>
           <img v-else :src="logo.url" alt="">
         </template>
       </div>
