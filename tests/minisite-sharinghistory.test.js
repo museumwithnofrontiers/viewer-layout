@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import {
-  LABELS, sharinghistoryCaption, sharinghistoryNavigation, sharinghistoryPageRoute, sharinghistoryPageWithNext, sharinghistoryReadingOrder,
+  LABELS, sharinghistoryCaption, sharinghistoryListedSubthemes, sharinghistoryListedThemes,
+  sharinghistoryNavigation, sharinghistoryPageRoute, sharinghistoryPageWithNext, sharinghistoryReadingOrder,
   sharinghistoryRelatedLinks,
   sharinghistoryRoutes, sharinghistorySettings, sharinghistorySlotsOf,
 } from '../src/minisite/index.js'
@@ -25,6 +26,18 @@ describe("Sharing History's mini-sites", () => {
     expect(sharinghistoryPageWithNext(pages, 1, 2).next).toEqual({ name: 'theme', params: { theme: 2 } })
     expect(sharinghistoryPageWithNext(pages, 2, 0).next).toBeNull()
     expect(sharinghistoryPageRoute(pages[1])).toEqual({ name: 'subtheme', params: { theme: 1, page: 1 } })
+  })
+
+  it('list only the themes and subthemes with a title, as legacy listed them', () => {
+    const titles = { en: { t1: 'Commodities', s1: 'Raw materials' }, fr: { t2: 'Routes' } }
+    const titleIn = (id, lang) => titles[lang]?.[id]
+    const themes = [{ id: 't1' }, { id: 'untitled' }, { id: 't2' }]
+    expect(sharinghistoryListedThemes(themes, titleIn, 'en').map((t) => t.id)).toEqual(['t1'])
+    expect(sharinghistoryListedThemes(themes, titleIn, 'fr').map((t) => t.id)).toEqual(['t2'])
+    // No theme titled in the page language: legacy listed the English ones.
+    expect(sharinghistoryListedThemes(themes, titleIn, 'ar').map((t) => t.id)).toEqual(['t1'])
+    expect(sharinghistoryListedSubthemes([{ id: 's1' }, { id: 's2' }], titleIn, 'en').map((s) => s.id)).toEqual(['s1'])
+    expect(sharinghistoryListedSubthemes([{ id: 's1' }], titleIn, 'ar')).toEqual([])
   })
 
   it("draw a page's pictures by position, each with its views in order, and never a relation alone", () => {

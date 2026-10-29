@@ -27,6 +27,21 @@ export function readingOrder(themes, children) {
   ])
 }
 
+/**
+ * The themes legacy listed (LoadListByExId): those with a title in the page
+ * language — none of them, those with one in English. `titleIn(id, lang)` is
+ * a collection's title in a language.
+ */
+export function listedThemes(themes, titleIn, lang) {
+  const own = themes.filter((theme) => titleIn(theme.id, lang)?.trim())
+  return own.length > 0 || lang === 'en' ? own : themes.filter((theme) => titleIn(theme.id, 'en')?.trim())
+}
+
+/** The subthemes legacy listed (LoadListByThId): those with a title in the page language. */
+export function listedSubthemes(subthemes, titleIn, lang) {
+  return subthemes.filter((subtheme) => titleIn(subtheme.id, lang)?.trim())
+}
+
 /** The route of a page of the exhibition. */
 export function pageRoute(page) {
   return page.page === 0
@@ -138,11 +153,14 @@ export function useSharingHistoryExhibition() {
     immediate: true,
   })
 
-  const root = tree.root
-  const themes = computed(() => (root.value ? tree.children(root.value.id) : []))
-  const pages = computed(() => readingOrder(themes.value, tree.children))
-
   const text = (id) => pkg.translations('collections', lang.value)[id] ?? {}
+  const titleIn = (id, code) => pkg.translations('collections', code)[id]?.title
+
+  // The pages legacy listed: an untitled theme or subtheme was not one.
+  const root = tree.root
+  const themes = computed(() => (root.value ? listedThemes(tree.children(root.value.id), titleIn, lang.value) : []))
+  const subthemesOf = (id) => listedSubthemes(tree.children(id), titleIn, lang.value)
+  const pages = computed(() => readingOrder(themes.value, subthemesOf))
   /** The languages this website offers, and a language's name, as the data package's site lists them. */
   const offered = (pkg.manifest.site?.languages ?? []).map((l) => l.code)
   const languageName = (code) => pkg.manifest.site?.languages?.find((l) => l.code === code)?.label ?? code
@@ -178,6 +196,7 @@ export function useSharingHistoryExhibition() {
     tree,
     root,
     themes,
+    subthemesOf,
     pages,
     text,
     offered,

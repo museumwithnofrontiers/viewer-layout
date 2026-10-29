@@ -18,14 +18,14 @@ const props = defineProps({
   page: { type: Number, default: 0 },
 })
 
-const { data, label, pageAt, picture, slots, text, themes, title, tree } = useSharingHistoryExhibition()
+const { data, label, pageAt, picture, slots, subthemesOf, text, themes, title } = useSharingHistoryExhibition()
 
 const current = computed(() => pageAt(props.theme, props.page))
 const themeNode = computed(() => current.value?.themeNode ?? null)
 const node = computed(() => current.value?.node ?? null)
 const own = computed(() => (node.value ? text(node.value.id) : {}))
 const pageSlots = computed(() => slots(node.value))
-const subthemes = computed(() => (themeNode.value ? tree.children(themeNode.value.id) : []))
+const subthemes = computed(() => (themeNode.value ? subthemesOf(themeNode.value.id) : []))
 
 // The panel shows the first picture's first view until a thumbnail or a view is chosen.
 const shown = ref(0)

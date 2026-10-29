@@ -13,6 +13,7 @@ export { default as SharingHistoryZoom } from './Zoom.vue'
 // Named for the family: the entry also exports Discover Islamic Art's
 // readingOrder, slotsOf and placementCaption.
 export {
+  listedSubthemes as sharinghistoryListedSubthemes, listedThemes as sharinghistoryListedThemes,
   pageRoute as sharinghistoryPageRoute, pageWithNext as sharinghistoryPageWithNext,
   placementCaption as sharinghistoryCaption, readingOrder as sharinghistoryReadingOrder,
   relatedLinks as sharinghistoryRelatedLinks, SHARINGHISTORY_LABELS, SHARINGHISTORY_WINDOWS,
