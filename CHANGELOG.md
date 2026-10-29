@@ -1,8 +1,19 @@
-## 3.12.0 (2026-10-28)
+## 3.12.0 (2026-10-29)
 
 Discover Baroque Art's mini-sites (museumwithnofrontiers/inventory-app#2390).
-Additive: a Discover Islamic Art mini-site is drawn as before. Reads
-viewer-i18n 6.3's `minisiteBaroque` bundle.
+Reads viewer-i18n 6.3's `minisiteBaroque` bundle. A Discover Islamic Art
+mini-site changes only by the three fixes below, each now drawn as legacy did.
+
+### Fixed
+
+- **Mini-sites: the menu over the footer and the footer are legacy's height.**
+  viewer-core's base stylesheet counts padding inside a box's height
+  (`border-box`), which legacy's stylesheets did not: both bars were drawn
+  shorter than legacy's. They are drawn `content-box` again.
+- **Mini-sites: a caption's justification is bold**, as legacy's
+  `showDetail()` wrote it; the caption's font shorthand had reset it.
+- **Mini-sites: the introduction's pictures keep legacy's 180px column**
+  (`IntroPageTableTD2`); a long caption widened it and narrowed the text.
 
 ### Added
 
@@ -27,6 +38,14 @@ viewer-i18n 6.3's `minisiteBaroque` bundle.
   Introduction, Exhibitions leads to the exhibition's home, no bars between
   links: `menuSeparator`), the footer's language-policy link, and the logo's
   tooltip in the family's labels (`logoTip`).
+- **Baroque Art's pages**: the home picture (`banner`) placed against the
+  footer by the `--minisite-banner-*` tokens, the home menu placed from the
+  right (`--minisite-home-menu-right`), the titles' alignment
+  (`--minisite-intro-title-align`, `--minisite-exhibition-title-align`), the
+  introduction's pictures opening in the zoom window (zoomImage.php), and a
+  view that never takes the first view's detail name, which legacy wrote as a
+  space (`withFirstView(mine, first, family)`).
+
 ## 3.11.2 (2026-10-27)
 
 ### Fixed
