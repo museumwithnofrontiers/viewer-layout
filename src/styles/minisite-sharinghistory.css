@@ -1,0 +1,399 @@
+/*
+ * Sharing History's mini-sites: legacy's virtual exhibition pages
+ * (exhibitions/AWE/) inside the Sharing History frame, as _styles.css.php
+ * drew them. Every colour is one of the exhibition's styles
+ * (sh_exhibitions_styles), which the site's theme/tokens.css sets:
+ *   --sh-head-bg, --sh-head-color            head_bg, head_color
+ *   --sh-body-bg                             body_bg
+ *   --sh-footer-bg, --sh-footer-color        footer_bg, footer_color
+ *   --sh-footer-icon-bg, --sh-footer-icon-color   footer_icon_bg, footer_icon_color
+ *   --sh-menu1-bg, --sh-menu1-color          menu1_bg, menu1_color
+ *   --sh-menu2-bg, --sh-menu2-color          menu2_bg, menu2_color
+ *   --sh-tooltip-bg, --sh-tooltip-border, --sh-tooltip-color
+ *   --sh-exh-right-bg, --sh-exh-right-color  exh_right_bg, exh_right_color
+ *   --sh-home-image-color, --sh-intro-image-color, --sh-exh-image-color
+ * The three pictures behind the title (home_image, intro_image, exh_image)
+ * are the site's chrome files, named by the pages.
+ */
+
+.mwnf-sh {
+  display: flex;
+  justify-content: center;
+  min-height: 100vh;
+  background-color: var(--sh-body-bg);
+  color: #fff;
+  font: 11px/15px verdana, arial, helvetica;
+  text-align: left;
+}
+.mwnf-sh *, .mwnf-sh *::before, .mwnf-sh *::after { box-sizing: content-box; }
+.mwnf-sh a, .mwnf-sh a:visited { color: #fff; text-decoration: none; }
+.mwnf-sh a:hover { text-decoration: underline; }
+.mwnf-sh img { border: 0; }
+.mwnf-sh h1, .mwnf-sh h2, .mwnf-sh h3, .mwnf-sh p, .mwnf-sh ul { margin: 0; padding: 0; }
+.mwnf-sh__strip { flex: 0 0 5px; }
+.mwnf-sh__column { flex: 0 1 990px; max-width: 990px; min-width: 0; }
+
+/* The header (_headerEx.php). */
+.mwnf-sh-header {
+  display: flex;
+  height: 67px;
+  background-color: var(--sh-head-bg);
+  font-family: Verdana, Geneva, sans-serif;
+}
+.mwnf-sh-header__logo { width: 100px; padding: 11px 0 0 17px; }
+.mwnf-sh-header__space { width: 249px; }
+.mwnf-sh-header__name {
+  width: 252px;
+  height: 55px;
+  padding-top: 4px;
+  padding-left: 1px;
+  text-align: center;
+  text-decoration: none !important;
+}
+.mwnf-sh-header__name h1 {
+  margin-top: 20px;
+  font: italic 28px/0 Georgia, 'Times New Roman', Times, serif;
+  text-shadow: rgb(25, 25, 25) 1px 1px 1px;
+  color: var(--sh-head-color);
+}
+.mwnf-sh-header__name h2 {
+  margin-top: 14px;
+  font: normal 14px Georgia, 'Times New Roman', Times, serif;
+  text-shadow: rgb(25, 25, 25) 1px 1px 1px;
+  color: var(--sh-head-color);
+}
+.mwnf-sh-header__links {
+  display: flex;
+  margin-left: auto;
+  padding: 12px 10px 0 0;
+  color: var(--sh-head-color);
+  font: 9px Verdana, Arial, Helvetica, sans-serif;
+}
+.mwnf-sh-header__links a, .mwnf-sh-header__links a:visited { color: var(--sh-head-color); font-size: 9px; }
+.mwnf-sh-header__sizes { width: 50px; padding-left: 5px; font-size: 11px; }
+.mwnf-sh-header__sizes button {
+  padding: 0 1px;
+  border: 0;
+  background: none;
+  color: var(--sh-head-color);
+  font-family: Verdana, Arial, Helvetica, sans-serif;
+  cursor: pointer;
+}
+.mwnf-sh-header__list {
+  margin: 0;
+  padding: 0 5px;
+  list-style: none;
+  text-align: left;
+}
+.mwnf-sh-header__list--ruled { border-right: 1px solid var(--sh-head-color); }
+.mwnf-sh-header__list li { position: relative; }
+
+/* A dropdown (the header's About, the menu's About and Historical Profiles). */
+.mwnf-sh-drop {
+  position: absolute;
+  z-index: 1;
+  left: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  opacity: 0;
+  visibility: hidden;
+}
+li:hover > .mwnf-sh-drop, li:focus-within > .mwnf-sh-drop { opacity: 1; visibility: visible; }
+.mwnf-sh-drop li {
+  display: block;
+  width: 190px;
+  border: 1px solid var(--sh-menu2-color);
+  border-bottom: 0;
+  background-color: var(--sh-tooltip-bg);
+}
+.mwnf-sh-drop li a, .mwnf-sh-drop li a:visited {
+  display: block;
+  padding: 1px 0;
+  text-indent: 3px;
+  color: var(--sh-menu2-color);
+  background-color: var(--sh-tooltip-bg);
+  font: normal 13px roboto_condensedregular, Tahoma, Geneva, sans-serif;
+  text-align: left;
+}
+.mwnf-sh-drop li:hover, .mwnf-sh-drop li:hover a { background-color: var(--sh-menu2-color); color: var(--sh-tooltip-bg); text-decoration: none; }
+.mwnf-sh-header .mwnf-sh-drop { top: 13px; }
+
+/* The band under the pages (_curator_and_image.php): the windows and the partners' logos. */
+.mwnf-sh-band {
+  display: flex;
+  height: 85px;
+  padding: 10px 0 0;
+  background-color: var(--sh-footer-icon-bg);
+}
+.mwnf-sh-band__links { width: 120px; padding: 0 0 5px 17px; }
+.mwnf-sh-band__links a, .mwnf-sh-band__links a:visited {
+  color: var(--sh-footer-icon-color);
+  font: normal 9px/11px Verdana, Arial, Helvetica, sans-serif;
+}
+.mwnf-sh-band__logos { display: flex; flex: 0 1 750px; justify-content: center; align-items: flex-start; }
+.mwnf-sh-band__logos img { height: 74px; }
+.mwnf-sh-band__gap { width: 30px; }
+
+/* The menu over the footer (_menuFooterEx.php) and the footer. */
+.mwnf-sh-menu {
+  height: 12px;
+  padding: 1px 0 6px;
+  background-color: var(--sh-menu1-bg);
+  text-align: center;
+  font-family: Tahoma, Geneva, sans-serif;
+}
+.mwnf-sh-menu > ul { margin: 0; padding: 0; list-style: none; }
+.mwnf-sh-menu > ul > li { display: inline; position: relative; padding: 0 10px 0 18px; }
+.mwnf-sh-menu > ul > li > a, .mwnf-sh-menu > ul > li > a:visited { color: var(--sh-menu1-color); font-size: 10px; text-transform: uppercase; }
+.mwnf-sh-menu > ul > li > a:hover { color: var(--sh-menu2-color); text-decoration: none; }
+.mwnf-sh-menu .mwnf-sh-drop { bottom: 11px; left: 13px; }
+.mwnf-sh-footer {
+  padding: 5px 0;
+  background-color: var(--sh-footer-bg);
+  color: var(--sh-footer-color);
+  font: 9px verdana, arial, helvetica;
+  text-align: center;
+}
+.mwnf-sh-footer a, .mwnf-sh-footer a:visited { color: var(--sh-footer-color); }
+
+/* The home page (exh_items.php). */
+.mwnf-sh-home__picture {
+  position: relative;
+  height: 447px;
+  background-color: var(--sh-footer-icon-bg);
+  background-repeat: no-repeat;
+}
+.mwnf-sh-home__heading {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 368px;
+  padding-bottom: 8px;
+  background: var(--sh-title-band) repeat;
+}
+.mwnf-sh-home__title {
+  padding-left: 17px;
+  letter-spacing: -1px;
+  font: 45px Georgia, 'Times New Roman', Times, serif;
+  color: var(--sh-home-image-color);
+}
+.mwnf-sh-home__quote {
+  padding: 0 40px 0 17px;
+  font: italic 17px/20px Georgia, 'Times New Roman', Times, serif;
+  letter-spacing: 1px;
+  color: #fff;
+}
+.mwnf-sh-home__menu {
+  display: flex;
+  padding: 13px 0 10px;
+  background-color: #fff;
+  color: #000;
+}
+.mwnf-sh-home__themes { width: 500px; padding-left: 123px; font: 12px/17px Georgia, 'Times New Roman', Times, serif; }
+.mwnf-sh-home__themes a, .mwnf-sh-home__themes a:visited { color: #000; font: 12px/17px Georgia, 'Times New Roman', Times, serif; }
+.mwnf-sh-home__theme {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: #000;
+  cursor: pointer;
+  font: bold 12px/17px Georgia, 'Times New Roman', Times, serif;
+  text-align: left;
+}
+.mwnf-sh-home__pages { margin: 0; padding: 0 0 0 30px; list-style: none; }
+.mwnf-sh-home__pages a { font: 11px/15px verdana, arial, helvetica !important; }
+
+/* A Related Content box (exh_items.php, and the pages' bottom row). */
+.mwnf-sh-related { width: 300px; color: #000; font: 11px/15px verdana, arial, helvetica; }
+.mwnf-sh-related a, .mwnf-sh-related a:visited { color: #000; }
+.mwnf-sh-related__heading { font-weight: bold; }
+.mwnf-sh-related ul { margin: 0; padding: 0; list-style: none; }
+.mwnf-sh-related__all { margin-top: 15px; }
+
+/* The banner over the introduction and the exhibition pages, with its navigation. */
+.mwnf-sh-banner {
+  position: relative;
+  background-repeat: no-repeat;
+  background-color: var(--sh-exh-right-bg);
+}
+.mwnf-sh-banner--page { height: 240px; }
+.mwnf-sh-banner--intro { height: 379px; }
+.mwnf-sh-banner__top { height: 137px; }
+.mwnf-sh-banner--intro .mwnf-sh-banner__top { height: 280px; }
+.mwnf-sh-banner__title {
+  height: 53px;
+  padding-left: 20px;
+  background: var(--sh-title-band) repeat;
+  font: 40px/42px 'Palatino Linotype', Georgia, 'Times New Roman', Times, serif;
+  color: var(--sh-exh-image-color);
+}
+.mwnf-sh-banner--intro .mwnf-sh-banner__title { padding-left: 27px; color: var(--sh-intro-image-color); }
+.mwnf-sh-nav {
+  display: flex;
+  justify-content: space-between;
+  padding: 9px 23px 0 21px;
+  font: bold 11px/13px verdana, arial, helvetica;
+  text-transform: uppercase;
+}
+.mwnf-sh-banner--intro .mwnf-sh-nav { padding-left: 30px; }
+.mwnf-sh-nav__group { display: flex; }
+.mwnf-sh-nav__first { width: 80px; padding-right: 5px; border-right: 1px solid #fff; }
+.mwnf-sh-nav__second { width: 100px; padding-left: 10px; }
+.mwnf-sh-nav__previous { width: 70px; }
+.mwnf-sh-nav__next { width: 35px; padding-right: 0; }
+.mwnf-sh-nav button {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: #fff;
+  font: inherit;
+  text-transform: inherit;
+  cursor: pointer;
+  text-align: left;
+}
+
+/* A theme or subtheme page (theme_items.php, subtheme_items.php). */
+.mwnf-sh-page { display: grid; grid-template-columns: 533px 1fr; color: #000; }
+.mwnf-sh-page__text { padding: 5px 15px 10px 20px; background-color: #fff; min-width: 0; }
+.mwnf-sh-page__theme { margin: 10px 0 15px; font: 17px/1.1em Georgia, 'Times New Roman', Times, serif; color: #000; }
+.mwnf-sh-page__name {
+  margin: 10px 0 15px;
+  padding: 10px 0;
+  background-color: var(--sh-menu2-bg);
+  color: var(--sh-menu2-color);
+  font: 17px/1.1em Georgia, 'Times New Roman', Times, serif;
+}
+.mwnf-sh-page__thumbs { width: 496px; padding: 5px 0; }
+.mwnf-sh-page__thumbs button { padding: 0; border: 0; background: none; cursor: pointer; }
+.mwnf-sh-page__thumbs img {
+  width: 93px;
+  height: 65px;
+  margin: 2px 4px 2px 0;
+  border: 1px solid var(--sh-menu2-bg);
+  object-fit: cover;
+}
+.mwnf-sh-page__rule { padding-top: 15px; margin-bottom: 15px; border-bottom: 1px solid var(--sh-menu2-bg); }
+.mwnf-sh-page__body { margin: 15px 0 25px; min-height: 180px; font: 11px/15px Verdana, arial, helvetica; color: #000; }
+.mwnf-sh-page__quote { margin: 15px 0; font: italic 17px Georgia, 'Times New Roman', Times, serif; color: #000; }
+.mwnf-sh-more { font: 12px/17px Georgia, 'Times New Roman', Times, serif; color: #000; }
+.mwnf-sh-more a, .mwnf-sh-more a:visited { color: #000; font: 12px/17px Georgia, 'Times New Roman', Times, serif; }
+.mwnf-sh-more__label { font: bold 11px/15px verdana, arial, helvetica; }
+.mwnf-sh-more__theme { font-weight: bold; color: var(--sh-menu2-bg); }
+.mwnf-sh-more__current { color: rgb(192, 192, 192); }
+.mwnf-sh-more ul { margin: 0; padding: 0; list-style: none; }
+.mwnf-sh-download { margin-top: 10px; font: 11px/15px verdana, arial, helvetica; color: #000; }
+.mwnf-sh-download a, .mwnf-sh-download a:visited { color: #000; }
+.mwnf-sh-arrow { margin-right: 3px; vertical-align: baseline; }
+
+/* The item panel. */
+.mwnf-sh-panel { padding: 5px 15px 10px 20px; background-color: #fff; color: #000; min-width: 0; }
+/* #exh_image_sub, and the box showItem() drew in it. */
+.mwnf-sh-panel__picture { width: 340px; height: 265px; margin: 0 0 15px; padding-top: 43px; }
+.mwnf-sh-panel__frame { position: relative; height: 265px; text-align: right; }
+.mwnf-sh-panel__frame > div { position: absolute; }
+.mwnf-sh-panel__picture button { padding: 0; border: 0; background: none; cursor: zoom-in; }
+/* Legacy's exhib_medium rendition fits a 340 by 255 box. */
+.mwnf-sh-panel__shown { max-width: 340px; max-height: 255px; }
+.mwnf-sh-panel__magnify { padding: 5px 0; text-align: right; }
+/* #exh_item_sub div: each line a blank line apart. */
+.mwnf-sh-panel__caption { font: 11px/15px verdana, arial, helvetica; color: #000; }
+.mwnf-sh-panel__caption p { margin: 0 0 15px; }
+.mwnf-sh-panel__name { font: italic bold 11px/15px verdana, arial, helvetica; }
+.mwnf-sh-panel__justification { font-weight: bold; }
+.mwnf-sh-panel__caption a, .mwnf-sh-panel__caption a:visited { color: #000; font: bold 12px verdana, arial, helvetica; }
+/* Legacy's thumb rendition: 80 by 60, a space apart. */
+.mwnf-sh-panel__related { display: flex; flex-wrap: wrap; gap: 4px; }
+.mwnf-sh-panel__related button { padding: 0; border: 0; background: none; cursor: pointer; }
+.mwnf-sh-panel__related img { width: 80px; height: 60px; object-fit: cover; }
+
+/* The pages' bottom row: the exhibition's pages, then Related Content and the windows. */
+.mwnf-sh-bottom { display: grid; grid-template-columns: 530px 1fr; }
+.mwnf-sh-bottom__pages {
+  padding: 7px 0 10px 20px;
+  background-color: var(--sh-exh-right-color);
+  color: #fff;
+  font: 12px/17px Georgia, 'Times New Roman', Times, serif;
+}
+.mwnf-sh-bottom__pages a, .mwnf-sh-bottom__pages a:visited { color: #fff; font: 12px/17px Georgia, 'Times New Roman', Times, serif; }
+.mwnf-sh-bottom__current { color: rgb(202, 200, 200); }
+.mwnf-sh-bottom__pages ul { margin: 0; padding: 0; list-style: none; }
+.mwnf-sh-bottom__related {
+  display: flex;
+  justify-content: space-between;
+  padding: 7px 20px 10px 30px;
+  background-color: var(--sh-exh-right-color);
+  color: #fff;
+}
+.mwnf-sh-bottom__related .mwnf-sh-related, .mwnf-sh-bottom__related .mwnf-sh-related a { color: #fff; }
+.mwnf-sh-bottom__windows { text-align: right; }
+.mwnf-sh-bottom__windows a, .mwnf-sh-bottom__windows a:visited {
+  color: var(--sh-footer-icon-color);
+  font: normal 9px/11px Verdana, Arial, Helvetica, sans-serif;
+}
+
+/* The introduction (exh_introduction.php). */
+/* Legacy's table shared its 990px between a 450px text cell (and its padding) and a 425px picture cell. */
+.mwnf-sh-intro { display: grid; grid-template-columns: 525px 1fr; background-color: #fff; color: #000; }
+.mwnf-sh-intro a, .mwnf-sh-intro a:visited { color: #000; }
+.mwnf-sh-intro__text { padding: 20px 0 0 30px; min-width: 0; }
+.mwnf-sh-intro__heading { margin: 11px 0 15px; font: normal 17px/15px Georgia, 'Times New Roman', Times, serif; color: #000; }
+.mwnf-sh-intro__body { font: 11px/15px verdana, arial, helvetica; color: #000; }
+.mwnf-sh-intro__body p { margin: 0 0 15px; }
+.mwnf-sh-intro__pictures { padding-top: 20px; min-width: 0; }
+.mwnf-sh-intro__picture { padding: 0 15px 0 25px; margin: 10px 0 5px; font: 11px/15px Verdana, Arial, Helvetica; }
+.mwnf-sh-intro__frame { position: relative; height: 265px; text-align: right; }
+.mwnf-sh-intro__frame > div { position: absolute; }
+.mwnf-sh-intro__frame button { padding: 0; border: 0; background: none; cursor: pointer; }
+.mwnf-sh-intro__frame img { margin-bottom: 5px; }
+/* Legacy's medium rendition fits a 298 by 240 box. */
+.mwnf-sh-intro__shown { max-width: 298px; max-height: 240px; }
+/* Legacy's .numbering: a line break (9px/13px), then the thumbnails a space apart. */
+.mwnf-sh-intro__thumbs { padding: 13px 0 0 25px; display: flex; flex-wrap: wrap; gap: 3px; }
+.mwnf-sh-intro__thumbs button { padding: 0; border: 0; background: none; cursor: pointer; }
+.mwnf-sh-intro__thumbs img { width: 80px; height: 60px; object-fit: cover; }
+
+/* Further Reading (bibliography.php). */
+/* #bibiloPage: the language tabs (#bibiloNavigation), then #bibiloPageContent. */
+.mwnf-sh-reading { background-color: #fff; color: #000; }
+.mwnf-sh-reading__languages { display: flex; justify-content: flex-end; }
+.mwnf-sh-reading__language { padding: 6px; border-left: 1px solid var(--sh-body-bg); background-color: var(--sh-body-bg); color: #fff; font-size: 11px; }
+.mwnf-sh-reading__language a, .mwnf-sh-reading__language a:visited { color: #fff; font-size: 11px; }
+.mwnf-sh-reading__language--current { border-left-color: var(--sh-exh-right-bg); background-color: var(--sh-exh-right-bg); }
+.mwnf-sh-reading__content { min-height: 300px; padding: 30px; font: 11px/15px verdana, arial, helvetica; }
+.mwnf-sh-reading__content a, .mwnf-sh-reading__content a:visited { color: #000; }
+.mwnf-sh-reading__close { margin-bottom: 3px; }
+.mwnf-sh-reading__title { margin: 11px 0 15px; font: 17px/15px Georgia, 'Times New Roman', Times, serif; }
+.mwnf-sh-reading__content p { margin: 0 0 15px; }
+
+/* Legacy's windows: the curators and the cover image (credits.php, coverImage.php), the zoom. */
+.mwnf-sh-window { min-height: 100vh; padding: 10px 20px; background-color: #fff; color: #000; font: 11px/15px verdana, arial, helvetica; }
+.mwnf-sh-window h3 { margin: 10px 0; font: 13px 'Trebuchet MS', Arial, Helvetica, sans-serif; color: #000; }
+.mwnf-sh-window--zoom { padding: 0; background-color: #000; text-align: center; }
+.mwnf-sh-window--zoom img { max-width: 100%; max-height: 100vh; }
+
+/* The tooltip (#dhtmltooltip). */
+.mwnf-sh-tip {
+  position: absolute;
+  z-index: 100;
+  padding: 2px;
+  border: 1px solid var(--sh-tooltip-border);
+  background-color: var(--sh-tooltip-bg);
+  color: var(--sh-tooltip-color);
+  font: 11px verdana, arial, helvetica;
+  pointer-events: none;
+}
+
+/* Narrow screens: the columns stack, as legacy's own layout let them. */
+@media (max-width: 974px) {
+  .mwnf-sh__strip { display: none; }
+  .mwnf-sh-header { height: auto; flex-wrap: wrap; }
+  .mwnf-sh-header__space { display: none; }
+  .mwnf-sh-home__menu, .mwnf-sh-page, .mwnf-sh-bottom, .mwnf-sh-intro { display: block; }
+  .mwnf-sh-home__themes { width: auto; padding-left: 17px; }
+  .mwnf-sh-related { width: auto; padding: 10px 17px; }
+  .mwnf-sh-page__thumbs { width: auto; }
+  .mwnf-sh-intro__text, .mwnf-sh-intro__pictures { width: auto; padding-right: 17px; }
+  .mwnf-sh-band { height: auto; flex-wrap: wrap; }
+}

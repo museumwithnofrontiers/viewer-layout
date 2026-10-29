@@ -843,7 +843,64 @@ export default {
   menus and links on its pictures, the Arabic ones under `[dir='rtl']`.
   inventory-app's `scripts/minisites/legacy-theme.mjs` writes a site's
   `tokens.css` from its legacy stylesheets.
-- **The curators' band** on the home page is drawn here; which curators, their\n  logos and their links are the site's own (`minisite.curators`): a partner\n  (`{ partner, logo, space }`, its name, country and page from its record) or a\n  curator legacy named itself (`{ name, country, href, logo, space }`).\n- **The texts** are viewer-i18n's `minisite` bundle (class `minisite`).
+- **The curators' band** on the home page is drawn here; which curators, their
+  logos and their links are the site's own (`minisite.curators`): a partner
+  (`{ partner, logo, space }`, its name, country and page from its record) or a
+  curator legacy named itself (`{ name, country, href, logo, space }`).
+- **The texts** are viewer-i18n's `minisite` bundle (class `minisite`).
+
+### Sharing History's mini-sites
+
+Sharing History's virtual exhibitions are a family of their own, on pages of
+their own (legacy's `exhibitions/AWE/`: `exh_items.php`, `exh_introduction.php`,
+`theme_items.php`, `subtheme_items.php`, `bibliography.php` and the curators,
+cover-image and zoom windows), inside the Sharing History frame. They share
+only how every mini-site reads its records and the tooltip; their exports are
+named `SharingHistory*` / `sharinghistory*`. Their sites are created from
+`sharinghistory-minisite-template`.
+
+```js
+import {
+  SharingHistoryHome, SharingHistoryShell, sharinghistoryNavigation, sharinghistoryRoutes, sharinghistorySettings,
+} from '@museumwnf/viewer-layout/minisite'
+
+const parent = 'https://museumwithnofrontiers.github.io/sharinghistory'
+
+export default {
+  // …datasetPackage, siteName, site, features, languages, chrome…
+  shell: SharingHistoryShell,
+  navigation: sharinghistoryNavigation({ languages: languageLabels(languages), parent, profiles }),
+  minisite: sharinghistorySettings({ parent, partnerLinks }),
+  views: { home: SharingHistoryHome },
+  extraViews: sharinghistoryRoutes(sectionMeta()),
+}
+```
+
+- **Routes**: `home`, `introduction`, `theme` (`/theme/<theme>`, a theme's
+  overview), `subtheme` (`/theme/<theme>/<page>`), `further-reading`, and the
+  bare windows `credits`, `cover-image` and `zoom`. Next Page walks each
+  theme's overview, then its subthemes (`sharinghistoryReadingOrder`).
+- **Legacy's rules**: a page shows a view only when the curator approved its
+  relation, and a position only with its main view
+  (`sharinghistorySlotsOf`); the item panel's "Related" lists the other views
+  at that position; the caption is `showItem()`'s
+  (`sharinghistoryPlacementCaption`), the curator's justification only when
+  its status is "Y". The introduction shows the exhibition's own pictures,
+  the first five. Related Content leads to the parent's timelines and its
+  gallery, narrowed to the page's theme and subtheme
+  (`sharinghistoryRelatedLinks`).
+- **The site's own values**: `profiles`, the parent's country profiles its
+  footer menu lists, and `partnerLinks`, where each partner logo leads on the
+  parent site, both written by inventory-app's
+  `scripts/minisites/sharinghistory-minisite.mjs`.
+- **The theme**: `minisite-sharinghistory.css` reads `--sh-*` tokens, the
+  exhibition's `sh_exhibitions_styles`; its pictures are the site's chrome
+  files under the names legacy gave them (`legacy/home_bg.jpg`,
+  `legacy/intro_bg.jpg`, `legacy/exhibition_bg.jpg`, `legacy/bg.png`, the
+  arrows, `legacy/magnify.png`, `legacy/print.gif`,
+  `legacy/dash_dark_back.gif`, `legacy/mwnfLogoShExIn-en.png`).
+- **The texts** are viewer-i18n's `minisiteSharingHistory` bundle (6.4).
+
 ## Theming
 
 Every color, font, spacing, radius comes from a `--mwnf-*` CSS custom property with a neutral fallback. Full list: [`tokens.reference.css`](src/tokens.reference.css) (also exported as `@museumwnf/viewer-layout/tokens.reference.css`) — copy it into your website as `theme/tokens.css` and set values.
