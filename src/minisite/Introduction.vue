@@ -2,7 +2,7 @@
 // The introduction (generic_introduction.php): the exhibition's title over
 // legacy's picture, the way back and on, the introduction's text and, beside
 // it, the map (`minisite.map`) and the pictures the exhibition opens with,
-// each captioned.
+// each captioned; Discover Baroque Art's open in the zoom window.
 import { computed, watch } from 'vue'
 import { useGlossaryPopup } from '@museumwnf/viewer-core'
 import GlossaryPopover from '../content/GlossaryPopover.vue'
@@ -10,7 +10,8 @@ import { openWindow, useExhibition, WINDOWS } from './exhibition.js'
 import { introductionDocument } from './wordDocument.js'
 import DownloadBlock from './DownloadBlock.vue'
 
-const { label, lang, data, root, text, title, settings, picture, href, introCaption, slots, glossaryFor } = useExhibition()
+const { label, lang, data, root, text, title, settings, picture, href, introCaption, slots, glossaryFor, family } =
+  useExhibition()
 
 const own = computed(() => (root.value ? text(root.value.id) : {}))
 const glossary = computed(() => (root.value ? glossaryFor(root.value.id) : []))
@@ -23,6 +24,10 @@ const pictures = computed(() =>
 )
 
 const map = computed(() => settings.map ?? null)
+
+function zoom(image) {
+  openWindow(href({ name: 'zoom', query: { img: image } }), WINDOWS.introZoom)
+}
 const popup = useGlossaryPopup(glossary)
 
 function word() {
@@ -68,7 +73,11 @@ watch([title, lang], () => {
           <a class="mwnf-minisite-intro-item__map" :href="href({ name: 'map' })" @click.prevent="openWindow(href({ name: 'map' }), WINDOWS.map)">{{ label('intro.enlargeMap') }}</a>
         </div>
         <div v-for="item in pictures" :key="`${item.entry.id}-${item.entry.variant_order}`" class="mwnf-minisite-intro-item">
-          <img v-if="item.image" class="mwnf-minisite-intro-item__image" :src="item.image" alt=""><br>
+          <a v-if="item.image && family === 'BAR'" :href="href({ name: 'zoom', query: { img: item.image } })" @click.prevent="zoom(item.image)">
+            <img class="mwnf-minisite-intro-item__image" :src="item.image" alt="">
+          </a>
+          <img v-else-if="item.image" class="mwnf-minisite-intro-item__image" :src="item.image" alt="">
+          <br v-if="item.image">
           <template v-for="(line, i) in item.lines.filter(Boolean)" :key="i">
             <br v-if="i > 0">
             <!-- eslint-disable-next-line vue/no-v-html -- an item's own Markdown, rendered and escaped by viewer-core -->

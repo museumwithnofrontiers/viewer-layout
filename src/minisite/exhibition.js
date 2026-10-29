@@ -165,6 +165,9 @@ export const WINDOWS = {
   credits: ['exhcredits', 'scrollbars=auto, resizable=1, width=420, height=530'],
   map: ['exhibition_map', 'scrollbars=auto, resize=yes, width=800, height=418'],
   zoom: ['mwnfing', ''],
+  // Discover Baroque Art's introduction opened its pictures in a window of its
+  // own (zoomImage.php).
+  introZoom: ['BAR', 'scrollbars=no,resize=no,width=565,height=435'],
 }
 
 export function openWindow(address, [name, features]) {
