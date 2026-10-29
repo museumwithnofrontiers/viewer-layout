@@ -57,7 +57,7 @@ const blocks = computed(() => [
         <div class="mwnf-sh-page__theme">{{ text(themeNode.id).title }}</div>
         <div class="mwnf-sh-page__name">&nbsp;{{ pageName }}</div>
         <div v-if="pageSlots.length" class="mwnf-sh-page__thumbs">
-          <button v-for="(slot, i) in pageSlots" :key="slot.n" type="button" @click="choose(i)">
+          <button v-for="(slot, i) in pageSlots" :key="`${slot.n}-${slot.variants[0].id}`" type="button" @click="choose(i)">
             <img :src="slot.variants[0].image_url" alt="">
           </button>
         </div>

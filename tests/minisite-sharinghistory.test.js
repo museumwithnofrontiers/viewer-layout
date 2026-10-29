@@ -68,6 +68,22 @@ describe("Sharing History's mini-sites", () => {
     expect(sharinghistorySlotsOf(node).map((s) => [s.n, s.variants.map((v) => v.id)])).toEqual([[1, ['a']]])
   })
 
+  it('draw a thumbnail for each main view when two records share a position, as legacy did', () => {
+    const node = {
+      items: [
+        { id: 'a', display_order: 2, variant_order: 1, image_url: 'a.jpg', curator_status: 'Y' },
+        { id: 'b', display_order: 2, variant_order: 1, image_url: 'b.jpg', curator_status: 'Y' },
+        { id: 'c', display_order: 2, variant_order: 2, image_url: 'c.jpg', curator_status: 'Y' },
+        { id: 'd', display_order: 3, variant_order: 1, image_url: 'd.jpg', curator_status: 'Y' },
+      ],
+    }
+    expect(sharinghistorySlotsOf(node).map((s) => [s.n, s.variants.map((v) => v.id)])).toEqual([
+      [2, ['a', 'c']],
+      [2, ['b', 'c']],
+      [3, ['d']],
+    ])
+  })
+
   it("print an object's caption as showItem() did, the curator's text only when its status is Y", () => {
     const countryName = (id) => ({ are: 'United Arab Emirates (Sharjah)' })[id] ?? ''
     const own = {
