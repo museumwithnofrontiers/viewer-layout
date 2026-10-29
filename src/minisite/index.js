@@ -21,6 +21,8 @@ export { default as MinisiteMap } from './Map.vue'
 export { default as MinisiteZoom } from './Zoom.vue'
 export { EXHIBITION_ENTITIES, exhibitionData, familyOf, LABELS, labelSet, useExhibition } from './exhibition.js'
 export { baroqueartMenu, islamicartMenu, minisiteNavigation, minisiteRoutes, minisiteSettings } from './routes.js'
+// Sharing History's mini-sites: their own pages and frame (./sharinghistory/).
+export * from './sharinghistory/index.js'
 export {
   cleanText, curatorLabel, curatorLink, detailViewCaption, introCaption, ISLAMICART_NO_COUNTRY, pageWithNeighbours, placementCaption, PLACEHOLDER_TITLE,
   quoteHasItalics, readingOrder, sheetItemId, slotsOf, viewPicture, withFirstView,
