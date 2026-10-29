@@ -83,7 +83,7 @@ export function slotsOf(node) {
         .sort((a, b) => (a.variant_order ?? 0) - (b.variant_order ?? 0))
         .flatMap((entry) =>
           entry.details?.length
-            ? entry.details.map((view) => ({ entry, view, image: view.image_url ?? null }))
+            ? entry.details.map((view) => ({ entry, view, image: view.image_url ?? pagePicture(n) }))
             : [{ entry, image: entry.image_url ?? pagePicture(n) }],
         ),
     }))
