@@ -17,8 +17,8 @@ const logoHref = (logo) => settings.partnerLinks?.[logo.link] ?? logo.link
 
 const quote = computed(() => (root.value ? text(root.value.id).extra?.subtitle ?? '' : ''))
 const logos = computed(() => imagesOf('logo'))
-// Legacy's accordion opened the first theme.
-const open = ref(0)
+// Legacy's accordion opened with every theme closed.
+const open = ref(-1)
 </script>
 
 <template>

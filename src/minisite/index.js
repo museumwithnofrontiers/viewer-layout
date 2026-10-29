@@ -11,6 +11,9 @@
 // `minisiteNavigation()` as its navigation, `minisiteSettings()` as its
 // `minisite`, and `minisiteRoutes()` as its routes.
 import '../styles/minisite.css'
+// Imported here, not only by ./sharinghistory/: the build keeps an entry's own
+// stylesheets, and drops those of a module it reaches through `export *`.
+import '../styles/minisite-sharinghistory.css'
 
 export { default as MinisiteShell } from './Shell.vue'
 export { default as MinisiteHome } from './Home.vue'

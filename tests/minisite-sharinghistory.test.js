@@ -30,16 +30,29 @@ describe("Sharing History's mini-sites", () => {
   it("draw a page's pictures by position, each with its views in order, and never a relation alone", () => {
     const node = {
       items: [
-        { id: 'b', display_order: 1, variant_order: 2, image_url: 'b.jpg' },
-        { id: 'a', display_order: 1, variant_order: 1, image_url: 'a.jpg' },
-        { id: 'c', display_order: 2, variant_order: 1, image_url: 'c.jpg' },
-        { id: 'related-only', display_order: 3, variant_order: null },
+        { id: 'b', display_order: 1, variant_order: 2, image_url: 'b.jpg', curator_status: 'Y' },
+        { id: 'a', display_order: 1, variant_order: 1, image_url: 'a.jpg', curator_status: 'Y' },
+        { id: 'c', display_order: 2, variant_order: null, image_url: 'c.jpg', curator_status: 'Y' },
+        { id: 'related-only', display_order: 3, variant_order: null, curator_status: 'Y' },
       ],
     }
     expect(sharinghistorySlotsOf(node).map((s) => [s.n, s.variants.map((v) => v.id)])).toEqual([
       [1, ['a', 'b']],
       [2, ['c']],
     ])
+  })
+
+  it('draw only the views whose relation the curator approved, and a position only with its main view', () => {
+    const node = {
+      items: [
+        { id: 'a', display_order: 1, variant_order: 1, image_url: 'a.jpg', curator_status: 'Y' },
+        { id: 'b', display_order: 1, variant_order: 2, image_url: 'b.jpg', curator_status: 'N' },
+        { id: 'c', display_order: 2, variant_order: 1, image_url: 'c.jpg', curator_status: 'N' },
+        { id: 'd', display_order: 2, variant_order: 2, image_url: 'd.jpg', curator_status: 'Y' },
+        { id: 'e', display_order: 3, variant_order: 1, image_url: 'e.jpg' },
+      ],
+    }
+    expect(sharinghistorySlotsOf(node).map((s) => [s.n, s.variants.map((v) => v.id)])).toEqual([[1, ['a']]])
   })
 
   it("print an object's caption as showItem() did, the curator's text only when its status is Y", () => {
@@ -71,12 +84,22 @@ describe("Sharing History's mini-sites", () => {
   })
 
   it("link Related Content to the parent site's pages and the further reading here", () => {
-    expect(sharinghistoryRelatedLinks({ parent: 'https://p', exhibitionId: 'x', furtherReading: { name: 'further-reading' } })).toEqual([
+    const links = sharinghistoryRelatedLinks({ parent: 'https://p', exhibitionId: 'x', title: 'TRAVELLING abroad', furtherReading: { name: 'further-reading' } })
+    expect(links).toEqual([
       { key: 'politicalTimeline', href: 'https://p/#/timeline/results?collection=pc' },
-      { key: 'thematicTimeline', href: 'https://p/#/timeline/results?collection=x', tip: true },
+      { key: 'thematicTimeline', href: 'https://p/#/timeline/results?collection=x', tipText: 'Travelling Abroad' },
       { key: 'gallery', href: 'https://p/#/permanent-collection/results?exhibition=x', tip: 'galleryTip' },
       { key: 'furtherReading', to: { name: 'further-reading' }, tip: 'furtherReadingTip' },
     ])
+  })
+
+  it("narrow the gallery to a page's theme and subtheme; a theme's overview lists its thematic timeline first", () => {
+    const overview = sharinghistoryRelatedLinks({ parent: 'https://p', exhibitionId: 'x', themeId: 't', furtherReading: {} })
+    expect(overview.map((l) => l.key)).toEqual(['thematicTimeline', 'politicalTimeline', 'gallery', 'furtherReading'])
+    expect(overview[2].href).toBe('https://p/#/permanent-collection/results?exhibition=x&theme=t')
+    const subtheme = sharinghistoryRelatedLinks({ parent: 'https://p', exhibitionId: 'x', themeId: 't', subthemeId: 's', furtherReading: {} })
+    expect(subtheme.map((l) => l.key)).toEqual(['politicalTimeline', 'thematicTimeline', 'gallery', 'furtherReading'])
+    expect(subtheme[2].href).toBe('https://p/#/permanent-collection/results?exhibition=x&theme=t&chapter=s')
   })
 
   it('declare their routes, legacy windows drawn bare, and their frame', () => {

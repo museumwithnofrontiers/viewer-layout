@@ -21,6 +21,15 @@ const entry = computed(() => props.slot?.variants[props.view] ?? null)
 const lines = computed(() => (entry.value ? caption(entry.value) : null))
 const sheet = computed(() => (entry.value ? `${settings.parent}/#/item/${encodeURIComponent(entry.value.id)}` : ''))
 
+// "Related": the slot's other views, the main one first; legacy listed at most
+// five beside the main view, and never the view on show.
+const others = computed(() =>
+  (props.slot?.variants ?? [])
+    .slice(0, 6)
+    .map((variant, index) => ({ variant, index }))
+    .filter((other) => other.index !== props.view),
+)
+
 function zoom() {
   openWindow(href({ name: 'zoom', query: { img: entry.value.image_url } }), SHARINGHISTORY_WINDOWS.zoom)
 }
@@ -28,14 +37,19 @@ function zoom() {
 
 <template>
   <div v-if="entry" class="mwnf-sh-panel">
+    <!-- The picture and, under its right edge, the magnifier: both open the zoom window. -->
     <div class="mwnf-sh-panel__picture">
-      <button v-tip="{ text: label('item.showZoom') }" type="button" @click="zoom">
-        <img :src="entry.image_url" alt="">
-      </button>
-      <div>
-        <button v-tip="{ text: label('item.showZoom') }" type="button" @click="zoom">
-          <img :src="picture('legacy/magnify.png')" alt="" width="15" height="15">
-        </button>
+      <div class="mwnf-sh-panel__frame">
+        <div>
+          <button v-tip="{ text: label('item.showZoom') }" type="button" @click="zoom">
+            <img class="mwnf-sh-panel__shown" :src="entry.image_url" alt="">
+          </button>
+          <div class="mwnf-sh-panel__magnify">
+            <button v-tip="{ text: label('item.showZoom') }" type="button" @click="zoom">
+              <img :src="picture('legacy/magnify.png')" alt="" width="15" height="15">
+            </button>
+          </div>
+        </div>
       </div>
     </div>
     <div class="mwnf-sh-panel__caption">
@@ -52,17 +66,11 @@ function zoom() {
         <img :src="picture('legacy/arrow_inner_black.gif')" alt="" class="mwnf-sh-arrow" width="11" height="8">
         <a :href="sheet" target="_blank" rel="noopener">{{ label('item.moreInfo') }}</a>
       </p>
-      <template v-if="slot.variants.length > 1">
+      <template v-if="others.length">
         <p><b>{{ label('item.related') }}</b></p>
         <div class="mwnf-sh-panel__related">
-          <button
-            v-for="(variant, i) in slot.variants"
-            :key="`${variant.id}-${i}`"
-            type="button"
-            :aria-current="i === view ? 'true' : 'false'"
-            @click="emit('update:view', i)"
-          >
-            <img :src="variant.image_url" alt="">
+          <button v-for="other in others" :key="other.index" type="button" @click="emit('update:view', other.index)">
+            <img :src="other.variant.image_url" alt="">
           </button>
         </div>
       </template>

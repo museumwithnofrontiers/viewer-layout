@@ -1,7 +1,7 @@
 // Sharing History's mini-sites: a family of their own (exhibitions/AWE/, inside
 // the Sharing History frame), with pages of their own. They share only how
-// every mini-site reads its records (../exhibition.js) and the tooltip.
-import '../../styles/minisite-sharinghistory.css'
+// every mini-site reads its records (../exhibition.js) and the tooltip. Their
+// stylesheet (minisite-sharinghistory.css) is imported by ../index.js.
 
 export { default as SharingHistoryShell } from './Shell.vue'
 export { default as SharingHistoryHome } from './Home.vue'

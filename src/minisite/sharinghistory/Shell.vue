@@ -1,7 +1,8 @@
 <script setup>
 // The Sharing History frame around every virtual exhibition page
 // (exhibitions/AWE/_headerEx.php, _menuFooterEx.php, _footer_inside.inc.php):
-// a 990px column between two fading strips; the header with the MWNF logo,
+// a 990px column between two 5px strips (their fading pictures are missing on
+// legacy, so they show blank); the header with the MWNF logo,
 // the site's name and its links, with the text-size buttons over a page of
 // text; under the page, the menu and the footer. Legacy's windows (the
 // curators, the cover image, the zoom) are routes marked `meta.bare`, drawn
@@ -51,7 +52,7 @@ const frame = computed(() => ({
     <slot />
   </div>
   <div v-else class="mwnf-sh" :style="frame">
-    <div class="mwnf-sh__strip" :style="{ backgroundImage: `url(${asset('legacy/bg_fading_right.gif') ?? ''})` }" aria-hidden="true" />
+    <div class="mwnf-sh__strip" aria-hidden="true" />
     <div class="mwnf-sh__column">
       <header class="mwnf-sh-header">
         <div class="mwnf-sh-header__logo">
@@ -64,23 +65,23 @@ const frame = computed(() => ({
           <h1>{{ label('header.heading') }}</h1>
           <h2>{{ label('header.subheading') }}</h2>
         </a>
+        <!-- One column (#rt_links2): About with its dropdown, Home, the portal;
+             over a page of text, the size buttons beside it (#rt_links3). -->
         <div class="mwnf-sh-header__links">
-          <div v-if="sizable" class="mwnf-sh-header__sizes">
-            <button v-tip="{ text: label('header.decreaseSize') }" type="button" style="font-size: 9px" @click="resize(-0.1)">A</button>
-            <button v-tip="{ text: label('header.revertSize') }" type="button" style="font-size: 11px" @click="resize(0)">A</button>
-            <button v-tip="{ text: label('header.increaseSize') }" type="button" style="font-size: 13px" @click="resize(0.1)">A</button>
-          </div>
-          <ul class="mwnf-sh-header__list">
+          <ul class="mwnf-sh-header__list" :class="{ 'mwnf-sh-header__list--ruled': sizable }">
             <li>
               <a :href="aboutLinks[0]?.href">{{ label('header.about') }}</a>
               <ul class="mwnf-sh-drop">
                 <li v-for="link in aboutLinks" :key="link.label"><a :href="link.href">{{ label(link.label) }}</a></li>
               </ul>
             </li>
+            <li><a v-tip="{ text: label('header.homeTip') }" :href="homeHref">{{ label('header.home') }}</a></li>
+            <li><a v-tip="{ text: label('header.portalTip') }" :href="portalHref">{{ label('header.portal') }}</a></li>
           </ul>
-          <div class="mwnf-sh-header__more">
-            <a v-tip="{ text: label('header.homeTip') }" :href="homeHref">{{ label('header.home') }}</a>
-            <a v-tip="{ text: label('header.portalTip') }" :href="portalHref">{{ label('header.portal') }}</a>
+          <div v-if="sizable" class="mwnf-sh-header__sizes">
+            <button v-tip="{ text: label('header.decreaseSize') }" type="button" style="font-size: 8px" @click="resize(-0.1)">A</button>
+            <button v-tip="{ text: label('header.revertSize') }" type="button" style="font-size: 10px" @click="resize(0)">A</button>
+            <button v-tip="{ text: label('header.increaseSize') }" type="button" style="font-size: 12px" @click="resize(0.1)">A</button>
           </div>
         </div>
       </header>
@@ -108,7 +109,7 @@ const frame = computed(() => ({
         {{ label('footer.copyright') }} {{ year }}
       </footer>
     </div>
-    <div class="mwnf-sh__strip" :style="{ backgroundImage: `url(${asset('legacy/bg_fading_left.gif') ?? ''})` }" aria-hidden="true" />
+    <div class="mwnf-sh__strip" aria-hidden="true" />
     <div v-if="tip.visible" class="mwnf-sh-tip" :style="{ left: `${tip.x + 12}px`, top: `${tip.y + 12}px`, width: `${tip.width}px` }">{{ tip.text }}</div>
   </div>
 </template>

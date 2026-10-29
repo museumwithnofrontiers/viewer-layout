@@ -47,12 +47,13 @@ export function pageWithNext(pages, theme, page) {
  * (`variant_order`, legacy's rel_sort_order). The first view is the
  * thumbnail; the item panel shows the others as "Related". A placement with
  * no picture of its own is a relation only (the rel_* tables): legacy's pages
- * never drew it.
+ * never drew it. Legacy drew a view only when the curator had approved its
+ * relation (curator_status 'Y'), and a position only when its main view was.
  */
 export function slotsOf(node) {
   const byPosition = new Map()
   for (const entry of node?.items ?? []) {
-    if (!entry.image_url) continue
+    if (!entry.image_url || entry.curator_status !== 'Y') continue
     const n = entry.display_order ?? 0
     if (!byPosition.has(n)) byPosition.set(n, [])
     byPosition.get(n).push(entry)
@@ -63,6 +64,7 @@ export function slotsOf(node) {
       n,
       variants: [...entries].sort((a, b) => (a.variant_order ?? 0) - (b.variant_order ?? 0)),
     }))
+    .filter((slot) => (slot.variants[0].variant_order ?? 1) === 1)
 }
 
 /**
@@ -91,18 +93,28 @@ export function placementCaption({ item, own, entry, lang, countryName }) {
 }
 
 /**
- * The Related Content box of the home page and the exhibition pages, in its
- * order: the parent site's political context timeline, this exhibition's
- * thematic timeline, its gallery (the parent's collection, narrowed to the
- * exhibition), its further reading (this website's own page) and the parent's
- * list of exhibitions.
+ * The Related Content box of the home page, the introduction and the
+ * exhibition pages: the parent site's political context timeline, this
+ * exhibition's thematic timeline (its tooltip the exhibition's title, as
+ * PHP's ucwords(strtolower()) wrote it), its gallery (the parent's collection,
+ * narrowed to the page's theme and subtheme, as legacy's pclist_all.php was)
+ * and its further reading (this website's own page). A theme's overview
+ * listed the thematic timeline first.
  */
-export function relatedLinks({ parent, exhibitionId, furtherReading }) {
+export function relatedLinks({ parent, exhibitionId, themeId = null, subthemeId = null, title = '', furtherReading }) {
   const id = encodeURIComponent(exhibitionId)
+  const gallery = [`exhibition=${id}`]
+  if (themeId) gallery.push(`theme=${encodeURIComponent(themeId)}`)
+  if (subthemeId) gallery.push(`chapter=${encodeURIComponent(subthemeId)}`)
+  const political = { key: 'politicalTimeline', href: `${parent}/#/timeline/results?collection=pc` }
+  const thematic = {
+    key: 'thematicTimeline',
+    href: `${parent}/#/timeline/results?collection=${id}`,
+    tipText: title.toLowerCase().replace(/(^|[\s])(\S)/g, (_, space, letter) => space + letter.toUpperCase()),
+  }
   return [
-    { key: 'politicalTimeline', href: `${parent}/#/timeline/results?collection=pc` },
-    { key: 'thematicTimeline', href: `${parent}/#/timeline/results?collection=${id}`, tip: true },
-    { key: 'gallery', href: `${parent}/#/permanent-collection/results?exhibition=${id}`, tip: 'galleryTip' },
+    ...(themeId && !subthemeId ? [thematic, political] : [political, thematic]),
+    { key: 'gallery', href: `${parent}/#/permanent-collection/results?${gallery.join('&')}`, tip: 'galleryTip' },
     { key: 'furtherReading', to: furtherReading, tip: 'furtherReadingTip' },
   ]
 }
@@ -131,6 +143,9 @@ export function useSharingHistoryExhibition() {
   const pages = computed(() => readingOrder(themes.value, tree.children))
 
   const text = (id) => pkg.translations('collections', lang.value)[id] ?? {}
+  /** The languages this website offers, and a language's name, as the data package's site lists them. */
+  const offered = (pkg.manifest.site?.languages ?? []).map((l) => l.code)
+  const languageName = (code) => pkg.manifest.site?.languages?.find((l) => l.code === code)?.label ?? code
   const countryName = (id) => (id ? removeEndingPoint(data.tr('countries', id, lang.value).name ?? '') : '')
 
   function caption(entry) {
@@ -165,6 +180,8 @@ export function useSharingHistoryExhibition() {
     themes,
     pages,
     text,
+    offered,
+    languageName,
     settings,
     caption,
     picture,
@@ -173,11 +190,18 @@ export function useSharingHistoryExhibition() {
     slots: slotsOf,
     pageAt: (theme, page) => pageWithNext(pages.value, theme, page),
     title: computed(() => (root.value ? text(root.value.id).title ?? '' : '')),
-    related: computed(() =>
+    /** The Related Content links of a page: of the exhibition, or of one theme or subtheme. */
+    related: (themeId = null, subthemeId = null) =>
       root.value
-        ? relatedLinks({ parent: settings.parent, exhibitionId: root.value.id, furtherReading: { name: 'further-reading' } })
+        ? relatedLinks({
+            parent: settings.parent,
+            exhibitionId: root.value.id,
+            themeId,
+            subthemeId,
+            title: text(root.value.id).title ?? '',
+            furtherReading: { name: 'further-reading' },
+          })
         : [],
-    ),
   }
 }
 

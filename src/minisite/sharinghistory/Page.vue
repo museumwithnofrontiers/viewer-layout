@@ -103,7 +103,7 @@ const blocks = computed(() => [
         </ul>
       </div>
       <div class="mwnf-sh-bottom__related">
-        <Related arrow="legacy/arrow_inner.gif" />
+        <Related arrow="legacy/arrow_inner.gif" :theme-id="themeNode.id" :subtheme-id="page === 0 ? null : node.id" />
         <Windows class="mwnf-sh-bottom__windows" />
       </div>
     </div>
