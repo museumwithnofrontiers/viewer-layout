@@ -17,9 +17,10 @@ import {
 /**
  * The label set each family's mini-sites read (viewer-i18n): Discover Islamic
  * Art's and Discover Baroque Art's are sets of their own, named alike;
- * Sharing History's is its own too, named for its own pages.
+ * Sharing History's is its own too, named for its own pages, and so is the
+ * Artistic Introduction's (`GAI`).
  */
-export const LABELS = { ISL: 'minisite', BAR: 'minisiteBaroque', SH: 'minisiteSharingHistory' }
+export const LABELS = { ISL: 'minisite', BAR: 'minisiteBaroque', SH: 'minisiteSharingHistory', GAI: 'minisiteArtIntro' }
 
 /** The family a site's settings name (`minisite.family`): Discover Islamic Art's unless another. */
 export function familyOf(settings) {

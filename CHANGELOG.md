@@ -1,3 +1,35 @@
+## 3.14.0 (2026-10-30)
+
+### Added
+
+- **Discover Islamic Art's Artistic Introduction** (`./minisite`,
+  ./minisite/artintro/): one site of its own, in the frame of Discover
+  Islamic Art's virtual exhibitions, on pages of its own (gai/). Its home
+  page (`ArtIntroHome`) draws the title, the subtitle, the text and the
+  credits over legacy's picture, the menu of its themes in two columns, and
+  the links to MWNF's social media; a page (`ArtIntroPage`) draws the way
+  back, the theme's title and its pages, the quote and the text, and beside
+  them the item on show, its caption, its views and its sheet's link, with
+  a 4:3 thumbnail per item under it. Its captions follow Discover Islamic
+  Art's exhibition rules; the zoom window is the exhibitions'. A site
+  declares it with `artintroRoutes()`, `artintroNavigation()` (the MWNF
+  portal and the parent site's home in the header, no menu over the footer)
+  and `artintroSettings()` (`family` "GAI"). Its label set is viewer-i18n's
+  `minisiteArtIntro` (`LABELS.GAI`). Its stylesheet
+  (minisite-artintro.css) reads every value from `--minisite-*` tokens,
+  the exhibitions' where legacy styled the same selector, and
+  `--minisite-artintro-*` for its own.
+
+### Changed
+
+- The mini-site frame draws no menu over the footer when `navigation.menu`
+  is empty, and no tooltip on the logo when `logoTip` is empty.
+- The footer's height and the header links' margin read
+  `--minisite-footer-height` and `--minisite-header-back-margin`, defaulting
+  to the exhibitions' values: a site whose stylesheet set its own draws them.
+- `PLACEHOLDER_TITLE` also matches the importer's Artistic Introduction
+  placeholders ("Artintro Page 15"): legacy printed no title there.
+
 ## 3.13.2 (2026-10-29)
 
 ### Fixed

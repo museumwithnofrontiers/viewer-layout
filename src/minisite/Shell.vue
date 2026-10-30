@@ -62,7 +62,7 @@ function openWindow(link) {
     <div class="mwnf-minisite__column">
       <header class="mwnf-minisite-header">
         <div class="mwnf-minisite-header__logo">
-          <a v-tip="{ text: t(logoTip) }" :href="logoHref">
+          <a v-tip="{ text: logoTip ? t(logoTip) : '' }" :href="logoHref">
             <img :src="asset(`legacy/logo_${language}.gif`)" alt="" height="60">
           </a>
         </div>
@@ -90,18 +90,21 @@ function openWindow(link) {
         <slot />
       </main>
 
-      <nav class="mwnf-minisite-menu">
-        <ul class="mwnf-minisite-menu__list">
-          <template v-for="(link, i) in menu" :key="link.label">
-            <template v-if="i > 0 && menuSeparator">|</template>
-            <li>
-              <a v-if="link.window" :href="link.href" @click.prevent="openWindow(link)">{{ t(link.label) }}</a>
-              <a v-else :href="link.href">{{ t(link.label) }}</a>
-            </li>
-          </template>
-        </ul>
-      </nav>
-      <div class="mwnf-minisite-menu__line" />
+      <!-- The Artistic Introduction drew no menu over its footer. -->
+      <template v-if="menu.length">
+        <nav class="mwnf-minisite-menu">
+          <ul class="mwnf-minisite-menu__list">
+            <template v-for="(link, i) in menu" :key="link.label">
+              <template v-if="i > 0 && menuSeparator">|</template>
+              <li>
+                <a v-if="link.window" :href="link.href" @click.prevent="openWindow(link)">{{ t(link.label) }}</a>
+                <a v-else :href="link.href">{{ t(link.label) }}</a>
+              </li>
+            </template>
+          </ul>
+        </nav>
+        <div class="mwnf-minisite-menu__line" />
+      </template>
       <footer class="mwnf-minisite-footer">
         <template v-for="link in footerLinks" :key="link.label">
           <a :href="link.href">{{ t(link.label) }}</a>&nbsp;|&nbsp;

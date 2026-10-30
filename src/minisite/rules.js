@@ -18,8 +18,11 @@ export function cleanText(text) {
   return PLAIN.reduce((value, [from, to]) => value.replace(from, to), String(text ?? ''))
 }
 
-/** The importer's title for a page or theme legacy has none for in a language: legacy printed none. */
-export const PLACEHOLDER_TITLE = /^(Theme|Page) \d+$/
+/**
+ * The importer's title for a page or theme legacy has none for in a language
+ * ("Theme 5"; the Artistic Introduction's "Artintro Page 15"): legacy printed none.
+ */
+export const PLACEHOLDER_TITLE = /^(Artintro )?(Theme|Page) \d+$/
 
 /**
  * Legacy names no country after a place in Jerusalem

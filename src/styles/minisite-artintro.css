@@ -1,0 +1,242 @@
+/*
+ * Discover Islamic Art's Artistic Introduction, laid out as legacy's pages
+ * laid it out (gai/generic_index.php, gai/generic_page.php), inside the
+ * mini-sites' frame (minisite.css). Every value its stylesheet set
+ * (gai/ISL/_styles.css) is a `--minisite-*` token of the site's
+ * theme/tokens.css, written by inventory-app's scripts/minisites/legacy-theme.mjs:
+ * the home page's title, description and menus use the exhibitions' tokens,
+ * since legacy styled them with the same selectors; what is the introduction's
+ * alone is `--minisite-artintro-*`. What this file writes itself is what the
+ * pages wrote into their own markup. Every rule is scoped to the introduction's
+ * own classes.
+ */
+
+/* ---------- The home page (#homePage) ---------- */
+
+.mwnf-artintro-home {
+  position: relative;
+  height: var(--minisite-home-height);
+  background-color: var(--minisite-home-paper);
+  background-repeat: no-repeat;
+  text-align: start;
+}
+.mwnf-artintro-home__title {
+  position: absolute;
+  left: var(--minisite-home-title-left);
+  top: var(--minisite-home-title-top);
+  font: var(--minisite-home-title-font);
+  color: var(--minisite-home-title-color);
+}
+.mwnf-artintro-home__subtitle {
+  position: absolute;
+  left: var(--minisite-artintro-subtitle-left);
+  top: var(--minisite-artintro-subtitle-top);
+  font: var(--minisite-artintro-subtitle-font);
+  color: var(--minisite-artintro-subtitle-color);
+}
+.mwnf-artintro-home__description {
+  position: absolute;
+  left: var(--minisite-home-description-left);
+  top: var(--minisite-home-description-top);
+  width: var(--minisite-home-description-width);
+  font: var(--minisite-home-description-font);
+  color: var(--minisite-home-description-color);
+}
+.mwnf-minisite .mwnf-artintro-home__description a {
+  color: var(--minisite-home-description-link);
+}
+.mwnf-artintro-home__credits {
+  position: absolute;
+  left: var(--minisite-artintro-credits-left);
+  top: var(--minisite-artintro-credits-top);
+  width: var(--minisite-artintro-credits-width);
+  font: var(--minisite-artintro-credits-font);
+  color: var(--minisite-artintro-credits-color);
+}
+.mwnf-artintro-home__menu,
+.mwnf-artintro-home__menu2 {
+  position: absolute;
+  text-align: start;
+}
+.mwnf-artintro-home__menu {
+  left: var(--minisite-home-menu-left);
+  top: var(--minisite-home-menu-top);
+  width: var(--minisite-home-menu-width);
+  font: var(--minisite-home-menu-font);
+}
+.mwnf-artintro-home__menu2 {
+  left: var(--minisite-home-menu2-left);
+  top: var(--minisite-home-menu2-top);
+  width: var(--minisite-home-menu2-width);
+  font: var(--minisite-home-menu2-font);
+}
+.mwnf-minisite .mwnf-artintro-home__menu a,
+.mwnf-minisite .mwnf-artintro-home__menu2 a {
+  font: var(--minisite-home-menu-link-font);
+  color: var(--minisite-home-menu-link);
+}
+.mwnf-minisite .mwnf-artintro-home__menu a:hover,
+.mwnf-minisite .mwnf-artintro-home__menu2 a:hover {
+  color: var(--minisite-home-menu-link-hover);
+}
+.mwnf-minisite .mwnf-artintro-home__menu a:visited,
+.mwnf-minisite .mwnf-artintro-home__menu2 a:visited {
+  color: var(--minisite-home-menu-link-visited);
+}
+
+/* The links to MWNF's social media (#icons, #social-media): each icon its
+   file's shape in the token's colour, one em high. */
+.mwnf-artintro-home__icons {
+  position: absolute;
+  bottom: var(--minisite-artintro-icons-bottom);
+  right: var(--minisite-artintro-icons-right);
+  width: var(--minisite-artintro-icons-width);
+  padding-right: var(--minisite-artintro-icons-padding-right);
+  text-align: var(--minisite-artintro-icons-align);
+  box-sizing: content-box;
+}
+.mwnf-artintro-home__social {
+  padding: var(--minisite-artintro-social-padding);
+}
+.mwnf-artintro-home__social a {
+  margin: var(--minisite-artintro-social-link-margin);
+  font-size: var(--minisite-artintro-social-link-size);
+}
+.mwnf-artintro-home__icon {
+  display: inline-block;
+  height: 1em;
+  vertical-align: -0.125em;
+  background-color: var(--minisite-artintro-social-icon);
+  mask-repeat: no-repeat;
+  mask-size: contain;
+  mask-position: center;
+}
+
+/* ---------- A page (#GaiPage) ---------- */
+
+.mwnf-artintro-page {
+  background-color: var(--minisite-artintro-page-paper);
+  text-align: start;
+}
+.mwnf-artintro-page__head {
+  position: relative;
+  height: var(--minisite-artintro-head-height);
+  background-color: var(--minisite-artintro-head);
+}
+/* Legacy widened the way back in its markup (style="width: 750px"). */
+.mwnf-artintro-page__back {
+  position: absolute;
+  top: var(--minisite-artintro-back-top);
+  left: var(--minisite-artintro-back-left);
+  width: 750px;
+  font: var(--minisite-artintro-back-font);
+  color: var(--minisite-artintro-back-color);
+}
+.mwnf-minisite .mwnf-artintro-page__back a,
+.mwnf-minisite .mwnf-artintro-page__back a:hover {
+  font: var(--minisite-artintro-back-link-font);
+  color: var(--minisite-artintro-back-link-color);
+}
+.mwnf-artintro-page__body {
+  display: flex;
+  align-items: stretch;
+}
+/* Legacy's two table cells: the item's as narrow as its picture allows, the
+   text's the rest of the frame, however wide its own width asked. */
+.mwnf-artintro-page__text {
+  flex: 1 1 auto;
+  min-width: 0;
+  box-sizing: content-box;
+  width: var(--minisite-artintro-text-width);
+  padding: var(--minisite-artintro-text-padding);
+  background-color: var(--minisite-artintro-text-paper);
+}
+.mwnf-artintro-page__title {
+  margin-top: var(--minisite-artintro-title-margin-top);
+  margin-bottom: var(--minisite-artintro-title-margin-bottom);
+  font: var(--minisite-artintro-title-font);
+}
+.mwnf-artintro-page__pages {
+  margin-top: var(--minisite-artintro-pages-margin-top);
+  margin-bottom: var(--minisite-artintro-pages-margin-bottom);
+}
+/* The pages' links: the current one black, the others grey, as legacy's markup coloured them. */
+.mwnf-minisite .mwnf-artintro-page__current {
+  color: #000000;
+}
+.mwnf-minisite .mwnf-artintro-page__other {
+  color: #999999;
+}
+.mwnf-artintro-page__quote {
+  margin-top: var(--minisite-artintro-quote-margin-top);
+  margin-bottom: var(--minisite-artintro-quote-margin-bottom);
+  text-align: var(--minisite-artintro-quote-align);
+  font: var(--minisite-artintro-quote-font);
+}
+/* Legacy dropped the quote's italics when the quote set its own. */
+.mwnf-artintro-page__quote--own-italics {
+  font-style: normal;
+}
+.mwnf-artintro-page__content {
+  margin-top: var(--minisite-artintro-content-margin-top);
+  margin-bottom: var(--minisite-artintro-content-margin-bottom);
+  min-height: var(--minisite-artintro-content-min-height);
+  font: var(--minisite-artintro-content-font);
+}
+.mwnf-artintro-page__content p {
+  margin-top: var(--minisite-artintro-paragraph-margin-top);
+  margin-bottom: var(--minisite-artintro-paragraph-margin-bottom);
+  font: var(--minisite-artintro-paragraph-font);
+}
+.mwnf-artintro-page__item {
+  flex: none;
+  width: min-content;
+  padding: var(--minisite-artintro-item-padding);
+  background-color: var(--minisite-artintro-item-paper);
+}
+.mwnf-artintro-page__image {
+  width: var(--minisite-artintro-image-width);
+  height: var(--minisite-artintro-image-height);
+  overflow: hidden;
+  margin: var(--minisite-artintro-image-margin);
+  padding: var(--minisite-artintro-image-padding);
+}
+/* Legacy drew the picture's rendition that fits the box (ssmall). */
+.mwnf-artintro-page__image img {
+  max-width: var(--minisite-artintro-image-width);
+  max-height: var(--minisite-artintro-image-height);
+}
+.mwnf-artintro-page__caption {
+  min-height: var(--minisite-artintro-caption-min-height);
+}
+.mwnf-artintro-page__caption > div {
+  margin-bottom: var(--minisite-artintro-caption-line-margin-bottom);
+  font: var(--minisite-exhibition-caption-font);
+  color: var(--minisite-artintro-caption-color);
+}
+.mwnf-minisite .mwnf-artintro-page__caption a {
+  color: var(--minisite-exhibition-caption-link);
+}
+.mwnf-artintro-page__caption .mwnf-artintro-page__justification {
+  color: var(--minisite-artintro-justification-color);
+}
+.mwnf-artintro-page__caption img {
+  vertical-align: top;
+}
+.mwnf-artintro-page__thumbs {
+  margin-top: var(--minisite-artintro-thumbs-margin-top);
+  margin-bottom: var(--minisite-artintro-thumbs-margin-bottom);
+  padding-top: var(--minisite-artintro-thumbs-padding-top);
+  border-top: var(--minisite-artintro-thumbs-border-top);
+}
+/* Legacy's thumbnails: the picture's 4:3 rendition (thumb), its height set by the markup. */
+.mwnf-artintro-page__thumbs img {
+  box-sizing: content-box;
+  width: 48px;
+  max-width: none;
+  height: 36px;
+  object-fit: cover;
+  vertical-align: top;
+  margin: var(--minisite-artintro-thumb-margin);
+  border: var(--minisite-artintro-thumb-border);
+}
