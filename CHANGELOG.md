@@ -1,3 +1,22 @@
+## 3.16.0 (2026-10-30)
+
+### Removed
+
+- **The Discover Baroque Art branches of Discover Islamic Art's mini-site
+  pages**, deprecated in 3.15.0: every Discover Baroque Art site is now on its
+  own pages (`./minisite/baroqueart/`). `minisiteNavigation()` and
+  `minisiteSettings()` take no `family` (no Baroque Art menu, footer link or
+  band, no `partnerListHref`); the home page draws no Baroque Art band or home
+  picture; the introduction opens no zoom; the exhibition page prints no
+  artist or material line; `slotsOf` reads no detail views; `placementCaption`
+  and `withFirstView` take no `family`; `curatorLabel` reads no `place`;
+  `detailViewCaption` and `WINDOWS.introZoom` are gone (Discover Baroque
+  Art's are `baroqueartDetailViewCaption` and `BAROQUEART_WINDOWS`); the
+  shell's `menuSeparator` is gone (Discover Islamic Art's menu always had its
+  bars); minisite.css styles no Baroque Art band or home picture. Discover
+  Islamic Art's exhibitions and the Artistic Introduction draw exactly as
+  before.
+
 ## 3.15.0 (2026-10-30)
 
 ### Added

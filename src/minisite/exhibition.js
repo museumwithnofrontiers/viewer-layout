@@ -9,16 +9,12 @@ import {
   useSiteConfig,
 } from '@museumwnf/viewer-core'
 import { chromeSource } from '../chrome.js'
-import {
-  detailViewCaption, introCaption, pageWithNeighbours, placementCaption, PLACEHOLDER_TITLE, readingOrder, slotsOf,
-  withFirstView,
-} from './rules.js'
+import { introCaption, pageWithNeighbours, placementCaption, PLACEHOLDER_TITLE, readingOrder, slotsOf, withFirstView } from './rules.js'
 
 /**
  * The label set each family's mini-sites read (viewer-i18n): Discover Islamic
- * Art's and Discover Baroque Art's are sets of their own, named alike;
- * Sharing History's is its own too, named for its own pages, and so is the
- * Artistic Introduction's (`GAI`).
+ * Art's exhibitions', Discover Baroque Art's and Sharing History's, each
+ * named for its own pages, and the Artistic Introduction's (`GAI`).
  */
 export const LABELS = { ISL: 'minisite', BAR: 'minisiteBaroque', SH: 'minisiteSharingHistory', GAI: 'minisiteArtIntro' }
 
@@ -61,7 +57,6 @@ export function useExhibition() {
   const { locale, t } = useI18n()
   const config = useSiteConfig()
   const settings = config.minisite ?? {}
-  const family = familyOf(settings)
   const texts = labelSet(settings)
   const label = (key) => t(`${texts}.${key}`)
   const router = useRouter()
@@ -94,30 +89,18 @@ export function useExhibition() {
       caption: entry.caption?.[lang.value] ?? {},
       countryName,
       noCountry: settings.noCountry,
-      family,
     }
   }
 
   /**
-   * A view's caption as legacy printed it: a detail view's from its own text,
-   * the slot's first view's and the record it shows; any other view's from
-   * its placement; each field then the first view's where its own is empty
-   * (showDetail()).
+   * A view's caption as legacy printed it: from its placement, each field the
+   * first view's where its own is empty (showDetail()).
    */
   function viewCaption(slot, index) {
-    const of = (variant) => {
-      if (!variant.view) return placementCaption(captionInput(variant.entry))
-      const first = slot.variants[0]
-      return detailViewCaption({
-        caption: variant.view.caption?.[lang.value] ?? {},
-        first: first.view ? first.view.caption?.[lang.value] ?? {} : {},
-        record: variant.view.id ? data.tr('items', variant.view.id, lang.value) : {},
-        placement: captionInput(variant.entry),
-      })
-    }
+    const of = (variant) => placementCaption(captionInput(variant.entry))
     const mine = slot?.variants[index]
     if (!mine) return null
-    return withFirstView(of(mine), of(slot.variants[0]), family)
+    return withFirstView(of(mine), of(slot.variants[0]))
   }
 
   /** The glossary terms a collection's text links in the page language, as the renderers take them. */
@@ -142,7 +125,6 @@ export function useExhibition() {
   return {
     t,
     label,
-    family,
     lang,
     data,
     root,
@@ -167,9 +149,6 @@ export const WINDOWS = {
   credits: ['exhcredits', 'scrollbars=auto, resizable=1, width=420, height=530'],
   map: ['exhibition_map', 'scrollbars=auto, resize=yes, width=800, height=418'],
   zoom: ['mwnfing', ''],
-  // Discover Baroque Art's introduction opened its pictures in a window of its
-  // own (zoomImage.php).
-  introZoom: ['BAR', 'scrollbars=no,resize=no,width=565,height=435'],
 }
 
 export function openWindow(address, [name, features]) {

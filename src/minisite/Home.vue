@@ -10,7 +10,7 @@ import { openWindow, useExhibition, WINDOWS } from './exhibition.js'
 import { curatorLabel, curatorLink } from './rules.js'
 import { vTip } from './tip.js'
 
-const { label, family, lang, data, root, themes, text, title, settings, picture, href, glossaryFor } = useExhibition()
+const { label, lang, data, root, themes, text, title, settings, picture, href, glossaryFor } = useExhibition()
 
 const description = computed(() =>
   root.value ? data.mdInline(text(root.value.id).description, { glossary: glossaryFor(root.value.id) }) : '',
@@ -31,14 +31,6 @@ const curatorName = (curator) =>
     countryName: (id) => data.tr('countries', id, lang.value).name,
   })
 const curatorHref = (curator) => curatorLink(curator, settings.partnerHref)
-
-// Discover Baroque Art's band (exhibitions/BAR/generic_homelogo.php): who
-// curated the exhibition (its own credits text), the partner institutions'
-// list, each curator named over its logo, and beside them the designer.
-const credits = computed(() => (root.value ? text(root.value.id).extra?.credits ?? '' : ''))
-const design = computed(() => settings.design ?? null)
-// Its home picture (#banner), drawn in the frame's footer as legacy placed it there.
-const banner = computed(() => (family === 'BAR' ? picture(settings.banner) : null))
 
 const background = computed(() => picture(lang.value === 'ar' ? 'legacy/home_bg_ar.jpg' : 'legacy/home_bg.jpg'))
 
@@ -66,31 +58,7 @@ watch([title, lang], () => {
       </div>
     </div>
   </div>
-  <div v-if="family === 'BAR'" class="mwnf-minisite-partners mwnf-minisite-partners--baroque">
-    <div class="mwnf-minisite-partners__curators">
-      <div class="mwnf-minisite-partners__line">{{ label('home.curatedBy') }}</div>
-      <!-- eslint-disable-next-line vue/no-v-html -- the exhibition's own Markdown, rendered and escaped by viewer-core -->
-      <div class="mwnf-minisite-partners__tab" v-html="data.mdInline(credits)" />
-      <div class="mwnf-minisite-partners__cooperation">
-        {{ label('home.cooperation') }} <a :href="settings.partnerListHref">{{ label('home.partnerInstitutions') }}</a>
-      </div>
-      <div class="mwnf-minisite-partners__tab">
-        <template v-for="(curator, i) in curators" :key="curator.logo">
-          {{ curatorName(curator) }}<br>
-          <a v-tip="{ text: curatorName(curator), width: 220 }" class="mwnf-minisite-partners__curator" :href="curatorHref(curator)"><img :src="picture(curator.logo)" alt=""></a>
-          <span v-if="i < curators.length - 1" class="mwnf-minisite-partners__gap" :style="{ width: `${curator.space ?? 0}px` }" />
-        </template>
-      </div>
-    </div>
-    <div v-if="design" class="mwnf-minisite-partners__design">
-      {{ label('home.design') }}
-      <div class="mwnf-minisite-partners__design-tab">{{ design.name }}</div>
-      <div class="mwnf-minisite-partners__design-tab">
-        <a :href="design.href" target="_blank" rel="noopener"><img :src="picture(design.logo)" alt=""></a>
-      </div>
-    </div>
-  </div>
-  <div v-else class="mwnf-minisite-partners">
+  <div class="mwnf-minisite-partners">
     <div class="mwnf-minisite-partners__line">
       <a :href="href({ name: 'credits' })" @click.prevent="openWindow(href({ name: 'credits' }), WINDOWS.credits)">{{ label('home.curatedBy') }}</a>
     </div>
@@ -103,7 +71,4 @@ watch([title, lang], () => {
       </template>
     </div>
   </div>
-  <Teleport v-if="banner" defer to=".mwnf-minisite-footer">
-    <div class="mwnf-minisite-home__banner" :style="{ backgroundImage: `url(${banner})` }" aria-hidden="true" />
-  </Teleport>
 </template>

@@ -4,7 +4,7 @@ import { createMemoryHistory, createRouter } from 'vue-router'
 import { useSiteConfig } from '@museumwnf/viewer-core'
 import { createI18n } from '@museumwnf/viewer-core/i18n'
 import {
-  baroqueartMenu, cleanText, curatorLabel, curatorLink, detailViewCaption, introCaption, ISLAMICART_NO_COUNTRY, labelSet, MinisiteShell,
+  cleanText, curatorLabel, curatorLink, introCaption, ISLAMICART_NO_COUNTRY, labelSet, MinisiteShell,
   minisiteNavigation, minisiteRoutes, minisiteSettings,
   pageWithNeighbours, placementCaption, PLACEHOLDER_TITLE, quoteHasItalics, readingOrder, sheetItemId, slotsOf, viewPicture,
   withFirstView,
@@ -241,92 +241,25 @@ describe('MinisiteShell', () => {
   })
 })
 
-// Discover Baroque Art's exhibitions ran on pages built like ISL's
-// (exhibitions/BAR/generic_*.php), with their own labels, two more caption
-// lines, detail views and a home band of their own (inventory-app#2390).
-describe('Discover Baroque Art', () => {
-  const painting = { type: 'object', country_id: 'cze' }
-  const church = { type: 'monument', country_id: 'cze' }
-  const czech = (item) => (item?.country_id === 'cze' ? 'Czech Republic' : '')
-
-  it('reads the family’s own label set', () => {
+// Discover Baroque Art's exhibitions are a product of their own, with pages of
+// their own (tests/minisite-baroqueart.test.js): nothing of theirs is drawn here.
+describe("Discover Islamic Art's pages alone", () => {
+  it('read their own label set, and the label set the settings name', () => {
     expect(labelSet({})).toBe('minisite')
-    expect(labelSet({ family: 'BAR' })).toBe('minisiteBaroque')
-    expect(labelSet({ family: 'BAR', texts: 'other' })).toBe('other')
+    expect(labelSet({ texts: 'other' })).toBe('other')
   })
 
-  it('prints the artist and the material, the page’s own first, else an object’s artist or a monument’s architects', () => {
+  it('print no artist or material line, and give a placement no detail views', () => {
     const own = { name: 'Portrait.', artist: 'Johann Kupetzky.', materials: ['Oil on canvas.'] }
-    expect(placementCaption({ item: painting, own, countryName: czech, family: 'BAR' })).toMatchObject({
-      artist: 'Johann Kupetzky',
-      material: 'Oil on canvas',
-    })
-    const caption = { artist: 'Santini', material: 'Stucco' }
-    expect(placementCaption({ item: church, own: { architects: 'J. B. Santini Aichel.' }, caption, countryName: czech, family: 'BAR' }))
-      .toMatchObject({ artist: 'Santini', material: 'Stucco' })
-    expect(placementCaption({ item: church, own: { architects: 'J. B. Santini Aichel.' }, countryName: czech, family: 'BAR' }).artist)
-      .toBe('J. B. Santini Aichel')
-    expect(placementCaption({ item: painting, own, countryName: czech })).not.toHaveProperty('artist')
+    expect(placementCaption({ item: { type: 'object' }, own, countryName })).not.toHaveProperty('artist')
+    const [slot] = slotsOf({ items: [{ id: 'a', display_order: 1, image_url: 'a.jpg', details: [{ image_url: 'd.jpg' }] }] })
+    expect(slot.variants.map((v) => v.image)).toEqual(['a.jpg'])
   })
 
-  it('shows a placement’s detail views as its views, each with its own picture', () => {
-    const node = {
-      items: [{ id: 'church', display_order: 1, variant_order: 1, image_url: 'church.jpg', details: [
-        { id: 'altar', image_url: 'altar.jpg' }, { id: 'pulpit', image_url: null },
-      ] }],
-    }
-    const [slot] = slotsOf(node)
-    expect(slot.variants.map((v) => [v.view.id, v.image])).toEqual([['altar', 'altar.jpg'], ['pulpit', null]])
-    expect(viewPicture(slot, 1)).toBe('altar.jpg')
-  })
-
-  it('shows the page’s picture at its position for a detail view that has none of its own, as legacy showed its placeholder', () => {
-    const node = {
-      images: [{ url: 'awaiting.jpg', display_order: 1 }],
-      items: [{ id: 'abbey', display_order: 1, variant_order: 2, details: [{ image_url: null }, { image_url: 'fresco.jpg' }] }],
-    }
-    const [slot] = slotsOf(node)
-    expect(slot.variants.map((v) => v.image)).toEqual(['awaiting.jpg', 'fresco.jpg'])
-  })
-
-  it('never gives a view the first view’s detail name, which legacy wrote as a space', () => {
-    const first = { name: 'Library', detailName: 'Triumphal arches', dateLines: ['1728'], details: [], justification: 'Wisdom.' }
-    const second = { name: 'Detail of ceiling painting', detailName: '', dateLines: ['1723'], details: [], justification: '' }
-    expect(withFirstView(second, first, 'BAR')).toMatchObject({ detailName: '', justification: 'Wisdom.' })
-    expect(withFirstView(second, first)).toMatchObject({ detailName: 'Triumphal arches' })
-  })
-
-  it('captions a detail view from its own text, the first view’s, then the detail it shows', () => {
-    const fields = detailViewCaption({
-      caption: { detail_name: 'Pulpit' },
-      first: { name: 'Pilgrimage church', dynasty: 'Baroque' },
-      record: { name: 'The pulpit.', dates: '1720', location: 'Nave', artist: 'Anonymous' },
-      placement: { item: church, own: { location: 'Žďár nad Sázavou' }, caption: {}, countryName: czech },
-    })
-    expect(fields).toEqual({
-      name: 'Pilgrimage church',
-      detailName: 'Pulpit',
-      dateLines: ['Baroque', '1720', 'Nave'],
-      details: ['Žďár nad Sázavou, Czech Republic'],
-      artist: 'Anonymous',
-      material: '',
-      justification: '',
-    })
-  })
-
-  it('names a curator with the city and country legacy printed after it', () => {
-    const lookups = { partnerName: () => 'Moravian Gallery', partnerCountry: () => 'cze', countryName: () => 'Czech Republic' }
-    expect(curatorLabel({ partner: 'p', place: 'Brno', country: 'cze' }, lookups)).toBe('Moravian Gallery, Brno, Czech Republic')
-  })
-
-  it('has its own menu and footer: no Artistic Introduction, no bars, the language policy', () => {
-    const navigation = minisiteNavigation({ languages: [], parent: 'https://example.org/baroqueart', family: 'BAR' })
-    expect(navigation.menu.map((l) => l.label)).toEqual(baroqueartMenu('https://example.org/baroqueart').map((l) => l.label))
-    expect(navigation.menu.some((l) => l.label.endsWith('artisticIntroduction'))).toBe(false)
-    expect(navigation.menu.find((l) => l.label === 'minisiteBaroque.menu.exhibitions').href).toBe('#/')
-    expect(navigation.menuSeparator).toBe(false)
-    expect(navigation.footerLinks.map((l) => l.label)).toContain('minisiteBaroque.footer.languagePolicy')
-    expect(navigation.logoTip).toBe('minisiteBaroque.header.logoTip')
-    expect(minisiteSettings({ parent: 'https://example.org/baroqueart' }).partnerListHref).toBe('https://example.org/baroqueart/#/partners')
+  it('have one menu and one footer, Discover Islamic Art’s', () => {
+    const navigation = minisiteNavigation({ languages: [], parent: 'https://example.org/islamicart' })
+    expect(navigation.footerLinks.map((l) => l.label)).not.toContain('minisite.footer.languagePolicy')
+    expect(navigation.menu.some((l) => l.label.endsWith('artisticIntroduction'))).toBe(true)
+    expect(navigation).not.toHaveProperty('menuSeparator')
   })
 })

@@ -18,7 +18,7 @@ const props = defineProps({
   page: { type: Number, required: true },
 })
 
-const { label, family, lang, data, title, text, settings, picture, href, pageAt, slots, placementCaption, viewCaption, glossaryFor } = useExhibition()
+const { label, lang, data, title, text, settings, picture, href, pageAt, slots, placementCaption, viewCaption, glossaryFor } = useExhibition()
 
 const current = computed(() => pageAt(props.theme, props.page))
 const own = computed(() => (current.value ? text(current.value.node.id) : {}))
@@ -131,10 +131,6 @@ const background = computed(() => picture(lang.value === 'ar' ? 'legacy/exhibiti
           <div>
             <template v-for="(line, i) in caption.details" :key="i"><span v-html="data.mdInline(line)" /><br></template>
           </div>
-          <template v-if="family === 'BAR'">
-            <div v-html="data.mdInline(caption.artist)" />
-            <div v-html="data.mdInline(caption.material)" />
-          </template>
           <div v-if="slot.variants.length > 1">
             <a
               v-for="(v, i) in slot.variants"
