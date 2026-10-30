@@ -1,0 +1,554 @@
+/*
+ * Discover Baroque Art's mini-sites, laid out as legacy's virtual exhibition
+ * pages laid them out (exhibitions/BAR/generic_*.php and _mainpage.css): a
+ * 763px frame between two fading strips, each page's texts placed on its
+ * picture. Every value an exhibition's own stylesheet set is a `--minisite-*`
+ * token of the site's theme/tokens.css (inventory-app's
+ * scripts/minisites/legacy-theme.mjs writes it from that stylesheet); what
+ * this file writes itself is what every Discover Baroque Art exhibition
+ * shared. Positions are legacy's own, from the left in every language, as its
+ * Arabic stylesheet wrote them; what flows — the columns, the logos, the
+ * menu — mirrors in Arabic, as legacy's right-to-left tables did. Every rule
+ * is scoped to Discover Baroque Art's own classes: this stylesheet ships in
+ * every website's style.css, and no other family's reaches these pages.
+ */
+
+body:has(.mwnf-baroqueart, .mwnf-baroqueart-window) {
+  margin: 0;
+  background: var(--minisite-page);
+}
+
+.mwnf-baroqueart,
+.mwnf-baroqueart-window {
+  --mwnf-font-body: verdana, arial, helvetica, sans-serif;
+  --mwnf-color-text: #000000;
+  --mwnf-color-background: var(--minisite-exhibition-text-paper);
+  --mwnf-color-accent: var(--minisite-link);
+  --mwnf-color-border: var(--minisite-header);
+}
+
+.mwnf-baroqueart a,
+.mwnf-baroqueart-window a {
+  color: var(--minisite-link);
+  text-decoration: none;
+}
+.mwnf-baroqueart a:hover {
+  text-decoration: underline;
+}
+
+/* ---------- The frame (_mainpage.css) ---------- */
+
+.mwnf-baroqueart {
+  display: flex;
+  justify-content: center;
+  min-height: 100vh;
+  background: var(--minisite-page);
+  font: var(--minisite-font);
+  color: #000000;
+}
+.mwnf-baroqueart__column {
+  width: 763px;
+  flex: none;
+}
+.mwnf-baroqueart__strip {
+  width: 5px;
+  flex: none;
+  background-repeat: repeat-y;
+}
+
+/* ---------- The header ---------- */
+
+.mwnf-baroqueart-header {
+  position: relative;
+  height: 71px;
+  background: var(--minisite-header);
+}
+.mwnf-baroqueart-header__logo {
+  position: absolute;
+  left: var(--minisite-header-logo-left, 0);
+  top: 0;
+  width: 300px;
+  text-align: start;
+}
+.mwnf-baroqueart-header__logo img {
+  display: inline-block;
+  vertical-align: top;
+}
+.mwnf-baroqueart-header__nav {
+  position: absolute;
+  left: var(--minisite-header-nav-left, 400px);
+  top: 0;
+  width: var(--minisite-header-nav-width, 350px);
+  text-align: var(--minisite-header-nav-align, right);
+}
+.mwnf-baroqueart-header__back {
+  margin: var(--minisite-header-back-margin, 12px 0);
+  color: var(--minisite-header-text);
+}
+.mwnf-baroqueart .mwnf-baroqueart-header__link,
+.mwnf-baroqueart .mwnf-baroqueart-header__link:hover {
+  font: var(--minisite-header-link-font);
+  color: var(--minisite-header-link);
+}
+.mwnf-baroqueart-header__select {
+  border: none;
+  padding: 1px;
+  font: var(--minisite-select-font);
+  background: var(--minisite-select);
+  color: var(--minisite-select-text, #000000);
+}
+
+/* ---------- The menu over the footer, and the footer ---------- */
+
+.mwnf-baroqueart-menu {
+  /* legacy's height excludes its padding (viewer-core's base sets border-box) */
+  box-sizing: content-box;
+  padding: 5px 0 6px;
+  height: 12px;
+  background: var(--minisite-menu);
+  text-align: center;
+  font: var(--minisite-menu-font);
+  color: var(--minisite-menu-text);
+}
+.mwnf-baroqueart-menu__list {
+  margin: 0;
+  padding: 0;
+}
+.mwnf-baroqueart-menu__list li {
+  display: inline;
+  padding: var(--minisite-menu-item-padding);
+}
+.mwnf-baroqueart .mwnf-baroqueart-menu a,
+.mwnf-baroqueart .mwnf-baroqueart-menu a:hover {
+  font-size: 10px;
+  color: var(--minisite-menu-link);
+  text-decoration: none;
+}
+.mwnf-baroqueart-menu__line {
+  height: 1px;
+  background: var(--minisite-strip);
+}
+.mwnf-baroqueart-footer {
+  box-sizing: content-box;
+  position: relative;
+  /* the exhibitions' own height unless the site's stylesheet set another */
+  height: var(--minisite-footer-height, 18px);
+  padding-top: 5px;
+  background: var(--minisite-footer);
+  text-align: center;
+  font: var(--minisite-footer-font);
+  color: var(--minisite-footer-text);
+}
+.mwnf-baroqueart .mwnf-baroqueart-footer a {
+  color: var(--minisite-footer-link);
+}
+
+/* ---------- Legacy's tooltip ---------- */
+
+.mwnf-baroqueart-tip {
+  position: absolute;
+  z-index: 100;
+  padding: 6px;
+  border: var(--minisite-tip-border);
+  background: var(--minisite-tip);
+  color: var(--minisite-tip-text);
+  font: var(--minisite-tip-font);
+  text-align: start;
+  opacity: 0.9;
+  pointer-events: none;
+}
+
+/* ---------- The home page ---------- */
+
+.mwnf-baroqueart-home {
+  position: relative;
+  height: var(--minisite-home-height);
+  background: var(--minisite-home-paper);
+}
+.mwnf-baroqueart-home__bg1 {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 763px;
+  height: var(--minisite-home-bg1-height);
+  background: var(--minisite-home-bg1);
+}
+.mwnf-baroqueart-home__bg2 {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 763px;
+  height: var(--minisite-home-bg2-height);
+  background-repeat: no-repeat;
+}
+.mwnf-baroqueart-home__title {
+  position: absolute;
+  left: var(--minisite-home-title-left);
+  top: var(--minisite-home-title-top);
+  width: var(--minisite-home-title-width, auto);
+  font: var(--minisite-home-title-font);
+  color: var(--minisite-home-title-color);
+}
+.mwnf-baroqueart-home__description {
+  position: absolute;
+  left: var(--minisite-home-description-left);
+  top: var(--minisite-home-description-top);
+  width: var(--minisite-home-description-width, auto);
+  font: var(--minisite-home-description-font);
+  color: var(--minisite-home-description-color);
+}
+.mwnf-baroqueart .mwnf-baroqueart-home__description a {
+  color: var(--minisite-home-description-link);
+}
+.mwnf-baroqueart-home__menu {
+  position: absolute;
+  left: var(--minisite-home-menu-left, auto);
+  right: var(--minisite-home-menu-right, auto);
+  top: var(--minisite-home-menu-top);
+  width: var(--minisite-home-menu-width, auto);
+  font: var(--minisite-home-menu-font);
+}
+.mwnf-baroqueart-home__menu2 {
+  position: absolute;
+  left: var(--minisite-home-menu2-left);
+  top: var(--minisite-home-menu2-top);
+  width: var(--minisite-home-menu2-width, auto);
+  font: var(--minisite-home-menu2-font);
+}
+.mwnf-baroqueart .mwnf-baroqueart-home__menu a,
+.mwnf-baroqueart .mwnf-baroqueart-home__menu2 a {
+  font: var(--minisite-home-menu-link-font);
+  color: var(--minisite-home-menu-link);
+}
+.mwnf-baroqueart .mwnf-baroqueart-home__menu a:visited,
+.mwnf-baroqueart .mwnf-baroqueart-home__menu2 a:visited {
+  color: var(--minisite-home-menu-link-visited, var(--minisite-home-menu-link));
+}
+.mwnf-baroqueart .mwnf-baroqueart-home__menu a:hover,
+.mwnf-baroqueart .mwnf-baroqueart-home__menu2 a:hover {
+  color: var(--minisite-home-menu-link-hover, var(--minisite-home-menu-link));
+  font-weight: var(--minisite-home-menu-link-hover-weight, inherit);
+}
+
+/* The band (generic_homelogo.php): the curators' column, ruled off from the
+   designer's, every value its stylesheet set (#homePartners, .homePartners_tab*). */
+.mwnf-baroqueart-partners,
+.mwnf-baroqueart-partners * {
+  box-sizing: content-box;
+}
+.mwnf-baroqueart-partners {
+  display: flow-root;
+  width: var(--minisite-partners-width, auto);
+  height: var(--minisite-partners-height);
+  margin: 0 auto;
+  padding: var(--minisite-partners-padding, 0);
+  background: var(--minisite-partners);
+  color: var(--minisite-partners-color, inherit);
+  text-align: left;
+  font: var(--minisite-partners-font);
+}
+.mwnf-baroqueart .mwnf-baroqueart-partners a {
+  color: var(--minisite-partners-link);
+}
+.mwnf-baroqueart-partners__line {
+  margin: var(--minisite-partners-line-margin-top) 0 var(--minisite-partners-line-margin-bottom);
+  color: var(--minisite-partners-line-color, inherit);
+  font: var(--minisite-partners-line-font);
+  line-height: var(--minisite-partners-line-height, normal);
+}
+.mwnf-baroqueart-partners__curators {
+  float: left;
+  width: var(--minisite-partners-curators-width, auto);
+  margin-right: var(--minisite-partners-curators-margin-right, 0);
+  padding: var(--minisite-partners-curators-padding, 0);
+  border-right: var(--minisite-partners-curators-rule, none);
+}
+.mwnf-baroqueart-partners__tab {
+  float: left;
+  width: var(--minisite-partners-tab-width, auto);
+  color: var(--minisite-partners-tab-color, inherit);
+  font: var(--minisite-partners-tab-font, inherit);
+  letter-spacing: var(--minisite-partners-tab-spacing, normal);
+}
+.mwnf-baroqueart-partners__tab img {
+  padding-top: var(--minisite-partners-tab-logo-padding-top, 0);
+  border: 0;
+}
+.mwnf-baroqueart-partners__gap {
+  display: inline-block;
+}
+.mwnf-baroqueart-partners__cooperation {
+  float: left;
+  width: var(--minisite-partners-cooperation-width, auto);
+  padding-right: var(--minisite-partners-cooperation-padding-right, 0);
+  padding-left: var(--minisite-partners-cooperation-padding-left, 0);
+  color: var(--minisite-partners-cooperation-color, inherit);
+  font: var(--minisite-partners-cooperation-font, inherit);
+  letter-spacing: var(--minisite-partners-cooperation-spacing, normal);
+}
+.mwnf-baroqueart-partners__cooperation a {
+  text-decoration: var(--minisite-partners-cooperation-decoration, none);
+}
+.mwnf-baroqueart-partners__design {
+  float: left;
+  width: var(--minisite-partners-design-width, auto);
+  padding: var(--minisite-partners-design-padding, 0);
+  color: var(--minisite-partners-design-color, inherit);
+  font-size: var(--minisite-partners-design-font-size, inherit);
+  letter-spacing: var(--minisite-partners-design-spacing, normal);
+  line-height: var(--minisite-partners-design-line-height, normal);
+}
+.mwnf-baroqueart-partners__design-tab {
+  float: left;
+  width: 100%;
+  padding: var(--minisite-partners-design-tab-padding, 0);
+  color: var(--minisite-partners-design-tab-color, inherit);
+  font-size: var(--minisite-partners-design-tab-font-size, inherit);
+  letter-spacing: var(--minisite-partners-design-tab-spacing, normal);
+  line-height: var(--minisite-partners-design-tab-line-height, normal);
+}
+.mwnf-baroqueart-partners__design-tab img {
+  border: 0;
+}
+
+/* ---------- The introduction ---------- */
+
+.mwnf-baroqueart-intro {
+  position: relative;
+  padding: 200px 0 30px;
+  background-color: var(--minisite-intro-paper);
+  background-repeat: no-repeat;
+}
+.mwnf-baroqueart-intro__title {
+  position: absolute;
+  left: var(--minisite-intro-title-left, auto);
+  right: var(--minisite-intro-title-right, auto);
+  top: var(--minisite-intro-title-top);
+  width: var(--minisite-intro-title-width, auto);
+  font: var(--minisite-intro-title-font);
+  color: var(--minisite-intro-title-color);
+  text-align: var(--minisite-intro-title-align);
+}
+.mwnf-baroqueart-intro__nav {
+  position: absolute;
+  color: var(--minisite-intro-nav-color);
+}
+.mwnf-baroqueart-intro__nav--start {
+  left: var(--minisite-intro-nav-start-left);
+  top: var(--minisite-intro-nav-start-top);
+  width: var(--minisite-intro-nav-start-width);
+  text-align: var(--minisite-intro-nav-start-align, start);
+  font: var(--minisite-intro-nav-start-font);
+}
+.mwnf-baroqueart-intro__nav--end {
+  left: var(--minisite-intro-nav-end-left);
+  top: var(--minisite-intro-nav-end-top);
+  width: var(--minisite-intro-nav-end-width);
+  text-align: var(--minisite-intro-nav-end-align, end);
+  font: var(--minisite-intro-nav-end-font);
+}
+.mwnf-baroqueart .mwnf-baroqueart-intro__nav a {
+  font: var(--minisite-intro-nav-link-font);
+  color: var(--minisite-intro-nav-link-color);
+}
+.mwnf-baroqueart-intro__table {
+  display: grid;
+  /* legacy's #IntroPageTableTD2 is 180px wide (an inline style): a long caption
+     wraps in it rather than widening it */
+  grid-template-columns: minmax(0, 1fr) 180px;
+  margin: var(--minisite-intro-table-margin);
+}
+.mwnf-baroqueart-intro__header {
+  margin-bottom: 15px;
+  font: var(--minisite-intro-header-font);
+}
+.mwnf-baroqueart-intro__header:empty {
+  display: none;
+}
+.mwnf-baroqueart-intro__content {
+  font: var(--minisite-intro-text-font);
+  text-align: justify;
+}
+.mwnf-baroqueart-intro__content p {
+  margin: 0;
+}
+.mwnf-baroqueart-intro-item {
+  margin: 10px 0 20px;
+  padding-inline: 25px 15px;
+  font: var(--minisite-intro-item-font);
+  color: var(--minisite-intro-item-color);
+}
+.mwnf-baroqueart .mwnf-baroqueart-intro-item a {
+  color: var(--minisite-intro-item-link);
+}
+.mwnf-baroqueart-intro-item img {
+  margin-bottom: 3px;
+  vertical-align: top;
+}
+.mwnf-baroqueart-intro-item__image {
+  max-width: 180px;
+  max-height: 135px;
+}
+
+/* ---------- An exhibition page ---------- */
+
+.mwnf-baroqueart-page {
+  background-color: var(--minisite-exhibition-paper);
+  background-repeat: no-repeat;
+}
+.mwnf-baroqueart-page__head {
+  position: relative;
+  height: var(--minisite-exhibition-head-height);
+}
+.mwnf-baroqueart-page__title {
+  position: absolute;
+  left: var(--minisite-exhibition-title-left, auto);
+  right: var(--minisite-exhibition-title-right, auto);
+  top: var(--minisite-exhibition-title-top);
+  width: var(--minisite-exhibition-title-width, auto);
+  font: var(--minisite-exhibition-title-font);
+  color: var(--minisite-exhibition-title-color);
+  text-align: var(--minisite-exhibition-title-align);
+}
+.mwnf-baroqueart-page__nav {
+  position: absolute;
+  color: var(--minisite-exhibition-nav-color);
+}
+.mwnf-baroqueart-page__nav--start {
+  left: var(--minisite-exhibition-nav-start-left);
+  top: var(--minisite-exhibition-nav-start-top);
+  width: var(--minisite-exhibition-nav-start-width);
+  text-align: var(--minisite-exhibition-nav-start-align, start);
+  font: var(--minisite-exhibition-nav-start-font);
+}
+.mwnf-baroqueart-page__nav--end {
+  left: var(--minisite-exhibition-nav-end-left);
+  top: var(--minisite-exhibition-nav-end-top);
+  width: var(--minisite-exhibition-nav-end-width);
+  text-align: var(--minisite-exhibition-nav-end-align, end);
+  font: var(--minisite-exhibition-nav-end-font);
+}
+.mwnf-baroqueart .mwnf-baroqueart-page__nav a {
+  font: var(--minisite-exhibition-nav-link-font);
+  color: var(--minisite-exhibition-nav-link-color);
+}
+.mwnf-baroqueart-page__body {
+  display: grid;
+  grid-template-columns: var(--minisite-exhibition-text-width) 1fr;
+}
+.mwnf-baroqueart-page__text {
+  padding: 10px;
+  background: var(--minisite-exhibition-text-paper);
+}
+.mwnf-baroqueart-page__page-title {
+  margin: 10px 0 15px;
+  font: var(--minisite-exhibition-page-title-font);
+  color: var(--minisite-exhibition-page-title-color, #000000);
+}
+.mwnf-baroqueart-page__thumbs {
+  margin: 15px 0;
+  border-top: var(--minisite-exhibition-thumbs-top);
+  border-bottom: var(--minisite-exhibition-thumbs-bottom);
+}
+.mwnf-baroqueart-page__thumbs img {
+  width: auto;
+  max-width: none;
+  height: 36px;
+  margin: var(--minisite-exhibition-thumb-margin);
+  border: var(--minisite-exhibition-thumb-border);
+  vertical-align: top;
+}
+.mwnf-baroqueart-page__quote {
+  margin: 15px 0;
+  text-align: start;
+  font: var(--minisite-exhibition-quote-font);
+}
+.mwnf-baroqueart-page__quote--own-italics {
+  font-style: normal;
+}
+.mwnf-baroqueart-page__content {
+  min-height: 180px;
+  margin: 15px 0 25px;
+  font: var(--minisite-exhibition-text-font);
+}
+.mwnf-baroqueart-page__content p {
+  margin: 0 0 15px;
+}
+.mwnf-baroqueart-page__item {
+  padding: 10px;
+  background: var(--minisite-exhibition-item-paper);
+}
+.mwnf-baroqueart-page__image {
+  width: 340px;
+  height: 255px;
+  margin-bottom: 15px;
+}
+.mwnf-baroqueart-page__image img {
+  max-width: 340px;
+  max-height: 255px;
+}
+.mwnf-baroqueart-page__caption div {
+  margin-bottom: 8px;
+  font: var(--minisite-exhibition-caption-font);
+}
+.mwnf-baroqueart-page__caption img {
+  vertical-align: top;
+}
+.mwnf-baroqueart .mwnf-baroqueart-page__caption a {
+  color: var(--minisite-exhibition-caption-link);
+}
+/* Legacy's bold was an inline style: it wins over the caption's font. */
+.mwnf-baroqueart-page__caption .mwnf-baroqueart-page__justification {
+  font-weight: bold;
+}
+.mwnf-baroqueart .mwnf-baroqueart-page__caption .mwnf-baroqueart-page__more {
+  color: var(--minisite-exhibition-more, var(--minisite-exhibition-caption-link));
+}
+
+/* ---------- Under every text ---------- */
+
+.mwnf-baroqueart-download {
+  font: normal 11px/15px verdana, arial, helvetica;
+}
+
+/* ---------- Glossary terms, as legacy linked them ---------- */
+
+.mwnf-baroqueart .gloss-term {
+  cursor: pointer;
+  font-weight: bold;
+  font-style: italic;
+  text-decoration: underline;
+}
+
+/* ---------- The zoom window ---------- */
+
+.mwnf-baroqueart-window--zoom {
+  min-height: 100vh;
+  background: #000000;
+}
+.mwnf-baroqueart-zoom {
+  display: flex;
+  height: 100vh;
+  align-items: center;
+  justify-content: center;
+}
+.mwnf-baroqueart-zoom img {
+  max-width: 90%;
+  max-height: 90%;
+  border: 2px solid #ffffff;
+  object-fit: contain;
+}
+
+/* The home picture (#banner), placed against the footer where each
+   exhibition's stylesheet set it. */
+.mwnf-baroqueart-home__banner {
+  position: absolute;
+  top: var(--minisite-banner-top, auto);
+  bottom: var(--minisite-banner-bottom, auto);
+  left: var(--minisite-banner-left, auto);
+  right: var(--minisite-banner-right, auto);
+  width: var(--minisite-banner-width, auto);
+  height: var(--minisite-banner-height, auto);
+  background-repeat: no-repeat;
+  background-position: var(--minisite-banner-position, top);
+}

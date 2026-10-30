@@ -1,3 +1,32 @@
+## 3.15.0 (2026-10-30)
+
+### Added
+
+- **Discover Baroque Art's mini-sites, a product of their own**
+  (`./minisite`, ./minisite/baroqueart/): their own frame
+  (`BaroqueartShell`), home page with the band crediting the curators and the
+  designer and the home picture (`BaroqueartHome`), introduction whose
+  pictures open the zoom (`BaroqueartIntroduction`), exhibition pages with the
+  artist and material lines and the detail views (`BaroqueartPage`) and zoom
+  window (`BaroqueartZoom`); their caption rules (`baroqueartCaption`,
+  `baroqueartDetailViewCaption`, `baroqueartWithFirstView`,
+  `baroqueartSlotsOf`, `baroqueartIntroCaption`, `baroqueartCuratorLabel`,
+  `BAROQUEART_NO_COUNTRY`); and their declaration (`baroqueartRoutes()`,
+  `baroqueartNavigation()`, `baroqueartSettings()`, `baroqueartMenu()`). Their
+  stylesheet, minisite-baroqueart.css, styles only their own classes
+  (`mwnf-baroqueart-*`) and reads the same `--minisite-*` tokens, so a
+  site's theme/tokens.css stays as it is. They draw what the Discover Islamic
+  Art pages drew for `family: 'BAR'`, element for element.
+
+### Deprecated
+
+- `family: 'BAR'` on `minisiteNavigation()` and `minisiteSettings()`, and the
+  Discover Baroque Art branches of the Discover Islamic Art pages and rules
+  (`detailViewCaption`, a placement's `details` in `slotsOf`, the `family`
+  argument of `placementCaption` and `withFirstView`, `curatorLabel`'s
+  `place`). They go in the next release, once every Discover Baroque Art site
+  is on its own pages. `baroqueartMenu()` now comes from ./minisite/baroqueart/.
+
 ## 3.14.0 (2026-10-30)
 
 ### Added
