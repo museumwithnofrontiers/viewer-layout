@@ -20,8 +20,6 @@ const props = defineProps({
   logoTip: { type: String, default: 'minisite.header.logoTip' },
   headerLinks: { type: Array, default: () => [] },
   menu: { type: Array, default: () => [] },
-  // Discover Islamic Art's menu put a bar between its links; Discover Baroque Art's did not.
-  menuSeparator: { type: Boolean, default: true },
   footerLinks: { type: Array, default: () => [] },
   copyright: { type: String, required: true },
 })
@@ -95,7 +93,7 @@ function openWindow(link) {
         <nav class="mwnf-minisite-menu">
           <ul class="mwnf-minisite-menu__list">
             <template v-for="(link, i) in menu" :key="link.label">
-              <template v-if="i > 0 && menuSeparator">|</template>
+              <template v-if="i > 0">|</template>
               <li>
                 <a v-if="link.window" :href="link.href" @click.prevent="openWindow(link)">{{ t(link.label) }}</a>
                 <a v-else :href="link.href">{{ t(link.label) }}</a>

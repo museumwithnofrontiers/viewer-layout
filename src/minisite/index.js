@@ -1,7 +1,9 @@
 // The mini-site family layer: legacy's virtual exhibitions, each a website of
-// its own (inventory-app#2359), every one built on the same pages
-// (exhibitions/ISL/ or exhibitions/BAR/generic_*.php), so what they share lives here once and a
-// change to how a page is drawn reaches all of them. A mini-site keeps its own
+// its own (inventory-app#2359). Discover Islamic Art's exhibitions were all
+// built on the same pages (exhibitions/ISL/generic_*.php), which live here
+// once, so a change to how a page is drawn reaches all of them; every other
+// product's mini-sites have pages of their own (./sharinghistory/,
+// ./baroqueart/, the Artistic Introduction's ./artintro/). A mini-site keeps its own
 // exhibition settings (`minisite`), its theme (tokens.css, every value its
 // legacy stylesheet set), its legacy pictures and its texts. Like `/dxa` and
 // `/standalone`, it imports only what the other entries publish and
@@ -33,6 +35,6 @@ export * from './baroqueart/index.js'
 // Discover Islamic Art's Artistic Introduction: its own home page and pages (./artintro/).
 export * from './artintro/index.js'
 export {
-  cleanText, curatorLabel, curatorLink, detailViewCaption, introCaption, ISLAMICART_NO_COUNTRY, pageWithNeighbours, placementCaption, PLACEHOLDER_TITLE,
+  cleanText, curatorLabel, curatorLink, introCaption, ISLAMICART_NO_COUNTRY, pageWithNeighbours, placementCaption, PLACEHOLDER_TITLE,
   quoteHasItalics, readingOrder, sheetItemId, slotsOf, viewPicture, withFirstView,
 } from './rules.js'
