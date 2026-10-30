@@ -14,6 +14,7 @@ import '../styles/minisite.css'
 // Imported here, not only by ./sharinghistory/: the build keeps an entry's own
 // stylesheets, and drops those of a module it reaches through `export *`.
 import '../styles/minisite-sharinghistory.css'
+import '../styles/minisite-artintro.css'
 
 export { default as MinisiteShell } from './Shell.vue'
 export { default as MinisiteHome } from './Home.vue'
@@ -26,6 +27,8 @@ export { EXHIBITION_ENTITIES, exhibitionData, familyOf, LABELS, labelSet, useExh
 export { baroqueartMenu, islamicartMenu, minisiteNavigation, minisiteRoutes, minisiteSettings } from './routes.js'
 // Sharing History's mini-sites: their own pages and frame (./sharinghistory/).
 export * from './sharinghistory/index.js'
+// Discover Islamic Art's Artistic Introduction: its own home page and pages (./artintro/).
+export * from './artintro/index.js'
 export {
   cleanText, curatorLabel, curatorLink, detailViewCaption, introCaption, ISLAMICART_NO_COUNTRY, pageWithNeighbours, placementCaption, PLACEHOLDER_TITLE,
   quoteHasItalics, readingOrder, sheetItemId, slotsOf, viewPicture, withFirstView,

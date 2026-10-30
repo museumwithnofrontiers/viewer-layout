@@ -81,7 +81,7 @@ body:has(.mwnf-minisite, .mwnf-minisite-window) {
   text-align: var(--minisite-header-nav-align, right);
 }
 .mwnf-minisite-header__back {
-  margin: 12px 0;
+  margin: var(--minisite-header-back-margin, 12px 0);
   color: var(--minisite-header-text);
 }
 .mwnf-minisite .mwnf-minisite-header__link,
@@ -130,7 +130,8 @@ body:has(.mwnf-minisite, .mwnf-minisite-window) {
 .mwnf-minisite-footer {
   box-sizing: content-box;
   position: relative;
-  height: 18px;
+  /* the exhibitions' own height unless the site's stylesheet set another (the Artistic Introduction's did) */
+  height: var(--minisite-footer-height, 18px);
   padding-top: 5px;
   background: var(--minisite-footer);
   text-align: center;
