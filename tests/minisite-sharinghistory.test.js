@@ -1,3 +1,4 @@
+import { readdirSync, readFileSync } from 'node:fs'
 import { describe, expect, it } from 'vitest'
 import {
   LABELS, sharinghistoryCaption, sharinghistoryListedSubthemes, sharinghistoryListedThemes,
@@ -138,5 +139,28 @@ describe("Sharing History's mini-sites", () => {
     const nav = sharinghistoryNavigation({ languages: [], parent: 'https://p', profiles: [{ text: 'Austria', href: 'https://p/#/x' }] })
     expect(nav.menu.find((m) => m.label === 'menu.historicalProfiles').links).toEqual([{ text: 'Austria', href: 'https://p/#/x' }])
     expect(nav.homeHref).toBe('https://p/#/')
+  })
+})
+
+// A product of its own: nothing of another family's pages, frame or stylesheet
+// reaches Sharing History's, and its own stylesheet styles nothing else.
+describe("Sharing History's module stands on its own", () => {
+  // Read from the package's root, where the tests run (jsdom gives import.meta.url no file scheme).
+  const folder = 'src/minisite/sharinghistory'
+  const sources = readdirSync(folder).map((name) => [name, readFileSync(`${folder}/${name}`, 'utf8')])
+  const SHARED = ['../exhibition.js', '../rules.js', '../tip.js', '../wordDocument.js', '../../chrome.js', '../../content/GlossaryPopover.vue']
+
+  it('imports only what every mini-site shares', () => {
+    for (const [name, source] of sources) {
+      const parents = [...source.matchAll(/from '(\.\.\/[^']+)'/g)].map((m) => m[1])
+      expect(parents.filter((path) => !SHARED.includes(path)), name).toEqual([])
+    }
+  })
+
+  it('draws only its own classes, and its stylesheet styles only them', () => {
+    for (const [name, source] of sources) expect(source, name).not.toMatch(/mwnf-(minisite|baroqueart|artintro)[-_ "]/)
+    const css = readFileSync('src/styles/minisite-sharinghistory.css', 'utf8')
+    const selectors = css.replace(/\/\*[\s\S]*?\*\//g, '').match(/\.mwnf-[a-z-]+/g)
+    expect(selectors.filter((s) => !s.startsWith('.mwnf-sh-') && s !== '.mwnf-sh')).toEqual([])
   })
 })

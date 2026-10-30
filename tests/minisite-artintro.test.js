@@ -1,3 +1,4 @@
+import { readdirSync, readFileSync } from 'node:fs'
 import { describe, expect, it } from 'vitest'
 import { mwnfLinks } from '@museumwnf/viewer-core'
 import {
@@ -55,5 +56,36 @@ describe("Discover Islamic Art's Artistic Introduction", () => {
     expect(PLACEHOLDER_TITLE.test('Artintro Theme 3')).toBe(true)
     expect(PLACEHOLDER_TITLE.test('Page 4')).toBe(true)
     expect(PLACEHOLDER_TITLE.test('Monuments')).toBe(false)
+  })
+})
+
+// Discover Islamic Art's own part: the Artistic Introduction may use Islamic
+// Art's pages (its zoom window, its frame), never Baroque Art's or Sharing
+// History's, and its stylesheet styles only its own elements.
+describe("The Artistic Introduction's module stands on its own", () => {
+  // Read from the package's root, where the tests run (jsdom gives import.meta.url no file scheme).
+  const folder = 'src/minisite/artintro'
+  const sources = readdirSync(folder).map((name) => [name, readFileSync(`${folder}/${name}`, 'utf8')])
+  const SHARED = ['../exhibition.js', '../rules.js', '../tip.js', '../wordDocument.js', '../../chrome.js', '../../content/GlossaryPopover.vue']
+  const ISLAMIC_ART = ['../Zoom.vue']
+
+  it("imports only what every mini-site shares, and Discover Islamic Art's own pages", () => {
+    for (const [name, source] of sources) {
+      const parents = [...source.matchAll(/from '(\.\.\/[^']+)'/g)].map((m) => m[1])
+      expect(parents.filter((path) => !SHARED.includes(path) && !ISLAMIC_ART.includes(path)), name).toEqual([])
+    }
+  })
+
+  it('draws only its own classes, and its stylesheet styles only them', () => {
+    for (const [name, source] of sources) expect(source, name).not.toMatch(/mwnf-(minisite|baroqueart|sh)[-_ "]/)
+    // A rule may sit inside Islamic Art's frame (.mwnf-minisite …) to win over its link rules;
+    // what it styles, its selector's last class, is the Artistic Introduction's own.
+    const css = readFileSync('src/styles/minisite-artintro.css', 'utf8').replace(/\/\*[\s\S]*?\*\//g, '')
+    const subjects = [...css.matchAll(/([^{}]+)\{/g)]
+      .flatMap((m) => m[1].split(','))
+      .map((selector) => selector.match(/\.mwnf-[a-z_-]+/g)?.at(-1))
+      .filter(Boolean)
+    expect(subjects.length).toBeGreaterThan(0)
+    expect(subjects.filter((s) => !s.startsWith('.mwnf-artintro'))).toEqual([])
   })
 })
