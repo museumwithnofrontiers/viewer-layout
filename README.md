@@ -827,17 +827,10 @@ export default {
   `legacy/bg_fading_left.gif`, `legacy/bg_fading_right.gif`,
   `legacy/ico_item(_selected).gif`, `legacy/print_dark.gif`,
   `legacy/arrow_inner_black.gif`), plus the logos and maps the settings name.
-- **Two families**: Discover Islamic Art's exhibitions (the default) and
-  Discover Baroque Art's (`family: 'BAR'`, given to both `minisiteNavigation`
-  and `minisiteSettings`). Each family reads a label set of its own from
-  viewer-i18n — `minisite`, and `minisiteBaroque` (viewer-i18n 6.3) — named
-  alike. Baroque Art's pages print an artist and a material line, show a
-  placement's detail views (`details`) as its views, captioned from their own
-  text, the first view's and the detail they show (`detailViewCaption`), and
-  draw its home band: who curated the exhibition (its `credits` text), the
-  partner institutions (`partnerListHref`), each curator named over its logo
-  (`place`, `country`), and the designer (`design`). Its menu has no Artistic
-  Introduction and no bars, and its footer links the language policy.
+- **Discover Baroque Art's exhibitions** are a product of their own, with
+  pages of their own (below). `family: 'BAR'` on `minisiteNavigation` and
+  `minisiteSettings` still draws them on these pages until every Discover
+  Baroque Art site has moved to its own; it goes in the next release.
 - **The theme**: `minisite.css` reads `--minisite-*` tokens for every value an
   exhibition's stylesheet set — colours, fonts and the positions of its titles,
   menus and links on its pictures, the Arabic ones under `[dir='rtl']`.
@@ -848,6 +841,61 @@ export default {
   (`{ partner, logo, space }`, its name, country and page from its record) or a
   curator legacy named itself (`{ name, country, href, logo, space }`).
 - **The texts** are viewer-i18n's `minisite` bundle (class `minisite`).
+
+### Discover Baroque Art's mini-sites
+
+Discover Baroque Art's virtual exhibitions are a product of their own, on
+pages of their own (legacy's `exhibitions/BAR/generic_*.php`), with their own
+frame, caption rules and stylesheet (`src/minisite/baroqueart/`,
+`minisite-baroqueart.css`, classes `mwnf-baroqueart-*`). They share with every
+mini-site only how it reads its records, the order of its pages, which record a
+view opens, the tooltip and the Word document, so a change to another family's
+pages never reaches them. Their exports are named `Baroqueart*` / `baroqueart*`,
+and their sites are created from `baroqueart-minisite-template`.
+
+```js
+import {
+  BAROQUEART_NO_COUNTRY, BaroqueartHome, baroqueartNavigation, baroqueartRoutes, baroqueartSettings, BaroqueartShell,
+} from '@museumwnf/viewer-layout/minisite'
+
+const parent = 'https://museumwithnofrontiers.github.io/baroqueart'
+
+export default {
+  // …datasetPackage, siteName, site, features, languages, chrome…
+  shell: BaroqueartShell,
+  navigation: baroqueartNavigation({ languages: languageLabels(languages), parent }),
+  minisite: baroqueartSettings({
+    parent,
+    menuSecondColumnFrom: 7,
+    curators: [{ partner: '<uuid>', place: 'Brno', country: 'cze', logo: 'legacy/CZ-46.png', space: 35 }],
+    design: { name: 'Yasar University Izmir, Turkey', logo: 'legacy/yasar.png', href: 'http://www.yasar.edu.tr/en/' },
+    banner: 'legacy/banner.png',
+    noCountry: BAROQUEART_NO_COUNTRY,
+    documentTitle: 'MWNF DISCOVER BAROQUE ART - Exhibition',
+  }),
+  views: { home: BaroqueartHome },
+  extraViews: baroqueartRoutes(sectionMeta()),
+}
+```
+
+- **Routes** (`baroqueartRoutes`): `home`, `introduction`, `exhibition`
+  (`/exhibition/<theme>/<page>`) and the `zoom` window, marked `meta.bare`.
+  Legacy linked no credits window and drew no map for these exhibitions.
+- **The captions** (`baroqueartCaption`): the page's own text first, the
+  record's own otherwise, and under the place an artist line (an object's
+  artist, a monument's architects) and a material line. A placement's detail
+  views (`details`) are its views (`baroqueartSlotsOf`), captioned from their
+  own text, the first view's and the detail they show
+  (`baroqueartDetailViewCaption`); a view never takes the first view's
+  detail name (`baroqueartWithFirstView`).
+- **The home band**: who curated the exhibition (its `credits` text), the
+  partner institutions (`partnerListHref`), each curator named over its logo
+  with the city and country legacy wrote after it (`place`, `country`), and
+  the designer (`design`); the home picture (`banner`) sits against the footer.
+- **The frame**: the menu over the footer has no Artistic Introduction and no
+  bars, its Exhibitions leads to the exhibition's own home, and the footer
+  links the language policy.
+- **The texts** are viewer-i18n's `minisiteBaroque` bundle (`BAROQUEART_LABELS`).
 
 ### Sharing History's mini-sites
 

@@ -8,6 +8,7 @@ import Map from './Map.vue'
 import Page from './Page.vue'
 import Zoom from './Zoom.vue'
 import { EXHIBITION_ENTITIES, LABELS, labelSet } from './exhibition.js'
+import { baroqueartMenu } from './baroqueart/routes.js'
 
 /**
  * The routes of a mini-site: the home page, the introduction, the exhibition
@@ -59,22 +60,6 @@ export function islamicartMenu(parent, texts = LABELS.ISL) {
     { label: `${texts}.menu.database`, href: `${parent}/#/database` },
     { label: `${texts}.menu.exhibitions`, href: `${parent}/#/exhibitions` },
     { label: `${texts}.menu.artisticIntroduction`, href: `${parent}/#/artistic-introduction`, window: true },
-    { label: `${texts}.menu.timeline`, href: `${parent}/#/timeline` },
-    { label: `${texts}.menu.partners`, href: `${parent}/#/partners` },
-    { label: `${texts}.menu.myCollection`, href: mwnfLinks.myCollection },
-  ]
-}
-
-/**
- * The menu over the footer of Discover Baroque Art's exhibitions
- * (exhibitions/BAR/generic_footerTop.php), in its order: no Artistic
- * Introduction, and its Exhibitions led to the exhibition's own home page.
- */
-export function baroqueartMenu(parent, texts = LABELS.BAR) {
-  return [
-    { label: `${texts}.menu.permanentCollection`, href: `${parent}/#/permanent-collection` },
-    { label: `${texts}.menu.database`, href: `${parent}/#/database` },
-    { label: `${texts}.menu.exhibitions`, href: '#/' },
     { label: `${texts}.menu.timeline`, href: `${parent}/#/timeline` },
     { label: `${texts}.menu.partners`, href: `${parent}/#/partners` },
     { label: `${texts}.menu.myCollection`, href: mwnfLinks.myCollection },

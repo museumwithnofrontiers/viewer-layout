@@ -15,6 +15,7 @@ import '../styles/minisite.css'
 // stylesheets, and drops those of a module it reaches through `export *`.
 import '../styles/minisite-sharinghistory.css'
 import '../styles/minisite-artintro.css'
+import '../styles/minisite-baroqueart.css'
 
 export { default as MinisiteShell } from './Shell.vue'
 export { default as MinisiteHome } from './Home.vue'
@@ -24,9 +25,11 @@ export { default as MinisiteCredits } from './Credits.vue'
 export { default as MinisiteMap } from './Map.vue'
 export { default as MinisiteZoom } from './Zoom.vue'
 export { EXHIBITION_ENTITIES, exhibitionData, familyOf, LABELS, labelSet, useExhibition } from './exhibition.js'
-export { baroqueartMenu, islamicartMenu, minisiteNavigation, minisiteRoutes, minisiteSettings } from './routes.js'
+export { islamicartMenu, minisiteNavigation, minisiteRoutes, minisiteSettings } from './routes.js'
 // Sharing History's mini-sites: their own pages and frame (./sharinghistory/).
 export * from './sharinghistory/index.js'
+// Discover Baroque Art's mini-sites: a product of their own, with pages, frame and rules of their own (./baroqueart/).
+export * from './baroqueart/index.js'
 // Discover Islamic Art's Artistic Introduction: its own home page and pages (./artintro/).
 export * from './artintro/index.js'
 export {
