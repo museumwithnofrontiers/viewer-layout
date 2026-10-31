@@ -1,3 +1,12 @@
+## 3.17.1 (2026-11-01)
+
+### Fixed
+
+- **The working number's label and value run together** on every item sheet
+  ("MWNF working numberUK1 69"): `RecordCredits` drew them on separate
+  template lines, which Vue's whitespace condensing joined. A space now
+  parts them, as legacy did.
+
 ## 3.17.0 (2026-10-31)
 
 ### Added

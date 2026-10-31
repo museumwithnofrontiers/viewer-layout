@@ -331,7 +331,8 @@ describe('SheetSection, RecordCredits, RelatedRecords', () => {
     })
     expect(wrapper.findAll('h2').map((h) => h.text())).toEqual(['Credits', 'Citation'])
     expect(wrapper.find('dd').text()).toBe('A. Author')
-    expect(wrapper.find('.mwnf-credits__number').text()).toContain('EG 12')
+    // Apart, as legacy printed them, not "MWNF working numberEG 12".
+    expect(wrapper.find('.mwnf-credits__number').text()).toBe('MWNF working number EG 12')
     expect(wrapper.find('.mwnf-credits__citation').text()).toContain('in DIA')
   })
 

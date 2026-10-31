@@ -29,7 +29,8 @@ const visible = computed(() => props.credits.length > 0 || props.workingNumber |
       </template>
     </dl>
     <p v-if="workingNumber" class="mwnf-credits__number">
-      <span v-if="workingNumberLabel" class="mwnf-credits__label">{{ workingNumberLabel }}</span>
+      <!-- the space is explicit: the template's line break between the two is condensed away -->
+      <template v-if="workingNumberLabel"><span class="mwnf-credits__label">{{ workingNumberLabel }}</span>{{ ' ' }}</template>
       <strong>{{ workingNumber }}</strong>
     </p>
     <template v-if="citation">
