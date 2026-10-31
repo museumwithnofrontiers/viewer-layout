@@ -1,3 +1,39 @@
+## 3.17.0 (2026-10-31)
+
+### Added
+
+- **Mini-site tokens for what legacy placed or spaced on its own**, read by
+  `./minisite` with the old value as fallback, so a theme without them draws
+  as before: `--minisite-home-title-right` and
+  `--minisite-home-description-right` (minisite.css,
+  minisite-baroqueart.css), a home title or description placed from the
+  right as Reformation, Crusader and Women did; `--minisite-intro-padding-top`
+  (both), where the introduction's text starts, which each Baroque Art
+  exhibition set; `--minisite-partners-tab-padding-right`
+  (minisite-baroqueart.css), the space after the curators' column.
+
+### Fixed
+
+- **The introduction's picture column** (Discover Islamic Art and Discover
+  Baroque Art) widens to its widest picture, as legacy's table cell did, and
+  the text column gives up the difference: the pictures no longer sit 40px
+  right of legacy's or overflow the frame. Discover Islamic Art draws the
+  empty title above the text, whose margin legacy kept.
+- **Discover Baroque Art's introduction**: paragraphs a blank line apart and
+  pictures at legacy's spacing (no margin above, 30px below).
+- **Discover Islamic Art's home band**: the curators' logos are spaced as
+  legacy spaced them (inline, a space either side of each spacer), and
+  "This exhibition is curated by" takes the page's link colour where the
+  exhibition set none for the band.
+- **Sharing History's mini-sites**: at phone width the home quotation no
+  longer runs over the theme menu, the footer menu wraps entry by entry
+  without covering the footer, and closed dropdowns no longer widen the page
+  past the screen; "Previous page" is a link, as on legacy; "See Database
+  entry for this item" is in the caption's type, not bold.
+- **Discover Baroque Art's home band**: the curated-by line takes legacy's
+  line height (its themes no longer carry a line height legacy's own font
+  shorthand reset), so the curators' columns sit at legacy's height.
+
 ## 3.16.0 (2026-10-30)
 
 ### Removed

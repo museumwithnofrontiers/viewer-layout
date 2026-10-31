@@ -64,7 +64,7 @@ function zoom() {
       <!-- eslint-enable vue/no-v-html -->
       <p>
         <img :src="picture('legacy/arrow_inner_black.gif')" alt="" class="mwnf-sh-arrow" width="11" height="8">
-        <a :href="sheet" target="_blank" rel="noopener">{{ label('item.moreInfo') }}</a>
+        <a :href="sheet" target="_blank" rel="noopener" class="mwnf-sh-panel__sheet">{{ label('item.moreInfo') }}</a>
       </p>
       <template v-if="others.length">
         <p><b>{{ label('item.related') }}</b></p>

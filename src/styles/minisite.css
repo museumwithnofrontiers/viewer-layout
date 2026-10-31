@@ -182,7 +182,8 @@ body:has(.mwnf-minisite, .mwnf-minisite-window) {
 }
 .mwnf-minisite-home__title {
   position: absolute;
-  left: var(--minisite-home-title-left);
+  left: var(--minisite-home-title-left, auto);
+  right: var(--minisite-home-title-right, auto);
   top: var(--minisite-home-title-top);
   width: var(--minisite-home-title-width, auto);
   font: var(--minisite-home-title-font);
@@ -190,7 +191,8 @@ body:has(.mwnf-minisite, .mwnf-minisite-window) {
 }
 .mwnf-minisite-home__description {
   position: absolute;
-  left: var(--minisite-home-description-left);
+  left: var(--minisite-home-description-left, auto);
+  right: var(--minisite-home-description-right, auto);
   top: var(--minisite-home-description-top);
   width: var(--minisite-home-description-width, auto);
   font: var(--minisite-home-description-font);
@@ -240,19 +242,18 @@ body:has(.mwnf-minisite, .mwnf-minisite-window) {
   margin: var(--minisite-partners-line-margin-top) 0 var(--minisite-partners-line-margin-bottom);
   font: var(--minisite-partners-line-font);
 }
+/* Where an exhibition set no colour for #homePartners a, its links took the
+   page's own link colour. */
 .mwnf-minisite .mwnf-minisite-partners a {
-  color: var(--minisite-partners-link);
+  color: var(--minisite-partners-link, var(--minisite-link));
 }
+/* Inline, as legacy drew them: the logos, their spacers and the spaces
+   between them on one centred line. */
 .mwnf-minisite-partners__logos {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-.mwnf-minisite-partners__logos img {
-  display: block;
+  text-align: center;
 }
 .mwnf-minisite-partners__space {
-  display: block;
+  display: inline-block;
   height: 74px;
 }
 
@@ -260,7 +261,7 @@ body:has(.mwnf-minisite, .mwnf-minisite-window) {
 
 .mwnf-minisite-intro {
   position: relative;
-  padding: 200px 0 30px;
+  padding: var(--minisite-intro-padding-top, 200px) 0 30px;
   background-color: var(--minisite-intro-paper);
   background-repeat: no-repeat;
 }
@@ -298,17 +299,17 @@ body:has(.mwnf-minisite, .mwnf-minisite-window) {
 }
 .mwnf-minisite-intro__table {
   display: grid;
-  /* legacy's #IntroPageTableTD2 is 180px wide (an inline style): a long caption
-     wraps in it rather than widening it */
-  grid-template-columns: minmax(0, 1fr) 180px;
+  /* legacy's #IntroPageTableTD2 asks for 180px (an inline style), but as a
+     table cell it widens to its widest picture and that picture's padding, and
+     the text column gives up the difference; a long caption still wraps */
+  grid-template-columns: minmax(0, 1fr) minmax(180px, max-content);
   margin: var(--minisite-intro-table-margin);
 }
+/* Drawn even when empty: legacy's empty .IntroTextTitle still kept its margin
+   above the text. */
 .mwnf-minisite-intro__header {
   margin-bottom: 15px;
   font: var(--minisite-intro-header-font);
-}
-.mwnf-minisite-intro__header:empty {
-  display: none;
 }
 .mwnf-minisite-intro__content {
   font: var(--minisite-intro-text-font);

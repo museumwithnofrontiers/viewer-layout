@@ -67,7 +67,8 @@ watch([title, lang], () => {
         <a v-tip="{ text: curatorName(curator), width: 280 }" class="mwnf-minisite-partners__curator" :href="curatorHref(curator)">
           <img :src="picture(curator.logo)" alt="" height="74">
         </a>
-        <span v-if="i < curators.length - 1" class="mwnf-minisite-partners__space" :style="{ width: `${curator.space ?? 0}px` }" />
+        <!-- legacy wrote each logo and spacer on a line of its own: a space either side of the spacer -->
+        <template v-if="i < curators.length - 1">{{ ' ' }}<span class="mwnf-minisite-partners__space" :style="{ width: `${curator.space ?? 0}px` }" />{{ ' ' }}</template>
       </template>
     </div>
   </div>

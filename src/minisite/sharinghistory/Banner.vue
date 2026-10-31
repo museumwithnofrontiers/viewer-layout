@@ -23,11 +23,6 @@ const props = defineProps({
 const router = useRouter()
 const { label, picture, settings, title } = useSharingHistoryExhibition()
 const background = picture(props.kind === 'intro' ? 'legacy/intro_bg.jpg' : 'legacy/exhibition_bg.jpg')
-
-function back() {
-  if (props.previous) router.push(props.previous)
-  else router.back()
-}
 </script>
 
 <template>
@@ -40,7 +35,10 @@ function back() {
         <div class="mwnf-sh-nav__second"><a :href="`${settings.parent}/#/exhibitions`">{{ label('nav.allExhibitions') }}</a></div>
       </div>
       <div v-if="paging" class="mwnf-sh-nav__group">
-        <div class="mwnf-sh-nav__first mwnf-sh-nav__previous"><button type="button" @click="back">{{ label('nav.previous') }}</button></div>
+        <div class="mwnf-sh-nav__first mwnf-sh-nav__previous">
+          <router-link v-if="previous" :to="previous">{{ label('nav.previous') }}</router-link>
+          <a v-else href="#" @click.prevent="router.back()">{{ label('nav.previous') }}</a>
+        </div>
         <div v-if="next" class="mwnf-sh-nav__second mwnf-sh-nav__next"><router-link :to="next">{{ label('nav.next') }}</router-link></div>
       </div>
     </nav>
