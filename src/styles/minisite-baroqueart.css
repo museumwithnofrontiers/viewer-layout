@@ -183,7 +183,8 @@ body:has(.mwnf-baroqueart, .mwnf-baroqueart-window) {
 }
 .mwnf-baroqueart-home__title {
   position: absolute;
-  left: var(--minisite-home-title-left);
+  left: var(--minisite-home-title-left, auto);
+  right: var(--minisite-home-title-right, auto);
   top: var(--minisite-home-title-top);
   width: var(--minisite-home-title-width, auto);
   font: var(--minisite-home-title-font);
@@ -191,7 +192,8 @@ body:has(.mwnf-baroqueart, .mwnf-baroqueart-window) {
 }
 .mwnf-baroqueart-home__description {
   position: absolute;
-  left: var(--minisite-home-description-left);
+  left: var(--minisite-home-description-left, auto);
+  right: var(--minisite-home-description-right, auto);
   top: var(--minisite-home-description-top);
   width: var(--minisite-home-description-width, auto);
   font: var(--minisite-home-description-font);
@@ -266,6 +268,7 @@ body:has(.mwnf-baroqueart, .mwnf-baroqueart-window) {
 .mwnf-baroqueart-partners__tab {
   float: left;
   width: var(--minisite-partners-tab-width, auto);
+  padding-right: var(--minisite-partners-tab-padding-right, 0);
   color: var(--minisite-partners-tab-color, inherit);
   font: var(--minisite-partners-tab-font, inherit);
   letter-spacing: var(--minisite-partners-tab-spacing, normal);
@@ -315,7 +318,7 @@ body:has(.mwnf-baroqueart, .mwnf-baroqueart-window) {
 
 .mwnf-baroqueart-intro {
   position: relative;
-  padding: 200px 0 30px;
+  padding: var(--minisite-intro-padding-top, 200px) 0 30px;
   background-color: var(--minisite-intro-paper);
   background-repeat: no-repeat;
 }
@@ -353,9 +356,10 @@ body:has(.mwnf-baroqueart, .mwnf-baroqueart-window) {
 }
 .mwnf-baroqueart-intro__table {
   display: grid;
-  /* legacy's #IntroPageTableTD2 is 180px wide (an inline style): a long caption
-     wraps in it rather than widening it */
-  grid-template-columns: minmax(0, 1fr) 180px;
+  /* legacy's #IntroPageTableTD2 asks for 180px (an inline style), but as a
+     table cell it widens to its widest picture and that picture's padding, and
+     the text column gives up the difference; a long caption still wraps */
+  grid-template-columns: minmax(0, 1fr) minmax(180px, max-content);
   margin: var(--minisite-intro-table-margin);
 }
 .mwnf-baroqueart-intro__header {
@@ -372,8 +376,12 @@ body:has(.mwnf-baroqueart, .mwnf-baroqueart-window) {
 .mwnf-baroqueart-intro__content p {
   margin: 0;
 }
+/* legacy parted paragraphs with <br/> <br/>: one empty line */
+.mwnf-baroqueart-intro__content p + p {
+  margin-top: 1lh;
+}
 .mwnf-baroqueart-intro-item {
-  margin: 10px 0 20px;
+  margin: 0 0 30px;
   padding-inline: 25px 15px;
   font: var(--minisite-intro-item-font);
   color: var(--minisite-intro-item-color);

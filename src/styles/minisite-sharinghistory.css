@@ -243,16 +243,6 @@ li:hover > .mwnf-sh-drop, li:focus-within > .mwnf-sh-drop { opacity: 1; visibili
 .mwnf-sh-nav__second { width: 100px; padding-left: 10px; }
 .mwnf-sh-nav__previous { width: 70px; }
 .mwnf-sh-nav__next { width: 35px; padding-right: 0; }
-.mwnf-sh-nav button {
-  padding: 0;
-  border: 0;
-  background: none;
-  color: #fff;
-  font: inherit;
-  text-transform: inherit;
-  cursor: pointer;
-  text-align: left;
-}
 
 /* A theme or subtheme page (theme_items.php, subtheme_items.php). */
 .mwnf-sh-page { display: grid; grid-template-columns: 533px 1fr; color: #000; }
@@ -303,6 +293,8 @@ li:hover > .mwnf-sh-drop, li:focus-within > .mwnf-sh-drop { opacity: 1; visibili
 .mwnf-sh-panel__name { font: italic bold 11px/15px verdana, arial, helvetica; }
 .mwnf-sh-panel__justification { font-weight: bold; }
 .mwnf-sh-panel__caption a, .mwnf-sh-panel__caption a:visited { color: #000; font: bold 12px verdana, arial, helvetica; }
+/* The database entry link (introTextNew, which no stylesheet set): the caption's own type. */
+.mwnf-sh-panel__caption .mwnf-sh-panel__sheet { font: normal 11px/15px verdana, arial, helvetica; }
 /* Legacy's thumb rendition: 80 by 60, a space apart. */
 .mwnf-sh-panel__related { display: flex; flex-wrap: wrap; gap: 4px; }
 .mwnf-sh-panel__related button { padding: 0; border: 0; background: none; cursor: pointer; }
@@ -396,4 +388,17 @@ li:hover > .mwnf-sh-drop, li:focus-within > .mwnf-sh-drop { opacity: 1; visibili
   .mwnf-sh-page__thumbs { width: auto; }
   .mwnf-sh-intro__text, .mwnf-sh-intro__pictures { width: auto; padding-right: 17px; }
   .mwnf-sh-band { height: auto; flex-wrap: wrap; }
+  /* The title band and quotation stay at legacy's place on the picture, but in
+     the flow, so a quotation wrapped to more lines grows the picture rather
+     than running over the theme menu. */
+  .mwnf-sh-home__picture { height: auto; min-height: 447px; padding-top: 368px; box-sizing: border-box; }
+  .mwnf-sh-home__heading { position: static; }
+  /* A menu wrapped to two rows pushes the footer down instead of covering it;
+     each entry wraps whole (the entries touch, with no space to break at). */
+  .mwnf-sh-menu { height: auto; }
+  .mwnf-sh-menu > ul > li { display: inline-block; }
+  /* A closed dropdown takes no room: hidden but laid out, it widened the page
+     past the screen. */
+  .mwnf-sh-drop { display: none; }
+  li:hover > .mwnf-sh-drop, li:focus-within > .mwnf-sh-drop { display: block; }
 }
