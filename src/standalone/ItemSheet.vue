@@ -51,7 +51,7 @@ function allImagesOf({ record, text, language }) {
 
 const backLinks = computed(() => props.back.map((link) => ({ ...link, label: t(link.label) })))
 
-const OWN = new Set(['header', 'before-sheet', 'related', 'sidebar', 'aside'])
+const OWN = new Set(['header', 'before-sheet', 'related', 'sidebar', 'aside', 'source'])
 const passed = computed(() => Object.keys(slots).filter((name) => !OWN.has(name)))
 
 function goBack() {
@@ -89,6 +89,11 @@ function goBack() {
       >
         <slot name="sidebar" v-bind="ctx" />
       </RelatedContent>
+    </template>
+
+    <!-- Legacy's sheet printed no source address: only a site's own `source` slot draws one. -->
+    <template #source="ctx">
+      <slot name="source" v-bind="ctx" />
     </template>
 
     <template v-for="name in passed" :key="name" #[name]="slotProps">

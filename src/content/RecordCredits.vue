@@ -21,7 +21,7 @@ const visible = computed(() => props.credits.length > 0 || props.workingNumber |
 
 <template>
   <section v-if="visible" class="mwnf-credits">
-    <h2 v-if="credits.length || workingNumber" class="mwnf-credits__heading">{{ heading || t('record.sheet.credits') }}</h2>
+    <h2 v-if="credits.length || workingNumber" class="mwnf-credits__heading mwnf-credits__heading--credits">{{ heading || t('record.sheet.credits') }}</h2>
     <dl v-if="credits.length" class="mwnf-credits__list">
       <template v-for="credit in credits" :key="credit.label">
         <dt class="mwnf-credits__label">{{ credit.label }}</dt>
@@ -34,7 +34,7 @@ const visible = computed(() => props.credits.length > 0 || props.workingNumber |
       <strong>{{ workingNumber }}</strong>
     </p>
     <template v-if="citation">
-      <h2 class="mwnf-credits__heading">{{ citationHeading || t('record.citation.heading') }}</h2>
+      <h2 class="mwnf-credits__heading mwnf-credits__heading--citation">{{ citationHeading || t('record.citation.heading') }}</h2>
       <p class="mwnf-credits__citation">{{ citation }}</p>
     </template>
   </section>

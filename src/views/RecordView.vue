@@ -13,6 +13,7 @@ import RecordLanguages from '../content/RecordLanguages.vue'
 import RecordSheet from '../content/RecordSheet.vue'
 import RelatedRecords from '../content/RelatedRecords.vue'
 import SheetSection from '../content/SheetSection.vue'
+import ShortDescription from '../content/ShortDescription.vue'
 import SmartLink from '../content/SmartLink.vue'
 import SourceCredit from '../content/SourceCredit.vue'
 import { limitPictures } from './pictureLimit.js'
@@ -36,6 +37,7 @@ import { limitPictures } from './pictureLimit.js'
 //     spaced: true,                                    // a gap under the pictures and under the sheet
 //     credits: [{ field: 'author', label: 'sheet.field.preparedBy' }, …],
 //     workingNumber: 'mwnf_reference',
+//     workingNumberLabel: 'sheet.field.workingNumber',   // the entry naming it
 //     citation: { project: '<project id>' | (record, ctx) => string, permalink: true | false | string } | false,
 //     related: { variant: 'list' | 'grid', heading: 'record.related.items', record: (entry, ctx) => row } | false,
 //     back: { label: 'record.action.backToResults', to | href },
@@ -118,6 +120,14 @@ const sections = computed(() =>
   record.value
     ? sheetRows(resolveSpec(spec.value.sections).map((s) => ({ render: 'block', ...s })), ctx.value)
     : [],
+)
+
+const shortAfter = computed(() => spec.value.shortDescriptionAfter ?? 'description')
+// The toggle follows a section when the spec names one and no row: the
+// standalone sites print the description as a section (legacy's
+// "View Short Description" under it).
+const shortAfterSection = computed(() =>
+  !rows.value.some((row) => row.key === shortAfter.value) && sections.value.some((s) => s.key === shortAfter.value),
 )
 
 const shortField = computed(() => (spec.value.shortDescription === false ? '' : spec.value.shortDescription ?? 'short_description'))
@@ -253,21 +263,28 @@ const rowSlots = computed(() => Object.keys(slots).filter((name) => !OWN_SLOTS.h
           :layout="spec.layout ?? 'table'"
           :dir="dir"
           :short-description="shortDescription"
-          :short-description-after="spec.shortDescriptionAfter ?? 'description'"
+          :short-description-after="shortAfter"
         >
           <template v-for="name in rowSlots" :key="name" #[name]="rowProps">
             <slot :name="name" v-bind="{ ...rowProps, ...ctx }" />
           </template>
         </RecordSheet>
 
-        <SheetSection v-for="section in sections" :key="section.key" :heading="section.label" :html="section.html" :dir="dir" />
+        <template v-for="section in sections" :key="section.key">
+          <SheetSection :heading="section.label" :html="section.html" :dir="dir" />
+          <ShortDescription
+            v-if="shortDescription && shortAfterSection && section.key === shortAfter"
+            :html="shortDescription.html"
+            :dir="dir"
+          />
+        </template>
 
         <slot name="after-sheet" v-bind="ctx" />
 
         <RecordCredits
           :credits="credits"
           :working-number="workingNumber"
-          :working-number-label="t('sheet.field.workingNumber')"
+          :working-number-label="t(spec.workingNumberLabel ?? 'sheet.field.workingNumber')"
           :citation="citationText"
           :citation-heading="spec.citation?.heading ? t(spec.citation.heading) : ''"
         />
