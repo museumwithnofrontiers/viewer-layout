@@ -1064,15 +1064,19 @@
 /* ── The footer: legacy's p.cookie_footer and #social-media ─────────────────
    The links and the copyright on one centred line, "&nbsp;|&nbsp;" between
    them, 14px on 24px; the icons at the content's right edge on that line;
-   50px under it, where legacy left room for its cookie bar. */
+   on the home page, 50px under it, where legacy left room for its cookie
+   bar (its inner pages' footers have none). */
 
 .mwnf-standalone .mwnf-footer {
   position: relative;
   display: block;
-  padding-bottom: calc(var(--mwnf-footer-padding, 1.25rem) + 50px);
   font-weight: var(--mwnf-standalone-footer-weight, 400);
   line-height: 24px;
   text-align: center;
+}
+
+.mwnf-standalone--home .mwnf-footer {
+  padding-bottom: calc(var(--mwnf-footer-padding, 1.25rem) + 50px);
 }
 
 .mwnf-standalone .mwnf-footer__links,

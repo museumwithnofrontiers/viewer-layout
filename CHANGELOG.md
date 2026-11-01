@@ -1,3 +1,10 @@
+## 3.21.1 (2026-11-01)
+
+### Fixed
+
+- **The standalone footer's 50px under its line** is the home page's only,
+  as legacy's: its inner pages' footers have none.
+
 ## 3.21.0 (2026-11-01)
 
 ### Added
