@@ -18,6 +18,7 @@ import { legacyHomeItemKey, pickForDay, useChromePicture } from './chrome.js'
 //       list: ['object;ISL;uk;Mus02;6;en*1', …],   // legacy's home_items_img.txt, in order
 //       heading: entry, alsoKnownAs: entry, action: entry, route: 'item',
 //       pictures: ['random_image/DBA_new/1.jpg', …],  // chrome keys: legacy's own picture of the day, in its cycle
+//       place: (record, text, country) => line,   // the place line, where the site's legacy composed its own
 //     },
 //     tiles: { caption: entry, items: [{ image, label: entry | text, to | href }] | () => […] },
 //   }
@@ -67,6 +68,9 @@ const country = computed(() => {
   const id = record.value?.country_id
   return id ? (pkg.tr('countries', id, locale.value, 'en').name ?? '') : ''
 })
+const place = computed(() =>
+  record.value && highlight.value?.place ? highlight.value.place(record.value, text.value, country.value) : null,
+)
 const to = computed(() => (record.value ? { name: highlight.value.route ?? 'item', params: { id: record.value.id } } : null))
 const chromePicture = useChromePicture()
 const picture = computed(() => {
@@ -95,6 +99,7 @@ const tileItems = computed(() => {
       :record="record"
       :text="text"
       :country="country"
+      :place="place"
       :to="to"
       :picture="picture"
       :heading="highlight.heading ?? ''"

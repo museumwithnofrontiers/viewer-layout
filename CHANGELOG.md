@@ -1,3 +1,24 @@
+## 3.21.0 (2026-11-01)
+
+### Added
+
+- **The standalone home's place line, the site's own**: `home.highlight.place`
+  `(record, text, country) => line` replaces "location, country" where a
+  site's legacy composed it otherwise (Islamic Art adds the province).
+- **Home tokens**: `--mwnf-standalone-home-links-inset`,
+  `--mwnf-standalone-home-links-line-height`, `--mwnf-standalone-home-links-gap`,
+  `--mwnf-standalone-highlight-line-height` and
+  `--mwnf-standalone-highlight-paragraph-gap`, for legacy's indents, lines
+  and gaps.
+
+### Fixed
+
+- **The standalone footer** is legacy's `p.cookie_footer` and
+  `#social-media`, shared by the three products: the links and the
+  copyright on one centred line, "&nbsp;|&nbsp;" between them, 14px on
+  24px, the social icons at the content's right edge on that line, 50px
+  under it. `--mwnf-standalone-footer-weight` sets the line's weight.
+
 ## 3.20.0 (2026-11-01)
 
 ### Added

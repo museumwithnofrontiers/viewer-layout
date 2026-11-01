@@ -320,6 +320,11 @@ describe('TodayHighlight', () => {
     await wrapper.setProps({ picture: '/assets/123.jpg' })
     expect(wrapper.find('.mwnf-standalone-highlight__image').attributes('src')).toBe('/assets/123.jpg')
     expect(wrapper.find('.mwnf-standalone-highlight__action a').attributes('href')).toBe('/item/i1')
+    // The site's own place line, where its legacy composed one.
+    await wrapper.setProps({ place: 'London, England, United Kingdom' })
+    expect(wrapper.find('.mwnf-standalone-highlight__place').text()).toBe('London, England, United Kingdom')
+    await wrapper.setProps({ place: '' })
+    expect(wrapper.find('.mwnf-standalone-highlight__place').exists()).toBe(false)
   })
 })
 

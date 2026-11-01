@@ -860,11 +860,16 @@
   /* --mwnf-standalone-home-gap: 2rem;               Gap between the home page's two columns */
   /* --mwnf-standalone-home-padding: 1.25rem 2.25rem;   Home content padding (top, bottom) */
   /* --mwnf-standalone-home-links-margin: 3.5rem 0 0;   Side links' margin */
+  /* --mwnf-standalone-home-links-inset: 1.5rem;     Side links' indent (their arrows sit in it) */
+  /* --mwnf-standalone-home-links-line-height: inherit;  Side links' line height */
+  /* --mwnf-standalone-home-links-gap: 0.125rem;     Space under each side link */
   /* --mwnf-standalone-home-link: inherit;           Side link colour */
   /* --mwnf-standalone-home-text-size: inherit;      The home page's text size (side links, record of the day) */
   /* --mwnf-standalone-highlight-offset: 3.5rem;     Space above the record of the day */
   /* --mwnf-standalone-highlight-gap: 1.25rem;       Gap between its picture and its text */
   /* --mwnf-standalone-highlight-image-width: 18rem; Its picture's maximum width */
+  /* --mwnf-standalone-highlight-line-height: inherit;  Its line height */
+  /* --mwnf-standalone-highlight-paragraph-gap: 0.75rem;  Space under each of its paragraphs */
   /* --mwnf-standalone-sponsors-background: transparent;  The band above the footer */
   /* --mwnf-standalone-sponsors-padding: 1.25rem;    Its padding (top and bottom) */
   /* --mwnf-standalone-sponsors-gap: 1.5rem;         Gap between its columns */
@@ -882,6 +887,7 @@
   /* --mwnf-standalone-language-bar: transparent;    The item sheet's band of record languages */
   /* --mwnf-standalone-language-color: inherit;      Its words */
   /* --mwnf-standalone-language-active: transparent; The shown language's ground, and the rule between words */
+  /* --mwnf-standalone-footer-weight: 400;           The footer line's weight */
   /* --mwnf-standalone-pill: transparent;            The partner profile's rounded tab and items bars */
   /* --mwnf-standalone-heading-color: inherit;       The partner profile's name, place and map heading */
   /* --mwnf-standalone-results-border: rgba(255, 214, 0, 0.28);  The result tiles' frame and panel border */
