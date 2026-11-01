@@ -332,13 +332,16 @@
   /* --mwnf-credits-size: 0.75rem;                   Credits text size */
   /* --mwnf-credits-color: #555555;                  Credits text color */
   /* --mwnf-credits-gap: 0.25rem 1rem;               Gap in the credits list */
+  /* --mwnf-credits-person-color: inherit;           A credited name that opens a biography */
+  /* --mwnf-credits-person-decoration: none;         Its decoration (legacy: underline) */
+  /* --mwnf-credits-biography-heading-weight: 700;   The biography's name in bold */
   /* --mwnf-credits-biography-width: 25rem;          A credited person's biography box: its width */
   /* --mwnf-credits-biography-height: auto;          Its height (it scrolls past it) */
   /* --mwnf-credits-biography-padding: 1rem;         Its padding */
   /* --mwnf-credits-biography-size: inherit;         Its text size */
   /* --mwnf-credits-biography-weight: 400;           Its text weight */
   /* --mwnf-credits-biography-line-height: 1.4;      Its line height */
-  /* --mwnf-credits-biography-text: inherit;         Its text colour */
+  /* --mwnf-credits-biography-text: credits colour;  Its text colour */
   /* --mwnf-credits-biography-background: background colour;  Its ground */
   /* --mwnf-credits-biography-border: 1px solid #dddddd;  Its border */
 
