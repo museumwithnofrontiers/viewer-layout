@@ -1,3 +1,16 @@
+## 3.24.0 (2026-11-01)
+
+### Added
+
+- **Credited people with their biography**: `RecordView`'s
+  `creditPeople: { entity: 'authors' }` prints each person a translation
+  credits (`credit_ids`) from their own record: the name (its Arabic
+  spelling on an Arabic sheet) and, where the record has one in the
+  sheet's language, the biography in a box over the name, under the pointer
+  or the keyboard's focus, the name in bold first, as legacy Islamic Art's
+  `su_tooltip`. A person the package does not carry leaves the joined line.
+  Tokens `--mwnf-credits-biography-*` set the box.
+
 ## 3.23.0 (2026-11-01)
 
 ### Added
