@@ -2,7 +2,7 @@
 import { computed, useSlots } from 'vue'
 import { useRoute } from 'vue-router'
 import {
-  NotFoundView, byId, citation, creditLine, entityRef, languageLabels, pictureCredits, picturesInLanguage, renderBlock, renderInline,
+  NotFoundView, byId, citation, creditLine, entityRef, languageLabels, loadEntities, pictureCredits, picturesInLanguage, renderBlock, renderInline,
   renderPlain, sheetRows, sourceUrl, useDataPackage, useGlossaryPopup, useI18n, useProjects, useRecordSheet,
   useRelatedRecords,
 } from '@museumwnf/viewer-core'
@@ -36,6 +36,7 @@ import { limitPictures } from './pictureLimit.js'
 //     pictureLimit: 15 | (ctx) => number,              // at most this many pictures, as legacy's query fetched; 0 or absent: all
 //     spaced: true,                                    // a gap under the pictures and under the sheet
 //     credits: [{ field: 'author', label: 'sheet.field.preparedBy' }, …],
+//     creditPeople: { entity: 'authors' },             // each credited person from `credit_ids`, a biography tooltip
 //     workingNumber: 'mwnf_reference',
 //     workingNumberLabel: 'sheet.field.workingNumber',   // the entry naming it
 //     citation: { project: '<project id>' | (record, ctx) => string, permalink: true | false | string,
@@ -78,11 +79,16 @@ const index = byId(entity)
 const record = computed(() => index.value.get(props.id) ?? null)
 const loaded = computed(() => records.value !== null)
 
+// The credited people's own records, when the spec prints them apart.
+const peopleEntity = props.spec.creditPeople ? (props.spec.creditPeople.entity ?? 'authors') : null
+if (peopleEntity) loadEntities([peopleEntity]).catch(() => {})
+const people = peopleEntity ? byId(peopleEntity) : null
+
 const {
   language, languages, dir, select, text, ready, terms, glossary, attribution,
 } = useRecordSheet(record, {
   entity,
-  translations: props.spec.translations ?? [],
+  translations: [...(props.spec.translations ?? []), ...(peopleEntity ? [peopleEntity] : [])],
   attribution: props.spec.attribution ?? [],
 })
 const languageEntries = computed(() => languageLabels(languages.value))
@@ -181,9 +187,31 @@ function creditValue(field) {
   return text.value[field] ?? attribution.value[field] ?? ''
 }
 
+// A spec with `creditPeople` prints each person the translation credits
+// (`credit_ids`) from their own record: the name (its Arabic spelling on an
+// Arabic sheet), and, where the record has one in the sheet's language, the
+// biography a tooltip opens. A person the package does not carry leaves the
+// joined line.
+function creditPeople(field) {
+  const ids = people ? text.value.credit_ids?.[field] : null
+  if (!ids?.length) return null
+  const bios = translations(peopleEntity)
+  const list = ids.map((id) => {
+    const person = people.value.get(id)
+    if (!person) return null
+    const latin = person.name ?? ''
+    return {
+      name: language.value === 'ar' && person.originalname ? person.originalname : latin,
+      heading: [person.firstname, person.lastname].filter(Boolean).join(' ') || latin,
+      biography: bios?.[id]?.curriculum ?? '',
+    }
+  })
+  return list.every(Boolean) ? list : null
+}
+
 const credits = computed(() =>
   (spec.value.credits ?? DEFAULT_CREDITS)
-    .map(({ field, label }) => ({ label: t(label), value: creditValue(field) }))
+    .map(({ field, label }) => ({ label: t(label), value: creditValue(field), people: creditPeople(field) }))
     .filter((entry) => entry.value),
 )
 

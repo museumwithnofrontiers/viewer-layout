@@ -421,6 +421,30 @@ describe('RecordView', () => {
     expect(wrapper.find('.mwnf-record').classes()).toContain('mwnf-record--spaced')
   })
 
+  it('prints each credited person apart, with the biography their record has in the sheet language', async () => {
+    const { wrapper } = await mountView(RecordView, {
+      props: { spec: { ...spec, creditPeople: {} }, id: 'o4' },
+      route: '/objects/o4',
+    })
+    await settle(() => wrapper.find('.mwnf-credits__person').exists(), 200)
+    const person = wrapper.find('.mwnf-credits__person')
+    expect(person.attributes('tabindex')).toBe('0')
+    expect(person.find('.mwnf-credits__biography').attributes('role')).toBe('tooltip')
+    expect(person.find('.mwnf-credits__biography b').text()).toBe('Bea Author')
+    expect(person.find('.mwnf-credits__biography').text()).toContain('Bea Author writes about tiles.')
+    expect(person.text().startsWith('B. Author')).toBe(true)
+  })
+
+  it('keeps the joined credit line where the translation names no one apart', async () => {
+    const { wrapper } = await mountView(RecordView, {
+      props: { spec: { ...spec, creditPeople: {} }, id: 'o1' },
+      route: '/objects/o1',
+    })
+    await settle(() => wrapper.find('.mwnf-credits__value').exists(), 200)
+    expect(wrapper.find('.mwnf-credits__value').text()).toBe('A. Author')
+    expect(wrapper.find('.mwnf-credits__person').exists()).toBe(false)
+  })
+
   it("prints the site's own citation, as the HTML its format returns", async () => {
     const format = ({ text }, { year }) => `"${text.name}" in <i>The Site</i>, ${year}.`
     const { wrapper } = await mountView(RecordView, {

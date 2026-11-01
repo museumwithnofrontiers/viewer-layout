@@ -828,6 +828,54 @@
   color: var(--mwnf-credits-color, #555555);
 }
 
+/* A credited person's biography, in a box over the name, under the pointer
+   or the keyboard's focus. */
+.mwnf-credits__person {
+  position: relative;
+  cursor: pointer;
+}
+
+.mwnf-credits__biography {
+  position: absolute;
+  z-index: 20;
+  bottom: 90%;
+  left: 0;
+  box-sizing: border-box;
+  width: var(--mwnf-credits-biography-width, 25rem);
+  max-width: 90vw;
+  height: var(--mwnf-credits-biography-height, auto);
+  overflow: auto;
+  padding: var(--mwnf-credits-biography-padding, 1rem);
+  font-size: var(--mwnf-credits-biography-size, inherit);
+  font-weight: var(--mwnf-credits-biography-weight, 400);
+  line-height: var(--mwnf-credits-biography-line-height, 1.4);
+  color: var(--mwnf-credits-biography-text, inherit);
+  background-color: var(--mwnf-credits-biography-background, var(--mwnf-color-background, #ffffff));
+  border: var(--mwnf-credits-biography-border, 1px solid #dddddd);
+  cursor: default;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s 0.3s, visibility 0s 0.6s;
+}
+
+[dir="rtl"] .mwnf-credits__biography {
+  right: 0;
+  left: auto;
+}
+
+.mwnf-credits__person:hover .mwnf-credits__biography,
+.mwnf-credits__person:focus .mwnf-credits__biography {
+  opacity: 1;
+  visibility: visible;
+  transition-delay: 0s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mwnf-credits__biography {
+    transition: none;
+  }
+}
+
 .mwnf-credits__heading {
   margin: 0 0 var(--mwnf-space, 0.75rem);
   font-family: var(--mwnf-font-heading, inherit);

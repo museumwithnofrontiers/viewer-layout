@@ -6,7 +6,7 @@ import { useI18n } from '@museumwnf/viewer-core/i18n'
 // number, the citation. Both families print these; one printed them as a
 // list and the other as sentences, and neither difference was a decision.
 const props = defineProps({
-  /** [{ label, value }] */
+  /** [{ label, value, people? }], `people` [{ name, heading, biography }] printing each person apart */
   credits: { type: Array, default: () => [] },
   workingNumber: { type: String, default: '' },
   workingNumberLabel: { type: String, default: '' },
@@ -27,7 +27,14 @@ const visible = computed(() => props.credits.length > 0 || props.workingNumber |
     <dl v-if="credits.length" class="mwnf-credits__list">
       <template v-for="credit in credits" :key="credit.label">
         <dt class="mwnf-credits__label">{{ credit.label }}</dt>
-        <dd class="mwnf-credits__value">{{ credit.value }}</dd>
+        <dd v-if="credit.people" class="mwnf-credits__value">
+          <template v-for="(person, index) in credit.people" :key="index">
+            <template v-if="index">, </template>
+            <span v-if="person.biography" class="mwnf-credits__person" tabindex="0">{{ person.name }}<span class="mwnf-credits__biography" role="tooltip"><b>{{ person.heading }}</b><br><br>{{ person.biography }}</span></span>
+            <template v-else>{{ person.name }}</template>
+          </template>
+        </dd>
+        <dd v-else class="mwnf-credits__value">{{ credit.value }}</dd>
       </template>
     </dl>
     <p v-if="workingNumber" class="mwnf-credits__number">
