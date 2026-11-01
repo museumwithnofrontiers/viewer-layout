@@ -915,6 +915,13 @@
   /* --mwnf-standalone-related-margin: 0;            The column's margin, out of its grid column */
   /* --mwnf-standalone-related-reach-top: 0px;       How far its colour reaches above it */
   /* --mwnf-standalone-related-reach-right: 0%;      How far its colour reaches to its right, of its width */
+  /* --mwnf-standalone-window-background: transparent;  A window's ground (Glossary & Spelling) */
+  /* --mwnf-standalone-window-header: transparent;   Its band and article */
+  /* --mwnf-standalone-window-header-image: none;    The picture at the band's right (a url()) */
+  /* --mwnf-standalone-window-heading-color: inherit;  The band's heading */
+  /* --mwnf-standalone-window-close: transparent;    The round × */
+  /* --mwnf-standalone-window-panel: #f0ede4;        The pale bands of its content */
+  /* --mwnf-standalone-window-input-border: #ccc;    Its text field's border */
   /* --mwnf-standalone-page-width: 42rem;            Text page column width */
   /* --mwnf-standalone-page-inset: 16.666%;          Text page column inset */
   /* --mwnf-standalone-page-padding: 1.25rem 1.875rem;  Text page padding (top, bottom) */

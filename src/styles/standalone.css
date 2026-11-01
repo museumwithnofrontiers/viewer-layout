@@ -1490,3 +1490,192 @@
     padding-right: 15px;
   }
 }
+
+/* Legacy's windows (`#hcr_timeline .modal-content`), drawn on a route marked
+   `meta.bare`: the coloured ground, the box with its shadow, the band with
+   the heading over the product's picture, the round × above its corner, the
+   scrolling article. Legacy's window opened 700px wide, where its own narrow
+   rules applied: the box 91% wide and 70% of the window high. */
+.mwnf-standalone--bare {
+  min-height: 100vh;
+  background-color: var(--mwnf-standalone-window-background, transparent);
+}
+
+.mwnf-standalone-window {
+  position: fixed;
+  inset: 0;
+  padding-top: 50px;
+  background-color: var(--mwnf-standalone-window-background, transparent);
+}
+
+.mwnf-standalone-window__box {
+  position: relative;
+  width: calc(126vh - 30px);
+  height: 544px;
+  margin: 0 auto;
+  border-radius: 10px;
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.7);
+}
+
+.mwnf-standalone-window__header {
+  padding-bottom: 18px;
+  border-radius: 10px 10px 0 0;
+  background: var(--mwnf-standalone-window-header-image, none) top right no-repeat;
+  background-color: var(--mwnf-standalone-window-header, transparent);
+}
+
+.mwnf-standalone-window__heading {
+  margin: 0;
+  padding: 25px 0 0 15px;
+  font: 600 32px/normal Roboto, sans-serif;
+  color: var(--mwnf-standalone-window-heading-color, inherit);
+}
+
+.mwnf-standalone-window__close {
+  position: absolute;
+  top: -15px;
+  right: -10px;
+  width: 30px;
+  height: 30px;
+  padding: 0 6px;
+  border: 0;
+  border-radius: 50%;
+  font: 700 28px/1 'Times New Roman', serif;
+  color: #000;
+  background-color: var(--mwnf-standalone-window-close, transparent);
+  cursor: pointer;
+}
+
+.mwnf-standalone-window__close:hover,
+.mwnf-standalone-window__close:focus-visible {
+  color: #fff;
+}
+
+.mwnf-standalone-window__article {
+  display: block;
+  width: 100%;
+  max-height: calc(100vh - 170px);
+  overflow-y: scroll;
+  border-radius: 0 0 10px 10px;
+  background-color: var(--mwnf-standalone-window-header, transparent);
+}
+
+@media (max-width: 47.9375rem) {
+  .mwnf-standalone-window {
+    padding-top: 40px;
+  }
+
+  .mwnf-standalone-window__box {
+    width: 91%;
+    height: calc(70vh - 21px);
+  }
+
+  .mwnf-standalone-window__close {
+    top: -37px;
+    right: -9px;
+  }
+}
+
+/* The Glossary & Spelling window (glossarysearch.php): the instruction on the
+   pale band, the field on white, then the term on the pale band again, its
+   headings 15px, its texts 16px on 24px lines, a line between the parts. */
+.mwnf-standalone-glossary {
+  padding: 0 15px;
+}
+
+.mwnf-standalone-glossary__intro {
+  margin: 0;
+  padding: 20px;
+  font: 400 16px/normal Roboto, sans-serif;
+  color: #000;
+  background-color: var(--mwnf-standalone-window-panel, #f0ede4);
+}
+
+.mwnf-standalone-glossary__body {
+  padding: 10px 20px;
+  background-color: #fff;
+}
+
+.mwnf-standalone-glossary__field {
+  position: relative;
+  margin-bottom: 20px;
+}
+
+.mwnf-standalone-glossary__input {
+  display: block;
+  box-sizing: border-box;
+  width: 100%;
+  height: 30px;
+  padding: 0 10px;
+  border: 1px solid var(--mwnf-standalone-window-input-border, #ccc);
+  font: 500 14px/normal Roboto, sans-serif;
+  color: #222;
+  background-color: #fff;
+}
+
+/* jQuery UI's autocomplete menu, as legacy's base theme drew it. */
+.mwnf-standalone-glossary__suggestions {
+  position: absolute;
+  z-index: 1;
+  top: 100%;
+  left: 0;
+  min-width: 100%;
+  box-sizing: border-box;
+  max-height: 240px;
+  margin: 0;
+  padding: 2px;
+  overflow-y: auto;
+  list-style: none;
+  border: 1px solid #aaa;
+  border-radius: 4px;
+  color: #222;
+  background-color: #fff;
+}
+
+.mwnf-standalone-glossary__suggestion {
+  padding: 0.2em 0.4em;
+  font: 400 15px/19px Roboto, sans-serif;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  cursor: default;
+}
+
+.mwnf-standalone-glossary__suggestion:hover,
+.mwnf-standalone-glossary__suggestion--active {
+  border-color: #999;
+  color: #212121;
+  background-color: #dadada;
+}
+
+.mwnf-standalone-glossary__result {
+  padding: 10px 20px;
+  font: 400 16px/24px Roboto, sans-serif;
+  color: #222;
+  background-color: var(--mwnf-standalone-window-panel, #f0ede4);
+}
+
+.mwnf-standalone-glossary__label {
+  margin: 0;
+  font: 500 15px/normal Roboto, sans-serif;
+  color: #000;
+}
+
+.mwnf-standalone-glossary__label--spellings {
+  margin-top: 24px;
+}
+
+.mwnf-standalone-glossary__definition p,
+.mwnf-standalone-glossary__note {
+  margin: 0;
+}
+
+/* Legacy's definitions were one paragraph with an empty line between parts. */
+.mwnf-standalone-glossary__definition p + p {
+  margin-top: 24px;
+}
+
+.mwnf-standalone-glossary__spellings {
+  margin: 24px 0 0;
+  padding: 0;
+  list-style: none;
+}

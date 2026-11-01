@@ -1,11 +1,12 @@
 import { afterEach, describe, expect, it } from 'vitest'
 import { mount } from '@vue/test-utils'
 import { createMemoryHistory, createRouter } from 'vue-router'
-import { loadEntities, partnerView, useSiteConfig } from '@museumwnf/viewer-core'
+import { loadEntities, partnerView, useDataPackage, useSiteConfig } from '@museumwnf/viewer-core'
 import { createI18n } from '@museumwnf/viewer-core/i18n'
 import {
   RelatedContent, StandaloneHome, StandaloneItemSheet, StandalonePartnerPage, StandaloneShell, StandaloneSponsors, StandaloneSubNav,
   StandalonePagination, StandaloneResultsGrid, StandaloneTextPage, StandaloneTileGrid, TodayHighlight, byLanguage, dayOfYear, legacyHomeItemKey, pickForDay,
+  StandaloneGlossarySpelling, StandaloneWindow,
 } from '../src/standalone/index.js'
 import { layoutTexts } from './helpers.js'
 import { settle } from './dxa/helpers.js'
@@ -115,6 +116,7 @@ const ROUTES = [
   { path: '/item/:id', name: 'item', component: { template: '<p>item</p>' } },
   { path: '/partner/:id', name: 'partner', component: { template: '<p>partner</p>' } },
   { path: '/partner/:id/items', name: 'partner-items', component: { template: '<p>items</p>' } },
+  { path: '/glossary-spelling', name: 'glossary-spelling', component: { template: '<p>window</p>' }, meta: { section: 'database', bare: true } },
 ]
 
 async function mountWith(component, { props = {}, slots = {}, route = '/', locale = 'en', site = config } = {}) {
@@ -539,5 +541,56 @@ describe('StandalonePagination', () => {
   it('draws nothing for a single page', async () => {
     const wrapper = await mountWith(StandalonePagination, { props: at(1, 1) })
     expect(wrapper.find('.mwnf-standalone-pages').exists()).toBe(false)
+  })
+})
+
+describe('the standalone windows', () => {
+  const labels = {
+    heading: 'Glossary & Spelling',
+    intro: 'Enter the first letter(s) of the term.',
+    definition: 'Definition',
+    spellings: 'Spellings used in the database',
+    spellingsNote: 'The list below refers to all languages.',
+    close: 'Close',
+  }
+
+  it('draws a route marked bare alone, without the chrome', async () => {
+    const wrapper = await mountWith(StandaloneShell, { route: '/glossary-spelling', props: { languages: ['en'], language: 'en' }, slots: { default: '<p class="page">window</p>' } })
+    expect(wrapper.find('.mwnf-standalone--bare .page').exists()).toBe(true)
+    expect(wrapper.find('header').exists()).toBe(false)
+    expect(wrapper.find('footer').exists()).toBe(false)
+  })
+
+  it('heads the window and closes it from its ×', async () => {
+    const wrapper = await mountWith(StandaloneWindow, { props: { heading: 'Glossary & Spelling', closeLabel: 'Close' }, slots: { default: '<p class="body">body</p>' } })
+    expect(wrapper.find('.mwnf-standalone-window__heading').text()).toBe('Glossary & Spelling')
+    expect(wrapper.find('.mwnf-standalone-window__close').attributes('aria-label')).toBe('Close')
+    expect(wrapper.find('.mwnf-standalone-window__article .body').exists()).toBe(true)
+  })
+
+  it('suggests the spellings the letters start, then shows the term and every spelling it has', async () => {
+    await loadEntities(['glossary'])
+    const { loadTranslations } = useDataPackage()
+    await Promise.all(['en', 'fr'].map((language) => loadTranslations('glossary', language)))
+    const wrapper = await mountWith(StandaloneGlossarySpelling, { props: { language: 'en', labels } })
+    expect(wrapper.find('.mwnf-standalone-glossary__intro').text()).toBe(labels.intro)
+    const input = wrapper.find('.mwnf-standalone-glossary__input')
+    await input.setValue('KU')
+    await settle(() => wrapper.find('.mwnf-standalone-glossary__suggestion').exists())
+    const suggestions = wrapper.findAll('.mwnf-standalone-glossary__suggestion')
+    expect(suggestions.map((s) => s.text())).toEqual(['kufic', 'kufic script'])
+    await suggestions[0].trigger('mousedown')
+    expect(input.element.value).toBe('kufic')
+    expect(wrapper.find('.mwnf-standalone-glossary__suggestions').exists()).toBe(false)
+    expect(wrapper.find('.mwnf-standalone-glossary__definition').text()).toBe('An angular Arabic script.')
+    expect(wrapper.findAll('.mwnf-standalone-glossary__spellings li').map((li) => li.text())).toEqual(['kufic', 'kufic script', 'coufique', 'écriture coufique'])
+  })
+
+  it('suggests nothing for letters no spelling starts', async () => {
+    const wrapper = await mountWith(StandaloneGlossarySpelling, { props: { language: 'en', labels } })
+    await settle(() => true, 50)
+    await wrapper.find('.mwnf-standalone-glossary__input').setValue('zz')
+    expect(wrapper.find('.mwnf-standalone-glossary__suggestions').exists()).toBe(false)
+    expect(wrapper.find('.mwnf-standalone-glossary__label').exists()).toBe(false)
   })
 })
