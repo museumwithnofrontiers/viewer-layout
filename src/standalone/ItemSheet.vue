@@ -91,7 +91,8 @@ function goBack() {
       </RelatedContent>
     </template>
 
-    <!-- Legacy's sheet printed no source address: only a site's own `source` slot draws one. -->
+    <!-- A site's own `source` slot, else RecordView's Source line: the MWNF
+         legal notice (wave K), kept on purpose although legacy printed none. -->
     <template #source="ctx">
       <slot name="source" v-bind="ctx" />
     </template>
