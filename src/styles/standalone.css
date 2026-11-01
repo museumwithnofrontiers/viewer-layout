@@ -183,7 +183,8 @@
 
 .mwnf-standalone-home__links {
   margin: var(--mwnf-standalone-home-links-margin, 3.5rem 0 0);
-  padding-inline-start: 1.5rem;
+  padding-inline-start: var(--mwnf-standalone-home-links-inset, 1.5rem);
+  line-height: var(--mwnf-standalone-home-links-line-height, inherit);
   list-style: none;
 }
 
@@ -191,6 +192,10 @@
 .mwnf-standalone-related__item {
   position: relative;
   margin-bottom: 0.125rem;
+}
+
+.mwnf-standalone-home__links li {
+  margin-bottom: var(--mwnf-standalone-home-links-gap, 0.125rem);
 }
 
 .mwnf-standalone-home__links li::before {
@@ -215,6 +220,7 @@
 .mwnf-standalone-highlight {
   display: flow-root;
   padding-top: var(--mwnf-standalone-highlight-offset, 3.5rem);
+  line-height: var(--mwnf-standalone-highlight-line-height, inherit);
 }
 
 .mwnf-standalone-highlight__media {
@@ -229,7 +235,7 @@
 }
 
 .mwnf-standalone-highlight p {
-  margin: 0 0 0.75rem;
+  margin: 0 0 var(--mwnf-standalone-highlight-paragraph-gap, 0.75rem);
 }
 
 .mwnf-standalone-highlight__heading strong {
@@ -1053,6 +1059,46 @@
   background: none;
   border: none;
   cursor: pointer;
+}
+
+/* ── The footer: legacy's p.cookie_footer and #social-media ─────────────────
+   The links and the copyright on one centred line, "&nbsp;|&nbsp;" between
+   them, 14px on 24px; the icons at the content's right edge on that line;
+   50px under it, where legacy left room for its cookie bar. */
+
+.mwnf-standalone .mwnf-footer {
+  position: relative;
+  display: block;
+  padding-bottom: calc(var(--mwnf-footer-padding, 1.25rem) + 50px);
+  font-weight: var(--mwnf-standalone-footer-weight, 400);
+  line-height: 24px;
+  text-align: center;
+}
+
+.mwnf-standalone .mwnf-footer__links,
+.mwnf-standalone .mwnf-footer__links li,
+.mwnf-standalone .mwnf-footer__text {
+  display: inline;
+}
+
+.mwnf-standalone .mwnf-footer__links li + li::before,
+.mwnf-standalone .mwnf-footer__links + .mwnf-footer__text::before {
+  content: "\a0|\a0";
+  padding: 0;
+}
+
+.mwnf-standalone .mwnf-footer__social {
+  position: absolute;
+  top: calc(var(--mwnf-footer-padding, 1.25rem) + 1px);
+  right: max(var(--mwnf-content-padding, 1rem), calc((100% - var(--mwnf-content-width, 64rem)) / 2));
+  gap: 0;
+  margin: 0;
+  padding: 0 15px;
+}
+
+.mwnf-standalone .mwnf-footer__social li {
+  margin: 0 5px;
+  line-height: 1;
 }
 
 /* ── Print: the print logo, no chrome around the page ─────────────────────── */

@@ -8,7 +8,8 @@ import SmartLink from '../content/SmartLink.vue'
 // - the name; "Also known as:" the other name; the date, then the period or
 //   dynasty after a comma; the materials; the holding museum — each without
 //   its ending period;
-// - then the place: the location and the country;
+// - then the place: the location and the country, or the line the site
+//   composes itself (`place`: Islamic Art's adds the province);
 // - then the link to the record's page.
 // `text` is the record's translation, `country` the country's name, already
 // resolved; every label is an entry name.
@@ -19,6 +20,8 @@ const props = defineProps({
   to: { type: [String, Object], default: null },
   /** Legacy's picture of the day, in place of the record's own first picture. */
   picture: { type: String, default: '' },
+  /** The place line as the site composes it, in place of "location, country". */
+  place: { type: String, default: null },
   heading: { type: String, default: '' },
   alsoKnownAs: { type: String, default: '' },
   action: { type: String, default: '' },
@@ -42,7 +45,7 @@ const lines = computed(() => {
   }
   return out
 })
-const place = computed(() => [clean(props.text?.location), props.country].filter(Boolean).join(', '))
+const place = computed(() => props.place ?? [clean(props.text?.location), props.country].filter(Boolean).join(', '))
 const image = computed(() => props.picture || (props.record?.images?.[0]?.url ?? ''))
 const alt = computed(() => renderPlain(String(props.text?.name ?? props.record?.internal_name ?? '')))
 </script>
