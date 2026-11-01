@@ -1,3 +1,12 @@
+## 3.25.1 (2026-11-01)
+
+### Fixed
+
+- **The standalone item sheet draws a single picture's thumbnail**, as
+  legacy's sheet did (its picture viewer always drew the strip).
+  `MediaGallery` takes `thumbsFrom`, the number of images from which it
+  draws the thumbnails (2 by default, as before).
+
 ## 3.25.0 (2026-11-01)
 
 ### Added

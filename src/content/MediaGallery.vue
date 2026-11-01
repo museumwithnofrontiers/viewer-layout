@@ -13,6 +13,8 @@ const props = defineProps({
   start: { type: Number, default: 0 },
   /** No thumbnails, no lightbox: every image in a row, as the standalone sites showed them. */
   variant: { type: String, default: '' },
+  /** The thumbnails are drawn from this many images; legacy's standalone sheet drew one for a single image. */
+  thumbsFrom: { type: Number, default: 2 },
 })
 const { t } = useI18n()
 
@@ -71,7 +73,7 @@ onBeforeUnmount(() => document.removeEventListener('keydown', onKey))
       <button type="button" class="mwnf-media__main" @click="openLightbox">
         <img class="mwnf-media__image" :src="image.url" :alt="image.alt ?? ''" />
       </button>
-      <ul v-if="images.length > 1" class="mwnf-media__thumbs">
+      <ul v-if="images.length >= thumbsFrom" class="mwnf-media__thumbs">
         <li v-for="(item, index) in images" :key="item.url ?? index">
           <button
             type="button"
