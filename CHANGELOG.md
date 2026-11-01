@@ -1,3 +1,25 @@
+## 3.25.0 (2026-11-01)
+
+### Added
+
+- **The standalone Related Content column's place and colour**:
+  `--mwnf-standalone-related-margin` sets it out of its grid column (legacy's
+  `.col-lg-3` in a row wider than the container); `-reach-top` and
+  `-reach-right` carry its colour up to the band and out to the right, drawn
+  behind it without widening the page.
+
+### Fixed
+
+- **The column is as tall as what it holds**, as legacy's, not the record's
+  height.
+- **Its spacing is legacy's**: 22px paragraph lines with no margin, the
+  heading 14px and "Related objects" 3px over what follows, the dynasties
+  16px under the links, the exhibitions' heading 10px over its list and the
+  galleries' on theirs, Download a line and 15px under the galleries.
+- **Related records are whole pictures**, no larger than
+  `--mwnf-standalone-related-thumb-size` (now 70px), centred on 20px lines,
+  10px apart and 5px over the next line, no longer cropped squares.
+
 ## 3.24.2 (2026-11-01)
 
 ### Fixed
