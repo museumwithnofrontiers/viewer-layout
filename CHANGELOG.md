@@ -1,3 +1,13 @@
+## 3.20.1 (2026-11-01)
+
+### Fixed
+
+- **No Source line on the standalone item sheet and partner profile**:
+  legacy printed none. The item sheet meant to leave it out but drew it
+  anyway (an empty slot falls back to its default); `RecordView`'s new
+  `spec.source: false` draws none, and both pages set it. A site's own
+  `source` slot still draws its own.
+
 ## 3.20.0 (2026-11-01)
 
 ### Added

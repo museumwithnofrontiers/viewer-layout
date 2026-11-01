@@ -49,6 +49,7 @@ const spec = {
   media: () => [],
   citation: false,
   related: false,
+  source: false,
 }
 
 const LABELS = {

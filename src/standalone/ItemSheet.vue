@@ -31,7 +31,7 @@ const { t } = useI18n()
 const slots = useSlots()
 
 // RecordView draws no pictures here: the left column does.
-const sheetSpec = computed(() => ({ ...props.spec, media: () => [] }))
+const sheetSpec = computed(() => ({ ...props.spec, media: () => [], source: false }))
 
 function imagesOf(ctx) {
   return limitPictures(allImagesOf(ctx), props.spec.pictureLimit, ctx)
@@ -92,7 +92,7 @@ function goBack() {
     </template>
 
     <!-- Legacy's sheet printed no source address: only a site's own `source` slot draws one. -->
-    <template #source="ctx">
+    <template v-if="$slots.source" #source="ctx">
       <slot name="source" v-bind="ctx" />
     </template>
 

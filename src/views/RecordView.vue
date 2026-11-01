@@ -55,6 +55,7 @@ import { limitPictures } from './pictureLimit.js'
 // surround the block with its own; a slot named after a `custom` or `link`
 // row's key reaches the sheet. `source`, under the citation, defaults to
 // `SourceCredit` — nothing unless the website declares `site.origin`.
+// `spec.source: false` draws none (a slot left empty would still draw it).
 // A website whose page is not this shape registers its own component instead.
 
 const props = defineProps({
@@ -290,7 +291,7 @@ const rowSlots = computed(() => Object.keys(slots).filter((name) => !OWN_SLOTS.h
         />
 
         <slot name="source" v-bind="ctx">
-          <SourceCredit />
+          <SourceCredit v-if="spec.source !== false" />
         </slot>
 
         <slot name="related" v-bind="{ ...ctx, records: relatedRows, outside: related.outside }">

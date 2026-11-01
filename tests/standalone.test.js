@@ -338,6 +338,8 @@ describe('StandaloneItemSheet', () => {
     await loadEntities(['objects'])
     const wrapper = await mountWith(StandaloneItemSheet, {
       route: '/objects/o1',
+      // With an origin the platform would print its Source line; legacy's sheet had none.
+      site: { ...config, site: { origin: 'https://example.org' } },
       props: {
         spec,
         id: 'o1',
@@ -359,6 +361,7 @@ describe('StandaloneItemSheet', () => {
     expect(related.find('.mwnf-standalone-related__thumbs a').attributes('href')).toBe('/item/o2')
     expect(related.find('.own-block').text()).toBe('Timeline for this item')
     expect(related.find('.mwnf-standalone-related__print').text()).toBe('As PDF (including images)')
+    expect(wrapper.find('.mwnf-source-credit').exists()).toBe(false)
     expect(wrapper.find('.mwnf-record__title').exists()).toBe(false)
   })
 })
@@ -379,7 +382,7 @@ describe('StandalonePartnerPage', () => {
 
   it("draws legacy's profile: the way back, the name and place, the pills, the pictures beside the open tab, the map", async () => {
     await loadEntities(['partners'])
-    const wrapper = await mountWith(StandalonePartnerPage, { route: '/partner/p1', props })
+    const wrapper = await mountWith(StandalonePartnerPage, { route: '/partner/p1', props, site: { ...config, site: { origin: 'https://example.org' } } })
     await settle(() => wrapper.find('.mwnf-standalone-partner__location').exists() && wrapper.find('.mwnf-standalone-partner__location').text() === 'Cairo, Egypt', 200)
     expect(wrapper.findAll('.mwnf-standalone-item__back-link').map((l) => l.text())).toEqual(['Back', 'Partners'])
     expect(wrapper.find('.mwnf-standalone-partner__location').text()).toBe('Cairo, Egypt')
@@ -403,6 +406,7 @@ describe('StandalonePartnerPage', () => {
     expect(wrapper.find('.mwnf-standalone-partner__map-heading').text()).toBe('The Partner on Google Maps')
     expect(wrapper.find('.mwnf-partner-map__embed').attributes('src')).toBe('https://maps.google.com/maps?q=30.0444,31.2357&z=10&t=h&hl=en&output=embed')
     expect(wrapper.find('.mwnf-sheet__value').exists()).toBe(false)
+    expect(wrapper.find('.mwnf-source-credit').exists()).toBe(false)
     // Only a museum offers its languages, as legacy's; the fixture partner has no type.
     expect(wrapper.find('.mwnf-standalone-item__top').exists()).toBe(false)
     expect(wrapper.find('.mwnf-record__title').exists()).toBe(false)
