@@ -54,10 +54,10 @@ import SmartLink from '../content/SmartLink.vue'
 //
 // The query it writes is the query `CatalogueResultsView`'s own spec reads:
 // `q`/`field` for the first keyword row, `q2`/`field2`/`op2` and on for the
-// rows after it, `from`/`to` for the date bound, `searchlanguage` for the search
-// language (viewer-core's `SEARCH_LANGUAGE_KEY`; `lang` is the language the
-// website is read in), a facet's own `key` for its value, and an extra's own `key` set
-// to `'1'`. In `facets` mode, choosing a value navigates immediately, with
+// rows after it, `from`/`to` for the date bound, `searchlanguage` for the
+// search language (viewer-core's `SEARCH_LANGUAGE_KEY`: `lang` is the
+// language the website is read in), a facet's own `key` for its value, and
+// an extra's own `key` set to `'1'`. In `facets` mode, choosing a value navigates immediately, with
 // only that one key — legacy's own `CollectionSearch.vue` behaviour, not an
 // accumulating filter panel. "Show all" (`showAllLabel`, wired to
 // `FilterPanel`'s reset) navigates to the target with none of the form's own
