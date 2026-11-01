@@ -421,6 +421,18 @@ describe('RecordView', () => {
     expect(wrapper.find('.mwnf-record').classes()).toContain('mwnf-record--spaced')
   })
 
+  it("prints the site's own citation, as the HTML its format returns", async () => {
+    const format = ({ text }, { year }) => `"${text.name}" in <i>The Site</i>, ${year}.`
+    const { wrapper } = await mountView(RecordView, {
+      props: { spec: { ...spec, citation: { format } }, id: 'o3' },
+      route: '/objects/o3',
+    })
+    await settle(() => wrapper.find('.mwnf-credits__citation i').exists())
+    expect(wrapper.find('.mwnf-credits__citation').html()).toContain('in <i>The Site</i>,')
+    expect(wrapper.find('.mwnf-credits__citation').text()).toContain(`${new Date().getFullYear()}.`)
+    expect(wrapper.findAll('.mwnf-credits__citation')).toHaveLength(1)
+  })
+
   it("reads the citation's project name from the data package manifest when the spec sets no project override", async () => {
     const { wrapper } = await mountView(RecordView, {
       props: { spec: { ...spec, citation: {} }, id: 'o3' },

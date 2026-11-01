@@ -38,7 +38,8 @@ import { limitPictures } from './pictureLimit.js'
 //     credits: [{ field: 'author', label: 'sheet.field.preparedBy' }, …],
 //     workingNumber: 'mwnf_reference',
 //     workingNumberLabel: 'sheet.field.workingNumber',   // the entry naming it
-//     citation: { project: '<project id>' | (record, ctx) => string, permalink: true | false | string } | false,
+//     citation: { project: '<project id>' | (record, ctx) => string, permalink: true | false | string,
+//                 format: (ctx, { permalink, year }) => html } | false,   // the site's own sentence, escaped HTML
 //     related: { variant: 'list' | 'grid', heading: 'record.related.items', record: (entry, ctx) => row } | false,
 //     back: { label: 'record.action.backToResults', to | href },
 //     title: (ctx) => inline HTML,                     // default: the record's name
@@ -188,28 +189,36 @@ const credits = computed(() =>
 
 const workingNumber = computed(() => String(record.value?.[spec.value.workingNumber ?? 'mwnf_reference'] ?? ''))
 
+// `permalink: false` keeps disabling it; a string keeps winning; otherwise
+// (unset, or `true`) the address is the site's own — `sourceUrl` reads the
+// declared `site.origin`, so a site that has not declared one gets no
+// address rather than a browser-local guess that resolves nowhere once
+// copied out of the app.
+function citationPermalink(s) {
+  if (s?.permalink === false) return undefined
+  return typeof s?.permalink === 'string' ? s.permalink : sourceUrl(route) ?? undefined
+}
+
+// A site whose legacy worded its citation its own way composes it
+// (`format`), as HTML it has escaped itself.
+const citationHtml = computed(() => {
+  const s = spec.value.citation
+  if (!record.value || typeof s?.format !== 'function') return ''
+  return s.format(ctx.value, { permalink: citationPermalink(s), year: new Date().getFullYear() })
+})
+
 const citationText = computed(() => {
   const s = spec.value.citation
-  if (!record.value || s === false) return ''
+  if (!record.value || s === false || typeof s?.format === 'function') return ''
   const projectId = typeof s?.project === 'function' ? null : (s?.project ?? record.value.project_id)
   const project = typeof s?.project === 'function'
     ? s.project(record.value, ctx.value)
     : projects.label(projectId)
-  // `permalink: false` keeps disabling it; a string keeps winning; otherwise
-  // (unset, or `true`) the address is the site's own — `sourceUrl` reads the
-  // declared `site.origin`, so a site that has not declared one gets no
-  // address rather than a browser-local guess that resolves nowhere once
-  // copied out of the app.
-  const permalink = s?.permalink === false
-    ? undefined
-    : typeof s?.permalink === 'string'
-      ? s.permalink
-      : sourceUrl(route) ?? undefined
   return citation({
     author: creditValue('author') || undefined,
     name: text.value.name ?? record.value.internal_name ?? '',
     project,
-    permalink,
+    permalink: citationPermalink(s),
     inWord: t('record.citation.in'),
   })
 })
@@ -286,6 +295,7 @@ const rowSlots = computed(() => Object.keys(slots).filter((name) => !OWN_SLOTS.h
           :working-number="workingNumber"
           :working-number-label="t(spec.workingNumberLabel ?? 'sheet.field.workingNumber')"
           :citation="citationText"
+          :citation-html="citationHtml"
           :citation-heading="spec.citation?.heading ? t(spec.citation.heading) : ''"
         />
 
