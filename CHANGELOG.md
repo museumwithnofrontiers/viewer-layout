@@ -1,3 +1,32 @@
+## 3.20.0 (2026-11-01)
+
+### Added
+
+- **`StandalonePartnerPage`** (`@museumwnf/viewer-layout/standalone`):
+  the standalone family's partner profile, legacy's `pm_partner.php`, which
+  Discover Islamic Art, Discover Baroque Art and Sharing History share. The
+  ways back; the name over "city, country" in italics; the About | Contact |
+  Logo | homepage pill beside the pill to the partner's items; the pictures
+  beside the open tab; for a museum with coordinates, the map across the
+  page under its heading. A product passes its view-model, ways back, items
+  link and words (`labels`); `about`, `bands`, `map` and `links` cover
+  legacy's own rules. Two tokens: `--mwnf-standalone-pill` and
+  `--mwnf-standalone-heading-color`.
+- **`PartnerMap`'s `provider: 'google'`**: Google's keyless embed in its
+  hybrid view at the record's zoom, in the page's `language`, without the
+  map's own title or link, as legacy's partner profile drew it
+  (inventory-app#2414). OpenStreetMap stays the default.
+
+### Fixed
+
+- **The standalone band of a record's languages** runs across the page
+  straight under the banner, its words in legacy's order (the first one
+  listed on the right), 26px high, 20px over the content, on the item sheet
+  as on the partner profile.
+- **The item sheet** runs from the band down without the composed views'
+  16px gaps; its sheet opens with its first label 28px under the way back,
+  as legacy's.
+
 ## 3.19.0 (2026-11-01)
 
 ### Added
