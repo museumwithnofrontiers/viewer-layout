@@ -694,11 +694,12 @@
 
 /* ── Result tiles: legacy's `pc_all` grid (style_inside.css) ─────────────── */
 
-/* Four col-md-3 cells to a row, each a 230 by 160 frame. */
+/* Four col-md-3 cells to a row, each a 230 by 160 frame. Legacy set the
+   cells straight in the results column, no row between: the column's own
+   padding is their edge. */
 .mwnf-standalone-results {
   display: flex;
   flex-wrap: wrap;
-  margin: 0 -15px;
 }
 
 .mwnf-standalone-results__cell {

@@ -248,8 +248,10 @@ const pagination = computed(() => ({ window: 5, jump: false, ends: true, ...(spe
             <template #empty><slot name="empty" v-bind="slotProps">{{ empty }}</slot></template>
           </component>
         </slot>
+        <!-- A website's slot replaces the default even when it draws nothing
+             (its pages elsewhere): Vue would fall back on an empty slot. -->
         <slot name="pagination" v-bind="slotProps">
-          <Pagination :page-info="pageInfo" :window="pagination.window" :jump="pagination.jump" :ends="pagination.ends" @navigate="goToPage" />
+          <Pagination v-if="!$slots.pagination" :page-info="pageInfo" :window="pagination.window" :jump="pagination.jump" :ends="pagination.ends" @navigate="goToPage" />
         </slot>
       </div>
       <aside v-if="$slots.aside" class="mwnf-catalogue__aside"><slot name="aside" v-bind="slotProps" /></aside>
