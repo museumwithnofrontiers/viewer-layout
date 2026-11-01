@@ -5,7 +5,7 @@ import { loadEntities, useSiteConfig } from '@museumwnf/viewer-core'
 import { createI18n } from '@museumwnf/viewer-core/i18n'
 import {
   RelatedContent, StandaloneHome, StandaloneItemSheet, StandaloneShell, StandaloneSponsors, StandaloneSubNav,
-  StandaloneTextPage, StandaloneTileGrid, TodayHighlight, byLanguage, dayOfYear, legacyHomeItemKey, pickForDay,
+  StandalonePagination, StandaloneResultsGrid, StandaloneTextPage, StandaloneTileGrid, TodayHighlight, byLanguage, dayOfYear, legacyHomeItemKey, pickForDay,
 } from '../src/standalone/index.js'
 import { layoutTexts } from './helpers.js'
 import { settle } from './dxa/helpers.js'
@@ -410,5 +410,63 @@ describe('Sharing History blocks', () => {
       props: { items: [{ image: 'legacy/homeImg1.jpg', text: 'The *Hospitality* of Sultans', to: { name: 'database' } }] },
     })
     expect(wrapper.find('.mwnf-standalone-tiles__label').text()).toBe('The Hospitality of Sultans')
+  })
+})
+
+describe('StandaloneResultsGrid', () => {
+  const rows = [
+    { id: 'a', to: { name: 'item', params: { id: 'a' } }, image: 'a.jpg', name: 'Coin (<i>dirham</i>)', lines: ['Hegira 91 / AD 709, Umayyad'], holder: 'Museum of Civilisations', location: 'Rome, Italy' },
+    { id: 'b', href: '#/item/b', image: '', name: 'Jar', lines: [] },
+  ]
+
+  it("draws legacy's tiles: the picture, then on hover the name, date line, holder, location and the sheet link", async () => {
+    const wrapper = await mountWith(StandaloneResultsGrid, { props: { rows, seeLabel: 'See Database Entry', noImage: 'none.gif' } })
+    const tiles = wrapper.findAll('.mwnf-standalone-results__tile')
+    expect(tiles).toHaveLength(2)
+    const panel = tiles[0].find('.mwnf-standalone-results__panel')
+    expect(panel.find('.mwnf-standalone-results__name').html()).toContain('Coin (<i>dirham</i>)')
+    expect(panel.text()).toContain('Hegira 91 / AD 709, Umayyad')
+    expect(panel.find('.mwnf-standalone-results__holder').text()).toBe('Museum of Civilisations')
+    expect(panel.text()).toContain('Rome, Italy')
+    expect(panel.find('.mwnf-standalone-results__see').text()).toBe('See Database Entry')
+    // A record with no picture shows the site's placeholder.
+    expect(tiles[1].find('.mwnf-standalone-results__frame img').attributes('src')).toBe('none.gif')
+  })
+
+  it('says so when there is no row', async () => {
+    const wrapper = await mountWith(StandaloneResultsGrid, { props: { rows: [], seeLabel: 'See', empty: 'No result' } })
+    expect(wrapper.find('.mwnf-standalone-results__empty').text()).toBe('No result')
+  })
+})
+
+describe('StandalonePagination', () => {
+  const labels = { previousLabel: 'Previous', nextLabel: 'Next' }
+  const at = (currentPage, lastPage) => ({ pageInfo: { currentPage, lastPage }, ...labels })
+  const numbers = (wrapper) => wrapper.findAll('.mwnf-standalone-pages__number').map((a) => a.text())
+
+  it("lists legacy's block of twenty pages around the current one, the current underlined", async () => {
+    const first = await mountWith(StandalonePagination, { props: at(11, 27) })
+    expect(numbers(first)).toEqual(Array.from({ length: 20 }, (_, i) => String(i + 1)))
+    expect(first.find('.mwnf-standalone-pages__number--active').text()).toBe('11')
+    const second = await mountWith(StandalonePagination, { props: at(21, 27) })
+    expect(numbers(second)).toEqual(['21', '22', '23', '24', '25', '26', '27'])
+  })
+
+  it('leaves "Previous" and "Next" as plain words at the ends, and links them elsewhere', async () => {
+    const start = await mountWith(StandalonePagination, { props: at(1, 7) })
+    expect(start.find('.mwnf-standalone-pages__previous a').exists()).toBe(false)
+    expect(start.find('.mwnf-standalone-pages__previous').text()).toBe('Previous')
+    await start.find('.mwnf-standalone-pages__next a').trigger('click')
+    expect(start.emitted('navigate')).toEqual([[2]])
+
+    const end = await mountWith(StandalonePagination, { props: at(7, 7) })
+    expect(end.find('.mwnf-standalone-pages__next a').exists()).toBe(false)
+    await end.findAll('.mwnf-standalone-pages__number')[2].trigger('click')
+    expect(end.emitted('navigate')).toEqual([[3]])
+  })
+
+  it('draws nothing for a single page', async () => {
+    const wrapper = await mountWith(StandalonePagination, { props: at(1, 1) })
+    expect(wrapper.find('.mwnf-standalone-pages').exists()).toBe(false)
   })
 })

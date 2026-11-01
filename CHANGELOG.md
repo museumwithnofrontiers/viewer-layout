@@ -1,3 +1,24 @@
+## 3.19.0 (2026-11-01)
+
+### Added
+
+- **`StandaloneResultsGrid`** (`@museumwnf/viewer-layout/standalone`):
+  legacy's `pc_all` result tiles, four to a row: each record's picture in
+  a 230×160 frame, and under the pointer (or the keyboard's focus) a panel
+  with the picture again, the name, the record's lines, the holder, the
+  location and the "See" link. On a phone the panel stands beside the
+  picture. Two tokens: `--mwnf-standalone-results-border` and
+  `--mwnf-standalone-results-panel`.
+- **`CatalogueResultsView`'s `records` slot**: a website draws the page's
+  rows itself (the slot receives the rows, the empty flag and the usual
+  slot props); the default stays the list or grid.
+- **`StandalonePagination`**: legacy's `page_listing`, "Previous", the
+  page numbers in blocks of twenty, then "Next", centred, with legacy's
+  arrows (`--mwnf-standalone-back-arrow`, `--mwnf-standalone-bullet`);
+  the ends are plain words on the first and the last page.
+- **`CatalogueResultsView`'s `pagination` slot**: a website draws the
+  pages' links itself, or elsewhere on the page (an empty slot draws none).
+
 ## 3.18.1 (2026-11-01)
 
 ### Fixed

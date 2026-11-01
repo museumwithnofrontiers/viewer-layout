@@ -237,6 +237,39 @@ describe('CatalogueResultsView', () => {
     expect(wrapper.find('.mwnf-list__link').attributes('href')).toBe('/objects/o1')
   })
 
+  it("hands the page's rows to a website's `records` slot, which draws them in place of the list", async () => {
+    const { wrapper } = await mountView(CatalogueResultsView, {
+      props: { spec },
+      slots: { records: '<template #records="{ rows }"><p v-for="row in rows" :key="row.id" class="own-tile" v-html="row.name"></p></template>' },
+      route: '/objects',
+    })
+    await settle(() => wrapper.findAll('.own-tile').length > 0)
+    expect(wrapper.findAll('.own-tile').map((p) => p.text())).toEqual(['Glazed bowl', 'Mosque lamp'])
+    expect(wrapper.find('.mwnf-list').exists()).toBe(false)
+    expect(wrapper.find('.mwnf-pagination').exists()).toBe(true)
+  })
+
+  it("hands the pages to a website's `pagination` slot, which draws them in place of the default", async () => {
+    const { wrapper } = await mountView(CatalogueResultsView, {
+      props: { spec: { ...spec, pageSize: 1 } },
+      slots: { pagination: '<template #pagination="{ pageInfo }"><p class="own-pages">{{ pageInfo.currentPage }} of {{ pageInfo.lastPage }}</p></template>' },
+      route: '/objects',
+    })
+    await settle(() => wrapper.find('.own-pages').exists())
+    expect(wrapper.find('.own-pages').text()).toBe('1 of 4')
+    expect(wrapper.find('.mwnf-pagination').exists()).toBe(false)
+  })
+
+  it('draws no pages for an empty `pagination` slot, the website drawing them elsewhere', async () => {
+    const { wrapper } = await mountView(CatalogueResultsView, {
+      props: { spec: { ...spec, pageSize: 1 } },
+      slots: { pagination: '<template #pagination></template>', after: '<p class="own-pages">pages</p>' },
+      route: '/objects',
+    })
+    await settle(() => wrapper.find('.own-pages').exists())
+    expect(wrapper.find('.mwnf-pagination').exists()).toBe(false)
+  })
+
   // The look a site would otherwise restyle the view's insides for.
   it('frames the results as a panel when the spec asks for the boxed look', async () => {
     const plain = await mountView(CatalogueResultsView, { props: { spec }, route: '/objects' })
