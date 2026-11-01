@@ -1,5 +1,6 @@
 <script setup>
 import { computed } from 'vue'
+import { useRoute } from 'vue-router'
 import { useI18n, useSection, useSiteConfig } from '@museumwnf/viewer-core'
 import SiteShell from '../components/SiteShell.vue'
 import { chromeSource } from '../chrome.js'
@@ -30,7 +31,8 @@ import { byLanguage } from './chrome.js'
 //   }
 //
 // The inner pages' band is titled by `navigation.sectionTitles[section]`, as
-// on every site. Every value is optional.
+// on every site. Every value is optional. A route marked `meta.bare` is one
+// of legacy's windows (the Glossary & Spelling tool): drawn alone, no chrome.
 
 const props = defineProps({
   language: { type: String, default: 'en' },
@@ -39,6 +41,8 @@ const props = defineProps({
 const emit = defineEmits(['update:language'])
 
 const { t, locale } = useI18n()
+const route = useRoute()
+const bare = computed(() => Boolean(route.meta?.bare))
 const siteConfig = useSiteConfig()
 const section = useSection()
 
@@ -105,7 +109,11 @@ const pageClass = computed(() => [
 </script>
 
 <template>
+  <div v-if="bare" class="mwnf-standalone mwnf-standalone--bare">
+    <slot />
+  </div>
   <SiteShell
+    v-else
     :class="pageClass"
     :config="shellConfig"
     :languages="standalone.languages === false ? [] : props.languages"

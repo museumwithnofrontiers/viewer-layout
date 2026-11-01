@@ -1,3 +1,22 @@
+## 3.26.0 (2026-11-02)
+
+Needs `@museumwnf/viewer-core` 2.13.0 (`collate`).
+
+### Added
+
+- **Legacy's windows on the standalone sites**: a route marked `meta.bare`
+  is drawn alone by `StandaloneShell`, without the chrome, and
+  `StandaloneWindow` draws legacy's `#hcr_timeline` window: the heading in
+  its band over the product's picture, the round × that closes it, the
+  scrolling article. Its colours and picture are the
+  `--mwnf-standalone-window-*` tokens.
+- **`StandaloneGlossarySpelling`**: legacy's Glossary & Spelling window
+  (`glossarysearch.php`). The first letters of a term bring the spellings
+  they start in the site's language; a pick shows the term's definition and
+  every spelling the database knows it by, in all languages. Legacy's own
+  suggestions never arrived (its script read a POST its autocomplete sent
+  as a GET); this window does what the scripts were written to do.
+
 ## 3.25.1 (2026-11-01)
 
 ### Fixed
