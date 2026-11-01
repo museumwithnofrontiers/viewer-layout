@@ -397,6 +397,14 @@ describe('MediaGallery', () => {
     expect(wrapper.findAll('figure')).toHaveLength(2)
     expect(wrapper.find('.mwnf-media__thumbs').exists()).toBe(false)
   })
+
+  it('draws a single image’s thumbnail only when asked to, as legacy’s standalone sheet did', () => {
+    const one = [images[0]]
+    const plain = mount(MediaGallery, { props: { images: one }, ...globalWithI18n() })
+    expect(plain.find('.mwnf-media__thumbs').exists()).toBe(false)
+    const sheet = mount(MediaGallery, { props: { images: one, thumbsFrom: 1 }, ...globalWithI18n() })
+    expect(sheet.findAll('.mwnf-media__thumb')).toHaveLength(1)
+  })
 })
 
 describe('GlossaryPopover', () => {

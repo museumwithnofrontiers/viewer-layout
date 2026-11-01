@@ -75,7 +75,7 @@ function goBack() {
             <SmartLink v-else class="mwnf-standalone-item__back-link" :to="link.to" :href="link.href">{{ link.label }}</SmartLink>
           </template>
         </p>
-        <MediaGallery :images="imagesOf(ctx)" />
+        <MediaGallery :images="imagesOf(ctx)" :thumbs-from="1" />
       </div>
       <slot name="before-sheet" v-bind="ctx" />
     </template>
