@@ -1,3 +1,18 @@
+## 3.26.1 (2026-11-02)
+
+### Fixed
+
+- **The standalone item sheet's columns are legacy's Bootstrap columns**:
+  col-md-4, col-md-5 and col-md-3 of a row one gap wider than the
+  container. The middle column was 7.5px too narrow, so a long value could
+  wrap one line more than legacy's. A product whose Related Content column
+  sets `--mwnf-standalone-related-margin` to reach legacy's `.col-lg-3` now
+  sets it symmetrically (Islamic Art: `0 -15px`).
+- **The sheet's sections follow its rows as legacy's did**: 10px under the
+  last value, where the sheet's own bottom margin added 20px.
+- **"View Short Description" stands 10px under the description**, as
+  legacy's link under its paragraph.
+
 ## 3.26.0 (2026-11-02)
 
 Needs `@museumwnf/viewer-core` 2.13.0 (`collate`).
