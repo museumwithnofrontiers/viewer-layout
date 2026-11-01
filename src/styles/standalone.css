@@ -144,6 +144,8 @@
   padding: var(--mwnf-standalone-menu-padding, 0.3125rem 0);
   font-size: var(--mwnf-standalone-menu-size, 0.9375rem);
   font-weight: var(--mwnf-standalone-menu-weight, 500);
+  /* Legacy's `ul.nav li a` set no line height: the band is 28px, not 34. */
+  line-height: normal;
   color: var(--mwnf-standalone-menu-link, inherit);
   background-color: var(--mwnf-standalone-menu-background, transparent);
   text-decoration: none;
@@ -153,8 +155,8 @@
   background-color: var(--mwnf-standalone-menu-alt-background, var(--mwnf-standalone-menu-background, transparent));
 }
 
-.mwnf-standalone .mwnf-nav__link:hover,
-.mwnf-standalone .mwnf-nav__link--active {
+/* Only hovering colours an entry: legacy's menu marked no current section. */
+.mwnf-standalone .mwnf-nav__link:hover {
   color: var(--mwnf-standalone-menu-hover, inherit);
   text-decoration: none;
 }

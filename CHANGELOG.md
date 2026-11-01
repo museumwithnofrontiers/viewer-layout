@@ -1,3 +1,11 @@
+## 3.18.1 (2026-11-01)
+
+### Fixed
+
+- **The standalone menu band** is legacy's 28px (its links set no line
+  height), not 34px, and no entry is coloured as the current section:
+  legacy's menu marked none, only the hovered one.
+
 ## 3.18.0 (2026-11-01)
 
 ### Added
