@@ -1,3 +1,13 @@
+## 3.24.1 (2026-11-01)
+
+### Fixed
+
+- **The biography box starts where the name ends**, as legacy's tooltip,
+  and keeps its own colour rather than the name's. The name that opens it
+  takes `--mwnf-credits-person-color` and `-decoration` (legacy Islamic
+  Art: the sheet's link blue, underlined); the box's bold name
+  `--mwnf-credits-biography-heading-weight`.
+
 ## 3.24.0 (2026-11-01)
 
 ### Added
