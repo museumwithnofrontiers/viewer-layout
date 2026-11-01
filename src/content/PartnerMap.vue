@@ -9,10 +9,17 @@ import { useI18n } from '@museumwnf/viewer-core/i18n'
 // This component surfaces the map provider choice: the iframe `src` and the
 // full-map link are OSM-specific; swapping to another provider means changing
 // only this component, not any caller.
+//
+// `provider: 'google'` is the standalone family's partner profile, which
+// legacy drew with Google Maps (inventory-app#2414): Google's keyless embed,
+// in its hybrid view at the record's zoom, in the page's `language`, with
+// neither title nor link (the page heads the map itself, as legacy did).
 const props = defineProps({
   latitude: { type: Number, default: null },
   longitude: { type: Number, default: null },
   zoom: { type: Number, default: 15 },
+  provider: { type: String, default: 'osm' },
+  language: { type: String, default: 'en' },
   // The defaults below must be names the shared `partner` section carries.
   mapTitleEntry: { type: String, default: 'partner.map.map' },
   mapOfEntry: { type: String, default: 'partner.map.mapOf' },
@@ -35,8 +42,12 @@ const bbox = computed(() => {
   return [lon - span, lat - span / 2, lon + span, lat + span / 2].join('%2C')
 })
 
+const google = computed(() => props.provider === 'google')
+
 const src = computed(() =>
-  `https://www.openstreetmap.org/export/embed.html?bbox=${bbox.value}&layer=mapnik&marker=${props.latitude}%2C${props.longitude}`
+  google.value
+    ? `https://maps.google.com/maps?q=${props.latitude},${props.longitude}&z=${props.zoom || 15}&t=h&hl=${encodeURIComponent(props.language)}&output=embed`
+    : `https://www.openstreetmap.org/export/embed.html?bbox=${bbox.value}&layer=mapnik&marker=${props.latitude}%2C${props.longitude}`
 )
 
 // A text is never interpolated (viewer-core's texts carry no placeholders),
@@ -49,8 +60,8 @@ const fullMap = computed(() =>
 </script>
 
 <template>
-  <div v-if="hasLocation" class="mwnf-partner-map">
-    <p class="mwnf-partner-map__title">{{ $t(mapTitleEntry) }}</p>
+  <div v-if="hasLocation" class="mwnf-partner-map" :class="{ 'mwnf-partner-map--google': google }">
+    <p v-if="!google" class="mwnf-partner-map__title">{{ $t(mapTitleEntry) }}</p>
     <iframe
       :src="src"
       :title="frameTitle"
@@ -58,7 +69,7 @@ const fullMap = computed(() =>
       referrerpolicy="no-referrer"
       class="mwnf-partner-map__embed"
     ></iframe>
-    <p class="mwnf-partner-map__link">
+    <p v-if="!google" class="mwnf-partner-map__link">
       <a :href="fullMap" target="_blank" rel="noopener">↗ {{ $t(openMapLinkEntry) }}</a>
     </p>
   </div>

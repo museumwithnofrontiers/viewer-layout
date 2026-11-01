@@ -1,10 +1,10 @@
 import { afterEach, describe, expect, it } from 'vitest'
 import { mount } from '@vue/test-utils'
 import { createMemoryHistory, createRouter } from 'vue-router'
-import { loadEntities, useSiteConfig } from '@museumwnf/viewer-core'
+import { loadEntities, partnerView, useSiteConfig } from '@museumwnf/viewer-core'
 import { createI18n } from '@museumwnf/viewer-core/i18n'
 import {
-  RelatedContent, StandaloneHome, StandaloneItemSheet, StandaloneShell, StandaloneSponsors, StandaloneSubNav,
+  RelatedContent, StandaloneHome, StandaloneItemSheet, StandalonePartnerPage, StandaloneShell, StandaloneSponsors, StandaloneSubNav,
   StandalonePagination, StandaloneResultsGrid, StandaloneTextPage, StandaloneTileGrid, TodayHighlight, byLanguage, dayOfYear, legacyHomeItemKey, pickForDay,
 } from '../src/standalone/index.js'
 import { layoutTexts } from './helpers.js'
@@ -54,6 +54,10 @@ const texts = {
   'site.about.background': 'See also Historical Background',
   'sheet.field.name': 'Name',
   'sheet.field.location': 'Location',
+  'site.partner.contact': 'Contact us',
+  'site.partner.phone': 'Tel.',
+  'site.partner.map': 'The Partner on Google Maps',
+  'site.partner.viewObjects': 'View Objects',
 }
 
 // The site's chrome files, as Vite's import.meta.glob over theme/assets/ hands them over.
@@ -109,6 +113,8 @@ const ROUTES = [
   { path: '/partners', name: 'partners', component: { template: '<p>partners</p>' }, meta: { section: 'partners' } },
   { path: '/objects/:id', name: 'objects-detail', component: { template: '<p>detail</p>' } },
   { path: '/item/:id', name: 'item', component: { template: '<p>item</p>' } },
+  { path: '/partner/:id', name: 'partner', component: { template: '<p>partner</p>' } },
+  { path: '/partner/:id/items', name: 'partner-items', component: { template: '<p>items</p>' } },
 ]
 
 async function mountWith(component, { props = {}, slots = {}, route = '/', locale = 'en', site = config } = {}) {
@@ -354,6 +360,66 @@ describe('StandaloneItemSheet', () => {
     expect(related.find('.own-block').text()).toBe('Timeline for this item')
     expect(related.find('.mwnf-standalone-related__print').text()).toBe('As PDF (including images)')
     expect(wrapper.find('.mwnf-record__title').exists()).toBe(false)
+  })
+})
+
+// v-show's display: none (the mounts are not attached, so isVisible cannot tell).
+const shown = (element) => !(element.attributes('style') ?? '').includes('display: none')
+
+describe('StandalonePartnerPage', () => {
+  const props = {
+    id: 'p1',
+    view: (record, text) => partnerView(record, text, { countryLabel: () => 'Egypt' }),
+    back: [{ label: 'site.item.back', history: true }, { label: 'site.nav.partners', to: { name: 'partners' } }],
+    items: (record) => (record.item_count ? { label: 'site.partner.viewObjects', to: { name: 'partner-items', params: { id: record.id } } } : null),
+    labels: { contact: 'site.partner.contact', phone: 'site.partner.phone', map: 'site.partner.map' },
+    // The fixture partner carries no type: the default draws a museum's map only.
+    map: () => true,
+  }
+
+  it("draws legacy's profile: the way back, the name and place, the pills, the pictures beside the open tab, the map", async () => {
+    await loadEntities(['partners'])
+    const wrapper = await mountWith(StandalonePartnerPage, { route: '/partner/p1', props })
+    await settle(() => wrapper.find('.mwnf-standalone-partner__location').exists() && wrapper.find('.mwnf-standalone-partner__location').text() === 'Cairo, Egypt', 200)
+    expect(wrapper.findAll('.mwnf-standalone-item__back-link').map((l) => l.text())).toEqual(['Back', 'Partners'])
+    expect(wrapper.find('.mwnf-standalone-partner__location').text()).toBe('Cairo, Egypt')
+    expect(wrapper.findAll('.mwnf-standalone-partner__tab').map((tab) => tab.text())).toEqual(['About', 'Contact us', 'Logo'])
+    expect(wrapper.find('.mwnf-standalone-partner__homepage').attributes('href')).toBe('https://p1.example.org')
+    expect(wrapper.find('.mwnf-standalone-partner__items').text()).toBe('View Objects')
+    expect(wrapper.find('.mwnf-standalone-partner__items').attributes('href')).toBe('/partner/p1/items')
+    expect(wrapper.find('.mwnf-standalone-partner__pictures .mwnf-media').exists()).toBe(true)
+    expect(wrapper.find('.mwnf-standalone-partner__pictures .mwnf-media__caption').exists()).toBe(false)
+    expect(wrapper.find('.mwnf-standalone-partner__about').html()).toContain('<strong>fixture</strong>')
+    expect(shown(wrapper.find('.mwnf-standalone-partner__contact'))).toBe(false)
+
+    await wrapper.findAll('.mwnf-standalone-partner__tab')[1].trigger('click')
+    const contact = wrapper.find('.mwnf-standalone-partner__contact')
+    expect(shown(contact)).toBe(true)
+    expect(contact.text()).toContain('1 Fixture Street')
+    expect(contact.text()).toContain('Tel. +20 000 0000')
+    expect(contact.find('strong').text()).toBe('Curator')
+    expect(contact.text()).not.toContain('p1.example.org/extra')
+
+    expect(wrapper.find('.mwnf-standalone-partner__map-heading').text()).toBe('The Partner on Google Maps')
+    expect(wrapper.find('.mwnf-partner-map__embed').attributes('src')).toBe('https://maps.google.com/maps?q=30.0444,31.2357&z=10&t=h&hl=en&output=embed')
+    expect(wrapper.find('.mwnf-sheet__value').exists()).toBe(false)
+    // Only a museum offers its languages, as legacy's; the fixture partner has no type.
+    expect(wrapper.find('.mwnf-standalone-item__top').exists()).toBe(false)
+    expect(wrapper.find('.mwnf-record__title').exists()).toBe(false)
+  })
+
+  it('lists no About tab where the product says so, and draws no map where it says so', async () => {
+    await loadEntities(['partners'])
+    const wrapper = await mountWith(StandalonePartnerPage, {
+      route: '/partner/p1',
+      props: { ...props, about: () => false, map: () => false, links: true, bands: () => true },
+    })
+    await settle(() => wrapper.find('.mwnf-standalone-partner__location').exists() && wrapper.find('.mwnf-standalone-partner__location').text() === 'Cairo, Egypt', 200)
+    expect(wrapper.findAll('.mwnf-standalone-partner__tab').map((tab) => tab.text())).toEqual(['Contact us', 'Logo'])
+    expect(shown(wrapper.find('.mwnf-standalone-partner__about'))).toBe(true)
+    expect(wrapper.find('.mwnf-standalone-partner__contact').text()).toContain('p1.example.org/extra')
+    expect(wrapper.find('.mwnf-standalone-partner__map').exists()).toBe(false)
+    expect(wrapper.find('.mwnf-standalone-item__top').exists()).toBe(true)
   })
 })
 

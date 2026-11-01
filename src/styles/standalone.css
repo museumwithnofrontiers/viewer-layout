@@ -317,6 +317,11 @@
 
 /* ── Item sheet: pictures, sheet, the coloured Related Content column ─────── */
 
+/* The pages run from the band down without the composed views' gaps. */
+.mwnf-standalone-item {
+  gap: 0;
+}
+
 .mwnf-standalone-item .mwnf-record__body {
   display: block;
 }
@@ -339,22 +344,39 @@
   grid-row: 1 / -1;
 }
 
+/* Legacy's sheet opens with its first label 28px under the way back. */
+.mwnf-standalone-item .mwnf-record__main > .mwnf-sheet {
+  margin-top: 18px;
+}
+
 .mwnf-standalone-item .mwnf-record__main > .mwnf-standalone-related {
   grid-column: 3;
   grid-row: 1 / -1;
   align-self: stretch;
 }
 
+/* Legacy's band runs across the page straight under the banner, its words
+   15px from the page's right edge, 20px over the content: the band leaves
+   the content area's top padding and its sides (its parent a container, so
+   that 100cqw is the page's width without the scrollbar). */
+:has(> .mwnf-content .mwnf-standalone-item__top) {
+  container-type: inline-size;
+}
+
 .mwnf-standalone-item__top {
   display: flex;
   justify-content: flex-end;
+  margin: calc(-1 * var(--mwnf-content-padding-block, 1.5rem)) calc(50% - 50cqw) 20px;
+  padding-right: 15px;
   background-color: var(--mwnf-standalone-language-bar, transparent);
 }
 
 /* The record's languages as legacy's `section.language_option`: 14px words
-   on the bar, a rule between them, the shown language on the lighter ground. */
+   on the bar, a rule between them, the shown language on the lighter ground;
+   each floated right, so the first one listed is the rightmost. */
 .mwnf-standalone-item__top .mwnf-languages {
   display: flex;
+  flex-direction: row-reverse;
   gap: 0;
   margin: 0;
 }
@@ -362,6 +384,7 @@
 .mwnf-standalone-item__top .mwnf-languages__button {
   margin: 0;
   padding: 5px 8px;
+  line-height: 16px;
   border: 0;
   border-radius: 0;
   font: 400 14px Roboto, sans-serif;
@@ -370,7 +393,7 @@
 }
 
 .mwnf-standalone-item__top .mwnf-languages__button + .mwnf-languages__button {
-  border-left: 1px solid var(--mwnf-standalone-language-active, transparent);
+  border-right: 1px solid var(--mwnf-standalone-language-active, transparent);
 }
 
 .mwnf-standalone-item__top .mwnf-languages__button--active {
@@ -1079,4 +1102,218 @@
 .mwnf-standalone-home-banner__line {
   margin: 0;
   font-size: var(--mwnf-standalone-home-banner-line-size, 1.125rem);
+}
+
+/* ── The partner profile (PartnerPage.vue), as legacy's pm_partner.php ──────
+   The ways back; the name over "city, country"; Bootstrap's row of col-lg-5
+   and col-lg-7 twice, for the tab pill beside the items pill and for the
+   pictures beside the open tab (whose text sits in col-md-10); then the map
+   across the page under its heading (style_inside.css's .short_heading,
+   .tabs-menu, .tabs-menu-sh, .sp-wrap). */
+
+.mwnf-standalone-partner .mwnf-record__body {
+  display: block;
+}
+
+/* Legacy's 30px under the profile, of which the content area gives 20. */
+.mwnf-standalone-partner {
+  gap: 0;
+  padding-bottom: 10px;
+}
+
+.mwnf-content:has(.mwnf-standalone-partner__map) {
+  padding-bottom: 0;
+}
+
+.mwnf-standalone-partner:has(.mwnf-standalone-partner__map) {
+  padding-bottom: 0;
+}
+
+.mwnf-standalone-partner__back {
+  min-height: 22px;
+  column-gap: 15px;
+  margin: 0 0 15px;
+}
+
+.mwnf-standalone-partner__heading {
+  margin: 0 0 15px;
+  color: var(--mwnf-standalone-heading-color, inherit);
+}
+
+.mwnf-standalone-partner__name,
+.mwnf-standalone-partner__map-heading {
+  margin: 0;
+  font: 400 19px Roboto, sans-serif;
+  color: var(--mwnf-standalone-heading-color, inherit);
+}
+
+.mwnf-standalone-partner__location {
+  margin: 0;
+  font: 500 16px Roboto, sans-serif;
+  color: var(--mwnf-standalone-heading-color, inherit);
+}
+
+.mwnf-standalone-partner__bar,
+.mwnf-standalone-partner__body {
+  display: grid;
+  grid-template-columns: 5fr 7fr;
+  margin: 0 -15px;
+}
+
+/* The pills sit on a line of the page's serif, 4px deeper than they are. */
+.mwnf-standalone-partner__bar {
+  padding-bottom: 4px;
+}
+
+.mwnf-standalone-partner__bar > *,
+.mwnf-standalone-partner__body > * {
+  min-width: 0;
+  padding: 0 15px;
+}
+
+/* The pills: a 28px rounded bar, the words 14px, "|" in the page's serif. */
+.mwnf-standalone-partner__tabs,
+.mwnf-standalone-partner__items {
+  display: inline-flex;
+  align-items: center;
+  margin: 0 0 20px;
+  padding: 5px 0;
+  border-radius: 20px;
+  font: 400 16px/18px 'Times New Roman', serif;
+  color: #000;
+  background-color: var(--mwnf-standalone-pill, transparent);
+  list-style: none;
+}
+
+.mwnf-standalone-partner__tabs li {
+  display: flex;
+  align-items: center;
+}
+
+.mwnf-standalone-partner__tab,
+.mwnf-standalone-partner__homepage,
+.mwnf-standalone-partner__items {
+  padding: 0 6px 0 7px;
+  border: 0;
+  font: 500 14px Roboto, sans-serif;
+  color: rgb(34 34 34 / 0.75);
+  text-decoration: none;
+  background: none;
+  cursor: pointer;
+}
+
+.mwnf-standalone-partner__tab--active,
+.mwnf-standalone-partner__items {
+  color: #222;
+}
+
+.mwnf-standalone-partner__items {
+  margin-left: 15px;
+  padding: 5px 16px 5px 17px;
+  line-height: 18px;
+  background-color: var(--mwnf-standalone-pill, transparent);
+}
+
+.mwnf-standalone-partner__tab:hover,
+.mwnf-standalone-partner__homepage:hover,
+.mwnf-standalone-partner__items:hover {
+  text-decoration: underline;
+}
+
+/* The pictures as legacy's slider: the picture across the column, 10px
+   under the bar, the thumbnails 50px with 10px around them. */
+.mwnf-standalone-partner__pictures .mwnf-media {
+  margin-top: 10px;
+}
+
+.mwnf-standalone-partner__pictures .mwnf-media__main {
+  background: none;
+}
+
+.mwnf-standalone-partner__pictures .mwnf-media__thumbs {
+  gap: 0 10px;
+  margin: 10px 0;
+}
+
+.mwnf-standalone-partner__pictures .mwnf-media__thumb {
+  width: 50px;
+  height: 50px;
+  border: 0;
+  background: none;
+}
+
+.mwnf-standalone-partner__panels {
+  padding: 0 calc(30px + (100% - 30px) / 6) 0 30px;
+}
+
+.mwnf-standalone-partner__panel p,
+.mwnf-standalone-partner__about {
+  margin: 0;
+  font: 400 16px/22px Roboto, sans-serif;
+  color: #222;
+}
+
+.mwnf-standalone-partner__about p {
+  margin: 0;
+}
+
+.mwnf-standalone-partner__about p + p {
+  margin-top: 22px;
+}
+
+.mwnf-standalone-partner__about,
+.mwnf-standalone-partner__contact p {
+  margin-bottom: 10px;
+}
+
+.mwnf-standalone-partner__panel b,
+.mwnf-standalone-partner__panel strong {
+  font-weight: 700;
+}
+
+.mwnf-standalone-partner__panel a {
+  color: inherit;
+}
+
+.mwnf-standalone-partner__address p {
+  display: inline;
+  margin: 0;
+}
+
+.mwnf-standalone-partner__logos img {
+  display: block;
+  max-width: 100%;
+  margin-bottom: 22px;
+}
+
+/* The map across the page: 30px under the profile and 20px over its
+   heading, 15px between them; 380px high, straight onto the footer. */
+.mwnf-standalone-partner__map {
+  margin-top: 50px;
+}
+
+.mwnf-standalone-partner__map-heading {
+  margin-bottom: 15px;
+}
+
+.mwnf-standalone-partner__map .mwnf-partner-map {
+  width: 100cqw;
+  margin-left: calc(50% - 50cqw);
+  padding: 0;
+}
+
+.mwnf-standalone-partner__map .mwnf-partner-map__embed {
+  height: 380px;
+  border: 0;
+}
+
+@media (max-width: 48rem) {
+  .mwnf-standalone-partner__bar,
+  .mwnf-standalone-partner__body {
+    grid-template-columns: 1fr;
+  }
+
+  .mwnf-standalone-partner__panels {
+    padding-right: 15px;
+  }
 }
