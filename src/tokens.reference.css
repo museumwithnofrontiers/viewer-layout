@@ -911,7 +911,10 @@
   /* --mwnf-standalone-results-panel: #fffced;        The result tile's hover panel */
   /* --mwnf-standalone-related-padding: 0 1.25rem 1.875rem;  Its padding */
   /* --mwnf-standalone-related-heading-offset: 1.75rem;  Space above its heading */
-  /* --mwnf-standalone-related-thumb-size: 3.75rem;  Related record thumbnail size */
+  /* --mwnf-standalone-related-thumb-size: 70px;     Related record thumbnail: its largest width and height */
+  /* --mwnf-standalone-related-margin: 0;            The column's margin, out of its grid column */
+  /* --mwnf-standalone-related-reach-top: 0px;       How far its colour reaches above it */
+  /* --mwnf-standalone-related-reach-right: 0%;      How far its colour reaches to its right, of its width */
   /* --mwnf-standalone-page-width: 42rem;            Text page column width */
   /* --mwnf-standalone-page-inset: 16.666%;          Text page column inset */
   /* --mwnf-standalone-page-padding: 1.25rem 1.875rem;  Text page padding (top, bottom) */
