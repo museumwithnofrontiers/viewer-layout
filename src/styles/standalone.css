@@ -401,16 +401,50 @@
   margin: calc(-1 * var(--mwnf-content-padding-block, 1.5rem)) calc(50% - 50cqw) 20px;
   padding-right: 15px;
   background-color: var(--mwnf-standalone-language-bar, transparent);
+  direction: ltr;
 }
 
 /* The record's languages as legacy's `section.language_option`: 14px words
    on the bar, a rule between them, the shown language on the lighter ground;
-   each floated right, so the first one listed is the rightmost. */
+   each floated right, so the first one listed is the rightmost. On the
+   Arabic item sheet, on the right still, the first one listed is the
+   leftmost; the Arabic partner profile kept the English order. */
 .mwnf-standalone-item__top .mwnf-languages {
   display: flex;
   flex-direction: row-reverse;
   gap: 0;
   margin: 0;
+}
+
+[dir="rtl"] .mwnf-standalone-item .mwnf-standalone-item__top .mwnf-languages {
+  direction: rtl;
+}
+
+[dir="rtl"] .mwnf-standalone-item .mwnf-standalone-item__top .mwnf-languages__button + .mwnf-languages__button {
+  border-right: 0;
+  border-left: 1px solid var(--mwnf-standalone-language-active, transparent);
+}
+
+/* Legacy's Arabic item sheet and partner profile keep the English pages'
+   columns (the pictures on the left; Related Content, or the open tab, on
+   the right): only their texts run right to left, each in its own column.
+   The pictures' column keeps its way back and its thumbnails left to
+   right; the profile's place keeps to the left, its tab pill on the left
+   with its tabs right to left, as legacy's. */
+.mwnf-standalone-item .mwnf-record__main,
+.mwnf-standalone-partner__bar,
+.mwnf-standalone-partner__body {
+  direction: ltr;
+}
+
+[dir="rtl"] .mwnf-standalone-item .mwnf-record__main > :not(.mwnf-standalone-item__left),
+[dir="rtl"] .mwnf-standalone-partner__panels,
+[dir="rtl"] .mwnf-standalone-partner__tabs {
+  direction: rtl;
+}
+
+[dir="rtl"] .mwnf-standalone-partner__location {
+  text-align: left;
 }
 
 .mwnf-standalone-item__top .mwnf-languages__button {
