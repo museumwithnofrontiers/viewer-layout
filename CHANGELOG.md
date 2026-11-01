@@ -1,3 +1,16 @@
+## 3.22.1 (2026-11-01)
+
+### Fixed
+
+- **The Arabic standalone item sheet and partner profile keep legacy's
+  columns**: the pictures on the left, Related Content (or the open tab) on
+  the right; only their texts run right to left, each in its own column.
+  The profile's place keeps to the left and its tab pill on the left with
+  its tabs right to left, as legacy's.
+- **The band of a record's languages** stays on the right in Arabic: the
+  item sheet lists them from the left in the page's order, the partner
+  profile in the English order, as legacy's two pages did.
+
 ## 3.22.0 (2026-11-01)
 
 ### Added
