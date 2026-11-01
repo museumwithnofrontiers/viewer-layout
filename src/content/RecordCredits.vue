@@ -12,11 +12,13 @@ const props = defineProps({
   workingNumberLabel: { type: String, default: '' },
   /** The sentence viewer-core's `citation()` assembles. */
   citation: { type: String, default: '' },
+  /** A site's own citation, as HTML it has escaped (RecordView's `citation.format`). */
+  citationHtml: { type: String, default: '' },
   heading: { type: String, default: '' },
   citationHeading: { type: String, default: '' },
 })
 const { t } = useI18n()
-const visible = computed(() => props.credits.length > 0 || props.workingNumber || props.citation)
+const visible = computed(() => props.credits.length > 0 || props.workingNumber || props.citation || props.citationHtml)
 </script>
 
 <template>
@@ -33,9 +35,10 @@ const visible = computed(() => props.credits.length > 0 || props.workingNumber |
       <template v-if="workingNumberLabel"><span class="mwnf-credits__label">{{ workingNumberLabel }}</span>{{ ' ' }}</template>
       <strong>{{ workingNumber }}</strong>
     </p>
-    <template v-if="citation">
+    <template v-if="citation || citationHtml">
       <h2 class="mwnf-credits__heading mwnf-credits__heading--citation">{{ citationHeading || t('record.citation.heading') }}</h2>
-      <p class="mwnf-credits__citation">{{ citation }}</p>
+      <p v-if="citationHtml" class="mwnf-credits__citation" v-html="citationHtml"></p>
+      <p v-else class="mwnf-credits__citation">{{ citation }}</p>
     </template>
   </section>
 </template>

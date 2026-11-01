@@ -1,3 +1,13 @@
+## 3.23.0 (2026-11-01)
+
+### Added
+
+- **`RecordView`'s `citation.format(ctx, { permalink, year })`**: a site
+  whose legacy worded its citation its own way composes it, as HTML it has
+  escaped itself (`RecordCredits`' new `citationHtml`). Islamic Art's
+  legacy cites the writers, the name without its ending period, a phrase
+  per language and project, the year, then the address in italics.
+
 ## 3.22.1 (2026-11-01)
 
 ### Fixed
