@@ -249,6 +249,17 @@ describe('CatalogueResultsView', () => {
     expect(wrapper.find('.mwnf-pagination').exists()).toBe(true)
   })
 
+  it("hands the pages to a website's `pagination` slot, which draws them in place of the default", async () => {
+    const { wrapper } = await mountView(CatalogueResultsView, {
+      props: { spec: { ...spec, pageSize: 1 } },
+      slots: { pagination: '<template #pagination="{ pageInfo }"><p class="own-pages">{{ pageInfo.currentPage }} of {{ pageInfo.lastPage }}</p></template>' },
+      route: '/objects',
+    })
+    await settle(() => wrapper.find('.own-pages').exists())
+    expect(wrapper.find('.own-pages').text()).toBe('1 of 4')
+    expect(wrapper.find('.mwnf-pagination').exists()).toBe(false)
+  })
+
   // The look a site would otherwise restyle the view's insides for.
   it('frames the results as a panel when the spec asks for the boxed look', async () => {
     const plain = await mountView(CatalogueResultsView, { props: { spec }, route: '/objects' })

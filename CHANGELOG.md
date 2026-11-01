@@ -12,6 +12,12 @@
 - **`CatalogueResultsView`'s `records` slot**: a website draws the page's
   rows itself (the slot receives the rows, the empty flag and the usual
   slot props); the default stays the list or grid.
+- **`StandalonePagination`**: legacy's `page_listing`, "Previous", the
+  page numbers in blocks of twenty, then "Next", centred, with legacy's
+  arrows (`--mwnf-standalone-back-arrow`, `--mwnf-standalone-bullet`);
+  the ends are plain words on the first and the last page.
+- **`CatalogueResultsView`'s `pagination` slot**: a website draws the
+  pages' links itself, or elsewhere on the page (an empty slot draws none).
 
 ## 3.18.1 (2026-11-01)
 

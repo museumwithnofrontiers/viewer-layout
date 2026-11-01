@@ -808,6 +808,69 @@
   .mwnf-standalone-results__panel-frame { display: none; }
 }
 
+/* ── Pages: legacy's `page_listing` (style_inside.css) ────────────────────── */
+
+/* "Previous", the numbers and "Next", centred, each end parted from the
+   numbers by a rule; the arrows are legacy's pictures beside the words. */
+.mwnf-standalone-pages {
+  padding-top: 30px;
+  font: 400 16px Roboto, sans-serif;
+  text-align: center;
+  color: #222;
+}
+
+.mwnf-standalone-pages a {
+  color: #222;
+  text-decoration: none;
+}
+
+.mwnf-standalone-pages__previous,
+.mwnf-standalone-pages__next {
+  position: relative;
+  background: no-repeat;
+}
+
+.mwnf-standalone-pages__previous {
+  margin-inline-end: 4px;
+  padding: 0 10px 0 16px;
+  background-image: var(--mwnf-standalone-back-arrow, none);
+  background-position: 0 6px;
+}
+
+.mwnf-standalone-pages__next {
+  margin-inline-start: 4px;
+  padding: 0 16px 0 10px;
+  background-image: var(--mwnf-standalone-bullet, none);
+  background-position: 100% 6px;
+}
+
+/* On the first and the last page the word is no link, and sits against its
+   arrow as legacy's did. */
+.mwnf-standalone-pages__previous:not(:has(a)) { padding-left: 12px; }
+.mwnf-standalone-pages__next:not(:has(a)) { padding-right: 12px; }
+
+.mwnf-standalone-pages__previous::after,
+.mwnf-standalone-pages__next::before {
+  position: absolute;
+  top: 1px;
+  width: 1px;
+  height: 20px;
+  padding-left: 2px;
+  content: "";
+  background-color: #2e2e2e;
+}
+
+.mwnf-standalone-pages__previous::after { right: 0; }
+.mwnf-standalone-pages__next::before { left: 0; }
+
+.mwnf-standalone-pages__number {
+  padding: 0 5px;
+}
+
+.mwnf-standalone-pages__number--active {
+  border-bottom: 1px solid #2e2e2e;
+}
+
 /* ── Text pages: legacy's centred column ──────────────────────────────────── */
 
 .mwnf-standalone-page {

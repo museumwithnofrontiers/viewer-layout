@@ -45,8 +45,8 @@ import ResultsSummary from '../content/ResultsSummary.vue'
 //
 // Slots — `filters` (more controls inside the panel), `actions` (beside the
 // summary), `aside` (next to the results), `records` (the page's rows drawn
-// the website's way; it also receives `rows` and `empty`), `empty`,
-// `before`, `after` — each
+// the website's way; it also receives `rows` and `empty`), `pagination`
+// (the pages' links, the website's way), `empty`, `before`, `after` — each
 // receiving `{ filters, active, apply, reset, goToPage, matching, pageInfo,
 // options }`: enough for a website to compose the panel itself, in the aside
 // where legacy put it, or a second pagination above the tiles. A
@@ -248,7 +248,9 @@ const pagination = computed(() => ({ window: 5, jump: false, ends: true, ...(spe
             <template #empty><slot name="empty" v-bind="slotProps">{{ empty }}</slot></template>
           </component>
         </slot>
-        <Pagination :page-info="pageInfo" :window="pagination.window" :jump="pagination.jump" :ends="pagination.ends" @navigate="goToPage" />
+        <slot name="pagination" v-bind="slotProps">
+          <Pagination :page-info="pageInfo" :window="pagination.window" :jump="pagination.jump" :ends="pagination.ends" @navigate="goToPage" />
+        </slot>
       </div>
       <aside v-if="$slots.aside" class="mwnf-catalogue__aside"><slot name="aside" v-bind="slotProps" /></aside>
     </div>
