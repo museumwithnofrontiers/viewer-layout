@@ -1,3 +1,15 @@
+## 3.27.0 (2026-11-02)
+
+### Added
+
+- **"As Word (text only)" on the standalone item sheet**, legacy's
+  `export.php`: the related column's `download.word` offers the sheet's
+  texts as a `.doc` file (an HTML page Word opens, in legacy's styles),
+  each label a heading and each value a paragraph, without the pictures,
+  the related content, the page's controls or its links.
+  `download.title` titles it and `download.wordFile(record, language)`
+  names it (legacy: the record's key and language, `;` as `_`).
+
 ## 3.26.1 (2026-11-02)
 
 ### Fixed
