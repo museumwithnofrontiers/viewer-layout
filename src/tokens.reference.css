@@ -877,6 +877,11 @@
   /* --mwnf-standalone-sponsors-logo-gap: 1.25rem;   Gap between its logos */
   /* --mwnf-standalone-sponsors-logo-height: 4.5rem; Logo maximum height */
   /* --mwnf-standalone-item-gap: 1.875rem;           Gap between the item sheet's three columns */
+  /* --mwnf-standalone-item-picture-width: 100%;     The item sheet's picture: its widest */
+  /* --mwnf-standalone-item-picture-height: none;    Its highest */
+  /* --mwnf-standalone-item-thumb-size: 4rem;        Its thumbnails' size */
+  /* --mwnf-standalone-item-thumb-gap: 0.375rem;     The gap between them */
+  /* --mwnf-standalone-item-thumb-margin: 0.75rem 0 0;  Their row's margin */
   /* --mwnf-standalone-related-background: transparent;  Related Content column */
   /* --mwnf-standalone-related-text: inherit;        Its text */
   /* --mwnf-standalone-related-link: inherit;        Its links */

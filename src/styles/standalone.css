@@ -350,6 +350,32 @@
   grid-row: 1 / -1;
 }
 
+/* The pictures as legacy's slider showed them: the picture at its own
+   proportions within the product's box (Islamic Art's "medium" rendition,
+   320×240), on no ground; the thumbnails at the product's size, 10px
+   apart and 10px above and below. The defaults keep the column's width. */
+.mwnf-standalone-item__left .mwnf-media__main {
+  width: auto;
+  max-width: 100%;
+  background: none;
+}
+
+.mwnf-standalone-item__left .mwnf-media__main .mwnf-media__image {
+  width: auto;
+  max-width: min(100%, var(--mwnf-standalone-item-picture-width, 100%));
+  max-height: var(--mwnf-standalone-item-picture-height, none);
+}
+
+.mwnf-standalone-item__left .mwnf-media__thumbs {
+  gap: 0 var(--mwnf-standalone-item-thumb-gap, 0.375rem);
+  margin: var(--mwnf-standalone-item-thumb-margin, 0.75rem 0 0);
+}
+
+.mwnf-standalone-item__left .mwnf-media__thumb {
+  width: var(--mwnf-standalone-item-thumb-size, 4rem);
+  height: var(--mwnf-standalone-item-thumb-size, 4rem);
+}
+
 /* Legacy's sheet opens with its first label 28px under the way back. */
 .mwnf-standalone-item .mwnf-record__main > .mwnf-sheet {
   margin-top: 18px;

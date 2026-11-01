@@ -1,3 +1,14 @@
+## 3.22.0 (2026-11-01)
+
+### Added
+
+- **The standalone item sheet's picture size**: `--mwnf-standalone-item-picture-width`
+  and `--mwnf-standalone-item-picture-height` keep the picture at its own
+  proportions within a product's box (Islamic Art's legacy "medium"
+  rendition: 320×240), on no ground; `--mwnf-standalone-item-thumb-size`,
+  `-thumb-gap` and `-thumb-margin` set the thumbnails. The defaults keep
+  the column's width and today's thumbnails.
+
 ## 3.21.2 (2026-11-01)
 
 ### Fixed
