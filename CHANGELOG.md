@@ -1,3 +1,11 @@
+## 3.21.2 (2026-11-01)
+
+### Fixed
+
+- **`SearchFormView` writes the search language as `searchlanguage`**
+  (viewer-core 2.12's `SEARCH_LANGUAGE_KEY`), no longer `lang`, which
+  switched the whole website to the language picked to search in.
+
 ## 3.21.1 (2026-11-01)
 
 ### Fixed

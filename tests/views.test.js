@@ -1023,7 +1023,7 @@ describe('SearchFormView', () => {
       op2: 'OR',
       from: '1001',
       to: '1600',
-      lang: 'fr',
+      searchlanguage: 'fr',
       epm: '1',
     })
   })
