@@ -1,3 +1,18 @@
+## 3.19.0 (2026-11-01)
+
+### Added
+
+- **`StandaloneResultsGrid`** (`@museumwnf/viewer-layout/standalone`):
+  legacy's `pc_all` result tiles, four to a row: each record's picture in
+  a 230×160 frame, and under the pointer (or the keyboard's focus) a panel
+  with the picture again, the name, the record's lines, the holder, the
+  location and the "See" link. On a phone the panel stands beside the
+  picture. Two tokens: `--mwnf-standalone-results-border` and
+  `--mwnf-standalone-results-panel`.
+- **`CatalogueResultsView`'s `records` slot**: a website draws the page's
+  rows itself (the slot receives the rows, the empty flag and the usual
+  slot props); the default stays the list or grid.
+
 ## 3.18.1 (2026-11-01)
 
 ### Fixed
