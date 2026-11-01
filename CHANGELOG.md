@@ -1,3 +1,11 @@
+## 3.24.2 (2026-11-01)
+
+### Fixed
+
+- **A biography is rendered as the Markdown it is**: inline, its line
+  breaks kept and its HTML escaped, as every other record text. It printed
+  the Markdown's own marks (`*Tiraz*`) where legacy set the word in italics.
+
 ## 3.24.1 (2026-11-01)
 
 ### Fixed

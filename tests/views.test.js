@@ -431,8 +431,22 @@ describe('RecordView', () => {
     expect(person.attributes('tabindex')).toBe('0')
     expect(person.find('.mwnf-credits__biography').attributes('role')).toBe('tooltip')
     expect(person.find('.mwnf-credits__biography b').text()).toBe('Bea Author')
-    expect(person.find('.mwnf-credits__biography').text()).toContain('Bea Author writes about tiles.')
+    expect(person.find('.mwnf-credits__biography').text()).toContain('Bea Author writes about Tiraz tiles.')
     expect(person.text().startsWith('B. Author')).toBe(true)
+  })
+
+  it('renders a biography as the inline Markdown it is, its line breaks kept and its HTML escaped', async () => {
+    const { wrapper } = await mountView(RecordView, {
+      props: { spec: { ...spec, creditPeople: {} }, id: 'o4' },
+      route: '/objects/o4',
+    })
+    await settle(() => wrapper.find('.mwnf-credits__person').exists(), 200)
+    const biography = wrapper.find('.mwnf-credits__biography')
+    expect(biography.find('em').text()).toBe('Tiraz')
+    expect(biography.findAll('br')).toHaveLength(3)
+    expect(biography.findAll('p')).toHaveLength(0)
+    expect(biography.findAll('b')).toHaveLength(1)
+    expect(biography.text()).toContain('<b>too</b>')
   })
 
   it('keeps the joined credit line where the translation names no one apart', async () => {

@@ -1,12 +1,13 @@
 <script setup>
 import { computed } from 'vue'
+import { renderInline } from '@museumwnf/viewer-core'
 import { useI18n } from '@museumwnf/viewer-core/i18n'
 
 // The block under a sheet that says who made it: the credits, the working
 // number, the citation. Both families print these; one printed them as a
 // list and the other as sentences, and neither difference was a decision.
 const props = defineProps({
-  /** [{ label, value, people? }], `people` [{ name, heading, biography }] printing each person apart */
+  /** [{ label, value, people? }], `people` [{ name, heading, biography }] printing each person apart; a biography is Markdown, inline, its line breaks kept */
   credits: { type: Array, default: () => [] },
   workingNumber: { type: String, default: '' },
   workingNumberLabel: { type: String, default: '' },
@@ -30,7 +31,8 @@ const visible = computed(() => props.credits.length > 0 || props.workingNumber |
         <dd v-if="credit.people" class="mwnf-credits__value">
           <template v-for="(person, index) in credit.people" :key="index">
             <template v-if="index">, </template>
-            <span v-if="person.biography" class="mwnf-credits__person" tabindex="0">{{ person.name }}<span class="mwnf-credits__biography" role="tooltip"><b>{{ person.heading }}</b><br><br>{{ person.biography }}</span></span>
+            <!-- eslint-disable-next-line vue/no-v-html -- the person's own Markdown, rendered and escaped by viewer-core -->
+            <span v-if="person.biography" class="mwnf-credits__person" tabindex="0">{{ person.name }}<span class="mwnf-credits__biography" role="tooltip"><b>{{ person.heading }}</b><br><br><span v-html="renderInline(person.biography, { breaks: true })"></span></span></span>
             <template v-else>{{ person.name }}</template>
           </template>
         </dd>
