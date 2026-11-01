@@ -5,7 +5,7 @@ import { loadEntities, useSiteConfig } from '@museumwnf/viewer-core'
 import { createI18n } from '@museumwnf/viewer-core/i18n'
 import {
   RelatedContent, StandaloneHome, StandaloneItemSheet, StandaloneShell, StandaloneSponsors, StandaloneSubNav,
-  StandaloneTextPage, StandaloneTileGrid, TodayHighlight, byLanguage, dayOfYear, legacyHomeItemKey, pickForDay,
+  StandaloneResultsGrid, StandaloneTextPage, StandaloneTileGrid, TodayHighlight, byLanguage, dayOfYear, legacyHomeItemKey, pickForDay,
 } from '../src/standalone/index.js'
 import { layoutTexts } from './helpers.js'
 import { settle } from './dxa/helpers.js'
@@ -410,5 +410,31 @@ describe('Sharing History blocks', () => {
       props: { items: [{ image: 'legacy/homeImg1.jpg', text: 'The *Hospitality* of Sultans', to: { name: 'database' } }] },
     })
     expect(wrapper.find('.mwnf-standalone-tiles__label').text()).toBe('The Hospitality of Sultans')
+  })
+})
+
+describe('StandaloneResultsGrid', () => {
+  const rows = [
+    { id: 'a', to: { name: 'item', params: { id: 'a' } }, image: 'a.jpg', name: 'Coin (<i>dirham</i>)', lines: ['Hegira 91 / AD 709, Umayyad'], holder: 'Museum of Civilisations', location: 'Rome, Italy' },
+    { id: 'b', href: '#/item/b', image: '', name: 'Jar', lines: [] },
+  ]
+
+  it("draws legacy's tiles: the picture, then on hover the name, date line, holder, location and the sheet link", async () => {
+    const wrapper = await mountWith(StandaloneResultsGrid, { props: { rows, seeLabel: 'See Database Entry', noImage: 'none.gif' } })
+    const tiles = wrapper.findAll('.mwnf-standalone-results__tile')
+    expect(tiles).toHaveLength(2)
+    const panel = tiles[0].find('.mwnf-standalone-results__panel')
+    expect(panel.find('.mwnf-standalone-results__name').html()).toContain('Coin (<i>dirham</i>)')
+    expect(panel.text()).toContain('Hegira 91 / AD 709, Umayyad')
+    expect(panel.find('.mwnf-standalone-results__holder').text()).toBe('Museum of Civilisations')
+    expect(panel.text()).toContain('Rome, Italy')
+    expect(panel.find('.mwnf-standalone-results__see').text()).toBe('See Database Entry')
+    // A record with no picture shows the site's placeholder.
+    expect(tiles[1].find('.mwnf-standalone-results__frame img').attributes('src')).toBe('none.gif')
+  })
+
+  it('says so when there is no row', async () => {
+    const wrapper = await mountWith(StandaloneResultsGrid, { props: { rows: [], seeLabel: 'See', empty: 'No result' } })
+    expect(wrapper.find('.mwnf-standalone-results__empty').text()).toBe('No result')
   })
 })

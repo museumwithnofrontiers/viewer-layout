@@ -882,6 +882,8 @@
   /* --mwnf-standalone-language-bar: transparent;    The item sheet's band of record languages */
   /* --mwnf-standalone-language-color: inherit;      Its words */
   /* --mwnf-standalone-language-active: transparent; The shown language's ground, and the rule between words */
+  /* --mwnf-standalone-results-border: rgba(255, 214, 0, 0.28);  The result tiles' frame and panel border */
+  /* --mwnf-standalone-results-panel: #fffced;        The result tile's hover panel */
   /* --mwnf-standalone-related-padding: 0 1.25rem 1.875rem;  Its padding */
   /* --mwnf-standalone-related-heading-offset: 1.75rem;  Space above its heading */
   /* --mwnf-standalone-related-thumb-size: 3.75rem;  Related record thumbnail size */

@@ -237,6 +237,18 @@ describe('CatalogueResultsView', () => {
     expect(wrapper.find('.mwnf-list__link').attributes('href')).toBe('/objects/o1')
   })
 
+  it("hands the page's rows to a website's `records` slot, which draws them in place of the list", async () => {
+    const { wrapper } = await mountView(CatalogueResultsView, {
+      props: { spec },
+      slots: { records: '<template #records="{ rows }"><p v-for="row in rows" :key="row.id" class="own-tile" v-html="row.name"></p></template>' },
+      route: '/objects',
+    })
+    await settle(() => wrapper.findAll('.own-tile').length > 0)
+    expect(wrapper.findAll('.own-tile').map((p) => p.text())).toEqual(['Glazed bowl', 'Mosque lamp'])
+    expect(wrapper.find('.mwnf-list').exists()).toBe(false)
+    expect(wrapper.find('.mwnf-pagination').exists()).toBe(true)
+  })
+
   // The look a site would otherwise restyle the view's insides for.
   it('frames the results as a panel when the spec asks for the boxed look', async () => {
     const plain = await mountView(CatalogueResultsView, { props: { spec }, route: '/objects' })
