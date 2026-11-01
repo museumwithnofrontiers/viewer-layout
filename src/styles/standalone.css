@@ -592,6 +592,15 @@
   display: none;
 }
 
+.mwnf-standalone-related .mwnf-on-display__subheading {
+  margin: 0;
+  font-weight: 500;
+}
+
+.mwnf-standalone-related .mwnf-on-display:not([dir='rtl']) .mwnf-on-display__subheading {
+  font-style: italic;
+}
+
 .mwnf-standalone-related .mwnf-on-display__list {
   margin: 0;
   padding: 0;
