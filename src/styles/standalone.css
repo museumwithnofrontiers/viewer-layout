@@ -332,9 +332,14 @@
   display: block;
 }
 
+/* Legacy's Bootstrap row: col-md-4, col-md-5 and col-md-3 of a row one gap
+   wider than the container, each column's content a gap narrower. */
 .mwnf-standalone-item .mwnf-record__main {
   display: grid;
-  grid-template-columns: 4fr 5fr 3fr;
+  grid-template-columns:
+    calc((100% + var(--mwnf-standalone-item-gap, 1.875rem)) * 4 / 12 - var(--mwnf-standalone-item-gap, 1.875rem))
+    calc((100% + var(--mwnf-standalone-item-gap, 1.875rem)) * 5 / 12 - var(--mwnf-standalone-item-gap, 1.875rem))
+    calc((100% + var(--mwnf-standalone-item-gap, 1.875rem)) * 3 / 12 - var(--mwnf-standalone-item-gap, 1.875rem));
   grid-template-rows: repeat(30, auto) 1fr;
   column-gap: var(--mwnf-standalone-item-gap, 1.875rem);
   align-items: start;
@@ -376,9 +381,12 @@
   height: var(--mwnf-standalone-item-thumb-size, 4rem);
 }
 
-/* Legacy's sheet opens with its first label 28px under the way back. */
+/* Legacy's sheet opens with its first label 28px under the way back, and
+   its sections follow its rows as one more row: 10px under the last value,
+   the heading's own margin, nothing of the sheet's. */
 .mwnf-standalone-item .mwnf-record__main > .mwnf-sheet {
   margin-top: 18px;
+  margin-bottom: 0;
 }
 
 /* Legacy's column is as tall as what it holds. Its `.col-lg-3` sits in a
@@ -510,8 +518,12 @@
   font-style: italic;
 }
 
-/* Legacy's "View Short Description" (`a.tag.arrow` in italics) under the
-   description, its text opened under it as a value. */
+/* Legacy's "View Short Description" (`a.tag.arrow` in italics) 10px under
+   the description, its text opened under it as a value. */
+.mwnf-standalone-item .mwnf-sheet__short {
+  margin-top: 10px;
+}
+
 .mwnf-standalone-item .mwnf-sheet__short .mwnf-sheet__toggle {
   margin: 0 0 0 2px;
   padding: 0 0 0 14px;
