@@ -16,7 +16,8 @@ import { limitPictures } from '../views/pictureLimit.js'
 //
 //   spec: RecordView's spec. Its pictures move to the left column.
 //   back: [{ label: entry, to | href, history: true }]   // legacy's breadcrumbs; `history` goes back one page
-//   related: { heading: entry, groups: [{ heading: entry, type }], download: { heading: entry, print: entry } }
+//   related: { heading: entry, groups: [{ heading: entry, type }],
+//              download: { heading: entry, print: entry, word: entry, title: entry, wordFile: (record, language) => name } }
 //
 // Slots: `sidebar` (the site's own blocks in the Related Content column,
 // after the related records), `before-sheet` and every slot RecordView hands
@@ -86,6 +87,7 @@ function goBack() {
         :records="ctx.records"
         :groups="related.groups ?? []"
         :download="related.download ?? null"
+        :word-file="related.download?.wordFile?.(ctx.record, ctx.language) ?? 'sheet.doc'"
       >
         <slot name="sidebar" v-bind="ctx" />
       </RelatedContent>

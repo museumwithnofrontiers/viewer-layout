@@ -8,6 +8,7 @@ import {
   StandalonePagination, StandaloneResultsGrid, StandaloneTextPage, StandaloneTileGrid, TodayHighlight, byLanguage, dayOfYear, legacyHomeItemKey, pickForDay,
   StandaloneGlossarySpelling, StandaloneWindow,
 } from '../src/standalone/index.js'
+import { sheetDocument } from '../src/standalone/wordExport.js'
 import { layoutTexts } from './helpers.js'
 import { settle } from './dxa/helpers.js'
 
@@ -541,6 +542,39 @@ describe('StandalonePagination', () => {
   it('draws nothing for a single page', async () => {
     const wrapper = await mountWith(StandalonePagination, { props: at(1, 1) })
     expect(wrapper.find('.mwnf-standalone-pages').exists()).toBe(false)
+  })
+})
+
+describe('the sheet as a Word document', () => {
+  it('writes each label as a heading and each value as a paragraph, the page’s controls and links left out', () => {
+    const root = document.createElement('div')
+    root.innerHTML = `
+      <dl class="mwnf-sheet">
+        <dt class="mwnf-sheet__label">Name of Object:</dt>
+        <dd class="mwnf-sheet__value">Five <i>textile</i> fragments<button>×</button></dd>
+      </dl>
+      <section class="mwnf-sheet-section"><h2 class="mwnf-sheet-section__heading">Description:</h2>
+        <div class="mwnf-sheet-section__body"><p>About the <a href="#/glossary">Tulunids</a>.</p><p>Second part.</p><img src="x.jpg"></div></section>
+      <section class="mwnf-credits"><h2 class="mwnf-credits__heading" hidden>Credits</h2>
+        <dl class="mwnf-credits__list"><dt>Prepared by:</dt><dd>A. Author<span role="tooltip">Bio</span></dd></dl></section>
+      <div class="mwnf-standalone-related"><dt class="mwnf-sheet__label">Related</dt></div>`
+    const html = sheetDocument(root, { title: 'MWNF - Discover Islamic Art' })
+    expect(html).toContain('<title>MWNF - Discover Islamic Art</title>')
+    expect(html).toContain('<h3>Name of Object:</h3>')
+    expect(html).toContain('<p>Five <i>textile</i> fragments</p>')
+    expect(html).toContain('<h3>Description:</h3>')
+    expect(html).toContain('<p>About the Tulunids.<br/>\n<br/>Second part.</p>')
+    expect(html).toContain('<p>Prepared by: A. Author</p>')
+    expect(html).not.toContain('Credits</h3>')
+    expect(html).not.toContain('Related')
+    expect(html).not.toContain('<img')
+  })
+
+  it('offers As Word only where the site names it', async () => {
+    const without = await mountWith(RelatedContent, { props: { download: { heading: 'site.nav.database', print: 'site.nav.home' } } })
+    expect(without.find('.mwnf-standalone-related__word').exists()).toBe(false)
+    const withWord = await mountWith(RelatedContent, { props: { download: { heading: 'site.nav.database', print: 'site.nav.home', word: 'site.nav.portal' } } })
+    expect(withWord.find('.mwnf-standalone-related__word').text()).toBe('MWNF Portal')
   })
 })
 
