@@ -1,3 +1,32 @@
+## 3.18.0 (2026-11-01)
+
+### Added
+
+- **`RecordView`'s short description after a section**: when
+  `spec.shortDescriptionAfter` names a section and no row (the standalone
+  sites print the description as a section), its toggle follows that
+  section (`ShortDescription`), as legacy's "View Short Description" did.
+- **`spec.workingNumberLabel`**: the entry naming the working number
+  (default `sheet.field.workingNumber`), so a site can print its own word.
+- **Standalone tokens** for the item sheet's colours
+  (`--mwnf-standalone-sheet-label-color`, `-value-color`, `-link-color`),
+  the Download picture (`--mwnf-standalone-download-icon`) and the record's
+  language band (`--mwnf-standalone-language-bar`, `-language-color`,
+  `-language-active`).
+- `RecordCredits` marks its two headings (`--credits`, `--citation`).
+
+### Changed
+
+- **The standalone item sheet is drawn as legacy's `database_item.php`**
+  (style_inside.css): labels, values, sections, credits and citation in
+  16px/22px Roboto, labels weight 500 over values indented under them; the
+  citation first, then each credit "Label Name" on its line, then the
+  working number, with no Credits heading; no Source line (a site's own
+  `source` slot still draws one); Related Content's links, dynasty,
+  exhibitions (in italics), galleries and Download behind the product's
+  arrow and download pictures; the record's languages as legacy's band.
+  The words, colons included, are the product's own.
+
 ## 3.17.1 (2026-11-01)
 
 ### Fixed

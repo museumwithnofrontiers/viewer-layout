@@ -346,6 +346,37 @@
 .mwnf-standalone-item__top {
   display: flex;
   justify-content: flex-end;
+  background-color: var(--mwnf-standalone-language-bar, transparent);
+}
+
+/* The record's languages as legacy's `section.language_option`: 14px words
+   on the bar, a rule between them, the shown language on the lighter ground. */
+.mwnf-standalone-item__top .mwnf-languages {
+  display: flex;
+  gap: 0;
+  margin: 0;
+}
+
+.mwnf-standalone-item__top .mwnf-languages__button {
+  margin: 0;
+  padding: 5px 8px;
+  border: 0;
+  border-radius: 0;
+  font: 400 14px Roboto, sans-serif;
+  color: var(--mwnf-standalone-language-color, inherit);
+  background: none;
+}
+
+.mwnf-standalone-item__top .mwnf-languages__button + .mwnf-languages__button {
+  border-left: 1px solid var(--mwnf-standalone-language-active, transparent);
+}
+
+.mwnf-standalone-item__top .mwnf-languages__button--active {
+  background-color: var(--mwnf-standalone-language-active, transparent);
+}
+
+.mwnf-standalone-related strong {
+  font-weight: 500;
 }
 
 .mwnf-standalone-item__back {
@@ -371,6 +402,125 @@
   font-style: italic;
 }
 
+/* Legacy's "View Short Description" (`a.tag.arrow` in italics) under the
+   description, its text opened under it as a value. */
+.mwnf-standalone-item .mwnf-sheet__short .mwnf-sheet__toggle {
+  margin: 0 0 0 2px;
+  padding: 0 0 0 14px;
+  border: 0;
+  font: italic 500 16px/22px Roboto, sans-serif;
+  color: var(--mwnf-standalone-sheet-value-color, #222);
+  background: var(--mwnf-standalone-bullet, none) no-repeat 0 3px;
+  cursor: pointer;
+}
+
+.mwnf-standalone-item .mwnf-sheet__short .mwnf-sheet__block {
+  margin: 0 0 0 2px;
+  padding-left: 12px;
+  font: 400 16px/22px Roboto, sans-serif;
+  color: var(--mwnf-standalone-sheet-value-color, #222);
+}
+
+/* The sheet as legacy's `modules/database_item.php` drew it (style_inside.css,
+   `.center_contents`): every label, a section's included, is an h3 of its own
+   over its value indented under it; the credits follow the citation, label
+   and name on one line, and close with the working number. A product sets
+   its colours, and its words: legacy's own, colons included where it wrote
+   them. */
+.mwnf-standalone-item .mwnf-sheet__label,
+.mwnf-standalone-item .mwnf-sheet-section__heading,
+.mwnf-standalone-item .mwnf-credits__heading--citation {
+  margin: 10px 0 0;
+  padding: 0;
+  border: 0;
+  font: 500 16px/22px Roboto, sans-serif;
+  letter-spacing: normal;
+  text-transform: none;
+  color: var(--mwnf-standalone-sheet-label-color, #000);
+}
+
+.mwnf-standalone-item .mwnf-sheet__value,
+.mwnf-standalone-item .mwnf-sheet-section__body,
+.mwnf-standalone-item .mwnf-credits {
+  margin: 0 0 0 2px;
+  padding: 0 0 0 12px;
+  font: 400 16px/22px Roboto, sans-serif;
+  color: var(--mwnf-standalone-sheet-value-color, #222);
+}
+
+.mwnf-standalone-item .mwnf-sheet-section,
+.mwnf-standalone-item .mwnf-credits {
+  margin-top: 0;
+  padding-top: 0;
+  border: 0;
+}
+
+.mwnf-standalone-item .mwnf-sheet-section__body p {
+  margin: 0;
+}
+
+.mwnf-standalone-item .mwnf-sheet__value a,
+.mwnf-standalone-item .mwnf-sheet-section__body a,
+.mwnf-standalone-item .mwnf-credits a {
+  color: var(--mwnf-standalone-sheet-link-color, rgb(1 141 206));
+}
+
+/* The credits block: no heading of its own, the citation first, each credit
+   "Label: Name" on its line, then the working number. */
+.mwnf-standalone-item .mwnf-credits {
+  display: flex;
+  flex-direction: column;
+  padding-left: 0;
+}
+
+.mwnf-standalone-item .mwnf-credits__heading--credits {
+  display: none;
+}
+
+.mwnf-standalone-item .mwnf-credits__heading--citation {
+  order: -2;
+  margin-left: -2px;
+}
+
+.mwnf-standalone-item .mwnf-credits__citation {
+  order: -1;
+  margin: 0 0 10px;
+  padding-left: 12px;
+  font: inherit;
+}
+
+.mwnf-standalone-item .mwnf-credits__list {
+  display: block;
+  margin: 0;
+  padding-left: 12px;
+}
+
+.mwnf-standalone-item .mwnf-credits__list dt,
+.mwnf-standalone-item .mwnf-credits__list dd {
+  display: inline;
+  margin: 0;
+  font: inherit;
+}
+
+.mwnf-standalone-item .mwnf-credits__list dd::before {
+  content: ' ';
+}
+
+.mwnf-standalone-item .mwnf-credits__list dd::after {
+  content: '\A';
+  white-space: pre;
+}
+
+.mwnf-standalone-item .mwnf-credits__number {
+  margin: 10px 0 0;
+  padding-left: 12px;
+  font: inherit;
+}
+
+.mwnf-standalone-item .mwnf-credits__number strong {
+  font-weight: inherit;
+}
+
 .mwnf-standalone-related {
   padding: var(--mwnf-standalone-related-padding, 0 1.25rem 1.875rem);
   background-color: var(--mwnf-standalone-related-background, transparent);
@@ -384,6 +534,89 @@
 
 .mwnf-standalone-related p {
   margin: 0 0 0.5rem;
+}
+
+/* Legacy's `.item_colr_bg`: every link a 16px line behind the product's
+   arrow, the related records 70px thumbnails. */
+.mwnf-standalone-related {
+  font: 400 16px/20px Roboto, sans-serif;
+}
+
+.mwnf-standalone-related a:not(:has(img)) {
+  display: block;
+  padding-left: 14px;
+  font: 400 16px/20px Roboto, sans-serif;
+  text-decoration: none;
+  background: var(--mwnf-standalone-bullet, none) no-repeat 0 4px;
+}
+
+.mwnf-standalone-related a:not(:has(img)):hover {
+  text-decoration: underline;
+}
+
+/* The blocks the column shares with other pages (DynastyList, OnDisplayIn),
+   as legacy's column drew them: plain 16px headings, no colon, the
+   dynasty a link behind the arrow, exhibitions and galleries in italics. */
+.mwnf-standalone-related .mwnf-dynasty-list__heading,
+.mwnf-standalone-related .mwnf-sheet-section__heading {
+  margin: 16px 0 0;
+  padding: 0;
+  border: 0;
+  font: 400 16px/20px Roboto, sans-serif;
+  letter-spacing: normal;
+  text-transform: none;
+  color: inherit;
+}
+
+.mwnf-standalone-related .mwnf-sheet-section__heading {
+  margin: 0 0 10px;
+  font-weight: 500;
+}
+
+.mwnf-standalone-related .mwnf-sheet-section {
+  margin: 0 0 10px;
+  padding: 0;
+  border: 0;
+}
+
+.mwnf-standalone-related .mwnf-dynasty__summary {
+  display: block;
+  padding-left: 14px;
+  font: 400 16px/20px Roboto, sans-serif;
+  list-style: none;
+  cursor: pointer;
+  background: var(--mwnf-standalone-bullet, none) no-repeat 0 4px;
+}
+
+.mwnf-standalone-related .mwnf-dynasty__summary::-webkit-details-marker {
+  display: none;
+}
+
+.mwnf-standalone-related .mwnf-on-display__subheading {
+  margin: 0;
+  font-weight: 500;
+}
+
+.mwnf-standalone-related .mwnf-on-display:not([dir='rtl']) .mwnf-on-display__subheading {
+  font-style: italic;
+}
+
+.mwnf-standalone-related .mwnf-on-display__list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.mwnf-standalone-related .mwnf-on-display__item {
+  padding-left: 14px;
+  font: italic 400 16px/20px Roboto, sans-serif;
+  background: var(--mwnf-standalone-bullet, none) no-repeat 0 4px;
+}
+
+.mwnf-standalone-related .mwnf-on-display__item a {
+  padding-left: 0;
+  font-style: italic;
+  background: none;
 }
 
 .mwnf-standalone-related__heading {
@@ -419,15 +652,23 @@
   margin-top: 1.5rem;
 }
 
+/* Legacy's `p.download` behind its download picture, then each format a
+   link behind the arrow. */
 .mwnf-standalone-related__download-heading {
-  font-weight: 600;
+  margin: 15px 0 0;
+  padding-left: 17px;
+  font-weight: 500;
+  background: var(--mwnf-standalone-download-icon, none) no-repeat 0 4px;
 }
 
 .mwnf-standalone-related__print {
-  padding: 0;
-  font: inherit;
+  display: block;
+  padding: 0 0 0 14px;
+  font: 400 16px/20px Roboto, sans-serif;
+  text-align: start;
   text-decoration: none;
-  background: none;
+  color: inherit;
+  background: var(--mwnf-standalone-bullet, none) no-repeat 0 4px;
   border: none;
   cursor: pointer;
 }

@@ -875,6 +875,13 @@
   /* --mwnf-standalone-related-background: transparent;  Related Content column */
   /* --mwnf-standalone-related-text: inherit;        Its text */
   /* --mwnf-standalone-related-link: inherit;        Its links */
+  /* --mwnf-standalone-sheet-label-color: #000;      The item sheet's labels, a section's heading included */
+  /* --mwnf-standalone-sheet-value-color: #222;      The item sheet's values, prose and credits */
+  /* --mwnf-standalone-sheet-link-color: rgb(1 141 206);  Their links */
+  /* --mwnf-standalone-download-icon: none;          The picture before the Related Content column's Download (a url()) */
+  /* --mwnf-standalone-language-bar: transparent;    The item sheet's band of record languages */
+  /* --mwnf-standalone-language-color: inherit;      Its words */
+  /* --mwnf-standalone-language-active: transparent; The shown language's ground, and the rule between words */
   /* --mwnf-standalone-related-padding: 0 1.25rem 1.875rem;  Its padding */
   /* --mwnf-standalone-related-heading-offset: 1.75rem;  Space above its heading */
   /* --mwnf-standalone-related-thumb-size: 3.75rem;  Related record thumbnail size */

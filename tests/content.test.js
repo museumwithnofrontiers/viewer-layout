@@ -38,6 +38,7 @@ import {
 import FeaturedPartners from '../src/dxa/FeaturedPartners.vue'
 import PopupLogo from '../src/dxa/PopupLogo.vue'
 import SiblingGalleries from '../src/dxa/SiblingGalleries.vue'
+import ShortDescription from '../src/content/ShortDescription.vue'
 import { globalWithI18n, layoutTexts, withSiteRights } from './helpers.js'
 
 const records = [
@@ -322,6 +323,16 @@ describe('SheetSection, RecordCredits, RelatedRecords', () => {
     const wrapper = mount(SheetSection, { props: { heading: 'History', html: '<p>Long ago.</p>' }, ...globalWithI18n() })
     expect(wrapper.find('h2').text()).toBe('History')
     expect(wrapper.find('.mwnf-sheet-section__body').html()).toContain('<p>Long ago.</p>')
+  })
+
+  it('a short description after a section stays folded behind its toggle until asked', async () => {
+    const wrapper = mount(ShortDescription, { props: { html: '<p>In short.</p>' }, ...globalWithI18n() })
+    const toggle = wrapper.find('.mwnf-sheet__toggle')
+    expect(toggle.attributes('aria-expanded')).toBe('false')
+    expect(wrapper.find('.mwnf-sheet__block').exists()).toBe(false)
+    await toggle.trigger('click')
+    expect(toggle.attributes('aria-expanded')).toBe('true')
+    expect(wrapper.find('.mwnf-sheet__block').html()).toContain('<p>In short.</p>')
   })
 
   it('credits render who made the sheet, the working number and the citation', () => {
