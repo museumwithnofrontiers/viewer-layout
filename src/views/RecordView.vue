@@ -30,6 +30,7 @@ import { limitPictures } from './pictureLimit.js'
 //     fields: [{ key, label, value, render, when, join }],   // viewer-core's `sheetRows` spec; labels are entry names
 //     sections: [{ key, label, value }],               // prose under the sheet, one SheetSection each
 //     layout: 'table' | 'list',
+//     labelsInRecordLanguage: true,                    // the sheet's labels, credits and citation heading in the record's language (legacy's db_GetTERM)
 //     shortDescription: 'short_description' | false,   // the field folded behind the toggle, after `shortDescriptionAfter`
 //     media: (record, ctx) => [{ url, alt, caption, photographer }],   // default: the record's `images`
 //     mediaVariant: '' | 'row',
@@ -66,7 +67,7 @@ const props = defineProps({
   entity: { type: String, default: '' },
 })
 
-const { t, locale } = useI18n()
+const { t, tIn, locale } = useI18n()
 const pkg = useDataPackage()
 const projects = useProjects()
 const slots = useSlots()
@@ -117,9 +118,13 @@ const ctx = computed(() => ({
 
 // ── The sheet ──────────────────────────────────────────────────────────────
 
+// A sheet label: in the site's language, or in the record's when the spec
+// asks (legacy's sheets printed theirs in the language the record is shown in).
+const sheetT = (key) => (spec.value.labelsInRecordLanguage && tIn ? tIn(language.value, key) : t(key))
+
 function resolveSpec(part) {
   const list = typeof part === 'function' ? part(ctx.value) : part
-  return (list ?? []).map((field) => ({ ...field, label: field.label ? t(field.label) : '' }))
+  return (list ?? []).map((field) => ({ ...field, label: field.label ? sheetT(field.label) : '' }))
 }
 
 const rows = computed(() => (record.value ? sheetRows(resolveSpec(spec.value.fields), ctx.value) : []))
@@ -211,7 +216,7 @@ function creditPeople(field) {
 
 const credits = computed(() =>
   (spec.value.credits ?? DEFAULT_CREDITS)
-    .map(({ field, label }) => ({ label: t(label), value: creditValue(field), people: creditPeople(field) }))
+    .map(({ field, label }) => ({ label: sheetT(label), value: creditValue(field), people: creditPeople(field) }))
     .filter((entry) => entry.value),
 )
 
@@ -321,10 +326,10 @@ const rowSlots = computed(() => Object.keys(slots).filter((name) => !OWN_SLOTS.h
         <RecordCredits
           :credits="credits"
           :working-number="workingNumber"
-          :working-number-label="t(spec.workingNumberLabel ?? 'sheet.field.workingNumber')"
+          :working-number-label="sheetT(spec.workingNumberLabel ?? 'sheet.field.workingNumber')"
           :citation="citationText"
           :citation-html="citationHtml"
-          :citation-heading="spec.citation?.heading ? t(spec.citation.heading) : ''"
+          :citation-heading="spec.citation?.heading ? sheetT(spec.citation.heading) : ''"
         />
 
         <slot name="source" v-bind="ctx">

@@ -1,3 +1,15 @@
+## 3.28.0 (2026-11-02)
+
+Needs `@museumwnf/viewer-core` 2.14.0 (`tIn`).
+
+### Added
+
+- **`RecordView`'s `labelsInRecordLanguage`**: the sheet's labels, its
+  credits, its citation heading and its working number's label in the
+  language the record is shown in, as legacy's `db_GetTERM` printed them,
+  rather than the site's. Discover Baroque Art's interface is English, its
+  Czech sheet Czech.
+
 ## 3.27.0 (2026-11-02)
 
 ### Added
