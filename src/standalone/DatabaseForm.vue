@@ -12,6 +12,7 @@ import { computed, reactive, useSlots } from 'vue'
 //
 //   labels: { criteria, keywords, category, in, and, or, date, from, to, language, go, listing, listingTooltip }
 //   fields: [{ value, label }]       languages: [{ code, name }]
+//   fromYears / toYears: [year] or [{ value, label }] (Sharing History's "Before 1800" for 0)
 //   slots: `aside` (the last column's link, Islamic Art's Glossary & Spelling),
 //          `options` (a row under the language, Islamic Art's Explore opt-in)
 const props = defineProps({
@@ -33,6 +34,9 @@ const rows = reactive([
 ])
 const dates = reactive({ from: '', to: '' })
 const options = computed(() => Boolean(slots.options))
+const asOption = (year) => (typeof year === 'object' ? year : { value: year, label: String(year) })
+const fromOptions = computed(() => props.fromYears.map(asOption))
+const toOptions = computed(() => props.toYears.map(asOption))
 
 function go() {
   emit('search', {
@@ -80,11 +84,11 @@ function go() {
     <p class="mwnf-standalone-db__dates">
       <select v-model="dates.from" :aria-label="`${labels.date} ${labels.from}`">
         <option value="">{{ labels.from }}</option>
-        <option v-for="year in fromYears" :key="year" :value="year">{{ year }}</option>
+        <option v-for="year in fromOptions" :key="year.value" :value="year.value">{{ year.label }}</option>
       </select>
       <select v-model="dates.to" :aria-label="`${labels.date} ${labels.to}`">
         <option value="">{{ labels.to }}</option>
-        <option v-for="year in toYears" :key="year" :value="year">{{ year }}</option>
+        <option v-for="year in toOptions" :key="year.value" :value="year.value">{{ year.label }}</option>
       </select>
     </p>
 

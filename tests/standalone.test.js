@@ -788,6 +788,15 @@ describe('StandaloneDatabaseForm', () => {
     expect(wrapper.emitted('update:language')[0]).toEqual(['cs'])
   })
 
+  it('names a year by its own label', async () => {
+    const wrapper = await mountWith(StandaloneDatabaseForm, {
+      props: { ...props, fromYears: [{ value: 0, label: 'Before 1800' }, 1800], toYears: [1800, { value: 2100, label: 'After 1930' }] },
+    })
+    const [from, to] = wrapper.findAll('.mwnf-standalone-db__dates select')
+    expect(from.findAll('option').map((o) => [o.attributes('value'), o.text()])).toEqual([['', 'From'], ['0', 'Before 1800'], ['1800', '1800']])
+    expect(to.findAll('option').map((o) => o.text())).toEqual(['To', '1800', 'After 1930'])
+  })
+
   it('takes an options row and a last-column link', async () => {
     const wrapper = await mountWith(StandaloneDatabaseForm, {
       props,

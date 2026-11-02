@@ -13,6 +13,9 @@
 - **`--mwnf-standalone-results-cell-width`** and
   **`--mwnf-standalone-results-cell-padding`**: the result tiles in quarters
   of the row (as before), or one after another (Sharing History's).
+- **`StandaloneDatabaseForm`'s years** may be `{ value, label }` as well as
+  years: Sharing History's lists send 0 for "Before 1800" and 2100 for
+  "After 1930".
 
 ## 3.43.0 (2026-11-02)
 
