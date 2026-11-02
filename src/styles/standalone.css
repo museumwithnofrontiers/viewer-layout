@@ -1205,6 +1205,111 @@
   .mwnf-standalone-list__cell { width: 100%; }
 }
 
+/* ── The partner lists: legacy's `pm_partner_list.php` ────────────────────── */
+
+/* StandalonePartnerList: the page on its own ground; the way back; the
+   headings over the two col-md-6 halves; each group a row of two halves
+   under a rule, the museums' right half the band that opens the associated
+   museums (style_inside.css's .country_head, .pm_partner_list,
+   .pt.center_contents). */
+.mwnf-content:has(.mwnf-standalone-pl) { background: var(--mwnf-standalone-pl-ground, transparent); }
+/* Legacy's 30px under the list, of which the content area gives 20. */
+.mwnf-standalone-pl { padding-bottom: 10px; }
+.mwnf-standalone-pl__back {
+  min-height: 16px;
+  margin: 0 0 15px;
+  font-weight: var(--mwnf-standalone-pl-back-weight, 500);
+  color: var(--mwnf-standalone-pl-back-color, #222);
+}
+.mwnf-standalone-pl__back .mwnf-standalone-item__back-link {
+  background-image: var(--mwnf-standalone-pl-back-arrow, var(--mwnf-standalone-back-arrow, none));
+}
+.mwnf-standalone-pl__heads,
+.mwnf-standalone-pl__head,
+.mwnf-standalone-pl__row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  column-gap: 30px;
+}
+.mwnf-standalone-pl__heads { margin: 0 0 15px; }
+.mwnf-standalone-pl__heads h3:nth-child(2) { width: calc(50% - 15px); }
+.mwnf-standalone-pl__heads h3 {
+  margin: 0;
+  font: var(--mwnf-standalone-pl-heading-weight, 400) 19px Roboto, sans-serif;
+  color: var(--mwnf-standalone-pl-heading-color, #222);
+}
+.mwnf-standalone-pl__head h3 {
+  margin: 10px 0 0;
+  border-bottom: 2px solid var(--mwnf-standalone-pl-rule, #e0b700);
+  font: var(--mwnf-standalone-pl-group-weight, 500) 15px/22px Roboto, sans-serif;
+  color: var(--mwnf-standalone-pl-group-color, #222);
+}
+.mwnf-standalone-pl__toggle {
+  position: relative;
+  display: block;
+  padding-left: 20px;
+  font: var(--mwnf-standalone-pl-link-weight, 400) 16px/22px Roboto, sans-serif;
+  color: var(--mwnf-standalone-pl-toggle-color, #222);
+  text-decoration: none;
+  background: var(--mwnf-standalone-pl-rule, #e0b700) var(--mwnf-standalone-accordion-closed, none) no-repeat 5px 8px / 10px 5px;
+}
+.mwnf-standalone-pl__toggle--active { background-image: var(--mwnf-standalone-accordion-open, var(--mwnf-standalone-accordion-closed, none)); }
+/* The rule runs on under the gap between the halves. */
+.mwnf-standalone-pl--museums .mwnf-standalone-pl__toggle::before {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: -50%;
+  width: 100%;
+  height: 2px;
+  background: var(--mwnf-standalone-pl-rule, #e0b700);
+}
+/* The institutions: legacy's plain accordion (.country_head h3 a), the
+   group the title, on the band while open, the open section padded. */
+.mwnf-standalone-pl--institutions .mwnf-standalone-pl__head { grid-template-columns: 1fr; }
+.mwnf-standalone-pl--institutions .mwnf-standalone-pl__head h3 {
+  width: calc(50% - 15px);
+  border: 0;
+  font-size: 16px;
+}
+.mwnf-standalone-pl--institutions .mwnf-standalone-pl__toggle {
+  display: inline;
+  margin-left: 10px;
+  padding: 0 20px;
+  font-weight: var(--mwnf-standalone-pl-title-weight, 500);
+  color: var(--mwnf-standalone-pl-title-color, #000);
+  background-color: transparent;
+  background-position: 0 8px;
+}
+.mwnf-standalone-pl--institutions .mwnf-standalone-pl__toggle--active {
+  background-color: var(--mwnf-standalone-pl-title-active, var(--mwnf-standalone-pl-rule, #e0b700));
+}
+/* Its partners in col-md-6, their associated ones in col-md-5. */
+.mwnf-standalone-pl--institutions .mwnf-standalone-pl__row {
+  grid-template-columns: calc((100% + 30px) / 2 - 30px) calc((100% + 30px) * 5 / 12 - 30px);
+  padding: 15px;
+}
+.mwnf-standalone-pl--museums .mwnf-standalone-pl__associated { padding-left: 10px; }
+.mwnf-standalone-pl__row p {
+  margin: 0 0 3px 2px;
+  padding-right: 8px;
+  font: 400 16px/29px Roboto, sans-serif;
+  color: var(--mwnf-standalone-pl-link-color, #222);
+}
+.mwnf-standalone-pl--museums .mwnf-standalone-pl__associated p { margin-left: 11px; }
+.mwnf-standalone-pl__row a {
+  margin-left: 13px;
+  padding-left: 14px;
+  font: var(--mwnf-standalone-pl-link-weight, 400) 16px/22px Roboto, sans-serif;
+  color: var(--mwnf-standalone-pl-link-color, #222);
+  text-decoration: none;
+  background: var(--mwnf-standalone-pl-bullet, var(--mwnf-standalone-bullet, none)) no-repeat 0 3px;
+}
+.mwnf-standalone-pl__row a:hover { text-decoration: underline; }
+@media (max-width: 62rem) {
+  .mwnf-standalone-pl__heads, .mwnf-standalone-pl__head, .mwnf-standalone-pl__row { grid-template-columns: 1fr; }
+}
+
 /* ── Pages: legacy's `page_listing` (style_inside.css) ────────────────────── */
 
 /* "Previous", the numbers and "Next", centred, each end parted from the

@@ -1,3 +1,16 @@
+## 3.32.0 (2026-11-02)
+
+### Added
+
+- **`StandalonePartnerList`, legacy's `pm_partner_list.php`**, shared by
+  the products (Islamic Art drew it as a site view): the way back, the
+  headings over the two halves, one row a group. Museums: the group beside
+  the "See Associated Museums" band, which opens that group's associated
+  museums and closes any other. Institutions: the group its own title,
+  every one open at first, its partners in col-md-6 and their associated
+  ones in col-md-5. `--mwnf-standalone-pl-*` colour the page and
+  `--mwnf-standalone-accordion-closed`/`-open` are the band's arrow.
+
 ## 3.31.0 (2026-11-02)
 
 ### Added
