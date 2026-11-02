@@ -15,7 +15,7 @@ import { downloadWord, timelineDocument } from './wordExport.js'
 // search as legacy's export_hcr_content.php wrote it. Every word is the
 // website's.
 //
-//   selects: [{ key, label, value, options: [{ value, label }] }]   // legacy's order: start, end, country
+//   selects: [{ key, label, value, options: [{ value, label }], disabled }]   // legacy's order: start, end, country
 //   rows: [{ id, date, country, html }]                             // `html` the description, rendered
 //   all: every row of the search, for the Word file (defaults to `rows`)
 //   related: { heading, gallery: { label, to, title } } | null
@@ -71,7 +71,7 @@ function word(event) {
         <div class="mwnf-standalone-tlr__selects">
           <p v-for="select in selects" :key="select.key">
             <label :for="`mwnf-tlr-${select.key}`">{{ select.label }}</label>
-            <select :id="`mwnf-tlr-${select.key}`" :value="select.value" @change="emit('change', { key: select.key, value: $event.target.value })">
+            <select :id="`mwnf-tlr-${select.key}`" :value="select.value" :disabled="select.disabled || undefined" @change="emit('change', { key: select.key, value: $event.target.value })">
               <option v-for="option in select.options" :key="option.value" :value="option.value">{{ option.label }}</option>
             </select>
           </p>

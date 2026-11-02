@@ -696,6 +696,7 @@ describe('StandaloneTimelineResults', () => {
     selects: [
       { key: 'start', label: 'Start Date', value: '1000', options: [{ value: '1000', label: '1000 A.D.' }] },
       { key: 'country', label: 'Country', value: 'egy', options: [{ value: '', label: 'All countries' }, { value: 'egy', label: 'Egypt' }] },
+      { key: 'theme', label: 'Theme', value: '', disabled: true, options: [{ value: '', label: 'Select a Theme' }] },
     ],
     back: [{ label: 'Back', history: true }, { label: 'Timeline start page', href: '#/timeline' }],
     heads: { date: 'Date', countryDescription: 'Country | Description' },
@@ -708,7 +709,8 @@ describe('StandaloneTimelineResults', () => {
   it("draws legacy's band, the way back, the events and the Related Content column", async () => {
     const wrapper = await mountWith(StandaloneTimelineResults, { props })
     expect(wrapper.find('.mwnf-standalone-tlr__summary').text()).toBe('Timeline | 1000 A.D.to 1200 A.D. | EGYPT')
-    expect(wrapper.findAll('.mwnf-standalone-tlr__selects label').map((l) => l.text())).toEqual(['Start Date', 'Country'])
+    expect(wrapper.findAll('.mwnf-standalone-tlr__selects label').map((l) => l.text())).toEqual(['Start Date', 'Country', 'Theme'])
+    expect(wrapper.findAll('select')[2].element.disabled).toBe(true)
     expect(wrapper.findAll('.mwnf-standalone-item__back-link').map((l) => l.text())).toEqual(['Back', 'Timeline start page'])
     expect(wrapper.findAll('.mwnf-standalone-tlr__heads h3').map((h) => h.text())).toEqual(['Date', 'Country | Description'])
     const row = wrapper.find('.mwnf-standalone-tlr__row')

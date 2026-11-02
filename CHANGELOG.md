@@ -14,6 +14,8 @@
   country and the theme over the description across them (Sharing
   History's export_hcr_content.php). The heading's first part is bold up
   to its first "|" or "/".
+- **A timeline list's `disabled`**: the list shows its value but cannot be
+  changed (Sharing History's Theme on the political timeline).
 
 ## 3.44.0 (2026-11-02)
 
