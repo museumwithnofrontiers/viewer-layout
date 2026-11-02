@@ -843,12 +843,24 @@
   /* --mwnf-standalone-header-tools-gap: 0.25rem;    Gap between the header links and the language select */
   /* --mwnf-standalone-header-link-color: inherit;   Header links ("MWNF Portal | Home") */
   /* --mwnf-standalone-header-links-gap: 0.5rem;     Space around the "|" between header links */
+  /* --mwnf-standalone-header-align: center;         The header's parts: centred, or `start` to hang from the top */
+  /* --mwnf-standalone-header-brand-offset: 0;       The logo's distance from the top */
+  /* --mwnf-standalone-header-title-offset: 0;       The heading's */
+  /* --mwnf-standalone-header-tools-offset: 0;       The links' */
   /* --mwnf-standalone-heading-size: 2.125rem;       Inner pages' header heading size */
   /* --mwnf-standalone-heading-weight: 400;          Its weight */
-  /* --mwnf-standalone-heading-color: inherit;       Its colour */
+  /* --mwnf-standalone-heading-color: inherit;       Its colour (and the partner profile's headings) */
+  /* --mwnf-standalone-header-title-color: var(--mwnf-standalone-heading-color);  The header heading's own colour */
+  /* --mwnf-standalone-header-title-line-height: 1.1;  Its line height */
   /* --mwnf-standalone-heading-shadow: none;         Its text shadow */
   /* --mwnf-standalone-language-size: 0.75rem;       Header language select text size */
+  /* --mwnf-standalone-language-select-width: auto;  Its width */
+  /* --mwnf-standalone-language-select-height: auto; Its height */
+  /* --mwnf-standalone-language-select-padding: 0 0.4rem;  Its padding */
+  /* --mwnf-standalone-language-select-color: #222;  Its words */
+  /* --mwnf-standalone-language-select-background: #fff;  Its ground */
   /* --mwnf-standalone-logo-height: 3.125rem;        Header logo maximum height */
+  /* --mwnf-standalone-logo-width: auto;             Header logo width */
   /* --mwnf-standalone-banner-height: 10rem;         Inner pages' banner band height */
   /* --mwnf-standalone-home-banner-inset: 4rem;      The home banner text: its start inset */
   /* --mwnf-standalone-home-banner-bottom: 2rem;     Its distance from the picture's bottom */

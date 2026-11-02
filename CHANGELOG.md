@@ -1,3 +1,23 @@
+## 3.33.0 (2026-11-02)
+
+### Added
+
+- **A header that hangs from the top, as legacy's**:
+  `--mwnf-standalone-header-align` (`center`, or `start`) and the logo's,
+  the heading's and the links' distances from the top
+  (`--mwnf-standalone-header-brand-offset`, `-title-offset`,
+  `-tools-offset`); the heading's line height; the logo's width; the
+  language list's size, padding and colours
+  (`--mwnf-standalone-language-select-*`). Unset, the header is drawn as
+  before.
+
+### Fixed
+
+- **The header heading's colour has a token of its own,
+  `--mwnf-standalone-header-title-color`**: the partner profile's headings
+  (3.20.0) share `--mwnf-standalone-heading-color`, so a site that coloured
+  them recoloured its header too. It falls back to the shared token.
+
 ## 3.32.0 (2026-11-02)
 
 ### Added
