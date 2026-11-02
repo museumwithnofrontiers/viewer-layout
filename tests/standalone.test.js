@@ -6,7 +6,7 @@ import { createI18n } from '@museumwnf/viewer-core/i18n'
 import {
   RelatedContent, StandaloneHome, StandaloneItemSheet, StandalonePartnerPage, StandaloneShell, StandaloneSponsors, StandaloneSubNav,
   StandalonePagination, StandaloneResultsGrid, StandaloneTextPage, StandaloneTileGrid, TodayHighlight, byLanguage, dayOfYear, legacyHomeItemKey, pickForDay,
-  StandaloneGlossarySpelling, StandalonePartnerList, StandaloneRefine, StandaloneResultsList, StandaloneWindow,
+  StandaloneGlossarySpelling, StandalonePartnerList, StandaloneRefine, StandaloneResultsList, StandaloneSponsorList, StandaloneWindow,
 } from '../src/standalone/index.js'
 import { sheetDocument } from '../src/standalone/wordExport.js'
 import { layoutTexts } from './helpers.js'
@@ -605,6 +605,37 @@ describe('StandalonePartnerList', () => {
     expect(wrapper.findAll('.mwnf-standalone-pl__row').map((r) => r.element.style.display !== 'none')).toEqual([true, true])
     await titles[1].trigger('click')
     expect(wrapper.findAll('.mwnf-standalone-pl__row').map((r) => r.element.style.display !== 'none')).toEqual([false, true])
+  })
+})
+
+describe('StandaloneSponsorList', () => {
+  const back = [{ label: 'Back', history: true }, { label: 'Partner Museums', href: '#/partners/results?type=museum' }]
+
+  it("draws legacy's international list: a sponsor's name, web address and logo, no label column", async () => {
+    const rows = [{ name: 'Euromed Heritage', web: 'www.euromedheritage.net', remarks: '', logo: '/s/21.jpg' }]
+    const wrapper = await mountWith(StandaloneSponsorList, { props: { heading: 'International Sponsors', rows, back } })
+    expect(wrapper.findAll('.mwnf-standalone-item__back-link').map((l) => l.text())).toEqual(['Back', 'Partner Museums'])
+    expect(wrapper.find('.mwnf-standalone-sp__heading').text()).toBe('International Sponsors')
+    expect(wrapper.classes()).not.toContain('mwnf-standalone-sp--labels')
+    expect(wrapper.find('.mwnf-standalone-sp__label').exists()).toBe(false)
+    expect(wrapper.findAll('.mwnf-standalone-sp__text p').map((p) => p.text())).toEqual(['Euromed Heritage', 'www.euromedheritage.net'])
+    expect(wrapper.find('.mwnf-standalone-sp__text a').attributes('href')).toBe('http://www.euromedheritage.net')
+    expect(wrapper.find('.mwnf-standalone-sp__logo img').attributes()).toMatchObject({ src: '/s/21.jpg', alt: 'Euromed Heritage' })
+  })
+
+  it("draws the local list's label column, the region line and the remarks in italics", async () => {
+    const rows = [
+      { label: 'ITALY/  \nROME', region: '', name: 'Comune di Roma', web: '', remarks: '*Main* sponsor', logo: '' },
+      { label: '', region: 'Tyrol', name: 'Land Tirol', web: '', remarks: '', logo: '' },
+    ]
+    const wrapper = await mountWith(StandaloneSponsorList, { props: { heading: 'Local Sponsors', rows } })
+    expect(wrapper.classes()).toContain('mwnf-standalone-sp--labels')
+    const labels = wrapper.findAll('.mwnf-standalone-sp__label')
+    expect(labels[0].html()).toContain('ITALY/<br')
+    expect(labels[1].text()).toBe('')
+    expect(wrapper.find('.mwnf-standalone-sp__remarks em').text()).toBe('Main')
+    expect(wrapper.findAll('.mwnf-standalone-sp__row')[1].findAll('.mwnf-standalone-sp__text p').map((p) => p.text())).toEqual(['Tyrol', 'Land Tirol'])
+    expect(wrapper.find('.mwnf-standalone-sp__logo img').exists()).toBe(false)
   })
 })
 
