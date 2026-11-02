@@ -480,6 +480,13 @@
   padding-inline-end: var(--mwnf-nav-toggle-gap, 0.5rem);
 }
 
+/* A drawer's own parts — an entry's fold button, the backdrop — shown only
+   by a family that draws its links as a drawer (standalone.css). */
+.mwnf-nav__fold,
+.mwnf-nav__backdrop {
+  display: none;
+}
+
 .mwnf-nav__links {
   display: flex;
   flex-wrap: wrap;

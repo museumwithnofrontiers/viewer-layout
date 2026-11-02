@@ -2581,3 +2581,218 @@
 @media (max-width: 47.9375rem) {
   .mwnf-standalone-hcr__body { grid-template-columns: 1fr; }
 }
+
+/* ── Phone: legacy's MWNF phone frame (all three sites) ───────────────────────
+   Below 768px legacy draws a 54px header — the menu button at the left, the
+   logo, the heading small in the middle, the two links stacked at the right
+   — an 80px banner with its title 24px over a strip, and the menu as a
+   270px drawer from the left over a dark backdrop, each entry's own links
+   folded behind a chevron, "×" beside it. Every value is a family token;
+   the defaults are Sharing History's. */
+@media (max-width: 47.9375rem) {
+  .mwnf-standalone {
+    position: relative;
+  }
+
+  .mwnf-standalone .mwnf-header__inner {
+    grid-template-columns: var(--mwnf-standalone-phone-header-columns, 98px 1fr 105px);
+    align-items: start;
+    height: var(--mwnf-standalone-phone-header-height, 54px);
+    min-height: 0;
+    padding-inline: 0;
+  }
+
+  .mwnf-standalone .mwnf-header__brand {
+    padding: var(--mwnf-standalone-phone-logo-offset, 15px 0 0 30px);
+  }
+
+  .mwnf-standalone .mwnf-header__brand-logo {
+    width: var(--mwnf-standalone-phone-logo-width, 60px);
+    height: auto;
+    max-height: none;
+  }
+
+  .mwnf-standalone .mwnf-header__lockup {
+    padding-top: var(--mwnf-standalone-phone-title-offset, 16px);
+    text-align: center;
+  }
+
+  .mwnf-standalone .mwnf-header__title {
+    font-size: var(--mwnf-standalone-phone-heading-size, 13px);
+    font-weight: var(--mwnf-standalone-phone-heading-weight, 300);
+    line-height: var(--mwnf-standalone-phone-heading-line-height, 16px);
+  }
+
+  .mwnf-standalone .mwnf-header__subtitle {
+    margin: 0;
+    font-size: var(--mwnf-standalone-phone-subheading-size, 9px);
+    font-weight: var(--mwnf-standalone-phone-subheading-weight, 500);
+    line-height: var(--mwnf-standalone-phone-subheading-line-height, 1);
+  }
+
+  .mwnf-standalone .mwnf-header__tools {
+    padding: var(--mwnf-standalone-phone-tools-offset, 19px 10px 0 0);
+  }
+
+  .mwnf-standalone .mwnf-header__links {
+    flex-direction: column;
+    align-items: flex-end;
+    gap: var(--mwnf-standalone-phone-header-links-gap, 5px);
+    font-size: var(--mwnf-standalone-phone-header-link-size, 10px);
+    line-height: 1.1;
+  }
+
+  .mwnf-standalone .mwnf-header__links li + li::before {
+    content: none;
+  }
+
+  .mwnf-standalone-banner {
+    min-height: var(--mwnf-standalone-phone-banner-height, 80px);
+  }
+
+  .mwnf-standalone .mwnf-content {
+    padding-inline: var(--mwnf-standalone-phone-content-padding, var(--mwnf-content-padding, 1rem));
+  }
+
+  .mwnf-standalone-banner__title {
+    padding: var(--mwnf-standalone-phone-banner-title-padding, 0 0 5px 18px);
+    font-size: var(--mwnf-standalone-phone-banner-title-size, 24px);
+    line-height: var(--mwnf-standalone-phone-banner-title-line-height, 24px);
+  }
+
+  /* The menu: the button over the header's left edge, the links a drawer. */
+  .mwnf-standalone .mwnf-nav {
+    padding: 0;
+    background: none;
+  }
+
+  .mwnf-standalone .mwnf-nav__toggle {
+    position: absolute;
+    z-index: 32;
+    top: var(--mwnf-standalone-phone-toggle-top, 13px);
+    left: 0;
+    width: 35px;
+    height: 34px;
+    padding: 10px;
+    font-size: 0;
+    background: none;
+  }
+
+  .mwnf-standalone .mwnf-nav__toggle-icon {
+    display: block;
+    width: 15px;
+    height: 10px;
+    padding: 0;
+    background: linear-gradient(var(--mwnf-standalone-phone-toggle-color, #fff) 0 0) top / 100% 2px no-repeat,
+      linear-gradient(var(--mwnf-standalone-phone-toggle-color, #fff) 0 0) center / 100% 2px no-repeat,
+      linear-gradient(var(--mwnf-standalone-phone-toggle-color, #fff) 0 0) bottom / 100% 2px no-repeat;
+  }
+
+  .mwnf-standalone .mwnf-nav--open .mwnf-nav__toggle {
+    position: fixed;
+    left: var(--mwnf-standalone-phone-drawer-width, 270px);
+  }
+
+  .mwnf-standalone .mwnf-nav--open .mwnf-nav__toggle-icon {
+    height: 15px;
+    background: linear-gradient(45deg, transparent calc(50% - 1.5px), var(--mwnf-standalone-phone-toggle-color, #fff) calc(50% - 1.5px) calc(50% + 1.5px), transparent calc(50% + 1.5px)),
+      linear-gradient(-45deg, transparent calc(50% - 1.5px), var(--mwnf-standalone-phone-toggle-color, #fff) calc(50% - 1.5px) calc(50% + 1.5px), transparent calc(50% + 1.5px));
+  }
+
+  .mwnf-standalone .mwnf-nav__links,
+  .mwnf-standalone .mwnf-nav--open .mwnf-nav__links {
+    position: fixed;
+    z-index: 31;
+    inset: 0 auto 0 0;
+    width: var(--mwnf-standalone-phone-drawer-width, 270px);
+    flex-direction: column;
+    flex-wrap: nowrap;
+    overflow-y: auto;
+    background-color: var(--mwnf-standalone-phone-drawer-background, #990000);
+  }
+
+  .mwnf-standalone .mwnf-nav__links {
+    display: none;
+  }
+
+  .mwnf-standalone .mwnf-nav--open .mwnf-nav__links {
+    display: flex;
+  }
+
+  .mwnf-standalone .mwnf-nav__links > li {
+    position: relative;
+    flex: none;
+    text-align: start;
+    border-bottom: var(--mwnf-standalone-phone-drawer-rule, 1px solid rgb(0 0 0 / 0.15));
+  }
+
+  .mwnf-standalone .mwnf-nav__link,
+  .mwnf-standalone .mwnf-nav__links > li:nth-child(even) .mwnf-nav__link {
+    padding: var(--mwnf-standalone-phone-drawer-link-padding, 17px 0 17px 25px);
+    font-size: var(--mwnf-standalone-phone-drawer-link-size, 16px);
+    font-weight: var(--mwnf-standalone-phone-drawer-link-weight, 300);
+    color: var(--mwnf-standalone-phone-drawer-link-color, #fff);
+    background: none;
+  }
+
+  .mwnf-standalone .mwnf-nav__fold {
+    display: block;
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 30px;
+    height: 30px;
+    padding: 0;
+    border: 0;
+    cursor: pointer;
+    background: none;
+  }
+
+  .mwnf-standalone .mwnf-nav__fold::before {
+    content: "";
+    position: absolute;
+    top: 9px;
+    right: 13px;
+    width: 5px;
+    height: 5px;
+    border-right: 1px solid var(--mwnf-standalone-phone-drawer-link-color, #fff);
+    border-bottom: 1px solid var(--mwnf-standalone-phone-drawer-link-color, #fff);
+    transform: rotate(45deg);
+  }
+
+  .mwnf-standalone .mwnf-nav__item--unfolded > .mwnf-nav__fold::before {
+    top: 12px;
+    transform: rotate(-135deg);
+  }
+
+  .mwnf-standalone .mwnf-nav__sublinks,
+  .mwnf-standalone .mwnf-nav__item--parent:hover > .mwnf-nav__sublinks,
+  .mwnf-standalone .mwnf-nav__item--parent:focus-within > .mwnf-nav__sublinks {
+    display: none;
+    position: static;
+    padding: 0 0 10px;
+    box-shadow: none;
+    background: none;
+  }
+
+  .mwnf-standalone .mwnf-nav__item--unfolded > .mwnf-nav__sublinks {
+    display: block;
+  }
+
+  .mwnf-standalone .mwnf-nav__sublink {
+    display: block;
+    padding: var(--mwnf-standalone-phone-drawer-sublink-padding, 6px 0 6px 40px);
+    font-size: var(--mwnf-standalone-phone-drawer-link-size, 16px);
+    font-weight: var(--mwnf-standalone-phone-drawer-link-weight, 300);
+    color: var(--mwnf-standalone-phone-drawer-sublink-color, #e5e5e5);
+    background: none;
+  }
+
+  .mwnf-standalone .mwnf-nav__backdrop {
+    display: block;
+    position: fixed;
+    z-index: 30;
+    inset: 0;
+    background-color: var(--mwnf-standalone-phone-backdrop, rgb(0 0 0 / 0.5));
+  }
+}

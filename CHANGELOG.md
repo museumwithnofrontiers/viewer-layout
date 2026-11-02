@@ -1,3 +1,25 @@
+## 3.46.0 (2026-11-02)
+
+### Added
+
+- **The standalone family's phone mode** (below 768px), legacy's MWNF phone
+  frame, which the three sites share:
+  - a 54px header: the logo, the heading small in the middle, the two links
+    stacked at the right;
+  - an 80px banner with its title 24px over its strip;
+  - the menu button over the header's left edge, opening the links as a
+    270px drawer from the left over a dark backdrop, each entry's own links
+    folded behind a chevron, and "×" beside the drawer.
+
+  Every value is a `--mwnf-standalone-phone-*` token (tokens.reference.css).
+  The defaults are Sharing History's.
+- **`AppNavigation`'s drawer parts**, hidden unless a family's stylesheet
+  shows them:
+  - a fold button after each entry that has links of its own (`aria-label`
+    the entry, `aria-expanded`), marking the entry
+    `mwnf-nav__item--unfolded`;
+  - a backdrop while the links are open, which closes them on a click.
+
 ## 3.45.0 (2026-11-02)
 
 ### Added
