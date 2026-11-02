@@ -909,6 +909,8 @@
   /* --mwnf-standalone-pill: transparent;            The partner profile's rounded tab and items bars */
   /* --mwnf-standalone-heading-color: inherit;       The partner profile's name, place and map heading */
   /* --mwnf-standalone-results-border: rgba(255, 214, 0, 0.28);  The result tiles' frame and panel border */
+  /* --mwnf-standalone-select-arrow: none;           A results page's date lists' arrow (a url(), legacy's select.png) */
+  /* --mwnf-standalone-results-heading-color: var(--mwnf-standalone-heading-color);  A results page's heading */
   /* --mwnf-standalone-results-panel: #fffced;        The result tile's hover panel */
   /* --mwnf-standalone-related-padding: 0 1.25rem 1.875rem;  Its padding */
   /* --mwnf-standalone-related-heading-offset: 1.75rem;  Space above its heading */
