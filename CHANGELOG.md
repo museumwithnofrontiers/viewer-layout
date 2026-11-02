@@ -1,3 +1,12 @@
+## 3.38.0 (2026-11-02)
+
+### Added
+
+- **`--mwnf-standalone-related-heading-weight` and
+  `--mwnf-standalone-download-weight`**: the Related Content column's
+  heading and Download weights (legacy Sharing History's 500 and 400).
+  Unset, drawn as before.
+
 ## 3.37.0 (2026-11-02)
 
 ### Added
