@@ -1519,16 +1519,33 @@
   color: var(--mwnf-standalone-subnav-active-text, inherit);
 }
 
+/* The band may reach past the content's sides (a negative inline margin),
+   as Sharing History's legacy home ran its tiles 30px from the window. */
+.mwnf-standalone-tiles {
+  margin-inline: var(--mwnf-standalone-tiles-reach, 0);
+}
+
 .mwnf-standalone-tiles__caption {
   margin: 0;
-  padding: 0.5rem 1rem;
+  padding: var(--mwnf-standalone-tiles-caption-padding, 0.5rem 1rem);
+  text-align: var(--mwnf-standalone-tiles-caption-align, start);
   background-color: var(--mwnf-standalone-tiles-caption-background, transparent);
   color: var(--mwnf-standalone-tiles-caption-text, inherit);
 }
 
+/* The caption's words on a strip of their own (legacy's white span). */
+.mwnf-standalone-tiles__caption-text {
+  padding: var(--mwnf-standalone-tiles-caption-text-padding, 0);
+  font-size: var(--mwnf-standalone-tiles-caption-size, inherit);
+  font-weight: var(--mwnf-standalone-tiles-caption-weight, inherit);
+  text-transform: var(--mwnf-standalone-tiles-caption-transform, none);
+  background-color: var(--mwnf-standalone-tiles-caption-text-background, transparent);
+}
+
 .mwnf-standalone-tiles__grid {
   display: grid;
-  grid-template-columns: repeat(var(--mwnf-standalone-tiles-columns, 5), 1fr);
+  grid-template-columns: repeat(var(--mwnf-standalone-tiles-columns, 5), var(--mwnf-standalone-tiles-width, 1fr));
+  gap: var(--mwnf-standalone-tiles-gap, 0);
   margin: 0;
   padding: 0;
   list-style: none;
@@ -1541,6 +1558,33 @@
   text-decoration: none;
 }
 
+/* Two corner marks over the picture, top right and bottom left, in the
+   frame colour (none by default). */
+.mwnf-standalone-tiles__link::before,
+.mwnf-standalone-tiles__link::after {
+  content: '';
+  position: absolute;
+  z-index: 1;
+  border: 0 solid var(--mwnf-standalone-tiles-frame, transparent);
+  pointer-events: none;
+}
+.mwnf-standalone-tiles__link::before {
+  top: 9px;
+  right: 9px;
+  width: 60px;
+  height: 40px;
+  border-top-width: 1px;
+  border-right-width: 1px;
+}
+.mwnf-standalone-tiles__link::after {
+  bottom: 9px;
+  left: 9px;
+  width: 40px;
+  height: 60px;
+  border-bottom-width: 1px;
+  border-left-width: 1px;
+}
+
 .mwnf-standalone-tiles__image {
   display: block;
   width: 100%;
@@ -1551,7 +1595,12 @@
   position: absolute;
   inset-inline: 0;
   bottom: 0;
-  padding: 0.25rem 0.5rem;
+  padding: var(--mwnf-standalone-tiles-label-padding, 0.25rem 0.5rem);
+  font-size: var(--mwnf-standalone-tiles-label-size, inherit);
+  font-style: var(--mwnf-standalone-tiles-label-style, normal);
+  font-weight: var(--mwnf-standalone-tiles-label-weight, inherit);
+  line-height: var(--mwnf-standalone-tiles-label-line-height, inherit);
+  text-align: var(--mwnf-standalone-tiles-label-align, start);
   background-color: var(--mwnf-standalone-tiles-label-background, rgba(0, 0, 0, 0.5));
   color: var(--mwnf-standalone-tiles-label-text, #ffffff);
 }

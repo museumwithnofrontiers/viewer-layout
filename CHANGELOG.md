@@ -1,3 +1,16 @@
+## 3.39.0 (2026-11-02)
+
+### Added
+
+- **The home page's tiles as Sharing History's legacy drew them**, by
+  tokens: the band's reach past the content's sides, fixed-width tiles and
+  the gap between them, two corner marks over each picture
+  (`--mwnf-standalone-tiles-frame`), the caption's alignment and padding
+  with its words on a strip of their own (size, weight, case, background),
+  and the name band's padding, size, style, weight, line height and
+  alignment (`--mwnf-standalone-tiles-*`). Unset, drawn as before; the
+  caption's words now sit in a `span` of their own.
+
 ## 3.38.0 (2026-11-02)
 
 ### Added
