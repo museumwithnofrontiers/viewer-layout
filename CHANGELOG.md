@@ -12,7 +12,8 @@
     folded behind a chevron, and "×" beside the drawer.
 
   Every value is a `--mwnf-standalone-phone-*` token (tokens.reference.css).
-  The defaults are Sharing History's.
+  The defaults are Sharing History's. `--mwnf-standalone-phone-tiles-columns`
+  (default 2) sets the tiles across a row (Sharing History's home: 1).
 - **`AppNavigation`'s drawer parts**, hidden unless a family's stylesheet
   shows them:
   - a fold button after each entry that has links of its own (`aria-label`

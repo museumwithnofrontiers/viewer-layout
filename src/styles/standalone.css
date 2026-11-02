@@ -1613,7 +1613,7 @@
 
 @media (max-width: 48rem) {
   .mwnf-standalone-tiles__grid {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(var(--mwnf-standalone-phone-tiles-columns, 2), 1fr);
   }
 }
 

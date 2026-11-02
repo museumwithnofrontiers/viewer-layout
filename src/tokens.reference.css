@@ -1069,6 +1069,7 @@
   /* --mwnf-standalone-phone-banner-title-size: 24px;  Its title's size */
   /* --mwnf-standalone-phone-banner-title-line-height: 24px;  Its title's line height */
   /* --mwnf-standalone-phone-content-padding: var(--mwnf-content-padding);  The content's distance from the edges */
+  /* --mwnf-standalone-phone-tiles-columns: 2;       The tiles across a row */
   /* --mwnf-standalone-phone-toggle-top: 13px;       The menu button's distance from the top */
   /* --mwnf-standalone-phone-toggle-color: #fff;     Its bars and its "×" */
   /* --mwnf-standalone-phone-drawer-width: 270px;    The menu drawer's width */
