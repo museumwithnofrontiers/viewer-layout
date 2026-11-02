@@ -1962,6 +1962,80 @@
   }
 }
 
+/* Phone: legacy's partner page below 768px. The back links in rows 22px
+   apart, the heading 35px under them; everything else 5px further in than
+   the page (legacy's columns), the pictures 15px under "View Objects", and
+   the words a token's depth under the thumbnails. A site whose legacy hides
+   "View Objects" there sets `--mwnf-standalone-phone-partner-items: none`. */
+@media (max-width: 47.9375rem) {
+  .mwnf-standalone-partner__back {
+    min-height: 16px;
+    row-gap: 6px;
+    margin-bottom: 35px;
+    line-height: 16px;
+  }
+
+  .mwnf-standalone-partner__heading {
+    margin-bottom: 10px;
+  }
+
+  .mwnf-standalone-partner__bar > *,
+  .mwnf-standalone-partner__body > *,
+  .mwnf-standalone-partner__panels {
+    padding: 0 20px;
+  }
+
+  .mwnf-standalone-partner__bar-end {
+    padding-top: 15px;
+  }
+
+  .mwnf-standalone-partner__items {
+    display: var(--mwnf-standalone-phone-partner-items, inline-flex);
+    margin: 4px 0 20px 15px;
+  }
+
+  .mwnf-standalone-partner__pictures .mwnf-media {
+    margin-top: 15px;
+  }
+
+  .mwnf-standalone-partner__panels {
+    margin-top: var(--mwnf-standalone-phone-partner-text-offset, 23px);
+  }
+}
+
+/* Up to 750px legacy sets the partner's name in 16px. */
+@media (max-width: 750px) {
+  .mwnf-standalone-partner__name {
+    font-size: 16px;
+    font-weight: var(--mwnf-standalone-phone-partner-name-weight, 500);
+  }
+}
+
+/* Up to 620px the tabs are pills of their own, in rows, each with a light
+   shadow; the bar under them goes, its "|" stay where they were. */
+@media (max-width: 620px) {
+  .mwnf-standalone-partner__tabs {
+    display: flex;
+    flex-wrap: wrap;
+    border-radius: 0;
+    background: none;
+  }
+
+  .mwnf-standalone-partner__tab,
+  .mwnf-standalone-partner__homepage {
+    margin: 3px;
+    padding: 5px 6px 5px 7px;
+    line-height: normal;
+    white-space: nowrap;
+    background-color: var(--mwnf-standalone-phone-pill, #990000);
+    box-shadow: 3px 3px 0 #e9e9e9;
+  }
+
+  .mwnf-standalone-partner__tab--active {
+    background-color: var(--mwnf-standalone-phone-pill-active, #750101);
+  }
+}
+
 /* Legacy's windows (`#hcr_timeline .modal-content`), drawn on a route marked
    `meta.bare`: the coloured ground, the box with its shadow, the band with
    the heading over the product's picture, the round × above its corner, the
