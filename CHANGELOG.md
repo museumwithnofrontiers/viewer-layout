@@ -1,3 +1,20 @@
+## 3.52.0 (2026-11-03)
+
+### Added
+
+- **The phone mode's Database form** (database.php's own form below 750px):
+  - each row is its join (38px), its keyword box to the middle, then "in" and the category;
+  - the dates and the language follow a row's pitch under them;
+  - Go comes next, with the complete listing beside it or under it;
+  - each site's spacing is a token (`--mwnf-standalone-phone-db-*`).
+- **The phone mode's Database results**: each record across the column, 15px under the one before; the refine band stacked, with the two buttons a space apart (below 750px); 21px under the heading.
+- **The phone mode's Collections entrance**: each heading 5px over what it heads; "About" a site's depth under the lists (`--mwnf-standalone-phone-pc-about-gap`, `--mwnf-standalone-phone-pc-bottom`).
+- `--mwnf-standalone-db-padding-bottom` and `--mwnf-standalone-pc-padding-bottom`: the space under the Database form and the Collections entrance.
+
+### Changed
+
+- A standalone page ends with its footer, as legacy's do: a short page no longer stretches to push the footer to the window's foot.
+- The Collections entrance's text separates its paragraphs, and ends, with a blank line, as legacy's two `<br/>`s.
 ## 3.51.0 (2026-11-02)
 
 ### Added
