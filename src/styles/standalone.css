@@ -1060,6 +1060,26 @@
   .mwnf-standalone-pcr .mwnf-catalogue__body { grid-template-columns: 1fr; }
 }
 
+/* ── A partner's objects: legacy's `pm_museum_items.php` ─────────────────── */
+
+/* The results page above for one partner's records: a heading of the name
+   and an italic place in col-md-8 (.short_heading); the tiles float in the
+   column without pclist_all.php's col-lg-3 cells; the side column has no
+   padding and "Partner Profile" no top margin (.as div a). The place's 10px
+   bottom margin falls inside the heading's 15px, as legacy's collapsed: a
+   flex item's margins do not. A site's view sets `mwnf-standalone-pmi`
+   beside `mwnf-standalone-pcr`. */
+.mwnf-standalone-pmi__heading { max-width: calc((100% + 30px) * 2 / 3 - 30px); margin: 0 0 15px; }
+.mwnf-standalone-pmi__heading .mwnf-standalone-pcr__heading { margin: 0; }
+.mwnf-standalone-pmi__heading p {
+  margin: 0;
+  font: 400 16px/22px Roboto, sans-serif;
+  color: #222;
+}
+.mwnf-standalone-pmi .mwnf-standalone-results__cell { width: auto; padding: 0; }
+.mwnf-standalone-pmi .mwnf-catalogue__aside { padding: 0; }
+.mwnf-standalone-pmi .mwnf-standalone-pcr__related a { margin-top: 0; }
+
 /* ── Pages: legacy's `page_listing` (style_inside.css) ────────────────────── */
 
 /* "Previous", the numbers and "Next", centred, each end parted from the

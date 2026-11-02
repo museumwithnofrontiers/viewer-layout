@@ -1,3 +1,14 @@
+## 3.30.0 (2026-11-02)
+
+### Added
+
+- **A partner's objects page's layout, `mwnf-standalone-pmi`**: legacy's
+  `pm_museum_items.php` on the results page's layout, shared by the
+  products (Islamic Art drew it in its own stylesheet): a heading of the
+  partner's name and its italic place, the tiles without the cells'
+  gutter, "Partner Profile" at the top of the side column. A site's view
+  sets it beside `mwnf-standalone-pcr`.
+
 ## 3.29.0 (2026-11-02)
 
 ### Added
