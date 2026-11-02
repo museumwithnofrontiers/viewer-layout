@@ -119,8 +119,8 @@ async function settle(predicate, tries = 40) {
   await nextTick()
 }
 
-async function mountView(component, { props = {}, slots = {}, route = '/', locale = 'en' } = {}) {
-  const i18n = createI18n({ locale, messages: { en: texts } })
+async function mountView(component, { props = {}, slots = {}, route = '/', locale = 'en', messages = { en: texts } } = {}) {
+  const i18n = createI18n({ locale, messages })
   const router = createRouter({
     history: createMemoryHistory(),
     routes: [
@@ -478,6 +478,27 @@ describe('RecordView', () => {
     })
     await settle(() => wrapper.find('.mwnf-credits__citation').text().length > 0)
     expect(wrapper.find('.mwnf-credits__citation').text()).toContain('in Discover Islamic Art (package)')
+  })
+
+  it("prints the sheet's labels in the record's language when the spec asks, the site's otherwise", async () => {
+    const messages = { en: { ...texts, 'sheet.field.name': 'Name of Object:' }, fr: { 'sheet.field.name': 'Nom de l’Objet:' } }
+    const { wrapper } = await mountView(RecordView, {
+      props: { spec: { ...spec, labelsInRecordLanguage: true }, id: 'o1' },
+      route: '/objects/o1',
+      messages,
+    })
+    await settle(() => wrapper.find('.mwnf-languages').exists())
+    expect(wrapper.find('.mwnf-sheet__label').text()).toBe('Name of Object:')
+    const french = wrapper.findAll('.mwnf-languages button').find((b) => /fr|Fran/i.test(b.text()))
+    await french.trigger('click')
+    await settle(() => wrapper.find('.mwnf-sheet__label').text() === 'Nom de l’Objet:')
+    expect(wrapper.find('.mwnf-sheet__label').text()).toBe('Nom de l’Objet:')
+
+    const plain = await mountView(RecordView, { props: { spec, id: 'o1' }, route: '/objects/o1', messages })
+    await settle(() => plain.wrapper.find('.mwnf-languages').exists())
+    await plain.wrapper.findAll('.mwnf-languages button').find((b) => /fr|Fran/i.test(b.text())).trigger('click')
+    await settle(() => true, 50)
+    expect(plain.wrapper.find('.mwnf-sheet__label').text()).toBe('Name of Object:')
   })
 
   it("reads the manifest project name in the record's active language", async () => {
