@@ -894,10 +894,13 @@
   /* --mwnf-standalone-highlight-image-width: 18rem; Its picture's maximum width */
   /* --mwnf-standalone-highlight-line-height: inherit;  Its line height */
   /* --mwnf-standalone-highlight-paragraph-gap: 0.75rem;  Space under each of its paragraphs */
+  /* --mwnf-standalone-highlight-width: none;        Its widest, picture and text together */
+  /* --mwnf-standalone-highlight-color: inherit;     Its text */
   /* --mwnf-standalone-sponsors-background: transparent;  The band above the footer */
   /* --mwnf-standalone-sponsors-padding: 1.25rem;    Its padding (top and bottom) */
   /* --mwnf-standalone-sponsors-gap: 1.5rem;         Gap between its columns */
   /* --mwnf-standalone-sponsors-text-size: 0.875rem; Its text size */
+  /* --mwnf-standalone-sponsors-line-height: normal; Its line height */
   /* --mwnf-standalone-sponsors-logo-gap: 1.25rem;   Gap between its logos */
   /* --mwnf-standalone-sponsors-logo-height: 4.5rem; Logo maximum height */
   /* --mwnf-standalone-item-gap: 1.875rem;           Gap between the item sheet's three columns */
