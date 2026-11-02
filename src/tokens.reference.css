@@ -961,6 +961,8 @@
   /* --mwnf-standalone-accordion-open: var(--mwnf-standalone-accordion-closed);  Open */
   /* --mwnf-standalone-related-padding: 0 1.25rem 1.875rem;  Its padding */
   /* --mwnf-standalone-related-heading-offset: 1.75rem;  Space above its heading */
+  /* --mwnf-standalone-related-heading-weight: 600;  Its heading's weight */
+  /* --mwnf-standalone-download-weight: 500;         Its Download heading's weight */
   /* --mwnf-standalone-related-thumb-size: 70px;     Related record thumbnail: its largest width and height */
   /* --mwnf-standalone-related-margin: 0;            The column's margin, out of its grid column */
   /* --mwnf-standalone-related-reach-top: 0px;       How far its colour reaches above it */

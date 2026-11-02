@@ -775,7 +775,7 @@
 }
 
 .mwnf-standalone-related__heading strong {
-  font-weight: 600;
+  font-weight: var(--mwnf-standalone-related-heading-weight, 600);
 }
 
 .mwnf-standalone-related p.mwnf-standalone-related__group-heading {
@@ -831,7 +831,7 @@
 .mwnf-standalone-related__download-heading {
   margin: 15px 0 0;
   padding-left: 17px;
-  font-weight: 500;
+  font-weight: var(--mwnf-standalone-download-weight, 500);
   background: var(--mwnf-standalone-download-icon, none) no-repeat 0 4px;
 }
 
