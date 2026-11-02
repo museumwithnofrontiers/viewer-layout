@@ -1,3 +1,16 @@
+## 3.51.0 (2026-11-02)
+
+### Added
+
+- **The phone mode's results list** (legacy's `.pc_listing_content` below 750px):
+  - each result under the one before: its picture in a 162px frame, its words under it over a rule, and 34px before the next;
+  - the count on its own line under the heading;
+  - each site's way as tokens: `--mwnf-standalone-phone-results-frame-width`, `-panel-display`, `-rule`, `-date-gap`, `-see-offset`, `-gap`, and `--mwnf-standalone-phone-pcr-heading-gap`. Sharing History's are the defaults;
+  - a partner's objects keep legacy's blank line over the holder.
+
+### Changed
+
+- Below 992px a partner's objects page sets its heading across the row, as legacy's `col-md-8` does.
 ## 3.50.0 (2026-11-02)
 
 ### Added

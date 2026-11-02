@@ -1099,6 +1099,62 @@
 .mwnf-standalone-pmi .mwnf-catalogue__aside { padding: 0; }
 .mwnf-standalone-pmi .mwnf-standalone-pcr__related a { margin-top: 0; }
 
+/* Below 992px col-md-8 spans the row; on a phone the tiles follow 10px under
+   the place. */
+@media (max-width: 61.9375rem) {
+  .mwnf-standalone-pmi__heading { max-width: none; }
+}
+
+@media (max-width: 47.9375rem) {
+  .mwnf-standalone-pmi__heading { margin-bottom: 10px; }
+}
+
+/* Phone: below 750px legacy lists each result under the one before
+   (`.pc_listing_content`, `hidden_large`): its picture in a frame, its words
+   under it over a rule, 34px before the next, and the count under the
+   heading. Sharing History's (the defaults) frame spans the column, its rule
+   is as wide as the words and 20px follow; Islamic Art's and Baroque Art's
+   frame is a tile's width, their rule spans the column, and a blank line
+   comes before "See Database Entry" (Baroque Art's after the date too). */
+@media (max-width: 749px) {
+  .mwnf-standalone-results > .mwnf-standalone-results__cell {
+    width: 100%;
+    margin-bottom: var(--mwnf-standalone-phone-results-gap, 20px);
+  }
+  .mwnf-standalone-results__tile { display: block; width: auto; height: auto; margin: 0; border: 0; }
+  .mwnf-standalone-results__frame {
+    box-sizing: border-box;
+    width: var(--mwnf-standalone-phone-results-frame-width, auto);
+    height: 162px;
+    border: 1px solid var(--mwnf-standalone-results-border, rgba(255, 214, 0, 0.28));
+  }
+  .mwnf-standalone-results__panel {
+    display: var(--mwnf-standalone-phone-results-panel-display, table);
+    position: static;
+    width: auto;
+    margin-bottom: 34px;
+    padding: 10px 0;
+    border: 0;
+    border-bottom: 1px solid var(--mwnf-standalone-phone-results-rule, var(--mwnf-standalone-results-border, rgba(255, 214, 0, 0.28)));
+    background: none;
+    box-shadow: none;
+  }
+  .mwnf-standalone-results__panel-frame { display: none; }
+  .mwnf-standalone-results__panel p { padding: 0; }
+  .mwnf-standalone-results__name + p { margin-bottom: var(--mwnf-standalone-phone-results-date-gap, 0); }
+  .mwnf-standalone-results__panel .mwnf-standalone-results__holder { margin-top: 0; }
+  /* A partner's objects keep legacy's blank line over the holder. */
+  .mwnf-standalone-pmi .mwnf-standalone-results__panel .mwnf-standalone-results__holder { margin-top: 16px; }
+  .mwnf-standalone-results__see {
+    padding-top: var(--mwnf-standalone-phone-results-see-offset, 0px);
+    background-position: 0 calc(var(--mwnf-standalone-phone-results-see-offset, 0px) + 4px);
+  }
+  .mwnf-standalone-pcr__count { display: block; }
+  .mwnf-standalone-pcr:not(.mwnf-standalone-dbr) .mwnf-standalone-pcr__heading {
+    margin-bottom: var(--mwnf-standalone-phone-pcr-heading-gap, 15px);
+  }
+}
+
 /* ── The search results: legacy's `database_results.php` ──────────────────── */
 
 /* The results page above with no side column: the "Refine your search"
