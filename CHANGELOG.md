@@ -1,3 +1,17 @@
+## 3.50.0 (2026-11-02)
+
+### Added
+
+- **The phone mode's partner page**, legacy's pm_partner.php:
+  - below 768px:
+    - the back links in rows 22px apart, the heading 35px under them;
+    - the tabs, the pictures and the words 5px further in than the page;
+    - the pictures 15px under "View Objects";
+    - the words `--mwnf-standalone-phone-partner-text-offset` under the thumbnails;
+    - `--mwnf-standalone-phone-partner-items: none` hides "View Objects", as Sharing History's legacy does;
+  - below 750px, the name in 16px (`--mwnf-standalone-phone-partner-name-weight`);
+  - below 620px, each tab a pill of its own, in rows, with a light shadow (`--mwnf-standalone-phone-pill`, `--mwnf-standalone-phone-pill-active`).
+
 ## 3.49.0 (2026-11-02)
 
 ### Added

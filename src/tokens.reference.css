@@ -1099,4 +1099,9 @@
   /* --mwnf-standalone-phone-home-footer-room: 70px; The home page's room under the words */
   /* --mwnf-standalone-phone-footer-social-right: 10px;  The icons' distance from the right */
   /* --mwnf-standalone-phone-footer-social-bottom: 5px;  Their distance from the foot */
+  /* --mwnf-standalone-phone-pill: #990000;          A partner page's tab, a pill of its own (below 620px) */
+  /* --mwnf-standalone-phone-pill-active: #750101;   The open tab's */
+  /* --mwnf-standalone-phone-partner-name-weight: 500;  The partner's name's weight (below 750px) */
+  /* --mwnf-standalone-phone-partner-items: inline-flex;  "View Objects" (none hides it) */
+  /* --mwnf-standalone-phone-partner-text-offset: 23px;  The words' depth under the thumbnails */
 }
