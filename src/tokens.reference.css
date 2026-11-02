@@ -972,6 +972,21 @@
   /* --mwnf-standalone-db-go-hover-background: var(--mwnf-standalone-db-go-background);  Hovered */
   /* --mwnf-standalone-db-go-hover-border: var(--mwnf-standalone-db-go-border);  Its border hovered */
   /* --mwnf-standalone-db-listing-indent: 16px;       The complete listing's words, after its arrow */
+  /* --mwnf-standalone-tlr-band: transparent;         The Timeline results' band under the banner (its Go and the entrance's: the db-go tokens) */
+  /* --mwnf-standalone-tlr-select-border: #767676;    Its lists' border */
+  /* --mwnf-standalone-tlr-heading-color: #222;       The Date and Country | Description headings */
+  /* --mwnf-standalone-tlr-strip: #ccc;               An event's date and country strips, and the rule under its date */
+  /* --mwnf-standalone-tlr-related: transparent;      The Related Content column, on to the page's right edge */
+  /* --mwnf-standalone-tlr-band-color: #222;          The band's words */
+  /* --mwnf-standalone-tlr-band-weight: 400;          Its line's weight */
+  /* --mwnf-standalone-tlr-label-weight: 500;         Its lists' labels' weight */
+  /* --mwnf-standalone-tlr-strip-color: #222;         The strips' words */
+  /* --mwnf-standalone-tlr-strip-weight: 400;         Their weight */
+  /* --mwnf-standalone-tlr-related-color: #222;       The Related Content column's words */
+  /* --mwnf-standalone-tlr-related-heading-weight: 500;  Its heading's weight */
+  /* --mwnf-standalone-tlr-link-weight: 400;          Its links' weight */
+  /* --mwnf-standalone-tlr-download-weight: 500;      Its Download heading's weight */
+  /* --mwnf-standalone-tlr-bullet: var(--mwnf-standalone-bullet);  Its links' arrow (a url()) */
   /* --mwnf-standalone-related-padding: 0 1.25rem 1.875rem;  Its padding */
   /* --mwnf-standalone-related-heading-offset: 1.75rem;  Space above its heading */
   /* --mwnf-standalone-related-heading-weight: 600;  Its heading's weight */

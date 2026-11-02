@@ -108,3 +108,63 @@ export function downloadWord(html, fileName) {
   link.remove()
   setTimeout(() => URL.revokeObjectURL(url), 0)
 }
+
+/**
+ * Legacy's timeline "As Word (text only)" (export_hcr_content.php): the
+ * heading line, then every event of the search, not one page of it, in a
+ * table, its date and country on one row and its description on the next.
+ *
+ *   heading: the line over the table ("TIMELINE | 1000 to 1200 | EGYPT")
+ *   heads: { date, countryDescription }
+ *   rows: [{ date, country, html }]   // `html` the description as rendered
+ *   empty: what legacy wrote when nothing matched
+ */
+export function timelineDocument({ title = '', heading = '', heads = {}, rows = [], empty = '', dir = '' } = {}) {
+  const align = dir === 'rtl' ? 'direction: rtl; text-align: right;' : 'text-align: left;'
+  const description = (html) => {
+    const holder = document.createElement('div')
+    holder.innerHTML = html ?? ''
+    return cleaned(holder)
+  }
+  const body = rows.length
+    ? `<tr><td style="padding:10px;">
+<table border='1' cellspacing='1' cellpadding='1' width="100%">
+<tr>
+<td style="padding:5px;" width="28%"><b>${escapeHtml(heads.date)}</b></td>
+<td style="padding:5px;" width="36%"><b>${escapeHtml(heads.countryDescription)}</b></td>
+<td width="37%"><b></b></td>
+</tr>
+${rows.map((row) => `<tr>
+<td style="padding:5px; vertical-align:top;">&nbsp;${escapeHtml(row.date)}</td>
+<td style="padding:5px;">${escapeHtml(row.country)}</td>
+<td>&nbsp;</td>
+</tr>
+<tr>
+<td style="padding:5px;">&nbsp;</td>
+<td style="padding:5px;" colspan="2"><span>${description(row.html)}</span></td>
+</tr>`).join('\n')}
+</table>
+</td></tr>
+<tr><td>&nbsp;</td></tr>`
+    : `<tr><td style="padding-top:100px;padding-left:350px;">${escapeHtml(empty)}</td></tr>`
+  return `<html>
+<title>${escapeHtml(title)}</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<head>
+<style>
+${STYLE}
+</style>
+</head>
+<body>
+<div class="content">
+<div class="item_description">
+<table style="${align}" border="0" width="750px">
+<tr><td class="txt" align="left" width="750px"><div style="width: 750px;">&nbsp;&nbsp;${escapeHtml(heading).replace(/^([^|]*)/, '<b>$1</b>')}</div></td></tr>
+<tr><td>&nbsp;</td></tr>
+${body}
+</table>
+</div>
+</div>
+</body>
+</html>`
+}
