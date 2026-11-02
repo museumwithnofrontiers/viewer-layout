@@ -6,7 +6,7 @@ import { createI18n } from '@museumwnf/viewer-core/i18n'
 import {
   RelatedContent, StandaloneHome, StandaloneItemSheet, StandalonePartnerPage, StandaloneShell, StandaloneSponsors, StandaloneSubNav,
   StandalonePagination, StandaloneResultsGrid, StandaloneTextPage, StandaloneTileGrid, TodayHighlight, byLanguage, dayOfYear, legacyHomeItemKey, pickForDay,
-  StandaloneGlossarySpelling, StandaloneRefine, StandaloneResultsList, StandaloneWindow,
+  StandaloneGlossarySpelling, StandalonePartnerList, StandaloneRefine, StandaloneResultsList, StandaloneWindow,
 } from '../src/standalone/index.js'
 import { sheetDocument } from '../src/standalone/wordExport.js'
 import { layoutTexts } from './helpers.js'
@@ -550,6 +550,47 @@ describe('StandaloneResultsList', () => {
     const wrapper = await mountWith(StandaloneResultsList, { props: { rows: [], empty: 'No result' } })
     expect(wrapper.find('.mwnf-standalone-list__empty').text()).toBe('No result')
     expect(wrapper.find('.mwnf-standalone-list__preview').exists()).toBe(false)
+  })
+})
+
+describe('StandalonePartnerList', () => {
+  const groups = [
+    { label: 'Croatia', main: [{ id: 'a', label: 'Museum of Arts and Crafts, Zagreb', href: '#/partner/a' }], associated: [] },
+    {
+      label: 'Hungary',
+      main: [{ id: 'b', label: 'Hungarian National Gallery, Budapest', href: '#/partner/b' }],
+      associated: [{ id: 'c', label: 'Esterházy Palace, Fertőd', href: '#/partner/c' }],
+    },
+  ]
+  const props = {
+    groups, back: [{ label: 'Back', history: true }, { label: 'Other Partners', href: '#/partners/results?type=institution' }],
+    heads: ['Partner Museums', 'Associated Museums'], seeAssociated: 'See Associated Museums', noAssociated: 'No associated museum',
+  }
+
+  it("draws legacy's museum list: each group beside its band, which opens its associated museums and closes the others", async () => {
+    const wrapper = await mountWith(StandalonePartnerList, { props: { ...props, type: 'museum' } })
+    expect(wrapper.findAll('.mwnf-standalone-item__back-link').map((l) => l.text())).toEqual(['Back', 'Other Partners'])
+    expect(wrapper.findAll('.mwnf-standalone-pl__heads h3').map((h) => h.text())).toEqual(['Partner Museums', 'Associated Museums'])
+    const heads = wrapper.findAll('.mwnf-standalone-pl__head')
+    expect(heads.map((h) => h.find('h3').text())).toEqual(['Croatia', 'Hungary'])
+    expect(heads[0].find('.mwnf-standalone-pl__toggle').text()).toBe('See Associated Museums')
+    const associated = () => wrapper.findAll('.mwnf-standalone-pl__associated').map((a) => a.element.style.display !== 'none')
+    expect(associated()).toEqual([false, false])
+    await heads[1].find('.mwnf-standalone-pl__toggle').trigger('click')
+    expect(associated()).toEqual([false, true])
+    expect(wrapper.findAll('.mwnf-standalone-pl__associated')[1].text()).toBe('Esterházy Palace, Fertőd')
+    await heads[0].find('.mwnf-standalone-pl__toggle').trigger('click')
+    expect(associated()).toEqual([true, false])
+    expect(wrapper.find('.mwnf-standalone-pl__none').text()).toBe('No associated museum')
+  })
+
+  it("draws legacy's institution list: each group its own title, every one open at first", async () => {
+    const wrapper = await mountWith(StandalonePartnerList, { props: { ...props, type: 'institution' } })
+    const titles = wrapper.findAll('.mwnf-standalone-pl__toggle')
+    expect(titles.map((t) => t.text())).toEqual(['Croatia', 'Hungary'])
+    expect(wrapper.findAll('.mwnf-standalone-pl__row').map((r) => r.element.style.display !== 'none')).toEqual([true, true])
+    await titles[1].trigger('click')
+    expect(wrapper.findAll('.mwnf-standalone-pl__row').map((r) => r.element.style.display !== 'none')).toEqual([false, true])
   })
 })
 

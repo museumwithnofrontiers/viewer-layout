@@ -920,6 +920,24 @@
   /* --mwnf-standalone-refine-search-color: #222;     Its Search button's words */
   /* --mwnf-standalone-refine-new-background: #14214e;  Its New Search button, and Search hovered */
   /* --mwnf-standalone-refine-shadow: #030717;        The buttons' right and bottom edges */
+  /* --mwnf-standalone-pl-ground: transparent;        The partner lists' page ground */
+  /* --mwnf-standalone-pl-back-color: #222;           Their way back */
+  /* --mwnf-standalone-pl-back-weight: 500;           Its weight */
+  /* --mwnf-standalone-pl-back-arrow: var(--mwnf-standalone-back-arrow);  Its arrow (a url()) */
+  /* --mwnf-standalone-pl-heading-color: #222;        The headings over the columns */
+  /* --mwnf-standalone-pl-heading-weight: 400;        Their weight */
+  /* --mwnf-standalone-pl-group-color: #222;          A museum group's name */
+  /* --mwnf-standalone-pl-group-weight: 500;          Its weight */
+  /* --mwnf-standalone-pl-rule: #e0b700;              The rule under a group, and the "See Associated" band */
+  /* --mwnf-standalone-pl-toggle-color: #222;         The band's words */
+  /* --mwnf-standalone-pl-title-color: #000;          An institution group's title */
+  /* --mwnf-standalone-pl-title-weight: 500;          Its weight */
+  /* --mwnf-standalone-pl-title-active: var(--mwnf-standalone-pl-rule);  Its ground while open */
+  /* --mwnf-standalone-pl-link-color: #222;           The partners' names */
+  /* --mwnf-standalone-pl-link-weight: 400;           Their weight, and the band's */
+  /* --mwnf-standalone-pl-bullet: var(--mwnf-standalone-bullet);  The arrow before a name (a url()) */
+  /* --mwnf-standalone-accordion-closed: none;        The band's arrow, closed (a url()) */
+  /* --mwnf-standalone-accordion-open: var(--mwnf-standalone-accordion-closed);  Open */
   /* --mwnf-standalone-related-padding: 0 1.25rem 1.875rem;  Its padding */
   /* --mwnf-standalone-related-heading-offset: 1.75rem;  Space above its heading */
   /* --mwnf-standalone-related-thumb-size: 70px;     Related record thumbnail: its largest width and height */
