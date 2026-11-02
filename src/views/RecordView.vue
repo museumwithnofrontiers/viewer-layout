@@ -112,6 +112,8 @@ const ctx = computed(() => ({
   ready: ready.value,
   attribution: attribution.value,
   t,
+  // A text in the record's language (legacy's db_GetTERM), English where it has none.
+  tIn: (key) => (tIn ? tIn(language.value, key) : t(key)),
   tr,
   translations,
 }))
