@@ -1216,6 +1216,51 @@
   .mwnf-standalone-list__cell { width: 100%; }
 }
 
+/* ── The Permanent Collection entrance: legacy's `pc_entrance.php` ────────── */
+
+/* "Sort by" and the site's lists in col-md-3, col-md-2 empty, "About" and
+   legacy's text in col-md-6 (style_inside.css's .short_heading h3, its p
+   and its selects). A site's view sets `mwnf-standalone-pc` and draws
+   `__lists` and `__about`. */
+.mwnf-standalone-pc {
+  display: grid;
+  grid-template-columns: 3fr 2fr 6fr 1fr;
+  /* Bootstrap's row: the columns' 15px gutters reach past the content box,
+     whose own padding stands for legacy's section padding. */
+  margin: 0 -15px;
+  padding: 0 0 10px;
+}
+.mwnf-standalone-pc__lists { grid-column: 1; padding: 0 15px; }
+.mwnf-standalone-pc__about { grid-column: 3; padding: 0 15px; }
+.mwnf-standalone-pc__heading {
+  margin: 0 0 15px;
+  font: 400 19px Roboto, sans-serif;
+  color: var(--mwnf-standalone-results-heading-color, var(--mwnf-standalone-heading-color, inherit));
+}
+.mwnf-standalone-pc p {
+  margin: 0 0 10px;
+  font: 400 16px/22px Roboto, sans-serif;
+  color: #222;
+}
+.mwnf-standalone-pc__about a {
+  color: #222;
+  text-decoration: underline;
+}
+.mwnf-standalone-pc select {
+  width: 100%;
+  margin-top: 5px;
+  padding: 5px 10px;
+  border: 1px solid #767676;
+  border-radius: 0;
+  font: 500 14px Roboto, sans-serif;
+  color: #222;
+  background-color: #efefef;
+}
+@media (max-width: 62rem) {
+  .mwnf-standalone-pc { grid-template-columns: 1fr; }
+  .mwnf-standalone-pc__lists, .mwnf-standalone-pc__about { grid-column: 1; }
+}
+
 /* ── The partner lists: legacy's `pm_partner_list.php` ────────────────────── */
 
 /* StandalonePartnerList: the page on its own ground; the way back; the
