@@ -1078,6 +1078,8 @@
   /* --mwnf-standalone-phone-drawer-width: 270px;    The menu drawer's width */
   /* --mwnf-standalone-phone-drawer-background: #990000;  Its ground */
   /* --mwnf-standalone-phone-drawer-rule: 1px solid rgb(0 0 0 / 0.15);  The rule under each entry */
+  /* --mwnf-standalone-phone-drawer-row: transparent;  An entry's ground */
+  /* --mwnf-standalone-phone-drawer-row-alt: var(--mwnf-standalone-phone-drawer-row);  Every other entry's ground */
   /* --mwnf-standalone-phone-drawer-link-padding: 17px 0 17px 25px;  An entry's padding */
   /* --mwnf-standalone-phone-drawer-link-size: 16px; Its size */
   /* --mwnf-standalone-phone-drawer-link-weight: 300;  Its weight */
