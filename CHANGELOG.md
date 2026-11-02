@@ -1,3 +1,13 @@
+## 3.35.0 (2026-11-02)
+
+### Added
+
+- **`--mwnf-standalone-highlight-width`, `--mwnf-standalone-highlight-color`
+  and `--mwnf-standalone-sponsors-line-height`**: the home page's record
+  of the day at its widest (legacy Discover Baroque Art's 775px, picture
+  and text together), its text colour, and the sponsor band's line height.
+  Unset, both are drawn as before.
+
 ## 3.34.0 (2026-11-02)
 
 ### Added

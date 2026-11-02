@@ -230,8 +230,10 @@
 
 .mwnf-standalone-highlight {
   display: flow-root;
+  max-width: var(--mwnf-standalone-highlight-width, none);
   padding-top: var(--mwnf-standalone-highlight-offset, 3.5rem);
   line-height: var(--mwnf-standalone-highlight-line-height, inherit);
+  color: var(--mwnf-standalone-highlight-color, inherit);
 }
 
 .mwnf-standalone-highlight__media {
@@ -296,7 +298,7 @@
 .mwnf-standalone-sponsors__text,
 .mwnf-standalone-sponsors__title {
   margin: 0;
-  line-height: normal;
+  line-height: var(--mwnf-standalone-sponsors-line-height, normal);
   font-size: var(--mwnf-standalone-sponsors-text-size, 0.875rem);
 }
 
