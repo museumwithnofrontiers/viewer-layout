@@ -1,3 +1,13 @@
+## 3.47.0 (2026-11-02)
+
+### Added
+
+- **The phone mode's partner list**: each country one column, as legacy's
+  phone page — its name, its partners, "See Associated …", then those it
+  opens.
+- **The phone mode's timeline results** (hcr_result.php below 768px): each
+  list under its label across the band, the two headings five and seven
+  twelfths of the width, an event's date and words 5px further in.
 ## 3.46.0 (2026-11-02)
 
 ### Added
