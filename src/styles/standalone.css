@@ -117,14 +117,18 @@
   background-position: center;
 }
 
+/* The title runs across the band, on its own ground where the site has one
+   (Sharing History's dark strip). */
 .mwnf-standalone-banner__title {
+  flex: 1 1 auto;
   margin: 0;
   padding: var(--mwnf-standalone-banner-title-padding, 0.5rem 0 0.875rem 4rem);
   font-family: var(--mwnf-font-heading, inherit);
   font-size: var(--mwnf-standalone-banner-title-size, 1.875rem);
   font-weight: 400;
-  line-height: 1.1;
+  line-height: var(--mwnf-standalone-banner-title-line-height, 1.1);
   color: var(--mwnf-standalone-banner-title-color, inherit);
+  background-color: var(--mwnf-standalone-banner-title-background, transparent);
 }
 
 /* ── Menu: equal cells, every other one in the second colour ──────────────── */
@@ -879,10 +883,12 @@
   flex-wrap: wrap;
 }
 
+/* Four a row in their quarters (Islamic Art's, Baroque Art's), or one after
+   another (Sharing History's, the cell its tile's size: the tokens). */
 .mwnf-standalone-results__cell {
   box-sizing: border-box;
-  width: 25%;
-  padding: 0 15px;
+  width: var(--mwnf-standalone-results-cell-width, 25%);
+  padding: var(--mwnf-standalone-results-cell-padding, 0 15px);
 }
 
 .mwnf-standalone-results__empty {

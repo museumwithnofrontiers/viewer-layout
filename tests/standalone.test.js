@@ -29,6 +29,7 @@ const texts = {
   'site.nav.database': 'Database',
   'site.nav.partners': 'Partners',
   'site.section.database': 'Database',
+  'site.section.results': 'Results of your search',
   'site.footer.aboutMwnf': 'About MWNF',
   'site.footer.copyright': '© Museum With No Frontiers (MWNF) 2004 –',
   'site.sponsors.supportHead': 'Discover Islamic Art',
@@ -114,6 +115,7 @@ const config = {
 const ROUTES = [
   { path: '/', name: 'home', component: { template: '<p>home</p>' }, meta: { section: 'home' } },
   { path: '/database', name: 'database', component: { template: '<p>database</p>' }, meta: { section: 'database' } },
+  { path: '/database/results', name: 'database-results', component: { template: '<p>results</p>' }, meta: { section: 'database', bannerTitle: 'site.section.results' } },
   { path: '/partners', name: 'partners', component: { template: '<p>partners</p>' }, meta: { section: 'partners' } },
   { path: '/objects/:id', name: 'objects-detail', component: { template: '<p>detail</p>' } },
   { path: '/item/:id', name: 'item', component: { template: '<p>item</p>' } },
@@ -200,6 +202,12 @@ describe('StandaloneShell', () => {
     expect(html.indexOf('mwnf-nav')).toBeLessThan(html.indexOf('mwnf-standalone-banner'))
     expect(wrapper.find('.mwnf-nav__link--active').text()).toBe('Database')
     expect(wrapper.find('.mwnf-sponsors').exists()).toBe(false)
+  })
+
+  it("titles the band with the route's own banner title over its section's", async () => {
+    const wrapper = await mountWith(StandaloneShell, { route: '/database/results', props: { languages: ['en'], language: 'en' }, slots: { default: '<p>page</p>' } })
+    expect(wrapper.find('.mwnf-standalone-banner').text()).toBe('Results of your search')
+    expect(wrapper.find('.mwnf-nav__link--active').text()).toBe('Database')
   })
 
   it('draws the band and the banner of the page it navigates to', async () => {
