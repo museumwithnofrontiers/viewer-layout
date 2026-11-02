@@ -6,7 +6,7 @@ import { createI18n } from '@museumwnf/viewer-core/i18n'
 import {
   RelatedContent, StandaloneHome, StandaloneItemSheet, StandalonePartnerPage, StandaloneShell, StandaloneSponsors, StandaloneSubNav,
   StandalonePagination, StandaloneResultsGrid, StandaloneTextPage, StandaloneTileGrid, TodayHighlight, byLanguage, dayOfYear, legacyHomeItemKey, pickForDay,
-  StandaloneGlossarySpelling, StandaloneWindow,
+  StandaloneGlossarySpelling, StandaloneRefine, StandaloneResultsList, StandaloneWindow,
 } from '../src/standalone/index.js'
 import { sheetDocument } from '../src/standalone/wordExport.js'
 import { layoutTexts } from './helpers.js'
@@ -510,6 +510,65 @@ describe('StandaloneResultsGrid', () => {
   it('says so when there is no row', async () => {
     const wrapper = await mountWith(StandaloneResultsGrid, { props: { rows: [], seeLabel: 'See', empty: 'No result' } })
     expect(wrapper.find('.mwnf-standalone-results__empty').text()).toBe('No result')
+  })
+})
+
+describe('StandaloneResultsList', () => {
+  const rows = [
+    {
+      id: 'a', to: { name: 'item', params: { id: 'a' } }, image: 'a.jpg', name: 'Coin (<i>dirham</i>)', place: 'Rome, Italy', dates: 'Hegira 91 / AD 709',
+      preview: { lines: ['Hegira 91 / AD 709, Umayyad'], holder: 'Museum of Civilisations', location: 'Rome, Lazio, Italy' },
+    },
+    { id: 'b', href: '#/item/b', image: '', name: 'Mosque', place: 'Cairo, Egypt', dates: '', preview: { lines: ['AD 879'], location: 'Cairo, Egypt' } },
+  ]
+
+  it("draws legacy's list: each record's picture beside its name, place and date, the first one in the preview", async () => {
+    const wrapper = await mountWith(StandaloneResultsList, { props: { rows, noImage: 'none.gif' } })
+    const cells = wrapper.findAll('.mwnf-standalone-list__cell')
+    expect(cells).toHaveLength(2)
+    expect(cells[0].find('.mwnf-standalone-list__name').html()).toContain('Coin (<i>dirham</i>),')
+    expect(cells[0].find('.mwnf-standalone-list__content p').text()).toBe('Coin (dirham), Rome, Italy')
+    expect(cells[0].find('.mwnf-standalone-list__content > div i').text()).toBe('Hegira 91 / AD 709')
+    // No date, no date line; no picture, the site's placeholder.
+    expect(cells[1].find('.mwnf-standalone-list__content div').exists()).toBe(false)
+    expect(cells[1].find('.mwnf-standalone-list__frame img').attributes('src')).toBe('none.gif')
+    const preview = wrapper.find('.mwnf-standalone-list__preview')
+    expect(preview.find('img').attributes('src')).toBe('a.jpg')
+    expect(preview.findAll('p').map((p) => p.text())).toEqual(['Coin (dirham)', 'Hegira 91 / AD 709, Umayyad', 'Museum of Civilisations', 'Rome, Lazio, Italy'])
+  })
+
+  it("shows a record's preview while its picture or words are hovered, then the first one's again", async () => {
+    const wrapper = await mountWith(StandaloneResultsList, { props: { rows } })
+    const link = wrapper.findAll('.mwnf-standalone-list__content a')[1]
+    await link.trigger('mouseenter')
+    expect(wrapper.find('.mwnf-standalone-list__preview').findAll('p').map((p) => p.text())).toEqual(['Mosque', 'AD 879', 'Cairo, Egypt'])
+    await link.trigger('mouseleave')
+    expect(wrapper.find('.mwnf-standalone-list__preview p').text()).toBe('Coin (dirham)')
+  })
+
+  it('says so when there is no row', async () => {
+    const wrapper = await mountWith(StandaloneResultsList, { props: { rows: [], empty: 'No result' } })
+    expect(wrapper.find('.mwnf-standalone-list__empty').text()).toBe('No result')
+    expect(wrapper.find('.mwnf-standalone-list__preview').exists()).toBe(false)
+  })
+})
+
+describe('StandaloneRefine', () => {
+  const props = {
+    label: 'Refine your search:', inLabel: 'in', searchLabel: 'Search', newSearchLabel: 'New Search', newSearch: '/database',
+    fields: [{ value: 'keyword', label: 'Keyword(s)' }, { value: 'name', label: 'Name' }],
+  }
+
+  it("draws legacy's band and searches within the results for a word in a field", async () => {
+    const wrapper = await mountWith(StandaloneRefine, { props })
+    expect(wrapper.findAll('.mwnf-standalone-refine__label').map((l) => l.text())).toEqual(['Refine your search:', 'in'])
+    expect(wrapper.find('.mwnf-standalone-refine__button--new').attributes('href')).toContain('/database')
+    await wrapper.find('form').trigger('submit')
+    expect(wrapper.emitted('search')).toBeUndefined()
+    await wrapper.find('input').setValue(' Cairo ')
+    await wrapper.find('select').setValue('name')
+    await wrapper.find('form').trigger('submit')
+    expect(wrapper.emitted('search')).toEqual([[{ keyword: 'Cairo', field: 'name' }]])
   })
 })
 

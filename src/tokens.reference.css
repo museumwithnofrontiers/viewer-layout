@@ -912,6 +912,14 @@
   /* --mwnf-standalone-select-arrow: none;           A results page's date lists' arrow (a url(), legacy's select.png) */
   /* --mwnf-standalone-results-heading-color: var(--mwnf-standalone-heading-color);  A results page's heading */
   /* --mwnf-standalone-results-panel: #fffced;        The result tile's hover panel */
+  /* --mwnf-standalone-refine-background: transparent;  The search results' "Refine your search" band */
+  /* --mwnf-standalone-refine-color: #222;            Its words */
+  /* --mwnf-standalone-refine-weight: 400;            Their weight */
+  /* --mwnf-standalone-refine-input-border: #a9a9a9;  Its keyword box's border */
+  /* --mwnf-standalone-refine-select-border: var(--mwnf-standalone-refine-input-border);  Its field list's border */
+  /* --mwnf-standalone-refine-search-color: #222;     Its Search button's words */
+  /* --mwnf-standalone-refine-new-background: #14214e;  Its New Search button, and Search hovered */
+  /* --mwnf-standalone-refine-shadow: #030717;        The buttons' right and bottom edges */
   /* --mwnf-standalone-related-padding: 0 1.25rem 1.875rem;  Its padding */
   /* --mwnf-standalone-related-heading-offset: 1.75rem;  Space above its heading */
   /* --mwnf-standalone-related-thumb-size: 70px;     Related record thumbnail: its largest width and height */
