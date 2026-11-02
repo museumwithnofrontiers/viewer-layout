@@ -1,3 +1,19 @@
+## 3.31.0 (2026-11-02)
+
+### Added
+
+- **The search results as legacy's `database_results.php`**, shared by the
+  products: `StandaloneResultsList` draws the records two to a row, each
+  its picture in a 154 by 122 frame beside the name and place and the date
+  in italics, with col-md-3's preview of the first record, or of the one
+  whose picture or words are hovered (it stays in view while the page
+  scrolls). `StandaloneRefine` is the "Refine your search" band across the
+  page under the banner: a word in a field searched within the results,
+  and New Search. A site's view sets `mwnf-standalone-dbr` beside
+  `mwnf-standalone-pcr`; legacy's Arabic page kept the English layout, as
+  this one does. `--mwnf-standalone-refine-*` colour the band and its
+  buttons.
+
 ## 3.30.0 (2026-11-02)
 
 ### Added
