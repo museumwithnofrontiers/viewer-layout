@@ -21,7 +21,7 @@ const tiles = computed(() => props.items.map((item) => ({ ...item, image: pictur
 
 <template>
   <section v-if="tiles.length" class="mwnf-standalone-tiles">
-    <p v-if="caption" class="mwnf-standalone-tiles__caption">{{ t(caption) }}</p>
+    <p v-if="caption" class="mwnf-standalone-tiles__caption"><span class="mwnf-standalone-tiles__caption-text">{{ t(caption) }}</span></p>
     <ul class="mwnf-standalone-tiles__grid">
       <li v-for="tile in tiles" :key="tile.image" class="mwnf-standalone-tiles__tile">
         <SmartLink :to="tile.to" :href="tile.href" class="mwnf-standalone-tiles__link">
