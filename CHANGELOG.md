@@ -1,3 +1,13 @@
+## 3.34.0 (2026-11-02)
+
+### Added
+
+- **The Permanent Collection entrance's layout, `mwnf-standalone-pc`**:
+  legacy's `pc_entrance.php`, shared by the products (Islamic Art drew it
+  in its own stylesheet): "Sort by" and the site's lists in col-md-3,
+  "About" and legacy's text in col-md-6, legacy's grey lists. A site's
+  view sets the class and draws `__lists` and `__about`.
+
 ## 3.33.0 (2026-11-02)
 
 ### Added
