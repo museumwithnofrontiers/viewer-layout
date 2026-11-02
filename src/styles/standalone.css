@@ -1983,7 +1983,7 @@
 .mwnf-standalone-window__heading {
   margin: 0;
   padding: 25px 0 0 15px;
-  font: 600 32px/normal Roboto, sans-serif;
+  font: var(--mwnf-standalone-window-heading-weight, 600) 32px/normal Roboto, sans-serif;
   color: var(--mwnf-standalone-window-heading-color, inherit);
 }
 
@@ -2013,7 +2013,7 @@
   max-height: calc(100vh - 170px);
   overflow-y: scroll;
   border-radius: 0 0 10px 10px;
-  background-color: var(--mwnf-standalone-window-header, transparent);
+  background-color: var(--mwnf-standalone-window-article, var(--mwnf-standalone-window-header, transparent));
 }
 
 @media (max-width: 47.9375rem) {
@@ -2478,3 +2478,100 @@
 [dir='rtl'] .mwnf-standalone-tlr__download { background-position: right 0 top 3px; }
 .mwnf-standalone-tlr__selects p { flex-shrink: 0; }
 .mwnf-standalone-tlr__selects label { flex-shrink: 0; white-space: nowrap; }
+
+/* Legacy's windows at a window 750 to 990px wide (the item's timeline opens
+   at 790): the box 20px from the top. */
+@media (min-width: 48rem) and (max-width: 61.875rem) {
+  .mwnf-standalone-window { padding-top: 20px; }
+}
+
+/* StandaloneHistoricalCrossRef: legacy's hcr.php. Under the band, the years
+   on their own band (section.hcr_lines): fourteen of them 36px wide in the
+   middle three quarters, the period's underlined in white, over the dashed
+   rule; then the article's col-md-4 (the lists, the item) and its col-md-8
+   (the country and period on the pale band, the events on alternate pale
+   and white rows). */
+.mwnf-standalone-hcr__scale {
+  padding: 10px 15px 16px;
+  background-color: var(--mwnf-standalone-hcr-scale, transparent);
+}
+.mwnf-standalone-hcr__years {
+  width: 75%;
+  margin: 0 auto;
+  font: 500 13px Roboto, sans-serif;
+  text-align: center;
+  color: #000;
+}
+.mwnf-standalone-hcr__years span {
+  position: relative;
+  display: inline-block;
+  box-sizing: border-box;
+  width: 36px;
+  padding: 0 2px;
+}
+.mwnf-standalone-hcr__years span:first-child { padding-left: 0; }
+.mwnf-standalone-hcr__year--active::after {
+  content: '';
+  position: absolute;
+  bottom: -16px;
+  left: 5px;
+  width: 100%;
+  height: 2px;
+  background: #fff;
+}
+.mwnf-standalone-hcr__lines {
+  width: 71.5%;
+  height: 8px;
+  margin: 0 auto;
+  background: var(--mwnf-standalone-hcr-dash, none) repeat-x;
+  background-size: 36px 6px;
+}
+.mwnf-standalone-hcr__body { display: grid; grid-template-columns: calc(100% / 3) 1fr; align-items: start; }
+.mwnf-standalone-hcr__left { min-width: 0; padding: 0 15px; }
+.mwnf-standalone-hcr__left p {
+  margin: 0;
+  font: 400 14px/18px Roboto, sans-serif;
+  text-align: left;
+  color: var(--mwnf-standalone-hcr-text-color, #000);
+}
+.mwnf-standalone-hcr__left strong { font-weight: 500; }
+.mwnf-standalone-hcr__left .mwnf-standalone-hcr__title { margin: 10px 0 5px; font-size: 16px; }
+.mwnf-standalone-hcr__left select {
+  box-sizing: border-box;
+  width: 100%;
+  height: 30px;
+  margin: 0;
+  padding: 0 10px;
+  border: 1px solid var(--mwnf-standalone-window-input-border, #111000);
+  border-radius: 0;
+  font: 500 14px Roboto, sans-serif;
+  color: #222;
+  background-color: #fff;
+}
+.mwnf-standalone-hcr__image { margin: 30px 0 10px; }
+/* Legacy's small picture: Islamic Art's came letterboxed to 180 by 110 on
+   black, Baroque Art's at its own size (the tokens). */
+.mwnf-standalone-hcr__image img {
+  display: block;
+  width: var(--mwnf-standalone-hcr-image-width, 180px);
+  max-width: 180px;
+  height: var(--mwnf-standalone-hcr-image-height, 110px);
+  object-fit: contain;
+  background: var(--mwnf-standalone-hcr-image-ground, #000);
+}
+.mwnf-standalone-hcr__main { min-width: 0; }
+.mwnf-standalone-hcr__main h3 {
+  margin: 0;
+  padding: 20px;
+  font: 400 18px Roboto, sans-serif;
+  color: #000;
+  background-color: var(--mwnf-standalone-window-panel, #f0ede4);
+}
+.mwnf-standalone-hcr__event { padding: 10px 20px; background-color: #fff; }
+.mwnf-standalone-hcr__event:nth-of-type(even) { background-color: var(--mwnf-standalone-window-panel, #f0ede4); }
+.mwnf-standalone-hcr__event p,
+.mwnf-standalone-hcr__text p { margin: 0; font: 400 16px/24px Roboto, sans-serif; color: #222; }
+.mwnf-standalone-hcr__event b { font-weight: 500; color: var(--mwnf-standalone-hcr-date-color, #254062); }
+@media (max-width: 47.9375rem) {
+  .mwnf-standalone-hcr__body { grid-template-columns: 1fr; }
+}
