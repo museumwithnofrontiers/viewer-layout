@@ -30,6 +30,8 @@ function close() {
         <h1 class="mwnf-standalone-window__heading">{{ heading }}</h1>
         <button type="button" class="mwnf-standalone-window__close" :aria-label="closeLabel || undefined" @click="close">×</button>
       </header>
+      <!-- What sits between the band and the scrolling article (the item's timeline: its years). -->
+      <slot name="before" />
       <article class="mwnf-standalone-window__article">
         <slot />
       </article>

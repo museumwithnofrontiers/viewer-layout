@@ -7,7 +7,7 @@ import {
   RelatedContent, StandaloneHome, StandaloneItemSheet, StandalonePartnerPage, StandaloneShell, StandaloneSponsors, StandaloneSubNav,
   StandalonePagination, StandaloneResultsGrid, StandaloneTextPage, StandaloneTileGrid, TodayHighlight, byLanguage, dayOfYear, legacyHomeItemKey, pickForDay,
   StandaloneGlossarySpelling, StandalonePartnerList, StandaloneRefine, StandaloneResultsList, StandaloneSponsorList, StandaloneWindow,
-  StandaloneDatabaseForm, StandaloneTimelineEntrance, StandaloneTimelineResults,
+  StandaloneDatabaseForm, StandaloneTimelineEntrance, StandaloneTimelineResults, StandaloneHistoricalCrossRef,
 } from '../src/standalone/index.js'
 import { timelineDocument } from '../src/standalone/wordExport.js'
 import { sheetDocument } from '../src/standalone/wordExport.js'
@@ -607,6 +607,43 @@ describe('StandalonePartnerList', () => {
     expect(wrapper.findAll('.mwnf-standalone-pl__row').map((r) => r.element.style.display !== 'none')).toEqual([true, true])
     await titles[1].trigger('click')
     expect(wrapper.findAll('.mwnf-standalone-pl__row').map((r) => r.element.style.display !== 'none')).toEqual([false, true])
+  })
+})
+
+describe('StandaloneHistoricalCrossRef', () => {
+  const props = {
+    labels: { heading: 'Timeline', close: 'Close', country: 'Get dates for', range: 'Time Range' },
+    start: 1450,
+    end: 1500,
+    countries: [{ value: 'egy', label: 'Egypt' }, { value: 'syr', label: 'Syria' }],
+    country: 'egy',
+    ranges: [{ value: 1400, label: '1400 - 1450 A.D.' }, { value: 1450, label: '1450 - 1500 A.D.' }],
+    range: 1450,
+    item: { image: '/sword.jpg', name: 'Sword', lines: ['Hegira 855–86 / AD 1451–81, Ottoman', '', 'Museum of Islamic Art', 'Cairo, Egypt'] },
+    heading: 'Egypt - 1450 - 1500 A.D.',
+    events: [{ id: 'a', date: '1468 A.D.', html: '<p>A cultural revival.</p>' }, { id: 'b', date: '1492 A.D.', html: '<p>The Cape.</p>' }],
+  }
+
+  it("draws legacy's window: the years with the period's marked, the lists, the item and the events", async () => {
+    const wrapper = await mountWith(StandaloneHistoricalCrossRef, { props })
+    expect(wrapper.find('.mwnf-standalone-window__heading').text()).toBe('Timeline')
+    const years = wrapper.findAll('.mwnf-standalone-hcr__years span')
+    expect(years.map((y) => Number(y.text()))).toEqual(Array.from({ length: 14 }, (_, i) => 1350 + 50 * i))
+    expect(years.filter((y) => y.classes('mwnf-standalone-hcr__year--active')).map((y) => y.text())).toEqual(['1450'])
+    expect(wrapper.findAll('.mwnf-standalone-hcr__title').map((p) => p.text())).toEqual(['Get dates for', 'Time Range'])
+    expect(wrapper.find('select').element.value).toBe('egy')
+    expect(wrapper.findAll('select')[1].element.value).toBe('1450')
+    expect(wrapper.find('.mwnf-standalone-hcr__left strong').text()).toBe('Sword')
+    expect(wrapper.findAll('.mwnf-standalone-hcr__left br')).toHaveLength(4)
+    expect(wrapper.find('.mwnf-standalone-hcr__main h3').text()).toBe('Egypt - 1450 - 1500 A.D.')
+    expect(wrapper.findAll('.mwnf-standalone-hcr__event b').map((b) => b.text())).toEqual(['1468 A.D.', '1492 A.D.'])
+    await wrapper.findAll('select')[1].setValue('1400')
+    expect(wrapper.emitted('change')[0][0]).toEqual({ key: 'start', value: '1400' })
+  })
+
+  it("keeps legacy's scale inside 2000 for a late period", async () => {
+    const wrapper = await mountWith(StandaloneHistoricalCrossRef, { props: { ...props, start: 1900, end: 2000 } })
+    expect(wrapper.find('.mwnf-standalone-hcr__years span').text()).toBe('1350')
   })
 })
 

@@ -1,3 +1,25 @@
+## 3.43.0 (2026-11-02)
+
+### Added
+
+- **`StandaloneHistoricalCrossRef`**: legacy's Historical Cross Referencing
+  window (`hcr.php`, "Timeline for this item"), drawn inside
+  `StandaloneWindow` at legacy's 790 by 600:
+  - the years: fourteen half-centuries around the period, the period's own
+    underlined, over legacy's dashed rule;
+  - on the left, the country and time-range lists and the item (picture,
+    name, date and dynasty, holder, place);
+  - on the right, the country and period over that country's events, on
+    alternating rows.
+  - The website gives the lists, the item and the events.
+  - New tokens: `--mwnf-standalone-hcr-scale`, `-dash`, `-date-color`,
+    `-text-color`, `-image-width`, `-image-height` and `-image-ground`.
+- **`StandaloneWindow`**:
+  - a `before` slot between the band and the scrolling article;
+  - `--mwnf-standalone-window-heading-weight` and
+    `--mwnf-standalone-window-article` (the article's own ground);
+  - legacy's 20px top in windows 750 to 990px wide.
+
 ## 3.42.0 (2026-11-02)
 
 ### Added

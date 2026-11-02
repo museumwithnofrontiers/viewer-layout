@@ -1001,7 +1001,16 @@
   /* --mwnf-standalone-window-heading-color: inherit;  The band's heading */
   /* --mwnf-standalone-window-close: transparent;    The round × */
   /* --mwnf-standalone-window-panel: #f0ede4;        The pale bands of its content */
-  /* --mwnf-standalone-window-input-border: #ccc;    Its text field's border */
+  /* --mwnf-standalone-window-input-border: #ccc;    Its text field's border (and the item timeline's lists) */
+  /* --mwnf-standalone-hcr-scale: transparent;       The item timeline's band of years (hcr.php's section.hcr_lines) */
+  /* --mwnf-standalone-hcr-dash: none;               Its dashed rule (a url()) */
+  /* --mwnf-standalone-hcr-date-color: #254062;      An event's date */
+  /* --mwnf-standalone-hcr-text-color: #000;         The window's left column: its titles and the item */
+  /* --mwnf-standalone-hcr-image-width: 180px;       The item's picture: its width (auto: its own) */
+  /* --mwnf-standalone-hcr-image-height: 110px;      Its height */
+  /* --mwnf-standalone-hcr-image-ground: #000;       Around it, when it is letterboxed */
+  /* --mwnf-standalone-window-heading-weight: 600;   A window's heading weight */
+  /* --mwnf-standalone-window-article: var(--mwnf-standalone-window-header);  Its scrolling content's ground */
   /* --mwnf-standalone-page-width: 42rem;            Text page column width */
   /* --mwnf-standalone-page-inset: 16.666%;          Text page column inset */
   /* --mwnf-standalone-page-padding: 1.25rem 1.875rem;  Text page padding (top, bottom) */
