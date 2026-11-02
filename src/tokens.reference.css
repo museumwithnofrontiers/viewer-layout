@@ -959,6 +959,10 @@
   /* --mwnf-standalone-pl-bullet: var(--mwnf-standalone-bullet);  The arrow before a name (a url()) */
   /* --mwnf-standalone-accordion-closed: none;        The band's arrow, closed (a url()) */
   /* --mwnf-standalone-accordion-open: var(--mwnf-standalone-accordion-closed);  Open */
+  /* --mwnf-standalone-sp-back-color: #222;           The Sponsors page's way back */
+  /* --mwnf-standalone-sp-heading-color: #222;        Its heading */
+  /* --mwnf-standalone-sp-text-color: #222;           A sponsor's words */
+  /* --mwnf-standalone-sp-link-color: #018dce;        Its web address */
   /* --mwnf-standalone-related-padding: 0 1.25rem 1.875rem;  Its padding */
   /* --mwnf-standalone-related-heading-offset: 1.75rem;  Space above its heading */
   /* --mwnf-standalone-related-heading-weight: 600;  Its heading's weight */

@@ -1,3 +1,17 @@
+## 3.40.0 (2026-11-02)
+
+### Added
+
+- **`StandaloneSponsorList`**: the standalone family's Sponsors page, as
+  legacy's `atrium_sponsor_detail.php` drew it. It has the way back and the
+  list's heading, then one Bootstrap row per sponsor: name, web address
+  (linked as `http://<web>`), remarks in italics and logo. Rows with a
+  `label` (Baroque Art's local list) get legacy's label column. Arabic keeps
+  the English layout, left to right, as legacy did. The rows are the
+  website's own files, never the inventory's. New tokens:
+  `--mwnf-standalone-sp-back-color`, `--mwnf-standalone-sp-heading-color`,
+  `--mwnf-standalone-sp-text-color` and `--mwnf-standalone-sp-link-color`.
+
 ## 3.39.0 (2026-11-02)
 
 ### Added

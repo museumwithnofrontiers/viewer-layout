@@ -2135,3 +2135,46 @@
   padding: 0;
   list-style: none;
 }
+
+/* StandaloneSponsorList: legacy's atrium_sponsor_detail.php. The way back
+   and the heading as the partner lists draw them; then each sponsor a
+   Bootstrap row 28px under the last (.country_head): an empty col-md-2,
+   Baroque Art's label in a col-md-2, the text in a col-md-5 (col-md-4 beside
+   a label) and the logo in a col-md-3 (col-md-4), each paragraph legacy's
+   .center_contents p. Stacked on a phone, as col-xs-12. */
+/* Legacy's Arabic page kept its English layout, left to right. */
+.mwnf-standalone-sp { padding-bottom: 10px; direction: ltr; }
+.mwnf-standalone-sp__back {
+  min-height: 16px;
+  margin: 0 0 15px;
+  font-weight: 500;
+  color: var(--mwnf-standalone-sp-back-color, #222);
+}
+.mwnf-standalone-sp__heading {
+  margin: 0;
+  width: calc(50% - 15px);
+  font: 400 19px Roboto, sans-serif;
+  color: var(--mwnf-standalone-sp-heading-color, #222);
+}
+.mwnf-standalone-sp__row {
+  display: grid;
+  grid-template-columns: 16.6667% 41.6667% 25%;
+  margin: 28px -15px 0;
+}
+.mwnf-standalone-sp--labels .mwnf-standalone-sp__row { grid-template-columns: 16.6667% 16.6667% 33.3333% 33.3333%; }
+.mwnf-standalone-sp__row > div { min-width: 0; padding: 0 15px; }
+.mwnf-standalone-sp__row > :first-child { grid-column-start: 2; }
+.mwnf-standalone-sp__row p {
+  margin: 0 0 10px 2px;
+  padding-left: 12px;
+  font: 400 16px/22px Roboto, sans-serif;
+  color: var(--mwnf-standalone-sp-text-color, #222);
+}
+.mwnf-standalone-sp__row a { color: var(--mwnf-standalone-sp-link-color, #018dce); text-decoration: none; }
+.mwnf-standalone-sp__remarks { font-style: italic; }
+.mwnf-standalone-sp__logo img { max-width: 100%; vertical-align: middle; }
+@media (max-width: 48rem) {
+  .mwnf-standalone-sp__row,
+  .mwnf-standalone-sp--labels .mwnf-standalone-sp__row { grid-template-columns: 100%; }
+  .mwnf-standalone-sp__row > :first-child { grid-column-start: 1; }
+}
