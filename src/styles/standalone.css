@@ -771,7 +771,7 @@
 
 .mwnf-standalone-related__heading {
   padding-top: var(--mwnf-standalone-related-heading-offset, 1.75rem);
-  text-transform: uppercase;
+  text-transform: var(--mwnf-standalone-related-heading-transform, uppercase);
 }
 
 .mwnf-standalone-related p.mwnf-standalone-related__heading {
@@ -2794,5 +2794,22 @@
     z-index: 30;
     inset: 0;
     background-color: var(--mwnf-standalone-phone-backdrop, rgb(0 0 0 / 0.5));
+  }
+}
+
+/* Phone: the sheet's values under their labels, legacy's indent dropped. */
+@media (max-width: 47.9375rem) {
+  .mwnf-standalone-item .mwnf-sheet__value,
+  .mwnf-standalone-item .mwnf-sheet-section__body,
+  .mwnf-standalone-item .mwnf-credits {
+    padding-left: var(--mwnf-standalone-phone-sheet-value-indent, 0);
+  }
+}
+
+/* Phone: Related Content under the sheet, as far out as the site's legacy
+   drew it. */
+@media (max-width: 47.9375rem) {
+  .mwnf-standalone-item .mwnf-record__main > .mwnf-standalone-related {
+    margin: var(--mwnf-standalone-phone-related-margin, 0);
   }
 }

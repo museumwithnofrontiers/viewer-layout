@@ -13,7 +13,13 @@
 
   Every value is a `--mwnf-standalone-phone-*` token (tokens.reference.css).
   The defaults are Sharing History's. `--mwnf-standalone-phone-tiles-columns`
-  (default 2) sets the tiles across a row (Sharing History's home: 1).
+  (default 2) sets the tiles across a row (Sharing History's home: 1);
+  `--mwnf-standalone-phone-sheet-value-indent` (default 0) the item sheet
+  values' indent under their labels; `--mwnf-standalone-phone-related-margin`
+  (default 0) Related Content's margin under the sheet.
+- **`--mwnf-standalone-related-heading-transform`** (default `uppercase`):
+  Related Content's heading case. Sharing History's legacy draws it as
+  written (`none`).
 - **`AppNavigation`'s drawer parts**, hidden unless a family's stylesheet
   shows them:
   - a fold button after each entry that has links of its own (`aria-label`
