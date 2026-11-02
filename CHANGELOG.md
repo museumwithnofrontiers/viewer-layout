@@ -8,7 +8,8 @@ Needs `@museumwnf/viewer-core` 2.14.0 (`tIn`).
   credits, its citation heading and its working number's label in the
   language the record is shown in, as legacy's `db_GetTERM` printed them,
   rather than the site's. Discover Baroque Art's interface is English, its
-  Czech sheet Czech.
+  Czech sheet Czech. The context a spec's functions receive carries
+  `tIn(key)`, a text in the record's language, for a site's own citation.
 
 ## 3.27.0 (2026-11-02)
 
