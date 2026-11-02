@@ -14,6 +14,15 @@ Needs `@museumwnf/viewer-core` 2.14.0 (`tIn`).
   Content column's links, where it differs from the sheet's (Discover
   Baroque Art's column draws it white on blue). It falls back to
   `--mwnf-standalone-bullet`.
+- **`RecordLanguages`' `from`**: the number of languages from which the
+  band is drawn (2 by default). The standalone item sheet draws it for one,
+  as legacy's sheet did.
+
+### Changed
+
+- **The standalone item sheet keeps a picture's photographer and copyright
+  in its alternative text**, as legacy's slider did, rather than printing
+  them under the thumbnails.
 
 ## 3.27.0 (2026-11-02)
 

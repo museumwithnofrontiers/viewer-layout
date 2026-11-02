@@ -41,13 +41,20 @@ function imagesOf(ctx) {
 function allImagesOf({ record, text, language }) {
   if (props.spec.media) return props.spec.media(record, { record, text, language })
   const name = renderPlain(String(text?.name ?? record?.internal_name ?? ''))
-  // Only the pictures with a row in the page's language, as legacy listed them.
-  return picturesInLanguage(record?.images, language).map((image) => ({
-    url: image.url,
-    alt: image.captions?.[language] ?? name,
-    caption: image.captions?.[language] ?? '',
-    ...pictureCredits(image, language),
-  }))
+  // Only the pictures with a row in the page's language, as legacy listed them;
+  // the photographer and the copyright in the picture's own text, as legacy's
+  // slider gave them (its alt), not printed under it.
+  return picturesInLanguage(record?.images, language).map((image) => {
+    const { photographer, copyright } = pictureCredits(image, language)
+    const credit = [photographer ? `${t('record.media.photograph')}: ${photographer}` : '', copyright ? `© ${copyright}` : '']
+      .filter(Boolean)
+      .join(', ')
+    return {
+      url: image.url,
+      alt: credit || image.captions?.[language] || name,
+      caption: image.captions?.[language] ?? '',
+    }
+  })
 }
 
 const backLinks = computed(() => props.back.map((link) => ({ ...link, label: t(link.label) })))
@@ -64,7 +71,7 @@ function goBack() {
   <RecordView :spec="sheetSpec" :id="id" class="mwnf-standalone-item">
     <template #header="{ languages, language, select }">
       <div class="mwnf-standalone-item__top">
-        <RecordLanguages :languages="languages" :language="language" @select="select" />
+        <RecordLanguages :languages="languages" :language="language" :from="1" @select="select" />
       </div>
     </template>
 

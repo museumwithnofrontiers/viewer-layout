@@ -10,6 +10,8 @@ const props = defineProps({
   /** ['ar', 'en'] or [{ code, label }], as viewer-core's `languageLabels()` answers. */
   languages: { type: Array, default: () => [] },
   language: { type: String, default: '' },
+  /** Drawn from this many languages; legacy's standalone sheet drew its band for one. */
+  from: { type: Number, default: 2 },
 })
 const emit = defineEmits(['select'])
 const { t } = useI18n()
@@ -20,7 +22,7 @@ const entries = computed(() =>
 </script>
 
 <template>
-  <div v-if="entries.length > 1" class="mwnf-languages" role="group" :aria-label="t('record.sheet.languages')">
+  <div v-if="entries.length && entries.length >= from" class="mwnf-languages" role="group" :aria-label="t('record.sheet.languages')">
     <button
       v-for="entry in entries"
       :key="entry.code"
