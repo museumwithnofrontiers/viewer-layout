@@ -15,7 +15,8 @@
   of the row (as before), or one after another (Sharing History's).
 - **`StandaloneDatabaseForm`'s years** may be `{ value, label }` as well as
   years: Sharing History's lists send 0 for "Before 1800" and 2100 for
-  "After 1930".
+  "After 1930". **`--mwnf-standalone-db-padding-top`**: the space above
+  the form (18px, legacy's line break; Sharing History's had none).
 
 ## 3.43.0 (2026-11-02)
 
