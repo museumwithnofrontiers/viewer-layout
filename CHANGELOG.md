@@ -1,3 +1,29 @@
+## 3.42.0 (2026-11-02)
+
+### Added
+
+- **`StandaloneTimelineEntrance`**: legacy's `hcr_home.php`. It has the
+  country list, the start and end dates side by side, and Go, in the middle
+  third of the page.
+  - Go checks what legacy's script checked and says it in legacy's alerts.
+  - The lists, the words and the alerts are the website's.
+- **`StandaloneTimelineResults`**: legacy's `hcr_result.php`.
+  - The coloured band under the banner says the search in words and holds
+    its three lists, which search again on change.
+  - Then the way back, the Date and Country | Description headings, one
+    row per event, and legacy's pages.
+  - Beside them, the Related Content column, whose colour runs to the
+    page's right edge: "See Gallery", then the downloads. "As PDF" is the
+    browser's print. "As Word (text only)" writes every event of the search
+    as legacy's `export_hcr_content.php` did.
+  - Arabic keeps legacy's layout: the band right to left, the rest left to
+    right, and each event's row right to left.
+  - New tokens: `--mwnf-standalone-tlr-band`, `-select-border`,
+    `-heading-color`, `-strip` and `-related`. Go and the entrance's
+    button use the Database entrance's `--mwnf-standalone-db-go-*` tokens.
+- **`timelineDocument()`** in `wordExport.js`: the Word file of a timeline
+  search.
+
 ## 3.41.0 (2026-11-02)
 
 ### Added

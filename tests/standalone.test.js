@@ -1,4 +1,4 @@
-import { afterEach, describe, expect, it } from 'vitest'
+import { afterEach, describe, expect, it, vi } from 'vitest'
 import { mount } from '@vue/test-utils'
 import { createMemoryHistory, createRouter } from 'vue-router'
 import { loadEntities, partnerView, useDataPackage, useSiteConfig } from '@museumwnf/viewer-core'
@@ -7,8 +7,9 @@ import {
   RelatedContent, StandaloneHome, StandaloneItemSheet, StandalonePartnerPage, StandaloneShell, StandaloneSponsors, StandaloneSubNav,
   StandalonePagination, StandaloneResultsGrid, StandaloneTextPage, StandaloneTileGrid, TodayHighlight, byLanguage, dayOfYear, legacyHomeItemKey, pickForDay,
   StandaloneGlossarySpelling, StandalonePartnerList, StandaloneRefine, StandaloneResultsList, StandaloneSponsorList, StandaloneWindow,
-  StandaloneDatabaseForm,
+  StandaloneDatabaseForm, StandaloneTimelineEntrance, StandaloneTimelineResults,
 } from '../src/standalone/index.js'
+import { timelineDocument } from '../src/standalone/wordExport.js'
 import { sheetDocument } from '../src/standalone/wordExport.js'
 import { layoutTexts } from './helpers.js'
 import { settle } from './dxa/helpers.js'
@@ -606,6 +607,95 @@ describe('StandalonePartnerList', () => {
     expect(wrapper.findAll('.mwnf-standalone-pl__row').map((r) => r.element.style.display !== 'none')).toEqual([true, true])
     await titles[1].trigger('click')
     expect(wrapper.findAll('.mwnf-standalone-pl__row').map((r) => r.element.style.display !== 'none')).toEqual([false, true])
+  })
+})
+
+describe('StandaloneTimelineEntrance', () => {
+  const props = {
+    labels: { selectCountry: 'Select a Country', allCountries: 'All countries', startDate: 'Start Date', endDate: 'End Date', go: 'Go' },
+    alerts: { country: 'Please select country', countryOrDates: 'Please select country or dates', startDate: 'Please select start date', endDate: 'Please select end date', period: 'Please select correct time period' },
+    countries: [{ value: 'egy', label: 'Egypt' }],
+    starts: [{ value: 1000, label: '1000 A.D.' }, { value: 1100, label: '1100 A.D.' }],
+    ends: [{ value: 1100, label: '1100 A.D.' }, { value: 1200, label: '1200 A.D.' }],
+  }
+
+  it("draws legacy's three lists and Go, and says what is missing as legacy's alert did", async () => {
+    const alert = vi.spyOn(window, 'alert').mockImplementation(() => {})
+    const wrapper = await mountWith(StandaloneTimelineEntrance, { props })
+    const selects = wrapper.findAll('select')
+    expect(selects[0].findAll('option').map((o) => o.text())).toEqual(['Select a Country', 'All countries', 'Egypt'])
+    expect(selects[1].findAll('option').map((o) => o.text())).toEqual(['Start Date', '1000 A.D.', '1100 A.D.'])
+    await wrapper.find('form').trigger('submit')
+    expect(alert).toHaveBeenLastCalledWith('Please select country')
+    await selects[0].setValue('')
+    await wrapper.find('form').trigger('submit')
+    expect(alert).toHaveBeenLastCalledWith('Please select country or dates')
+    await selects[1].setValue('1100')
+    await wrapper.find('form').trigger('submit')
+    expect(alert).toHaveBeenLastCalledWith('Please select end date')
+    expect(wrapper.emitted('search')).toBeUndefined()
+    await selects[2].setValue('1100')
+    await wrapper.find('form').trigger('submit')
+    expect(wrapper.emitted('search')[0][0]).toEqual({ country: '', start: 1100, end: 1100 })
+    await selects[0].setValue('egy')
+    await wrapper.find('form').trigger('submit')
+    expect(wrapper.emitted('search')[1][0]).toEqual({ country: 'egy', start: 1100, end: 1100 })
+    alert.mockRestore()
+  })
+})
+
+describe('StandaloneTimelineResults', () => {
+  const props = {
+    heading: 'Timeline',
+    summary: '1000 A.D.to 1200 A.D. | EGYPT',
+    selects: [
+      { key: 'start', label: 'Start Date', value: '1000', options: [{ value: '1000', label: '1000 A.D.' }] },
+      { key: 'country', label: 'Country', value: 'egy', options: [{ value: '', label: 'All countries' }, { value: 'egy', label: 'Egypt' }] },
+    ],
+    back: [{ label: 'Back', history: true }, { label: 'Timeline start page', href: '#/timeline' }],
+    heads: { date: 'Date', countryDescription: 'Country | Description' },
+    rows: [{ id: 'a', date: '1087 A.D.', country: 'Egypt', html: '<p>Badr Al-Jamali consolidates Cairo’s walls.</p>' }],
+    empty: 'No data',
+    related: { heading: 'Related Content', gallery: { label: 'See Gallery', href: '#/timeline/gallery', title: 'The objects' } },
+    download: { heading: 'Download', pdf: 'As PDF (including images)', word: 'As Word (text only)', file: 'DIA_egy-1000-1200-en.doc', title: 'MWNF', line: 'TIMELINE | 1000 to 1200 | EGYPT' },
+  }
+
+  it("draws legacy's band, the way back, the events and the Related Content column", async () => {
+    const wrapper = await mountWith(StandaloneTimelineResults, { props })
+    expect(wrapper.find('.mwnf-standalone-tlr__summary').text()).toBe('Timeline | 1000 A.D.to 1200 A.D. | EGYPT')
+    expect(wrapper.findAll('.mwnf-standalone-tlr__selects label').map((l) => l.text())).toEqual(['Start Date', 'Country'])
+    expect(wrapper.findAll('.mwnf-standalone-item__back-link').map((l) => l.text())).toEqual(['Back', 'Timeline start page'])
+    expect(wrapper.findAll('.mwnf-standalone-tlr__heads h3').map((h) => h.text())).toEqual(['Date', 'Country | Description'])
+    const row = wrapper.find('.mwnf-standalone-tlr__row')
+    expect(row.find('.mwnf-standalone-tlr__date span').text()).toBe('1087 A.D.')
+    expect(row.find('.mwnf-standalone-tlr__content span').text()).toBe('Egypt')
+    expect(row.find('.mwnf-standalone-tlr__content div').text()).toContain('Badr Al-Jamali')
+    expect(wrapper.find('.mwnf-standalone-tlr__related strong').text()).toBe('Related Content')
+    expect(wrapper.findAll('.mwnf-standalone-tlr__related a').map((a) => a.text())).toEqual(['See Gallery', 'As PDF (including images)', 'As Word (text only)'])
+    await wrapper.findAll('select')[1].setValue('')
+    expect(wrapper.emitted('change')[0][0]).toEqual({ key: 'country', value: '' })
+  })
+
+  it('prints for As PDF, and says when nothing matched', async () => {
+    const print = vi.spyOn(window, 'print').mockImplementation(() => {})
+    const wrapper = await mountWith(StandaloneTimelineResults, { props: { ...props, rows: [], related: null } })
+    expect(wrapper.find('.mwnf-standalone-tlr__heads').exists()).toBe(false)
+    expect(wrapper.find('.mwnf-standalone-tlr__empty').text()).toBe('No data')
+    await wrapper.findAll('.mwnf-standalone-tlr__related a')[0].trigger('click')
+    expect(print).toHaveBeenCalled()
+    print.mockRestore()
+  })
+
+  it("writes every event into legacy's Word table", () => {
+    const html = timelineDocument({
+      title: 'MWNF', heading: 'TIMELINE | 1000 to 1200 | EGYPT', heads: props.heads,
+      rows: [...props.rows, { id: 'b', date: '1099 A.D.', country: 'Egypt', html: '<p>Fall of Jerusalem.</p>' }],
+    })
+    expect(html).toContain('<b>TIMELINE </b>| 1000 to 1200 | EGYPT')
+    expect(html).toContain('<b>Country | Description</b>')
+    expect(html.match(/&nbsp;1\d{3} A\.D\./g)).toEqual(['&nbsp;1087 A.D.', '&nbsp;1099 A.D.'])
+    expect(html).toContain('<span>Fall of Jerusalem.</span>')
+    expect(timelineDocument({ empty: 'No data' })).toContain('No data')
   })
 })
 

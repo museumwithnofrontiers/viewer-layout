@@ -2291,3 +2291,185 @@
   .mwnf-standalone-db > * { grid-column: 1 !important; grid-row: auto !important; justify-self: stretch; }
   .mwnf-standalone-db__label { text-align: start; }
 }
+
+/* StandaloneTimelineEntrance: legacy's hcr_home.php. The form in the middle
+   col-md-4, six line breaks under the banner; the country list, then the
+   two dates side by side, rounded, and Go 20px under them (the Database
+   entrance's button: its tokens). */
+.mwnf-standalone-tle {
+  display: flex;
+  flex-wrap: wrap;
+  box-sizing: border-box;
+  width: calc((100% + 30px) / 3 - 30px);
+  margin: 108px auto 10px;
+}
+.mwnf-standalone-tle p { box-sizing: border-box; margin: 0 0 10px; padding: 0 5px; font: 400 16px/22px Roboto, sans-serif; color: #222; }
+.mwnf-standalone-tle__country { width: 100%; }
+.mwnf-standalone-tle__date { width: 50%; }
+.mwnf-standalone-tle select {
+  box-sizing: border-box;
+  width: 100%;
+  height: 30px;
+  margin-top: 5px;
+  padding: 5px 10px;
+  border: 1px solid #767676;
+  border-radius: 20px;
+  font: 500 14px Roboto, sans-serif;
+  color: #222;
+  background-color: #efefef;
+}
+.mwnf-standalone-tle__go { width: 100%; margin-top: 20px !important; padding: 0 !important; text-align: center; }
+.mwnf-standalone-tle__go button {
+  padding: 6px 20px;
+  border: 1px solid var(--mwnf-standalone-db-go-border, #222);
+  border-radius: 20px;
+  font: 400 16px Roboto, sans-serif;
+  color: #fff;
+  background-color: var(--mwnf-standalone-db-go-background, #222);
+  cursor: pointer;
+  transition: all 0.3s ease-out;
+}
+.mwnf-standalone-tle__go button:hover {
+  border-color: var(--mwnf-standalone-db-go-hover-border, var(--mwnf-standalone-db-go-border, #222));
+  background-color: var(--mwnf-standalone-db-go-hover-background, var(--mwnf-standalone-db-go-background, #222));
+}
+@media (max-width: 48rem) {
+  .mwnf-standalone-tle { width: 100%; margin-top: 30px; }
+}
+
+/* StandaloneTimelineResults: legacy's hcr_result.php. The band straight
+   under the banner, across the page (section.timeline_color), its search in
+   words and its three labelled lists 300px apart; the way back; then the
+   col-md-9 list (its col-md-5 dates, each on a strip over a rule, and its
+   col-md-7 countries on a strip over the description) beside the col-md-3
+   Related Content column, whose colour runs on to the page's right edge
+   (.right_area.colored, .color_bg). */
+.mwnf-standalone-tlr__band {
+  margin: calc(-1 * var(--mwnf-content-padding-block, 1.5rem)) calc(50% - 50cqw) 21px;
+  padding: 6px calc(50cqw - 50%);
+  background-color: var(--mwnf-standalone-tlr-band, transparent);
+}
+.mwnf-standalone-tlr__summary { margin: 0; font: 400 16px/24px Roboto, sans-serif; color: #222; }
+.mwnf-standalone-tlr__summary b { display: inline-block; margin: 5px 0 2px; font-weight: 500; }
+.mwnf-standalone-tlr__selects { display: flex; flex-wrap: wrap; }
+.mwnf-standalone-tlr__selects p {
+  display: flex;
+  align-items: center;
+  width: 300px;
+  margin: 0 0 10px;
+  font: 400 16px/24px Roboto, sans-serif;
+  color: #222;
+}
+.mwnf-standalone-tlr__selects label { margin-inline-end: 10px; font: 500 16px/22px Roboto, sans-serif; }
+.mwnf-standalone-tlr__selects select {
+  box-sizing: border-box;
+  width: 192px;
+  height: 30px;
+  padding: 0 10px;
+  border: 1px solid var(--mwnf-standalone-tlr-select-border, #767676);
+  border-radius: 0;
+  font: 500 14px Roboto, sans-serif;
+  color: #222;
+  background-color: #fff;
+}
+.mwnf-standalone-tlr__back { min-height: 21px; margin: 0 0 15px; color: #222; }
+.mwnf-standalone-tlr__body {
+  display: grid;
+  grid-template-columns: 75% 25%;
+  align-items: start;
+  margin: 0 -15px;
+}
+.mwnf-standalone-tlr__list { min-width: 0; padding: 0 15px; }
+.mwnf-standalone-tlr__heads,
+.mwnf-standalone-tlr__row {
+  display: grid;
+  grid-template-columns: calc(5 / 12 * 100%) 1fr;
+  margin: 0 0 15px -15px;
+}
+/* The headings run over the list alone, in its col-md-9. */
+.mwnf-standalone-tlr__heads { width: calc(0.75 * (100% + 30px) - 15px); }
+.mwnf-standalone-tlr__heads > *,
+.mwnf-standalone-tlr__row > * { min-width: 0; padding: 0 15px; }
+.mwnf-standalone-tlr__heads h3 {
+  margin: 0;
+  font: 400 19px Roboto, sans-serif;
+  color: var(--mwnf-standalone-tlr-heading-color, #222);
+}
+.mwnf-standalone-tlr__heads h3 + h3 { margin-inline-start: 5px; }
+.mwnf-standalone-tlr__date,
+.mwnf-standalone-tlr__content { font: 400 16px/22px Roboto, sans-serif; color: #222; }
+.mwnf-standalone-tlr__date { padding: 0; margin: 0 15px; border-top: 2px solid var(--mwnf-standalone-tlr-strip, #ccc); }
+.mwnf-standalone-tlr__date p,
+.mwnf-standalone-tlr__content p { margin: 0 0 10px; }
+.mwnf-standalone-tlr__date span {
+  display: inline-block;
+  margin-top: -2px;
+  padding: 2px 10px;
+  background-color: var(--mwnf-standalone-tlr-strip, #ccc);
+}
+.mwnf-standalone-tlr__content span {
+  display: block;
+  padding: 2px 10px;
+  background-color: var(--mwnf-standalone-tlr-strip, #ccc);
+}
+.mwnf-standalone-tlr__content div p { margin: 0; }
+.mwnf-standalone-tlr__empty { margin: 0; font: 400 16px/22px Roboto, sans-serif; text-align: center; color: #222; }
+.mwnf-standalone-tlr__related {
+  position: relative;
+  z-index: 0;
+  min-width: 0;
+  padding-bottom: 30px;
+  font: 400 16px/22px Roboto, sans-serif;
+  color: #222;
+  background-color: var(--mwnf-standalone-tlr-related, transparent);
+}
+.mwnf-standalone-tlr__related::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  box-shadow: 0 0 0 100vmax var(--mwnf-standalone-tlr-related, transparent);
+  clip-path: inset(0 -100vmax 0 0);
+}
+.mwnf-standalone-tlr__panel { padding: 20px 20px 0; }
+.mwnf-standalone-tlr__panel p { margin: 0; }
+.mwnf-standalone-tlr__panel strong { font-weight: 500; }
+.mwnf-standalone-tlr__link {
+  padding-inline-start: 14px;
+  color: #222;
+  text-decoration: none;
+  background: var(--mwnf-standalone-bullet, none) no-repeat 0 5px;
+}
+.mwnf-standalone-tlr__link:hover { text-decoration: underline; }
+.mwnf-standalone-tlr__download {
+  padding-inline-start: 17px;
+  font-weight: 500;
+  background: var(--mwnf-standalone-download-icon, none) no-repeat 0 3px;
+}
+@media (max-width: 48rem) {
+  .mwnf-standalone-tlr__selects p { width: 100%; }
+  .mwnf-standalone-tlr__body { grid-template-columns: 1fr; }
+  .mwnf-standalone-tlr__related { margin: 15px 15px 0; }
+  .mwnf-standalone-tlr__related::before { display: none; }
+}
+@media print {
+  .mwnf-standalone-tlr__band select,
+  .mwnf-standalone-tlr__back,
+  .mwnf-standalone-tlr__related,
+  .mwnf-standalone-tlr .mwnf-standalone-pages { display: none; }
+  .mwnf-standalone-tlr__body { grid-template-columns: 1fr; }
+}
+/* Legacy's Arabic page ran its band right to left and kept the rest of its
+   layout left to right (.arabic_left): the way back, the headings, the list
+   on the left and the Related Content column on the right; only an event's
+   own row ran right to left, its date on the right. */
+[dir='rtl'] .mwnf-standalone-tlr__back,
+[dir='rtl'] .mwnf-standalone-tlr__heads,
+[dir='rtl'] .mwnf-standalone-tlr__body { direction: ltr; }
+[dir='rtl'] .mwnf-standalone-tlr__heads { margin-right: auto; }
+[dir='rtl'] .mwnf-standalone-tlr__row,
+[dir='rtl'] .mwnf-standalone-tlr__related { direction: rtl; }
+[dir='rtl'] .mwnf-standalone-tlr__link { background-position: right 0 top 5px; }
+[dir='rtl'] .mwnf-standalone-tlr__download { background-position: right 0 top 3px; }
+.mwnf-standalone-tlr__selects p { flex-shrink: 0; }
+.mwnf-standalone-tlr__selects label { flex-shrink: 0; white-space: nowrap; }
