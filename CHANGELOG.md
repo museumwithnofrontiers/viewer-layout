@@ -1,3 +1,16 @@
+## 3.29.0 (2026-11-02)
+
+### Added
+
+- **A standalone results page's layout, `mwnf-standalone-pcr`**: legacy's
+  `pclist_all.php` around the result tiles, shared by the three products
+  (Islamic Art drew it in its own stylesheet): the way back, the heading
+  naming the selection with its count, col-lg-10 for the tiles and
+  col-lg-2 for the "Change your selection" panel and the related content,
+  the pages under both. A site's results view sets the class on its
+  `CatalogueResultsView` and draws these parts in its slots;
+  `--mwnf-standalone-select-arrow` is the date lists' arrow.
+
 ## 3.28.0 (2026-11-02)
 
 Needs `@museumwnf/viewer-core` 2.14.0 (`tIn`).

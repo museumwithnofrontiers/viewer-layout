@@ -973,6 +973,93 @@
   .mwnf-standalone-results__panel-frame { display: none; }
 }
 
+/* ── A results page: legacy's `pclist_all.php` (style_inside.css) ─────────── */
+
+/* The way back, the heading naming the selection and its count, then
+   col-lg-10 for the tiles and col-lg-2 for the "Change your selection"
+   panel and the related content, the pages under both (.short_heading, .as
+   and span.select_png). A site's results view sets `mwnf-standalone-pcr` on
+   its CatalogueResultsView and draws these parts in its slots. */
+.mwnf-standalone-pcr { gap: 0; padding-bottom: 10px; }
+.mwnf-standalone-pcr__back { min-height: 22px; margin: 0 0 15px; }
+.mwnf-standalone-pcr__heading {
+  margin: 0 0 15px;
+  font: 400 19px Roboto, sans-serif;
+  color: var(--mwnf-standalone-results-heading-color, var(--mwnf-standalone-heading-color, inherit));
+}
+.mwnf-standalone-pcr__heading b { font-weight: 500; }
+.mwnf-standalone-pcr__count {
+  padding: 2px 5px;
+  font-size: 14px;
+  font-weight: 500;
+}
+.mwnf-standalone-pcr .mwnf-catalogue__body {
+  display: grid;
+  grid-template-columns: 10fr 2fr;
+  gap: 0;
+  margin: 0 -15px;
+}
+.mwnf-standalone-pcr .mwnf-catalogue__results,
+.mwnf-standalone-pcr .mwnf-catalogue__aside { min-width: 0; padding: 0 15px; }
+.mwnf-standalone-pcr .mwnf-catalogue__aside { flex: none; margin-top: -4px; }
+.mwnf-standalone-pcr .mwnf-standalone-results__empty { margin: 0 0 115px; }
+.mwnf-standalone-pcr__panel,
+.mwnf-standalone-pcr__related { margin: 0 0 15px; }
+.mwnf-standalone-pcr__panel p,
+.mwnf-standalone-pcr__related p {
+  margin: 0;
+  font: 400 16px/22px Roboto, sans-serif;
+  color: #222;
+}
+.mwnf-standalone-pcr__panel strong,
+.mwnf-standalone-pcr__related strong { font-weight: 500; }
+.mwnf-standalone-pcr__panel select {
+  display: block;
+  box-sizing: border-box;
+  width: 100%;
+  height: 30px;
+  margin-top: 5px;
+  padding: 5px 10px;
+  border: 1px solid #767676;
+  border-radius: 0;
+  font: italic 400 12px Roboto, sans-serif;
+  color: #222;
+  background-color: #efefef;
+}
+/* The two dates side by side, each a narrow box whose own arrow is legacy's
+   picture: the list inside is wider than its box. */
+.mwnf-standalone-pcr__date {
+  display: inline-block;
+  box-sizing: border-box;
+  width: 85px;
+  height: 29px;
+  margin-top: 5px;
+  overflow: hidden;
+  border: 1px solid #a9a9a9;
+  border-radius: 1px;
+  background: var(--mwnf-standalone-select-arrow, none) right no-repeat;
+}
+.mwnf-standalone-pcr__date:first-child { margin-right: 8px; }
+.mwnf-standalone-pcr__date:hover { border-color: #7f7f7f; }
+.mwnf-standalone-pcr__panel .mwnf-standalone-pcr__date select {
+  width: 120px;
+  margin: 0;
+  border: 0;
+  background: transparent;
+}
+.mwnf-standalone-pcr__related a {
+  display: block;
+  margin: 2px 0;
+  padding-left: 14px;
+  color: #222;
+  text-decoration: none;
+  background: var(--mwnf-standalone-bullet, none) no-repeat 0 4px;
+}
+.mwnf-standalone-pcr__related a:hover { text-decoration: underline; }
+@media (max-width: 62rem) {
+  .mwnf-standalone-pcr .mwnf-catalogue__body { grid-template-columns: 1fr; }
+}
+
 /* ── Pages: legacy's `page_listing` (style_inside.css) ────────────────────── */
 
 /* "Previous", the numbers and "Next", centred, each end parted from the
