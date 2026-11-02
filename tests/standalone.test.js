@@ -760,6 +760,18 @@ describe('StandaloneTimelineResults', () => {
     expect(html).toContain('<span>Fall of Jerusalem.</span>')
     expect(timelineDocument({ empty: 'No data' })).toContain('No data')
   })
+
+  it("writes Sharing History's three columns, the theme beside the country", () => {
+    const html = timelineDocument({
+      heading: 'TIMELINE / Before 1800 to After 1930 / AUSTRIA / POLITICAL CONTEXT',
+      heads: { date: 'Date', country: 'Country', theme: 'Theme' },
+      rows: [{ id: 'a', date: '1797', country: 'Austria', theme: 'Political Context', html: '<p>Peace of Campo Formio.</p>' }],
+    })
+    expect(html).toContain('<b>TIMELINE </b>/ Before 1800 to After 1930 / AUSTRIA / POLITICAL CONTEXT')
+    expect(html).toContain('<b>Theme</b>')
+    expect(html).toContain('<td style="padding:5px;">Political Context</td>')
+    expect(html).toContain('colspan="3">Peace of Campo Formio.</td>')
+  })
 })
 
 describe('StandaloneDatabaseForm', () => {

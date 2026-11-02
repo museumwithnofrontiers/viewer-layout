@@ -9,6 +9,11 @@
   `{ label, to | href, title, target }` (Sharing History's switch between
   the political and thematic timelines, the gallery in a new window, the
   historical profile and About the Historical Background).
+- **`timelineDocument`'s three columns**: with `heads: { date, country,
+  theme }` and each row's `theme`, the Word file lists the date, the
+  country and the theme over the description across them (Sharing
+  History's export_hcr_content.php). The heading's first part is bold up
+  to its first "|" or "/".
 
 ## 3.44.0 (2026-11-02)
 
