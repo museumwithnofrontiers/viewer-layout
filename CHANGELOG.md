@@ -1,3 +1,22 @@
+## 3.45.0 (2026-11-02)
+
+### Added
+
+- **`StandaloneTimelineResults`' `#media` slot** (given `row`): fills the
+  date's column under the date, for a product's pictures of the event
+  (Sharing History's picture, its caption and its numbered thumbnails).
+- **`related.links`**: the Related column's links in their order, each
+  `{ label, to | href, title, target }` (Sharing History's switch between
+  the political and thematic timelines, the gallery in a new window, the
+  historical profile and About the Historical Background).
+- **`timelineDocument`'s three columns**: with `heads: { date, country,
+  theme }` and each row's `theme`, the Word file lists the date, the
+  country and the theme over the description across them (Sharing
+  History's export_hcr_content.php). The heading's first part is bold up
+  to its first "|" or "/".
+- **A timeline list's `disabled`**: the list shows its value but cannot be
+  changed (Sharing History's Theme on the political timeline).
+
 ## 3.44.0 (2026-11-02)
 
 ### Added

@@ -15,10 +15,14 @@ import { downloadWord, timelineDocument } from './wordExport.js'
 // search as legacy's export_hcr_content.php wrote it. Every word is the
 // website's.
 //
-//   selects: [{ key, label, value, options: [{ value, label }] }]   // legacy's order: start, end, country
+//   selects: [{ key, label, value, options: [{ value, label }], disabled }]   // legacy's order: start, end, country
 //   rows: [{ id, date, country, html }]                             // `html` the description, rendered
 //   all: every row of the search, for the Word file (defaults to `rows`)
 //   related: { heading, gallery: { label, to, title } } | null
+//            or { heading, links: [{ label, to | href, title, target }] } — every link in its order
+//
+// The `#media` slot (given `row`) fills the date's column under the date:
+// a product's pictures of the event.
 //   download: { heading, pdf, word, file, title, heading line for the file }
 const props = defineProps({
   heading: { type: String, default: '' },
@@ -67,7 +71,7 @@ function word(event) {
         <div class="mwnf-standalone-tlr__selects">
           <p v-for="select in selects" :key="select.key">
             <label :for="`mwnf-tlr-${select.key}`">{{ select.label }}</label>
-            <select :id="`mwnf-tlr-${select.key}`" :value="select.value" @change="emit('change', { key: select.key, value: $event.target.value })">
+            <select :id="`mwnf-tlr-${select.key}`" :value="select.value" :disabled="select.disabled || undefined" @change="emit('change', { key: select.key, value: $event.target.value })">
               <option v-for="option in select.options" :key="option.value" :value="option.value">{{ option.label }}</option>
             </select>
           </p>
@@ -89,7 +93,7 @@ function word(event) {
     <div class="mwnf-standalone-tlr__body">
       <div class="mwnf-standalone-tlr__list">
         <div v-for="row in rows" :key="row.id" class="mwnf-standalone-tlr__row">
-          <div class="mwnf-standalone-tlr__date"><p><span>{{ row.date }}</span></p></div>
+          <div class="mwnf-standalone-tlr__date"><p><span>{{ row.date }}</span></p><slot name="media" :row="row" /></div>
           <div class="mwnf-standalone-tlr__content">
             <p><span>{{ row.country }}</span></p>
             <div v-html="row.html"></div>
@@ -108,6 +112,9 @@ function word(event) {
       <aside class="mwnf-standalone-tlr__related">
         <div v-if="related" class="mwnf-standalone-tlr__panel">
           <p><strong>{{ related.heading }}</strong></p>
+          <p v-for="link in related.links ?? []" :key="link.label">
+            <SmartLink class="mwnf-standalone-tlr__link" :to="link.to" :href="link.href" :title="link.title" :target="link.target">{{ link.label }}</SmartLink>
+          </p>
           <p v-if="related.gallery">
             <SmartLink class="mwnf-standalone-tlr__link" :to="related.gallery.to" :title="related.gallery.title">{{ related.gallery.label }}</SmartLink>
           </p>

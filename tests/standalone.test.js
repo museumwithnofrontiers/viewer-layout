@@ -696,6 +696,7 @@ describe('StandaloneTimelineResults', () => {
     selects: [
       { key: 'start', label: 'Start Date', value: '1000', options: [{ value: '1000', label: '1000 A.D.' }] },
       { key: 'country', label: 'Country', value: 'egy', options: [{ value: '', label: 'All countries' }, { value: 'egy', label: 'Egypt' }] },
+      { key: 'theme', label: 'Theme', value: '', disabled: true, options: [{ value: '', label: 'Select a Theme' }] },
     ],
     back: [{ label: 'Back', history: true }, { label: 'Timeline start page', href: '#/timeline' }],
     heads: { date: 'Date', countryDescription: 'Country | Description' },
@@ -708,7 +709,8 @@ describe('StandaloneTimelineResults', () => {
   it("draws legacy's band, the way back, the events and the Related Content column", async () => {
     const wrapper = await mountWith(StandaloneTimelineResults, { props })
     expect(wrapper.find('.mwnf-standalone-tlr__summary').text()).toBe('Timeline | 1000 A.D.to 1200 A.D. | EGYPT')
-    expect(wrapper.findAll('.mwnf-standalone-tlr__selects label').map((l) => l.text())).toEqual(['Start Date', 'Country'])
+    expect(wrapper.findAll('.mwnf-standalone-tlr__selects label').map((l) => l.text())).toEqual(['Start Date', 'Country', 'Theme'])
+    expect(wrapper.findAll('select')[2].element.disabled).toBe(true)
     expect(wrapper.findAll('.mwnf-standalone-item__back-link').map((l) => l.text())).toEqual(['Back', 'Timeline start page'])
     expect(wrapper.findAll('.mwnf-standalone-tlr__heads h3').map((h) => h.text())).toEqual(['Date', 'Country | Description'])
     const row = wrapper.find('.mwnf-standalone-tlr__row')
@@ -719,6 +721,24 @@ describe('StandaloneTimelineResults', () => {
     expect(wrapper.findAll('.mwnf-standalone-tlr__related a').map((a) => a.text())).toEqual(['See Gallery', 'As PDF (including images)', 'As Word (text only)'])
     await wrapper.findAll('select')[1].setValue('')
     expect(wrapper.emitted('change')[0][0]).toEqual({ key: 'country', value: '' })
+  })
+
+  it("lists the product's related links in their order, and its pictures under each date", async () => {
+    const related = {
+      heading: 'Related Context',
+      links: [
+        { label: 'Add Thematic Timeline', href: '#/timeline/results?theme=all' },
+        { label: 'See Gallery', href: '#/timeline/gallery', target: '_blank' },
+      ],
+    }
+    const wrapper = await mountWith(StandaloneTimelineResults, {
+      props: { ...props, related },
+      slots: { media: '<template #media="{ row }"><p class="media">{{ row.id }}</p></template>' },
+    })
+    expect(wrapper.find('.mwnf-standalone-tlr__date .media').text()).toBe('a')
+    const links = wrapper.findAll('.mwnf-standalone-tlr__related a')
+    expect(links.map((a) => a.text())).toEqual(['Add Thematic Timeline', 'See Gallery', 'As PDF (including images)', 'As Word (text only)'])
+    expect(links[1].attributes('target')).toBe('_blank')
   })
 
   it('prints for As PDF, and says when nothing matched', async () => {
@@ -741,6 +761,18 @@ describe('StandaloneTimelineResults', () => {
     expect(html.match(/&nbsp;1\d{3} A\.D\./g)).toEqual(['&nbsp;1087 A.D.', '&nbsp;1099 A.D.'])
     expect(html).toContain('<span>Fall of Jerusalem.</span>')
     expect(timelineDocument({ empty: 'No data' })).toContain('No data')
+  })
+
+  it("writes Sharing History's three columns, the theme beside the country", () => {
+    const html = timelineDocument({
+      heading: 'TIMELINE / Before 1800 to After 1930 / AUSTRIA / POLITICAL CONTEXT',
+      heads: { date: 'Date', country: 'Country', theme: 'Theme' },
+      rows: [{ id: 'a', date: '1797', country: 'Austria', theme: 'Political Context', html: '<p>Peace of Campo Formio.</p>' }],
+    })
+    expect(html).toContain('<b>TIMELINE </b>/ Before 1800 to After 1930 / AUSTRIA / POLITICAL CONTEXT')
+    expect(html).toContain('<b>Theme</b>')
+    expect(html).toContain('<td style="padding:5px;">Political Context</td>')
+    expect(html).toContain('colspan="3">Peace of Campo Formio.</td>')
   })
 })
 

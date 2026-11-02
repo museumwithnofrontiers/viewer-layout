@@ -114,9 +114,12 @@ export function downloadWord(html, fileName) {
  * heading line, then every event of the search, not one page of it, in a
  * table, its date and country on one row and its description on the next.
  *
- *   heading: the line over the table ("TIMELINE | 1000 to 1200 | EGYPT")
+ *   heading: the line over the table ("TIMELINE | 1000 to 1200 | EGYPT"),
+ *            its first part in bold, up to the first "|" or "/"
  *   heads: { date, countryDescription }
- *   rows: [{ date, country, html }]   // `html` the description as rendered
+ *          or { date, country, theme }: Sharing History's three columns,
+ *          the date, the country and the theme over the description
+ *   rows: [{ date, country, theme, html }]   // `html` the description as rendered
  *   empty: what legacy wrote when nothing matched
  */
 export function timelineDocument({ title = '', heading = '', heads = {}, rows = [], empty = '', dir = '' } = {}) {
@@ -126,15 +129,24 @@ export function timelineDocument({ title = '', heading = '', heads = {}, rows = 
     holder.innerHTML = html ?? ''
     return cleaned(holder)
   }
-  const body = rows.length
-    ? `<tr><td style="padding:10px;">
-<table border='1' cellspacing='1' cellpadding='1' width="100%">
-<tr>
-<td style="padding:5px;" width="28%"><b>${escapeHtml(heads.date)}</b></td>
+  const themed = Boolean(heads.theme)
+  const header = themed
+    ? `<td style="padding:5px;" width="28%"><b>${escapeHtml(heads.date)}</b></td>
+<td style="padding:5px;" width="35%"><b>${escapeHtml(heads.country)}</b></td>
+<td style="padding:5px;" width="37%"><b>${escapeHtml(heads.theme)}</b></td>`
+    : `<td style="padding:5px;" width="28%"><b>${escapeHtml(heads.date)}</b></td>
 <td style="padding:5px;" width="36%"><b>${escapeHtml(heads.countryDescription)}</b></td>
-<td width="37%"><b></b></td>
+<td width="37%"><b></b></td>`
+  const event = themed
+    ? (row) => `<tr>
+<td style="padding:5px;">${escapeHtml(row.date)}</td>
+<td style="padding:5px;">${escapeHtml(row.country)}</td>
+<td style="padding:5px;">${escapeHtml(row.theme)}</td>
 </tr>
-${rows.map((row) => `<tr>
+<tr>
+<td style="padding:5px; width:558px; vertical-align:top;" colspan="3">${description(row.html)}</td>
+</tr>`
+    : (row) => `<tr>
 <td style="padding:5px; vertical-align:top;">&nbsp;${escapeHtml(row.date)}</td>
 <td style="padding:5px;">${escapeHtml(row.country)}</td>
 <td>&nbsp;</td>
@@ -142,7 +154,14 @@ ${rows.map((row) => `<tr>
 <tr>
 <td style="padding:5px;">&nbsp;</td>
 <td style="padding:5px;" colspan="2"><span>${description(row.html)}</span></td>
-</tr>`).join('\n')}
+</tr>`
+  const body = rows.length
+    ? `<tr><td style="padding:10px;">
+<table border='1' cellspacing='1' cellpadding='1' width="100%">
+<tr>
+${header}
+</tr>
+${rows.map(event).join('\n')}
 </table>
 </td></tr>
 <tr><td>&nbsp;</td></tr>`
@@ -159,7 +178,7 @@ ${STYLE}
 <div class="content">
 <div class="item_description">
 <table style="${align}" border="0" width="750px">
-<tr><td class="txt" align="left" width="750px"><div style="width: 750px;">&nbsp;&nbsp;${escapeHtml(heading).replace(/^([^|]*)/, '<b>$1</b>')}</div></td></tr>
+<tr><td class="txt" align="left" width="750px"><div style="width: 750px;">&nbsp;&nbsp;${escapeHtml(heading).replace(/^([^|/]*)/, '<b>$1</b>')}</div></td></tr>
 <tr><td>&nbsp;</td></tr>
 ${body}
 </table>
