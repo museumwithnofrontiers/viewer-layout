@@ -963,6 +963,15 @@
   /* --mwnf-standalone-sp-heading-color: #222;        Its heading */
   /* --mwnf-standalone-sp-text-color: #222;           A sponsor's words */
   /* --mwnf-standalone-sp-link-color: #018dce;        Its web address */
+  /* --mwnf-standalone-db-rows: 38px 37px 49px 49px 49px 49px 44px 69px 22px;  The Database entrance's row heights */
+  /* --mwnf-standalone-db-options-rows: 38px 37px 49px 49px 49px 49px 63px 31px 61px 36px;  Theirs with an options row */
+  /* --mwnf-standalone-db-heading-color: #222;        Its "Enter your criteria" heading */
+  /* --mwnf-standalone-db-keyword-color: #222;        The keywords typed */
+  /* --mwnf-standalone-db-go-background: #222;        The Go button */
+  /* --mwnf-standalone-db-go-border: #222;            Its border */
+  /* --mwnf-standalone-db-go-hover-background: var(--mwnf-standalone-db-go-background);  Hovered */
+  /* --mwnf-standalone-db-go-hover-border: var(--mwnf-standalone-db-go-border);  Its border hovered */
+  /* --mwnf-standalone-db-listing-indent: 16px;       The complete listing's words, after its arrow */
   /* --mwnf-standalone-related-padding: 0 1.25rem 1.875rem;  Its padding */
   /* --mwnf-standalone-related-heading-offset: 1.75rem;  Space above its heading */
   /* --mwnf-standalone-related-heading-weight: 600;  Its heading's weight */

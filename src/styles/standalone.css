@@ -2178,3 +2178,116 @@
   .mwnf-standalone-sp--labels .mwnf-standalone-sp__row { grid-template-columns: 100%; }
   .mwnf-standalone-sp__row > :first-child { grid-column-start: 1; }
 }
+
+/* StandaloneDatabaseForm: legacy's database.php. Its Bootstrap row
+   (col-md-1, col-md-2 for the joins and the labels, the col-md-6 form split
+   in two halves, col-md-3) as a grid of legacy's row heights; a form with an
+   options row (Islamic Art's Explore opt-in) has one more. Stacked on a
+   phone, as legacy's mobile form. */
+.mwnf-standalone-db {
+  display: grid;
+  grid-template-columns: 1fr 2fr 3fr 3fr 3fr;
+  grid-template-rows: var(--mwnf-standalone-db-rows, 38px 37px 49px 49px 49px 49px 44px 69px 22px);
+  align-items: start;
+  margin: 0 -15px;
+  /* Legacy's <br/> over the section, then its 30px under it (20 are the
+     content area's). */
+  padding: 18px 0 10px;
+}
+.mwnf-standalone-db--options {
+  grid-template-rows: var(--mwnf-standalone-db-options-rows, 38px 37px 49px 49px 49px 49px 63px 31px 61px 36px);
+}
+.mwnf-standalone-db > * { min-width: 0; margin: 0; padding: 0 15px; box-sizing: border-box; }
+.mwnf-standalone-db__criteria {
+  grid-area: 1 / 3;
+  font: 400 19px Roboto, sans-serif;
+  color: var(--mwnf-standalone-db-heading-color, #222);
+}
+.mwnf-standalone-db__head,
+.mwnf-standalone-db__label,
+.mwnf-standalone-db__options,
+.mwnf-standalone-db__listing { font: 400 16px/22px Roboto, sans-serif; color: #222; }
+.mwnf-standalone-db__head--keywords { grid-area: 2 / 3; }
+.mwnf-standalone-db__head--category { grid-area: 2 / 4; }
+.mwnf-standalone-db__row-1 { grid-row: 3; }
+.mwnf-standalone-db__row-2 { grid-row: 4; }
+.mwnf-standalone-db__row-3 { grid-row: 5; }
+.mwnf-standalone-db__cond { grid-column: 2; justify-self: right; }
+.mwnf-standalone-db__keyword { grid-column: 3; }
+.mwnf-standalone-db__field { grid-column: 4; display: flex; align-items: flex-start; }
+.mwnf-standalone-db__label { grid-column: 2; text-align: right; }
+.mwnf-standalone-db__label--date { grid-row: 6; margin-top: 5px; }
+.mwnf-standalone-db__label--language { grid-row: 7; margin-top: 2px; }
+.mwnf-standalone-db__dates { grid-area: 6 / 3 / auto / span 2; display: flex; }
+.mwnf-standalone-db__language { grid-area: 7 / 3 / auto / span 2; }
+.mwnf-standalone-db__options { grid-area: 8 / 3 / auto / span 2; }
+.mwnf-standalone-db__go { grid-area: 8 / 3 / auto / span 2; }
+.mwnf-standalone-db__listing { grid-area: 9 / 3 / auto / span 2; }
+.mwnf-standalone-db--options .mwnf-standalone-db__go { grid-row: 9; }
+.mwnf-standalone-db--options .mwnf-standalone-db__listing { grid-row: 10; }
+.mwnf-standalone-db select,
+.mwnf-standalone-db__keyword {
+  box-sizing: border-box;
+  height: 30px;
+  padding: 5px 10px;
+  border: 1px solid #767676;
+  border-radius: 0;
+  font: 500 14px Roboto, sans-serif;
+  color: #222;
+  background-color: #efefef;
+}
+/* The joins: 92% of their column, padding included. */
+.mwnf-standalone-db__cond { width: calc((100% - 30px) * 0.92); margin-right: 15px; padding: 5px 10px; }
+.mwnf-standalone-db__keyword {
+  margin-inline: 15px;
+  padding: 5px 10px;
+  border-color: #a9a9a9;
+  color: var(--mwnf-standalone-db-keyword-color, #222);
+  background-color: transparent;
+}
+.mwnf-standalone-db__field span { flex: 0 0 4%; min-width: 0; margin: 5px 0 0; margin-inline-end: 10px; font: 400 16px/22px Roboto, sans-serif; color: #222; }
+.mwnf-standalone-db__field select { width: 92%; }
+.mwnf-standalone-db__dates select,
+.mwnf-standalone-db__language select { width: 22.85%; margin-inline-end: 10px; }
+.mwnf-standalone-db__go button {
+  margin-inline-start: 20%;
+  padding: 6px 20px;
+  border: 1px solid var(--mwnf-standalone-db-go-border, #222);
+  border-radius: 20px;
+  font: 400 16px Roboto, sans-serif;
+  color: #fff;
+  background-color: var(--mwnf-standalone-db-go-background, #222);
+  cursor: pointer;
+  transition: all 0.3s ease-out;
+}
+.mwnf-standalone-db__go button:hover {
+  border-color: var(--mwnf-standalone-db-go-hover-border, var(--mwnf-standalone-db-go-border, #222));
+  background-color: var(--mwnf-standalone-db-go-hover-background, var(--mwnf-standalone-db-go-background, #222));
+}
+.mwnf-standalone-db__listing a {
+  padding-inline-start: var(--mwnf-standalone-db-listing-indent, 16px);
+  color: #222;
+  text-decoration: none;
+  background: var(--mwnf-standalone-bullet, none) no-repeat 0 5px;
+}
+.mwnf-standalone-db__listing a:hover { text-decoration: underline; }
+[dir='rtl'] .mwnf-standalone-db__listing a { background-position: right 0 top 5px; }
+/* The last column's link (Islamic Art's "Glossary & Spelling"), 50px in,
+   its arrow first (legacy's next arrow; the back arrow in Arabic). */
+.mwnf-standalone-db__aside { grid-area: 2 / 5; padding: 0; font: 400 16px/22px Roboto, sans-serif; }
+.mwnf-standalone-db__aside a { padding-left: 50px; color: #222; text-decoration: none; }
+.mwnf-standalone-db__aside a::before {
+  content: '';
+  display: inline-block;
+  width: 12px;
+  height: 10px;
+  margin-inline-end: 4px;
+  background: var(--mwnf-standalone-bullet, none) no-repeat;
+}
+[dir='rtl'] .mwnf-standalone-db__aside a::before { background-image: var(--mwnf-standalone-back-arrow, none); }
+@media (max-width: 48rem) {
+  .mwnf-standalone-db,
+  .mwnf-standalone-db--options { grid-template-columns: 1fr; grid-template-rows: none; row-gap: 10px; }
+  .mwnf-standalone-db > * { grid-column: 1 !important; grid-row: auto !important; justify-self: stretch; }
+  .mwnf-standalone-db__label { text-align: start; }
+}
