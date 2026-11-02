@@ -1,3 +1,21 @@
+## 3.37.0 (2026-11-02)
+
+### Added
+
+- **`StandalonePartnerPage`'s `languages`**: `(record, code) => boolean`,
+  whether the band offers that language. Legacy's pm_partner.php offered
+  the languages whose text had a description; a product passes that rule.
+- **The partner profile's pill colours and weight**
+  (`--mwnf-standalone-pill-color`, `-muted`, `-weight`, `-separator`), the
+  space between its ways back (`--mwnf-standalone-partner-back-gap`), and
+  the record band's weight (`--mwnf-standalone-language-weight`). Unset,
+  they are drawn as before.
+
+### Changed
+
+- **The partner profile's band shows a single language too**, as legacy's
+  did (its item sheet already did).
+
 ## 3.36.0 (2026-11-02)
 
 ### Added

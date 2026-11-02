@@ -919,9 +919,15 @@
   /* --mwnf-standalone-download-icon: none;          The picture before the Related Content column's Download (a url()) */
   /* --mwnf-standalone-language-bar: transparent;    The item sheet's band of record languages */
   /* --mwnf-standalone-language-color: inherit;      Its words */
+  /* --mwnf-standalone-language-weight: 400;         Their weight */
   /* --mwnf-standalone-language-active: transparent; The shown language's ground, and the rule between words */
   /* --mwnf-standalone-footer-weight: 400;           The footer line's weight */
   /* --mwnf-standalone-pill: transparent;            The partner profile's rounded tab and items bars */
+  /* --mwnf-standalone-pill-color: #222;             Their open tab and the items bar's words */
+  /* --mwnf-standalone-pill-muted: rgb(34 34 34 / 0.75);  The other tabs and the homepage */
+  /* --mwnf-standalone-pill-weight: 500;             Their weight */
+  /* --mwnf-standalone-pill-separator: #000;         The "|" between the tabs */
+  /* --mwnf-standalone-partner-back-gap: 15px;       The space between the profile's ways back */
   /* --mwnf-standalone-heading-color: inherit;       The partner profile's name, place and map heading */
   /* --mwnf-standalone-results-border: rgba(255, 214, 0, 0.28);  The result tiles' frame and panel border */
   /* --mwnf-standalone-select-arrow: none;           A results page's date lists' arrow (a url(), legacy's select.png) */

@@ -23,6 +23,8 @@ import SmartLink from '../content/SmartLink.vue'
 //   about:  (record, text) => boolean                 // whether the About tab is listed (default: always)
 //   bands:  (record) => boolean                       // whether the band of the record's languages shows
 //                                                     // (default: a museum; legacy offered an institution none)
+//   languages: (record, code) => boolean              // whether the band offers that language
+//                                                     // (default: every language the record carries)
 //   labels: the product's words, as entry names: about, contact, logo,
 //           homepage, addresses, phone, fax, map
 //   links:  print the partner's further links after its homepage (legacy's
@@ -35,6 +37,7 @@ const props = defineProps({
   map: { type: Function, default: (record) => record?.type === 'museum' },
   about: { type: Function, default: () => true },
   bands: { type: Function, default: (record) => record?.type === 'museum' },
+  languages: { type: Function, default: () => true },
   labels: { type: Object, default: () => ({}) },
   links: { type: Boolean, default: false },
 })
@@ -112,7 +115,7 @@ const mapLanguage = computed(() => String(locale.value || 'en'))
   <RecordView :spec="spec" :id="id" class="mwnf-standalone-partner">
     <template #header="{ record, languages, language, select }">
       <div v-if="bands(record)" class="mwnf-standalone-item__top">
-        <RecordLanguages :languages="languages" :language="language" @select="select" />
+        <RecordLanguages :languages="languages.filter((entry) => props.languages(record, entry.code))" :language="language" :from="1" @select="select" />
       </div>
       <!-- An empty slot would draw RecordView's own header (the way back, the languages, the title). -->
       <div v-else hidden></div>

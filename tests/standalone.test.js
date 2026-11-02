@@ -429,6 +429,20 @@ describe('StandalonePartnerPage', () => {
     expect(wrapper.find('.mwnf-standalone-partner__map').exists()).toBe(false)
     expect(wrapper.find('.mwnf-standalone-item__top').exists()).toBe(true)
   })
+
+  it('offers on the band only the languages the product keeps', async () => {
+    await loadEntities(['partners'])
+    const labels = async (languages) => {
+      const wrapper = await mountWith(StandalonePartnerPage, { route: '/partner/p1', props: { ...props, bands: () => true, ...(languages ? { languages } : {}) } })
+      await settle(() => wrapper.find('.mwnf-standalone-partner__location').exists(), 200)
+      return wrapper.findAll('.mwnf-standalone-item__top .mwnf-languages__button').map((b) => b.text())
+    }
+    const all = await labels()
+    // Legacy's band showed a single language too.
+    expect(all).toHaveLength(1)
+    expect(await labels((record, code) => code === 'en')).toEqual(all)
+    expect(await labels(() => false)).toEqual([])
+  })
 })
 
 describe('RelatedContent', () => {
