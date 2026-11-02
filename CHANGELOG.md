@@ -18,9 +18,12 @@
     as legacy's `export_hcr_content.php` did.
   - Arabic keeps legacy's layout: the band right to left, the rest left to
     right, and each event's row right to left.
-  - New tokens: `--mwnf-standalone-tlr-band`, `-select-border`,
-    `-heading-color`, `-strip` and `-related`. Go and the entrance's
-    button use the Database entrance's `--mwnf-standalone-db-go-*` tokens.
+  - New tokens: `--mwnf-standalone-tlr-band`, `-band-color`,
+    `-band-weight`, `-label-weight`, `-select-border`, `-heading-color`,
+    `-strip`, `-strip-color`, `-strip-weight`, `-related`,
+    `-related-color`, `-related-heading-weight`, `-link-weight`,
+    `-download-weight` and `-bullet`. Go and the entrance's button use the
+    Database entrance's `--mwnf-standalone-db-go-*` tokens.
 - **`timelineDocument()`** in `wordExport.js`: the Word file of a timeline
   search.
 
