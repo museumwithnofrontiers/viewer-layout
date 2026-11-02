@@ -10,6 +10,10 @@ Needs `@museumwnf/viewer-core` 2.14.0 (`tIn`).
   rather than the site's. Discover Baroque Art's interface is English, its
   Czech sheet Czech. The context a spec's functions receive carries
   `tIn(key)`, a text in the record's language, for a site's own citation.
+- **`--mwnf-standalone-related-bullet`**: the arrow before the Related
+  Content column's links, where it differs from the sheet's (Discover
+  Baroque Art's column draws it white on blue). It falls back to
+  `--mwnf-standalone-bullet`.
 
 ## 3.27.0 (2026-11-02)
 

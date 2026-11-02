@@ -897,6 +897,7 @@
   /* --mwnf-standalone-related-background: transparent;  Related Content column */
   /* --mwnf-standalone-related-text: inherit;        Its text */
   /* --mwnf-standalone-related-link: inherit;        Its links */
+  /* --mwnf-standalone-related-bullet: var(--mwnf-standalone-bullet);  The arrow before its links (a url()) */
   /* --mwnf-standalone-sheet-label-color: #000;      The item sheet's labels, a section's heading included */
   /* --mwnf-standalone-sheet-value-color: #222;      The item sheet's values, prose and credits */
   /* --mwnf-standalone-sheet-link-color: rgb(1 141 206);  Their links */

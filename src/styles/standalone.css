@@ -669,7 +669,7 @@
   padding-left: 14px;
   font: 400 16px/20px Roboto, sans-serif;
   text-decoration: none;
-  background: var(--mwnf-standalone-bullet, none) no-repeat 0 4px;
+  background: var(--mwnf-standalone-related-bullet, var(--mwnf-standalone-bullet, none)) no-repeat 0 4px;
 }
 
 .mwnf-standalone-related a:not(:has(img)):hover {
@@ -718,7 +718,7 @@
   font: 400 16px/20px Roboto, sans-serif;
   list-style: none;
   cursor: pointer;
-  background: var(--mwnf-standalone-bullet, none) no-repeat 0 4px;
+  background: var(--mwnf-standalone-related-bullet, var(--mwnf-standalone-bullet, none)) no-repeat 0 4px;
 }
 
 .mwnf-standalone-related .mwnf-dynasty__summary::-webkit-details-marker {
@@ -743,7 +743,7 @@
 .mwnf-standalone-related .mwnf-on-display__item {
   padding-left: 14px;
   font: italic 400 16px/20px Roboto, sans-serif;
-  background: var(--mwnf-standalone-bullet, none) no-repeat 0 4px;
+  background: var(--mwnf-standalone-related-bullet, var(--mwnf-standalone-bullet, none)) no-repeat 0 4px;
 }
 
 .mwnf-standalone-related .mwnf-on-display__item a {
@@ -829,7 +829,7 @@
   text-align: start;
   text-decoration: none;
   color: inherit;
-  background: var(--mwnf-standalone-bullet, none) no-repeat 0 4px;
+  background: var(--mwnf-standalone-related-bullet, var(--mwnf-standalone-bullet, none)) no-repeat 0 4px;
   border: none;
   cursor: pointer;
 }
