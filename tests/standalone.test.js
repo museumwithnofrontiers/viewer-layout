@@ -7,6 +7,7 @@ import {
   RelatedContent, StandaloneHome, StandaloneItemSheet, StandalonePartnerPage, StandaloneShell, StandaloneSponsors, StandaloneSubNav,
   StandalonePagination, StandaloneResultsGrid, StandaloneTextPage, StandaloneTileGrid, TodayHighlight, byLanguage, dayOfYear, legacyHomeItemKey, pickForDay,
   StandaloneGlossarySpelling, StandalonePartnerList, StandaloneRefine, StandaloneResultsList, StandaloneSponsorList, StandaloneWindow,
+  StandaloneDatabaseForm,
 } from '../src/standalone/index.js'
 import { sheetDocument } from '../src/standalone/wordExport.js'
 import { layoutTexts } from './helpers.js'
@@ -605,6 +606,61 @@ describe('StandalonePartnerList', () => {
     expect(wrapper.findAll('.mwnf-standalone-pl__row').map((r) => r.element.style.display !== 'none')).toEqual([true, true])
     await titles[1].trigger('click')
     expect(wrapper.findAll('.mwnf-standalone-pl__row').map((r) => r.element.style.display !== 'none')).toEqual([false, true])
+  })
+})
+
+describe('StandaloneDatabaseForm', () => {
+  const labels = {
+    criteria: 'Enter your criteria:', keywords: 'Keywords', category: 'Category', in: 'in', and: 'and', or: 'or',
+    date: 'Date', from: 'From', to: 'To', language: 'Language', go: 'Go', listing: 'Complete listing', listingTooltip: 'All of it',
+  }
+  const props = {
+    labels,
+    fields: [{ value: 'keyword', label: 'Keyword(s)' }, { value: 'name', label: 'Name' }],
+    fromYears: [1501, 1601], toYears: [1600, 1700],
+    languages: [{ code: 'cs', name: 'Czech' }, { code: 'en', name: 'English' }],
+    listingHref: 'https://example.org/listing',
+  }
+
+  it("draws legacy's three keyword rows, the dates, the language, Go and the listing link", async () => {
+    const wrapper = await mountWith(StandaloneDatabaseForm, { props })
+    expect(wrapper.find('.mwnf-standalone-db__criteria').text()).toBe('Enter your criteria:')
+    expect(wrapper.findAll('.mwnf-standalone-db__keyword')).toHaveLength(3)
+    expect(wrapper.findAll('.mwnf-standalone-db__cond')).toHaveLength(2)
+    expect(wrapper.findAll('.mwnf-standalone-db__field option').map((o) => o.text()).slice(0, 2)).toEqual(['Keyword(s)', 'Name'])
+    expect(wrapper.findAll('.mwnf-standalone-db__language option').map((o) => o.text())).toEqual(['', 'Czech', 'English'])
+    expect(wrapper.find('.mwnf-standalone-db__listing a').attributes()).toMatchObject({ href: 'https://example.org/listing', title: 'All of it' })
+    expect(wrapper.classes()).not.toContain('mwnf-standalone-db--options')
+    expect(wrapper.find('.mwnf-standalone-db__aside').exists()).toBe(false)
+  })
+
+  it('emits the rows, the dates and the language on Go', async () => {
+    const wrapper = await mountWith(StandaloneDatabaseForm, { props })
+    const inputs = wrapper.findAll('.mwnf-standalone-db__keyword')
+    await inputs[0].setValue(' angel ')
+    await inputs[1].setValue('Brno')
+    await wrapper.findAll('.mwnf-standalone-db__field select')[1].setValue('name')
+    await wrapper.findAll('.mwnf-standalone-db__cond')[0].setValue('OR')
+    await wrapper.findAll('.mwnf-standalone-db__dates select')[0].setValue('1601')
+    await wrapper.find('.mwnf-standalone-db__language select').setValue('cs')
+    await wrapper.find('form').trigger('submit')
+    const [payload] = wrapper.emitted('search')[0]
+    expect(payload.rows.slice(0, 2)).toEqual([
+      { keyword: 'angel', field: 'keyword', cond: 'AND' },
+      { keyword: 'Brno', field: 'name', cond: 'OR' },
+    ])
+    expect(payload).toMatchObject({ from: 1601, to: '' })
+    expect(wrapper.emitted('update:language')[0]).toEqual(['cs'])
+  })
+
+  it('takes an options row and a last-column link', async () => {
+    const wrapper = await mountWith(StandaloneDatabaseForm, {
+      props,
+      slots: { options: '<label class="opt">Include more</label>', aside: '<a href="#/glossary">Glossary</a>' },
+    })
+    expect(wrapper.classes()).toContain('mwnf-standalone-db--options')
+    expect(wrapper.find('.mwnf-standalone-db__options .opt').text()).toBe('Include more')
+    expect(wrapper.find('.mwnf-standalone-db__aside a').text()).toBe('Glossary')
   })
 })
 

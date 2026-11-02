@@ -1,3 +1,22 @@
+## 3.41.0 (2026-11-02)
+
+### Added
+
+- **`StandaloneDatabaseForm`**: the standalone family's Database entrance,
+  as legacy's `database.php` drew it. It has three keyword rows, each in a
+  category, the second and third joined by "and"/"or", then the century
+  range, the search language, Go, and the link to the portal's complete
+  listing. Legacy's Bootstrap columns become a grid with legacy's row
+  heights, mirrored right to left.
+  - The website supplies the words, the fields, the years and the
+    languages. Go emits what was entered, and the website writes its query.
+  - Two slots: `aside` for the last column's link (Islamic Art's Glossary &
+    Spelling) and `options` for a row under the language (its Explore
+    opt-in).
+  - New tokens: `--mwnf-standalone-db-rows`, `-options-rows`,
+    `-heading-color`, `-keyword-color`, `-go-background`, `-go-border`,
+    `-go-hover-background`, `-go-hover-border` and `-listing-indent`.
+
 ## 3.40.0 (2026-11-02)
 
 ### Added
