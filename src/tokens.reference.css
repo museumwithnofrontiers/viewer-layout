@@ -924,6 +924,13 @@
   /* --mwnf-standalone-language-weight: 400;         Their weight */
   /* --mwnf-standalone-language-active: transparent; The shown language's ground, and the rule between words */
   /* --mwnf-standalone-footer-weight: 400;           The footer line's weight */
+  /* --mwnf-standalone-footer-border: none;          The rule over the footer */
+  /* --mwnf-standalone-home-footer-room: 50px;       The home page's room under the footer line, in the footer */
+  /* --mwnf-standalone-home-footer-margin: 0;        Room under the home page's footer, in the page's colour */
+  /* --mwnf-standalone-footer-social-top: calc(var(--mwnf-footer-padding) + 1px);  The icons' distance from the footer's top */
+  /* --mwnf-standalone-footer-social-right: the content's right edge;  Their distance from the right */
+  /* --mwnf-standalone-footer-social-margin: 5px;    The space either side of each icon */
+  /* --mwnf-standalone-inner-footer-social-margin: var(--mwnf-standalone-footer-social-margin);  That space on the inner pages */
   /* --mwnf-standalone-pill: transparent;            The partner profile's rounded tab and items bars */
   /* --mwnf-standalone-pill-color: #222;             Their open tab and the items bar's words */
   /* --mwnf-standalone-pill-muted: rgb(34 34 34 / 0.75);  The other tabs and the homepage */
@@ -1087,4 +1094,9 @@
   /* --mwnf-standalone-phone-drawer-sublink-padding: 6px 0 6px 40px;  An entry's own links' padding */
   /* --mwnf-standalone-phone-drawer-sublink-color: #e5e5e5;  Their colour */
   /* --mwnf-standalone-phone-backdrop: rgb(0 0 0 / 0.5);  The backdrop over the page */
+  /* --mwnf-standalone-phone-footer-padding: 33px;   The footer's depth above and below its words */
+  /* --mwnf-standalone-phone-footer-inline: 17px;    Its words' distance from the sides */
+  /* --mwnf-standalone-phone-home-footer-room: 70px; The home page's room under the words */
+  /* --mwnf-standalone-phone-footer-social-right: 10px;  The icons' distance from the right */
+  /* --mwnf-standalone-phone-footer-social-bottom: 5px;  Their distance from the foot */
 }

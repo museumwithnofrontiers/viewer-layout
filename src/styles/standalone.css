@@ -1650,18 +1650,22 @@
    The links and the copyright on one centred line, "&nbsp;|&nbsp;" between
    them, 14px on 24px; the icons at the content's right edge on that line;
    on the home page, 50px under it, where legacy left room for its cookie
-   bar (its inner pages' footers have none). */
+   bar (its inner pages' footers have none). Sharing History leaves that
+   room under its footer instead, in the page's colour, and rules its
+   footer off from the band above. */
 
 .mwnf-standalone .mwnf-footer {
   position: relative;
   display: block;
+  border-top: var(--mwnf-standalone-footer-border, none);
   font-weight: var(--mwnf-standalone-footer-weight, 400);
   line-height: 24px;
   text-align: center;
 }
 
 .mwnf-standalone--home .mwnf-footer {
-  padding-bottom: calc(var(--mwnf-footer-padding, 1.25rem) + 50px);
+  margin-bottom: var(--mwnf-standalone-home-footer-margin, 0);
+  padding-bottom: calc(var(--mwnf-footer-padding, 1.25rem) + var(--mwnf-standalone-home-footer-room, 50px));
 }
 
 .mwnf-standalone .mwnf-footer__links,
@@ -1678,16 +1682,21 @@
 
 .mwnf-standalone .mwnf-footer__social {
   position: absolute;
-  top: calc(var(--mwnf-footer-padding, 1.25rem) + 1px);
-  right: max(var(--mwnf-content-padding, 1rem), calc((100% - var(--mwnf-content-width, 64rem)) / 2));
+  top: var(--mwnf-standalone-footer-social-top, calc(var(--mwnf-footer-padding, 1.25rem) + 1px));
+  right: var(--mwnf-standalone-footer-social-right, max(var(--mwnf-content-padding, 1rem), calc((100% - var(--mwnf-content-width, 64rem)) / 2)));
   gap: 0;
   margin: 0;
   padding: 0 15px;
 }
 
+/* Islamic Art's and Baroque Art's inner pages set the icons closer. */
 .mwnf-standalone .mwnf-footer__social li {
-  margin: 0 5px;
+  margin: 0 var(--mwnf-standalone-footer-social-margin, 5px);
   line-height: 1;
+}
+
+.mwnf-standalone--inner .mwnf-footer__social li {
+  margin-inline: var(--mwnf-standalone-inner-footer-social-margin, var(--mwnf-standalone-footer-social-margin, 5px));
 }
 
 /* ── Print: the print logo, no chrome around the page ─────────────────────── */
@@ -2800,6 +2809,24 @@
     z-index: 30;
     inset: 0;
     background-color: var(--mwnf-standalone-phone-backdrop, rgb(0 0 0 / 0.5));
+  }
+}
+
+/* Phone: legacy's footer 33px deep and its words 17px in, the icons at its
+   foot, 5px up; on the home page, 70px of room under the words. */
+@media (max-width: 47.9375rem) {
+  .mwnf-standalone .mwnf-footer {
+    padding: var(--mwnf-standalone-phone-footer-padding, 33px) var(--mwnf-standalone-phone-footer-inline, 17px);
+  }
+
+  .mwnf-standalone--home .mwnf-footer {
+    padding-bottom: calc(var(--mwnf-standalone-phone-footer-padding, 33px) + var(--mwnf-standalone-phone-home-footer-room, 70px));
+  }
+
+  .mwnf-standalone .mwnf-footer__social {
+    top: auto;
+    right: var(--mwnf-standalone-phone-footer-social-right, 10px);
+    bottom: var(--mwnf-standalone-phone-footer-social-bottom, 5px);
   }
 }
 

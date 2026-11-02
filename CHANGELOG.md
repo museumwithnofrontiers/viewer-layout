@@ -1,3 +1,28 @@
+## 3.49.0 (2026-11-02)
+
+### Added
+
+- **The standalone footer's frame as tokens**:
+  - `--mwnf-standalone-footer-border`, the rule over it;
+  - `--mwnf-standalone-home-footer-room` (default 50px), the home page's room
+    under the footer line, and `--mwnf-standalone-home-footer-margin`
+    (default 0), room under the footer in the page's colour, Sharing
+    History's;
+  - the icons' place, `--mwnf-standalone-footer-social-top` and `-right`;
+  - their spacing, `--mwnf-standalone-footer-social-margin` (default 5px),
+    and `--mwnf-standalone-inner-footer-social-margin` for the inner pages,
+    where Islamic Art and Baroque Art set them 3px apart.
+- **The phone mode's footer**, legacy's: 33px above and below the words,
+  17px from the sides, the icons at its foot 5px up and 10px from the right,
+  and on the home page 70px of room under the words. Each value is a
+  `--mwnf-standalone-phone-footer-*` token, with
+  `--mwnf-standalone-phone-home-footer-room`.
+
+### Changed
+
+- The standalone footer draws no rule over it by default; legacy's Islamic
+  Art and Baroque Art footers have none.
+
 ## 3.48.0 (2026-11-02)
 
 ### Added
