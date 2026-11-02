@@ -1280,6 +1280,26 @@
   .mwnf-standalone-list__cell { width: 100%; }
 }
 
+/* Phone: below 768px each record across the column, 15px under the one
+   before; below 750px the refine band stacked (database_results.php's
+   `hidden_large` buttons): its words, the box across, "in", the list
+   across, the two buttons a space apart. */
+@media (max-width: 47.9375rem) {
+  .mwnf-standalone-list__cell { margin-bottom: 15px; padding: 0; }
+  .mwnf-standalone-dbr .mwnf-standalone-pcr__heading { margin-bottom: 21px; }
+}
+@media (max-width: 749px) {
+  .mwnf-standalone-refine { padding-bottom: 13px; }
+  .mwnf-standalone-refine__row { display: block; }
+  .mwnf-standalone-refine__label { display: block; margin: 27px 0 0; }
+  .mwnf-standalone-refine__label[for$='field'] { margin-top: 14px; }
+  .mwnf-standalone-refine input,
+  .mwnf-standalone-refine select { display: block; width: 100%; margin: 6px 0 0; }
+  .mwnf-standalone-refine select { margin-top: -4px; }
+  .mwnf-standalone-refine__button { display: inline-block; margin: 21px 0 0; vertical-align: top; }
+  .mwnf-standalone-refine__button--new { margin-left: 0.25em; }
+}
+
 /* ── The Permanent Collection entrance: legacy's `pc_entrance.php` ────────── */
 
 /* "Sort by" and the site's lists in col-md-3, col-md-2 empty, "About" and
@@ -1292,7 +1312,9 @@
   /* Bootstrap's row: the columns' 15px gutters reach past the content box,
      whose own padding stands for legacy's section padding. */
   margin: 0 -15px;
-  padding: 0 0 10px;
+  /* The text's last paragraph's own 10px, then the section's (Baroque Art
+     adds its 100px spacer: the token). */
+  padding: 0 0 var(--mwnf-standalone-pc-padding-bottom, 20px);
 }
 .mwnf-standalone-pc__lists { grid-column: 1; padding: 0 15px; }
 .mwnf-standalone-pc__about { grid-column: 3; padding: 0 15px; }
@@ -1306,6 +1328,9 @@
   font: 400 16px/22px Roboto, sans-serif;
   color: #222;
 }
+/* Legacy's text separates its paragraphs, and ends, with two <br/>s: a
+   blank line. */
+.mwnf-standalone-pc .mwnf-standalone-pc__about p { margin-bottom: 22px; }
 .mwnf-standalone-pc__about a {
   color: #222;
   text-decoration: underline;
@@ -1323,6 +1348,15 @@
 @media (max-width: 62rem) {
   .mwnf-standalone-pc { grid-template-columns: 1fr; }
   .mwnf-standalone-pc__lists, .mwnf-standalone-pc__about { grid-column: 1; }
+}
+
+/* Phone: each heading 5px over what it heads; "About" the site's depth
+   under the lists (`--mwnf-standalone-phone-pc-about-gap`, from the last
+   list's foot). */
+@media (max-width: 47.9375rem) {
+  .mwnf-standalone-pc { padding-bottom: var(--mwnf-standalone-phone-pc-bottom, 35px); }
+  .mwnf-standalone-pc__heading { margin-bottom: 5px; }
+  .mwnf-standalone-pc__about { margin-top: calc(var(--mwnf-standalone-phone-pc-about-gap, 31px) - 10px); }
 }
 
 /* ── The partner lists: legacy's `pm_partner_list.php` ────────────────────── */
@@ -1709,6 +1743,10 @@
    bar (its inner pages' footers have none). Sharing History leaves that
    room under its footer instead, in the page's colour, and rules its
    footer off from the band above. */
+
+/* Legacy's page ends with its footer: a short page leaves the window's
+   foot empty rather than pushing the footer down to it. */
+.mwnf-page.mwnf-standalone { min-height: 0; }
 
 .mwnf-standalone .mwnf-footer {
   position: relative;
@@ -2336,8 +2374,9 @@
   align-items: start;
   margin: 0 -15px;
   /* Legacy's <br/> over the section (Sharing History's had none: the token),
-     then its 30px under it (20 are the content area's). */
-  padding: var(--mwnf-standalone-db-padding-top, 18px) 0 10px;
+     then its 30px under it (20 are the content area's; Sharing History's
+     and Baroque Art's forms stand 9px taller: the token). */
+  padding: var(--mwnf-standalone-db-padding-top, 18px) 0 var(--mwnf-standalone-db-padding-bottom, 10px);
 }
 .mwnf-standalone-db--options {
   grid-template-rows: var(--mwnf-standalone-db-options-rows, 38px 37px 49px 49px 49px 49px 63px 31px 61px 36px);
@@ -2435,6 +2474,64 @@
   .mwnf-standalone-db--options { grid-template-columns: 1fr; grid-template-rows: none; row-gap: 10px; }
   .mwnf-standalone-db > * { grid-column: 1 !important; grid-row: auto !important; justify-self: stretch; }
   .mwnf-standalone-db__label { text-align: start; }
+}
+
+/* Phone: below 750px legacy draws a form of its own (database.php's
+   `hidden_large`). The heading, the last column's link under it, then
+   "Keywords" and "Category" over the halves; each row its join (38px), its
+   keyword box to the middle, "in" and the category 15px past it; the dates
+   and the language a row's pitch under them; Go, and the complete listing
+   beside it or under it. Each site's spacing is a token. */
+@media (max-width: 749px) {
+  .mwnf-standalone-db,
+  .mwnf-standalone-db--options {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    row-gap: 0;
+    margin: 0;
+    padding-top: var(--mwnf-standalone-phone-db-top, 16px);
+    padding-bottom: var(--mwnf-standalone-phone-db-bottom, 50px);
+  }
+  .mwnf-standalone-db > * { order: 3; padding: 0; }
+  .mwnf-standalone-db__criteria { order: 0; width: 100%; }
+  .mwnf-standalone-db__aside { order: 1; width: 100%; margin-bottom: var(--mwnf-standalone-phone-db-aside-gap, 5px); text-align: var(--mwnf-standalone-phone-db-aside-align, start); }
+  .mwnf-standalone-db__aside a { padding-left: 0; }
+  .mwnf-standalone-db__head { order: 2; width: 50%; margin: 5px 0 15px; }
+  .mwnf-standalone-db__head--category { padding-left: 15px; }
+  .mwnf-standalone-db__cond {
+    width: 38px;
+    margin: var(--mwnf-standalone-phone-db-row-gap, 18px) 5px 0 0;
+    padding: 0;
+    font-size: 12px;
+  }
+  .mwnf-standalone-db__keyword { width: calc(50% - 43px); margin: var(--mwnf-standalone-phone-db-row-gap, 18px) 0 0; }
+  .mwnf-standalone-db__keyword.mwnf-standalone-db__row-1 { margin: 0 0 0 43px; }
+  .mwnf-standalone-db__field { width: 50%; margin-top: var(--mwnf-standalone-phone-db-row-gap, 18px); padding-left: 15px; }
+  .mwnf-standalone-db__field.mwnf-standalone-db__row-1 { margin-top: 0; }
+  .mwnf-standalone-db__field span { flex: none; margin-inline-end: 5px; }
+  .mwnf-standalone-db__field select { width: 75%; }
+  .mwnf-standalone-db__label { margin-top: calc(var(--mwnf-standalone-phone-db-row-gap, 18px) + 5px); text-align: start; }
+  .mwnf-standalone-db__label--date { width: 44px; }
+  .mwnf-standalone-db__label--language { width: var(--mwnf-standalone-phone-db-language-indent, 99px); }
+  .mwnf-standalone-db__dates { width: calc(100% - 44px); margin-top: var(--mwnf-standalone-phone-db-row-gap, 18px); }
+  .mwnf-standalone-db__language {
+    width: calc(100% - var(--mwnf-standalone-phone-db-language-indent, 99px));
+    margin-top: var(--mwnf-standalone-phone-db-row-gap, 18px);
+  }
+  .mwnf-standalone-db__dates select { flex: none; width: 127px; }
+  .mwnf-standalone-db__language select { width: var(--mwnf-standalone-phone-db-language-width, 130px); }
+  .mwnf-standalone-db__options { width: 100%; margin-top: var(--mwnf-standalone-phone-db-options-offset, 17px); }
+  .mwnf-standalone-db__go {
+    width: var(--mwnf-standalone-phone-db-go-width, auto);
+    margin-top: var(--mwnf-standalone-phone-db-go-offset, 13px);
+    text-align: center;
+  }
+  .mwnf-standalone-db__go button { margin-inline-start: 0; }
+  .mwnf-standalone-db__listing {
+    width: var(--mwnf-standalone-phone-db-listing-width, auto);
+    margin: var(--mwnf-standalone-phone-db-listing-offset, 20px) 0 0 var(--mwnf-standalone-phone-db-listing-gap, 4px);
+  }
 }
 
 /* StandaloneTimelineEntrance: legacy's hcr_home.php. The form in the middle

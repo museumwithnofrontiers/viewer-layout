@@ -984,6 +984,8 @@
   /* --mwnf-standalone-db-go-hover-border: var(--mwnf-standalone-db-go-border);  Its border hovered */
   /* --mwnf-standalone-db-listing-indent: 16px;       The complete listing's words, after its arrow */
   /* --mwnf-standalone-db-padding-top: 18px;          Above the form (legacy's <br/>) */
+  /* --mwnf-standalone-db-padding-bottom: 10px;       Under the form */
+  /* --mwnf-standalone-pc-padding-bottom: 20px;       Under the Collections entrance (Baroque Art: its 100px spacer more) */
   /* --mwnf-standalone-tlr-band: transparent;         The Timeline results' band under the banner (its Go and the entrance's: the db-go tokens) */
   /* --mwnf-standalone-tlr-select-border: #767676;    Its lists' border */
   /* --mwnf-standalone-tlr-heading-color: #222;       The Date and Country | Description headings */
@@ -1111,4 +1113,19 @@
   /* --mwnf-standalone-phone-results-see-offset: 0px;  A blank line before "See Database Entry" */
   /* --mwnf-standalone-phone-results-gap: 20px;      The space before the next result */
   /* --mwnf-standalone-phone-pcr-heading-gap: 15px;  The space under a results page's heading */
+  /* --mwnf-standalone-phone-db-top: 16px;           The Database phone form's space over it (below 750px) */
+  /* --mwnf-standalone-phone-db-bottom: 50px;        Its space under it */
+  /* --mwnf-standalone-phone-db-row-gap: 18px;       The space between its rows */
+  /* --mwnf-standalone-phone-db-aside-gap: 5px;      The space under the last column's link */
+  /* --mwnf-standalone-phone-db-aside-align: start;  That link's alignment */
+  /* --mwnf-standalone-phone-db-language-indent: 99px;  The language list's distance from the left */
+  /* --mwnf-standalone-phone-db-language-width: 130px;  Its width */
+  /* --mwnf-standalone-phone-db-options-offset: 17px;  The options row's space over it */
+  /* --mwnf-standalone-phone-db-go-width: auto;      Go's row (100%: on its own, centred) */
+  /* --mwnf-standalone-phone-db-go-offset: 13px;     The space over Go */
+  /* --mwnf-standalone-phone-db-listing-width: auto; The complete listing (auto: beside Go; 100%: under it) */
+  /* --mwnf-standalone-phone-db-listing-offset: 20px;  Its space over it */
+  /* --mwnf-standalone-phone-db-listing-gap: 4px;    Its space before it */
+  /* --mwnf-standalone-phone-pc-about-gap: 31px;     The Collections entrance's About under its lists */
+  /* --mwnf-standalone-phone-pc-bottom: 35px;        The space under that page's text */
 }
