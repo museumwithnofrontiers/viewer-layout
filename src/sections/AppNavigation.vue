@@ -37,6 +37,17 @@ function visible() {
 // them again. The button is in the document at every width and shown by the
 // stylesheet below the breakpoint, so the behaviour costs no script.
 const open = ref(false)
+
+// A family that folds the links into a drawer (the standalone family's
+// phone mode) folds each entry's own links too, behind a button of its own;
+// the button is hidden elsewhere, where the links drop down as before.
+const unfolded = ref(new Set())
+function fold(key) {
+  const next = new Set(unfolded.value)
+  if (next.has(key)) next.delete(key)
+  else next.add(key)
+  unfolded.value = next
+}
 </script>
 
 <template>
@@ -58,7 +69,10 @@ const open = ref(false)
           <li
             v-for="link in links"
             :key="link.href ?? link.label"
-            :class="{ 'mwnf-nav__item--parent': link.children?.length }"
+            :class="{
+              'mwnf-nav__item--parent': link.children?.length,
+              'mwnf-nav__item--unfolded': unfolded.has(link.href ?? link.label),
+            }"
           >
             <a
               class="mwnf-nav__link"
@@ -70,6 +84,14 @@ const open = ref(false)
               :rel="link.external ? 'noopener' : undefined"
               @click="open = false"
             >{{ link.label }}</a>
+            <button
+              v-if="link.children?.length"
+              type="button"
+              class="mwnf-nav__fold"
+              :aria-label="link.label"
+              :aria-expanded="unfolded.has(link.href ?? link.label) ? 'true' : 'false'"
+              @click="fold(link.href ?? link.label)"
+            ></button>
             <ul v-if="link.children?.length" class="mwnf-nav__sublinks">
               <li v-for="child in link.children" :key="child.href ?? child.label">
                 <a
@@ -95,6 +117,8 @@ const open = ref(false)
         </select>
       </label>
     </div>
+    <!-- The drawer's backdrop: a click beside the open links closes them. -->
+    <div v-if="open" class="mwnf-nav__backdrop" aria-hidden="true" @click="open = false"></div>
     <p v-if="notice && (notice.text || notice.title)" class="mwnf-nav__notice">
       <strong v-if="notice.title" class="mwnf-nav__notice-title">{{ notice.title }}</strong>
       {{ notice.text }}

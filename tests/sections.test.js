@@ -251,6 +251,33 @@ describe('AppNavigation', () => {
     expect(active.attributes('aria-current')).toBe('page')
   })
 
+  // The standalone family's phone drawer: an entry's own links fold behind
+  // a button of their own, and a click on the backdrop closes the drawer.
+  it("folds an entry's own links behind its button, and closes on the backdrop", async () => {
+    const wrapper = mount(AppNavigation, {
+      props: {
+        links: [
+          { label: 'About', href: '#/about', children: [{ label: 'The Project', href: '#/about' }] },
+          { label: 'Items', href: '#/items' },
+        ],
+      },
+      ...globalWithI18n(),
+    })
+    expect(wrapper.findAll('.mwnf-nav__fold')).toHaveLength(1)
+    const fold = wrapper.find('.mwnf-nav__fold')
+    expect(fold.attributes('aria-label')).toBe('About')
+    expect(fold.attributes('aria-expanded')).toBe('false')
+    await fold.trigger('click')
+    expect(wrapper.find('.mwnf-nav__item--unfolded').exists()).toBe(true)
+    expect(wrapper.find('.mwnf-nav__fold').attributes('aria-expanded')).toBe('true')
+
+    expect(wrapper.find('.mwnf-nav__backdrop').exists()).toBe(false)
+    await wrapper.find('.mwnf-nav__toggle').trigger('click')
+    expect(wrapper.find('.mwnf-nav').classes()).toContain('mwnf-nav--open')
+    await wrapper.find('.mwnf-nav__backdrop').trigger('click')
+    expect(wrapper.find('.mwnf-nav').classes()).not.toContain('mwnf-nav--open')
+  })
+
   it('opens an external link in a new window', () => {
     const wrapper = mount(AppNavigation, {
       props: { links: [{ label: 'My Collection', href: 'https://example.org/mycollection', external: true }] },

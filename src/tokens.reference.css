@@ -995,6 +995,7 @@
   /* --mwnf-standalone-related-padding: 0 1.25rem 1.875rem;  Its padding */
   /* --mwnf-standalone-related-heading-offset: 1.75rem;  Space above its heading */
   /* --mwnf-standalone-related-heading-weight: 600;  Its heading's weight */
+  /* --mwnf-standalone-related-heading-transform: uppercase;  Its heading's case (Sharing History: none) */
   /* --mwnf-standalone-download-weight: 500;         Its Download heading's weight */
   /* --mwnf-standalone-related-thumb-size: 70px;     Related record thumbnail: its largest width and height */
   /* --mwnf-standalone-related-margin: 0;            The column's margin, out of its grid column */
@@ -1049,4 +1050,39 @@
   /* --mwnf-standalone-tiles-label-line-height: inherit;  Its line height */
   /* --mwnf-standalone-tiles-label-align: start;     Its alignment */
   /* --mwnf-standalone-slider-count: 5;              Slides shown at once (set by the component) */
+  /* Phone (below 768px): legacy's MWNF phone frame; the defaults are Sharing History's. */
+  /* --mwnf-standalone-phone-header-height: 54px;    The header's height */
+  /* --mwnf-standalone-phone-header-columns: 98px 1fr 105px;  Its logo, heading and links columns */
+  /* --mwnf-standalone-phone-logo-offset: 15px 0 0 30px;  The logo's distance from the top and the left */
+  /* --mwnf-standalone-phone-logo-width: 60px;       The logo's width */
+  /* --mwnf-standalone-phone-title-offset: 16px;     The heading's distance from the top */
+  /* --mwnf-standalone-phone-heading-size: 13px;     The heading's size */
+  /* --mwnf-standalone-phone-heading-weight: 300;    Its weight */
+  /* --mwnf-standalone-phone-heading-line-height: 16px;  Its line height */
+  /* --mwnf-standalone-phone-subheading-size: 9px;   The line under it: size */
+  /* --mwnf-standalone-phone-subheading-weight: 500; Its weight */
+  /* --mwnf-standalone-phone-subheading-line-height: 1;  Its line height */
+  /* --mwnf-standalone-phone-tools-offset: 19px 10px 0 0;  The links' distance from the top and the right */
+  /* --mwnf-standalone-phone-header-link-size: 10px; Their size */
+  /* --mwnf-standalone-phone-header-links-gap: 5px;  The space between the two */
+  /* --mwnf-standalone-phone-banner-height: 80px;    The banner's height */
+  /* --mwnf-standalone-phone-banner-title-padding: 0 0 5px 18px;  Its title's padding */
+  /* --mwnf-standalone-phone-banner-title-size: 24px;  Its title's size */
+  /* --mwnf-standalone-phone-banner-title-line-height: 24px;  Its title's line height */
+  /* --mwnf-standalone-phone-content-padding: var(--mwnf-content-padding);  The content's distance from the edges */
+  /* --mwnf-standalone-phone-tiles-columns: 2;       The tiles across a row */
+  /* --mwnf-standalone-phone-sheet-value-indent: 0;  The item sheet values' indent under their labels */
+  /* --mwnf-standalone-phone-related-margin: 0;     Related Content's margin under the sheet */
+  /* --mwnf-standalone-phone-toggle-top: 13px;       The menu button's distance from the top */
+  /* --mwnf-standalone-phone-toggle-color: #fff;     Its bars and its "×" */
+  /* --mwnf-standalone-phone-drawer-width: 270px;    The menu drawer's width */
+  /* --mwnf-standalone-phone-drawer-background: #990000;  Its ground */
+  /* --mwnf-standalone-phone-drawer-rule: 1px solid rgb(0 0 0 / 0.15);  The rule under each entry */
+  /* --mwnf-standalone-phone-drawer-link-padding: 17px 0 17px 25px;  An entry's padding */
+  /* --mwnf-standalone-phone-drawer-link-size: 16px; Its size */
+  /* --mwnf-standalone-phone-drawer-link-weight: 300;  Its weight */
+  /* --mwnf-standalone-phone-drawer-link-color: #fff;  Its colour, and its chevron's */
+  /* --mwnf-standalone-phone-drawer-sublink-padding: 6px 0 6px 40px;  An entry's own links' padding */
+  /* --mwnf-standalone-phone-drawer-sublink-color: #e5e5e5;  Their colour */
+  /* --mwnf-standalone-phone-backdrop: rgb(0 0 0 / 0.5);  The backdrop over the page */
 }
