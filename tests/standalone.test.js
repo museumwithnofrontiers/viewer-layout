@@ -721,6 +721,24 @@ describe('StandaloneTimelineResults', () => {
     expect(wrapper.emitted('change')[0][0]).toEqual({ key: 'country', value: '' })
   })
 
+  it("lists the product's related links in their order, and its pictures under each date", async () => {
+    const related = {
+      heading: 'Related Context',
+      links: [
+        { label: 'Add Thematic Timeline', href: '#/timeline/results?theme=all' },
+        { label: 'See Gallery', href: '#/timeline/gallery', target: '_blank' },
+      ],
+    }
+    const wrapper = await mountWith(StandaloneTimelineResults, {
+      props: { ...props, related },
+      slots: { media: '<template #media="{ row }"><p class="media">{{ row.id }}</p></template>' },
+    })
+    expect(wrapper.find('.mwnf-standalone-tlr__date .media').text()).toBe('a')
+    const links = wrapper.findAll('.mwnf-standalone-tlr__related a')
+    expect(links.map((a) => a.text())).toEqual(['Add Thematic Timeline', 'See Gallery', 'As PDF (including images)', 'As Word (text only)'])
+    expect(links[1].attributes('target')).toBe('_blank')
+  })
+
   it('prints for As PDF, and says when nothing matched', async () => {
     const print = vi.spyOn(window, 'print').mockImplementation(() => {})
     const wrapper = await mountWith(StandaloneTimelineResults, { props: { ...props, rows: [], related: null } })

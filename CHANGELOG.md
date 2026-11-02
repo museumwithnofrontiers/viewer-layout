@@ -1,3 +1,15 @@
+## 3.45.0 (2026-11-02)
+
+### Added
+
+- **`StandaloneTimelineResults`' `#media` slot** (given `row`): fills the
+  date's column under the date, for a product's pictures of the event
+  (Sharing History's picture, its caption and its numbered thumbnails).
+- **`related.links`**: the Related column's links in their order, each
+  `{ label, to | href, title, target }` (Sharing History's switch between
+  the political and thematic timelines, the gallery in a new window, the
+  historical profile and About the Historical Background).
+
 ## 3.44.0 (2026-11-02)
 
 ### Added
