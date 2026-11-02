@@ -2724,6 +2724,12 @@
     flex: none;
     text-align: start;
     border-bottom: var(--mwnf-standalone-phone-drawer-rule, 1px solid rgb(0 0 0 / 0.15));
+    background-color: var(--mwnf-standalone-phone-drawer-row, transparent);
+  }
+
+  /* Islamic Art's and Baroque Art's drawers alternate their rows. */
+  .mwnf-standalone .mwnf-nav__links > li:nth-child(even) {
+    background-color: var(--mwnf-standalone-phone-drawer-row-alt, var(--mwnf-standalone-phone-drawer-row, transparent));
   }
 
   .mwnf-standalone .mwnf-nav__link,

@@ -1,3 +1,11 @@
+## 3.48.0 (2026-11-02)
+
+### Added
+
+- **The phone drawer's rows**: `--mwnf-standalone-phone-drawer-row` and
+  `--mwnf-standalone-phone-drawer-row-alt` (default transparent), each
+  entry's ground and every other one's — Islamic Art's and Baroque Art's
+  drawers alternate their rows.
 ## 3.47.0 (2026-11-02)
 
 ### Added
