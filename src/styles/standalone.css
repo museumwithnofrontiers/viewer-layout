@@ -2813,3 +2813,45 @@
     margin: var(--mwnf-standalone-phone-related-margin, 0);
   }
 }
+
+/* Phone: a partner list's country one column — its name, its partners,
+   "See Associated …", then those it opens. */
+@media (max-width: 47.9375rem) {
+  .mwnf-standalone-pl--museums .mwnf-standalone-pl__group {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .mwnf-standalone-pl--museums .mwnf-standalone-pl__head,
+  .mwnf-standalone-pl--museums .mwnf-standalone-pl__row {
+    display: contents;
+  }
+
+  .mwnf-standalone-pl--museums .mwnf-standalone-pl__head h3:first-child { order: 1; }
+  .mwnf-standalone-pl--museums .mwnf-standalone-pl__main { order: 2; }
+  .mwnf-standalone-pl--museums .mwnf-standalone-pl__head h3:last-child { order: 3; }
+  .mwnf-standalone-pl--museums .mwnf-standalone-pl__associated { order: 4; }
+}
+
+/* Phone: the timeline results as legacy's (hcr_result.php below 768px):
+   each list under its label across the band, 10px apart; the two headings
+   five and seven twelfths of the width, 11px apart; an event's date and
+   words 5px further in. */
+@media (max-width: 47.9375rem) {
+  .mwnf-standalone-tlr__band { padding-top: 10px; padding-bottom: 0; }
+  .mwnf-standalone-tlr__selects { display: block; margin-top: 10px; padding-bottom: 10px; }
+  .mwnf-standalone-tlr__selects p { display: block; width: auto; padding-top: 4px; }
+  .mwnf-standalone-tlr__selects label { display: block; margin: 0; }
+  .mwnf-standalone-tlr__selects select { width: 100%; margin-top: 6px; }
+  .mwnf-standalone-tlr__heads {
+    grid-template-columns: 5fr 7fr;
+    align-items: start;
+    width: auto;
+    margin: 0 0 20px;
+    padding-top: 4px;
+  }
+  .mwnf-standalone-tlr__heads > * { padding: 0; }
+  .mwnf-standalone-tlr__heads h3 + h3 { margin-inline-start: 11px; }
+  .mwnf-standalone-tlr__date { margin: 0 15px 0 20px; }
+  .mwnf-standalone-tlr__content { padding: 0 20px 0 16px; }
+}
