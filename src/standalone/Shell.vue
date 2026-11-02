@@ -31,7 +31,8 @@ import { byLanguage } from './chrome.js'
 //   }
 //
 // The inner pages' band is titled by `navigation.sectionTitles[section]`, as
-// on every site. Every value is optional. A route marked `meta.bare` is one
+// on every site, or by the route's own `meta.bannerTitle` (an entry name)
+// where legacy titled one page of a section apart. Every value is optional. A route marked `meta.bare` is one
 // of legacy's windows (the Glossary & Spelling tool): drawn alone, no chrome.
 
 const props = defineProps({
@@ -68,7 +69,7 @@ const bannerImage = computed(() => {
   return asset(isHome.value ? banner.home : banner.inner) ?? ''
 })
 const bannerTitle = computed(() => {
-  const entry = nav.value.sectionTitles?.[section.value]
+  const entry = route.meta?.bannerTitle ?? nav.value.sectionTitles?.[section.value]
   return entry ? t(entry) : ''
 })
 const innerBanner = computed(() => !isHome.value && Boolean(bannerImage.value || bannerTitle.value))

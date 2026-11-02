@@ -871,6 +871,8 @@
   /* --mwnf-standalone-banner-background: transparent;  Band colour under its picture */
   /* --mwnf-standalone-banner-title-size: 1.875rem;  Band title size */
   /* --mwnf-standalone-banner-title-color: inherit;  Band title colour */
+  /* --mwnf-standalone-banner-title-background: transparent;  The title's own strip across the band */
+  /* --mwnf-standalone-banner-title-line-height: 1.1;  Its line height */
   /* --mwnf-standalone-banner-title-padding: 0.5rem 0 0.875rem 4rem;  Band title padding */
   /* --mwnf-standalone-menu-background: transparent; Menu cells */
   /* --mwnf-standalone-menu-alt-background: var(--mwnf-standalone-menu-background);  Every other menu cell */
@@ -930,6 +932,8 @@
   /* --mwnf-standalone-partner-back-gap: 15px;       The space between the profile's ways back */
   /* --mwnf-standalone-heading-color: inherit;       The partner profile's name, place and map heading */
   /* --mwnf-standalone-results-border: rgba(255, 214, 0, 0.28);  The result tiles' frame and panel border */
+  /* --mwnf-standalone-results-cell-width: 25%;      A tile's cell: a quarter of the row, or auto */
+  /* --mwnf-standalone-results-cell-padding: 0 15px;  Its padding */
   /* --mwnf-standalone-select-arrow: none;           A results page's date lists' arrow (a url(), legacy's select.png) */
   /* --mwnf-standalone-results-heading-color: var(--mwnf-standalone-heading-color);  A results page's heading */
   /* --mwnf-standalone-results-panel: #fffced;        The result tile's hover panel */
@@ -972,6 +976,7 @@
   /* --mwnf-standalone-db-go-hover-background: var(--mwnf-standalone-db-go-background);  Hovered */
   /* --mwnf-standalone-db-go-hover-border: var(--mwnf-standalone-db-go-border);  Its border hovered */
   /* --mwnf-standalone-db-listing-indent: 16px;       The complete listing's words, after its arrow */
+  /* --mwnf-standalone-db-padding-top: 18px;          Above the form (legacy's <br/>) */
   /* --mwnf-standalone-tlr-band: transparent;         The Timeline results' band under the banner (its Go and the entrance's: the db-go tokens) */
   /* --mwnf-standalone-tlr-select-border: #767676;    Its lists' border */
   /* --mwnf-standalone-tlr-heading-color: #222;       The Date and Country | Description headings */

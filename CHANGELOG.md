@@ -1,3 +1,23 @@
+## 3.44.0 (2026-11-02)
+
+### Added
+
+- **A page's own banner title**: a route's `meta.bannerTitle` (an entry
+  name) titles the inner band in place of its section's
+  `sectionTitles` entry. Sharing History's Collections results are
+  "Collections" under the section "Permanent Collection".
+- **`--mwnf-standalone-banner-title-background`** and
+  **`--mwnf-standalone-banner-title-line-height`**: the band title's own
+  strip and line (Sharing History's white words on a dark strip). The title
+  now runs across the band.
+- **`--mwnf-standalone-results-cell-width`** and
+  **`--mwnf-standalone-results-cell-padding`**: the result tiles in quarters
+  of the row (as before), or one after another (Sharing History's).
+- **`StandaloneDatabaseForm`'s years** may be `{ value, label }` as well as
+  years: Sharing History's lists send 0 for "Before 1800" and 2100 for
+  "After 1930". **`--mwnf-standalone-db-padding-top`**: the space above
+  the form (18px, legacy's line break; Sharing History's had none).
+
 ## 3.43.0 (2026-11-02)
 
 ### Added

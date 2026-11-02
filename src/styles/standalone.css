@@ -117,14 +117,18 @@
   background-position: center;
 }
 
+/* The title runs across the band, on its own ground where the site has one
+   (Sharing History's dark strip). */
 .mwnf-standalone-banner__title {
+  flex: 1 1 auto;
   margin: 0;
   padding: var(--mwnf-standalone-banner-title-padding, 0.5rem 0 0.875rem 4rem);
   font-family: var(--mwnf-font-heading, inherit);
   font-size: var(--mwnf-standalone-banner-title-size, 1.875rem);
   font-weight: 400;
-  line-height: 1.1;
+  line-height: var(--mwnf-standalone-banner-title-line-height, 1.1);
   color: var(--mwnf-standalone-banner-title-color, inherit);
+  background-color: var(--mwnf-standalone-banner-title-background, transparent);
 }
 
 /* ── Menu: equal cells, every other one in the second colour ──────────────── */
@@ -879,10 +883,12 @@
   flex-wrap: wrap;
 }
 
+/* Four a row in their quarters (Islamic Art's, Baroque Art's), or one after
+   another (Sharing History's, the cell its tile's size: the tokens). */
 .mwnf-standalone-results__cell {
   box-sizing: border-box;
-  width: 25%;
-  padding: 0 15px;
+  width: var(--mwnf-standalone-results-cell-width, 25%);
+  padding: var(--mwnf-standalone-results-cell-padding, 0 15px);
 }
 
 .mwnf-standalone-results__empty {
@@ -2190,9 +2196,9 @@
   grid-template-rows: var(--mwnf-standalone-db-rows, 38px 37px 49px 49px 49px 49px 44px 69px 22px);
   align-items: start;
   margin: 0 -15px;
-  /* Legacy's <br/> over the section, then its 30px under it (20 are the
-     content area's). */
-  padding: 18px 0 10px;
+  /* Legacy's <br/> over the section (Sharing History's had none: the token),
+     then its 30px under it (20 are the content area's). */
+  padding: var(--mwnf-standalone-db-padding-top, 18px) 0 10px;
 }
 .mwnf-standalone-db--options {
   grid-template-rows: var(--mwnf-standalone-db-options-rows, 38px 37px 49px 49px 49px 49px 63px 31px 61px 36px);
