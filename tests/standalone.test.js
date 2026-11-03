@@ -953,9 +953,11 @@ describe('StandalonePagination', () => {
     expect(end.emitted('navigate')).toEqual([[3]])
   })
 
-  it('draws nothing for a single page', async () => {
+  it("keeps legacy's empty listing for a single page: no words, no links", async () => {
     const wrapper = await mountWith(StandalonePagination, { props: at(1, 1) })
-    expect(wrapper.find('.mwnf-standalone-pages').exists()).toBe(false)
+    expect(wrapper.find('.mwnf-standalone-pages').exists()).toBe(true)
+    expect(wrapper.find('.mwnf-standalone-pages').text()).toBe('')
+    expect(wrapper.find('.mwnf-standalone-pages a').exists()).toBe(false)
   })
 })
 

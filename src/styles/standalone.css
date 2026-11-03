@@ -268,7 +268,7 @@
 }
 
 .mwnf-standalone-highlight__action a {
-  color: inherit;
+  color: var(--mwnf-standalone-highlight-action-color, inherit);
   text-decoration: none;
 }
 
@@ -677,6 +677,91 @@
 .mwnf-standalone-item .mwnf-sheet-section__body a,
 .mwnf-standalone-item .mwnf-credits a {
   color: var(--mwnf-standalone-sheet-link-color, rgb(1 141 206));
+}
+
+/* A monument's special features as legacy's `.specials` drew them: the
+   heading a coloured label as wide as its words, then each feature's name
+   (a label of the sheet) over its description (a value), its pictures out
+   in the empty column before the sheet, top-aligned with the feature. */
+.mwnf-standalone-item .mwnf-special-features {
+  display: flow-root;
+}
+
+.mwnf-standalone-item .mwnf-special-features .mwnf-sheet-section__heading {
+  width: fit-content;
+  margin: 20px 0;
+  padding: var(--mwnf-standalone-specials-heading-padding, 4px 0);
+  font: var(--mwnf-standalone-specials-heading-weight, 400) 16px/normal Roboto, sans-serif;
+  color: var(--mwnf-standalone-specials-heading-color, #fff);
+  background: var(--mwnf-standalone-specials-heading-background, #12376b);
+}
+
+.mwnf-standalone-item .mwnf-special-features__item {
+  position: relative;
+  display: flow-root;
+  margin: 0;
+  padding-bottom: 28px;
+}
+
+.mwnf-standalone-item .mwnf-special-features__name {
+  margin: 10px 0 0;
+  font: 500 16px/22px Roboto, sans-serif;
+  color: var(--mwnf-standalone-sheet-label-color, #000);
+}
+
+.mwnf-standalone-item .mwnf-special-features__meta,
+.mwnf-standalone-item .mwnf-special-features__description {
+  margin: 0 0 0 2px;
+  padding-left: 12px;
+  font: 400 16px/22px Roboto, sans-serif;
+  color: var(--mwnf-standalone-sheet-value-color, #222);
+}
+
+.mwnf-standalone-item .mwnf-special-features__description p {
+  margin: 0;
+}
+
+.mwnf-standalone-item .mwnf-special-features .mwnf-media--row {
+  gap: 0;
+  margin-inline-start: -10px;
+}
+
+.mwnf-standalone-item .mwnf-special-features .mwnf-media__figure {
+  width: auto;
+  margin: 0 0 10px;
+  margin-inline-start: 10px;
+}
+
+.mwnf-standalone-item .mwnf-special-features .mwnf-media--row .mwnf-media__image {
+  box-sizing: border-box;
+  width: auto;
+  height: auto;
+  max-width: 110px;
+  max-height: 74px;
+  padding: 3px;
+  border: 1px solid #f1f1f1;
+  object-fit: initial;
+}
+
+/* Legacy floats them right, from the first, in a box 90% as wide as the
+   column ending 8% of it before; 50% ending 4% before below 992px. On a
+   phone that box falls off the screen: there they follow the text. */
+@media (min-width: 48rem) {
+  .mwnf-standalone-item .mwnf-special-features .mwnf-media--row {
+    position: absolute;
+    top: 15px;
+    inset-inline-end: 108%;
+    width: var(--mwnf-standalone-specials-pictures-width, 90%);
+    flex-direction: row-reverse;
+    margin: 0;
+  }
+}
+
+@media (min-width: 48rem) and (max-width: 61.9375rem) {
+  .mwnf-standalone-item .mwnf-special-features .mwnf-media--row {
+    inset-inline-end: 104%;
+    width: 50%;
+  }
 }
 
 /* The credits block: no heading of its own, the citation first, each credit
@@ -1408,6 +1493,8 @@
 /* Legacy's text separates its paragraphs, and ends, with two <br/>s: a
    blank line. */
 .mwnf-standalone-pc .mwnf-standalone-pc__about p { margin-bottom: 22px; }
+/* Legacy's strong is 500 (style_inside.css). */
+.mwnf-standalone-pc__about strong { font-weight: var(--mwnf-standalone-pc-strong-weight, 500); }
 .mwnf-standalone-pc__about a {
   color: #222;
   text-decoration: underline;
@@ -1606,21 +1693,95 @@
 
 /* ── Text pages: legacy's centred column ──────────────────────────────────── */
 
+/* Legacy's Bootstrap columns: an empty col-md-2, then the text in a col-md-9
+   (recommendedlinks.php), or in a col-md-8 inside it (`narrow`:
+   isl_missionstatement.php). Its paragraphs 16px on 22px lines, a blank line
+   apart (legacy's <br/><br/>); a heading (.short_heading h3) 19px with 15px
+   under it, the ones after the first a line further down (their leading
+   <br>); an entry's name (.media_partnerships h4) 15px, then its address,
+   and 15px under the entry. */
 .mwnf-standalone-page {
-  max-width: var(--mwnf-standalone-page-width, 42rem);
-  margin-inline-start: var(--mwnf-standalone-page-inset, 16.666%);
-  padding-block: var(--mwnf-standalone-page-padding, 1.25rem 1.875rem);
+  max-width: var(--mwnf-standalone-page-width, calc((100% + 30px) * 3 / 4 - 30px));
+  margin-inline-start: var(--mwnf-standalone-page-inset, calc((100% + 30px) / 6));
+  padding-block: var(--mwnf-standalone-page-padding, 0 10px);
+  font: 400 16px/22px Roboto, sans-serif;
+  color: var(--mwnf-standalone-page-color, #222);
+}
+
+.mwnf-standalone-page--narrow {
+  max-width: var(--mwnf-standalone-page-narrow-width, calc((100% + 30px) / 2 - 30px));
+}
+
+/* Below 992px legacy's col-md columns stack: the text takes the full width. */
+@media (max-width: 61.9375rem) {
+  .mwnf-standalone-page,
+  .mwnf-standalone-page--narrow {
+    max-width: none;
+    margin-inline-start: 0;
+  }
+}
+
+/* Phone: legacy's stacked columns keep 15px under each (its col-xs margin).
+   The empty one before the text leaves 16px over it, Print in a column of
+   its own has 15px over and under it, and the text's column ends 15px
+   lower. Headings keep 5px under them. */
+@media (max-width: 47.9375rem) {
+  .mwnf-standalone-page {
+    padding: 16px var(--mwnf-standalone-phone-page-padding, 5px) 19px;
+  }
+
+  /* Over it, the link's 10px and the column's 15px: margins that collapse here. */
+  .mwnf-standalone-page .mwnf-standalone-page__print {
+    margin: 25px 0;
+  }
+
+  .mwnf-standalone-page .mwnf-standalone-page__body h3 {
+    margin-bottom: 5px;
+  }
+}
+
+.mwnf-standalone-page__body p,
+.mwnf-standalone-page__link,
+.mwnf-standalone-page__print {
+  margin: 0 0 10px;
+}
+
+.mwnf-standalone-page__body p:not(:last-child) {
+  margin-bottom: 22px;
+}
+
+.mwnf-standalone-page__body strong,
+.mwnf-standalone-page__link strong {
+  font-weight: 500;
+}
+
+.mwnf-standalone-page__body a {
+  color: inherit;
 }
 
 .mwnf-standalone-page__body h3 {
+  margin: 0 0 15px;
   font-size: var(--mwnf-standalone-page-heading-size, 1.1875rem);
   font-weight: 400;
+  line-height: normal;
+  color: var(--mwnf-standalone-heading-color, inherit);
+}
+
+.mwnf-standalone-page__body * + h3 {
+  padding-top: 23px;
 }
 
 .mwnf-standalone-page__body h4 {
-  margin-bottom: 0.25rem;
-  font-size: var(--mwnf-standalone-page-subheading-size, 1rem);
+  margin: 0;
+  font-size: var(--mwnf-standalone-page-subheading-size, 15px);
   font-weight: 500;
+  line-height: normal;
+  color: var(--mwnf-standalone-page-subheading-color, #000);
+}
+
+.mwnf-standalone-page__body h4 + p,
+.mwnf-standalone-page__body h4 + p:not(:last-child) {
+  margin-bottom: 25px;
 }
 
 .mwnf-standalone-page--drop-cap .mwnf-standalone-page__body > p:first-child::first-letter {
@@ -2749,13 +2910,15 @@
 /* StandaloneTimelineEntrance: legacy's hcr_home.php. The form in the middle
    col-md-4, six line breaks under the banner; the country list, then the
    two dates side by side, rounded, and Go 20px under them (the Database
-   entrance's button: its tokens). */
+   entrance's button: its tokens). Under it the section's 30px and three
+   line breaks; on a phone the empty first column's 16px over it, and the
+   columns' 15px margins under it. */
 .mwnf-standalone-tle {
   display: flex;
   flex-wrap: wrap;
   box-sizing: border-box;
   width: calc((100% + 30px) / 3 - 30px);
-  margin: 108px auto 10px;
+  margin: 108px auto 44px;
 }
 .mwnf-standalone-tle p { box-sizing: border-box; margin: 0 0 10px; padding: 0 5px; font: 400 16px/22px Roboto, sans-serif; color: #222; }
 .mwnf-standalone-tle__country { width: 100%; }
@@ -2788,7 +2951,7 @@
   background-color: var(--mwnf-standalone-db-go-hover-background, var(--mwnf-standalone-db-go-background, #222));
 }
 @media (max-width: 48rem) {
-  .mwnf-standalone-tle { width: 100%; margin-top: 30px; }
+  .mwnf-standalone-tle { width: 100%; margin: 124px 0 53px; }
 }
 
 /* StandaloneTimelineResults: legacy's hcr_result.php. The band straight
@@ -2827,11 +2990,13 @@
   background-color: #fff;
 }
 .mwnf-standalone-tlr__back { min-height: 21px; margin: 0 0 15px; color: #222; }
+/* Under the list legacy's form row keeps 15px, and its section 30px (the
+   page's own padding 20px). */
 .mwnf-standalone-tlr__body {
   display: grid;
   grid-template-columns: 75% 25%;
   align-items: start;
-  margin: 0 -15px;
+  margin: 0 -15px var(--mwnf-standalone-tlr-bottom, 24px);
 }
 .mwnf-standalone-tlr__list { min-width: 0; padding: 0 15px; }
 .mwnf-standalone-tlr__heads,

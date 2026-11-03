@@ -56,7 +56,9 @@ import { limitPictures } from './pictureLimit.js'
 // `related` also receives `records` (the rows the spec made) and `outside`
 // (the related records the package does not carry), so a website can
 // surround the block with its own; a slot named after a `custom` or `link`
-// row's key reaches the sheet. `source`, under the citation, defaults to
+// row's key reaches the sheet, and `after-<section key>` follows that
+// section (a monument's special features after its dating method, as the
+// standalone sites' legacy put them). `source`, under the citation, defaults to
 // `SourceCredit` — nothing unless the website declares `site.origin`.
 // A website whose page is not this shape registers its own component instead.
 
@@ -321,6 +323,7 @@ const rowSlots = computed(() => Object.keys(slots).filter((name) => !OWN_SLOTS.h
             :html="shortDescription.html"
             :dir="dir"
           />
+          <slot :name="`after-${section.key}`" v-bind="ctx" />
         </template>
 
         <slot name="after-sheet" v-bind="ctx" />

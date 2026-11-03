@@ -899,6 +899,7 @@
   /* --mwnf-standalone-highlight-paragraph-gap: 0.75rem;  Space under each of its paragraphs */
   /* --mwnf-standalone-highlight-width: none;        Its widest, picture and text together */
   /* --mwnf-standalone-highlight-color: inherit;     Its text */
+  /* --mwnf-standalone-highlight-action-color: inherit;  Its "View description" link */
   /* --mwnf-standalone-sponsors-background: transparent;  The band above the footer */
   /* --mwnf-standalone-sponsors-padding: 1.25rem;    Its padding (top and bottom) */
   /* --mwnf-standalone-sponsors-gap: 1.5rem;         Gap between its columns */
@@ -919,6 +920,11 @@
   /* --mwnf-standalone-sheet-label-color: #000;      The item sheet's labels, a section's heading included */
   /* --mwnf-standalone-sheet-value-color: #222;      The item sheet's values, prose and credits */
   /* --mwnf-standalone-sheet-link-color: rgb(1 141 206);  Their links */
+  /* --mwnf-standalone-specials-heading-background: #12376b;  A monument's special features: their heading's label */
+  /* --mwnf-standalone-specials-heading-color: #fff;  Its words */
+  /* --mwnf-standalone-specials-heading-weight: 400;  Their weight */
+  /* --mwnf-standalone-specials-heading-padding: 4px 0;  Around them */
+  /* --mwnf-standalone-specials-pictures-width: 90%;  A feature's pictures, out before the sheet: their box, of the column's width */
   /* --mwnf-standalone-download-icon: none;          The picture before the Related Content column's Download (a url()) */
   /* --mwnf-standalone-language-bar: transparent;    The item sheet's band of record languages */
   /* --mwnf-standalone-language-color: inherit;      Its words */
@@ -999,9 +1005,11 @@
   /* --mwnf-standalone-db-padding-top: 18px;          Above the form (legacy's <br/>) */
   /* --mwnf-standalone-db-padding-bottom: 10px;       Under the form */
   /* --mwnf-standalone-pc-padding-bottom: 20px;       Under the Collections entrance (Baroque Art: its 100px spacer more) */
+  /* --mwnf-standalone-pc-strong-weight: 500;         Its text's bold words */
   /* --mwnf-standalone-tlr-band: transparent;         The Timeline results' band under the banner (its Go and the entrance's: the db-go tokens) */
   /* --mwnf-standalone-tlr-select-border: #767676;    Its lists' border */
   /* --mwnf-standalone-tlr-heading-color: #222;       The Date and Country | Description headings */
+  /* --mwnf-standalone-tlr-bottom: 24px;              The space under the results (legacy's row margin and section padding) */
   /* --mwnf-standalone-tlr-strip: #ccc;               An event's date and country strips, and the rule under its date */
   /* --mwnf-standalone-tlr-related: transparent;      The Related Content column, on to the page's right edge */
   /* --mwnf-standalone-tlr-band-color: #222;          The band's words */
@@ -1039,11 +1047,15 @@
   /* --mwnf-standalone-hcr-image-ground: #000;       Around it, when it is letterboxed */
   /* --mwnf-standalone-window-heading-weight: 600;   A window's heading weight */
   /* --mwnf-standalone-window-article: var(--mwnf-standalone-window-header);  Its scrolling content's ground */
-  /* --mwnf-standalone-page-width: 42rem;            Text page column width */
-  /* --mwnf-standalone-page-inset: 16.666%;          Text page column inset */
-  /* --mwnf-standalone-page-padding: 1.25rem 1.875rem;  Text page padding (top, bottom) */
+  /* --mwnf-standalone-page-width: calc((100% + 30px) * 3 / 4 - 30px);  Text page column width (legacy's col-md-9) */
+  /* --mwnf-standalone-page-narrow-width: calc((100% + 30px) / 2 - 30px);  A narrow text page's (a col-md-8 in it) */
+  /* --mwnf-standalone-page-inset: calc((100% + 30px) / 6);  Text page column inset (an empty col-md-2) */
+  /* --mwnf-standalone-page-padding: 0 10px;         Text page padding (top, bottom) */
+  /* --mwnf-standalone-phone-page-padding: 5px;      Its sides below 768px, where it takes the full width */
+  /* --mwnf-standalone-page-color: #222;             Its text */
   /* --mwnf-standalone-page-heading-size: 1.1875rem; Text page headings */
-  /* --mwnf-standalone-page-subheading-size: 1rem;   Text page subheadings */
+  /* --mwnf-standalone-page-subheading-size: 15px;   Text page subheadings */
+  /* --mwnf-standalone-page-subheading-color: #000;  Their colour */
   /* --mwnf-standalone-drop-cap-size: 3.5em;         Drop cap size */
   /* --mwnf-standalone-drop-cap-color: inherit;      Drop cap colour */
   /* --mwnf-standalone-subnav-border: 1px solid currentColor;  Tab strip rule */

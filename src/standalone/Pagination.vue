@@ -8,6 +8,8 @@ import { computed } from 'vue'
 // and "Next" are plain words on the first and the last page. The words are
 // the website's (legacy's own).
 //
+// With a single page legacy keeps the listing, empty: its 30px stay.
+//
 // `pageInfo` is what viewer-core's `paginate()` answers:
 // { total, lastPage, currentPage, from, to, rows }.
 const props = defineProps({
@@ -55,4 +57,5 @@ function go(page) {
       <template v-else>{{ nextLabel }}</template>
     </span>
   </nav>
+  <div v-else class="mwnf-standalone-pages" aria-hidden="true"></div>
 </template>
