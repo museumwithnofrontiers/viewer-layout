@@ -1,3 +1,8 @@
+## 3.57.1 (2026-11-03)
+
+### Fixed
+
+- **The phone mode's item sheet** keeps legacy's 12px indent under each label: legacy's values hold their padding at every width (`--mwnf-standalone-phone-sheet-value-indent`, now 12px). The credits keep none, as on desktop.
 ## 3.57.0 (2026-11-03)
 
 ### Changed
