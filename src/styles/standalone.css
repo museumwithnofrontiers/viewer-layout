@@ -3469,12 +3469,12 @@
   }
 }
 
-/* Phone: the sheet's values under their labels, legacy's indent dropped. */
+/* Phone: the sheet's values under their labels, with legacy's indent (its
+   12px padding holds at every width). */
 @media (max-width: 47.9375rem) {
   .mwnf-standalone-item .mwnf-sheet__value,
-  .mwnf-standalone-item .mwnf-sheet-section__body,
-  .mwnf-standalone-item .mwnf-credits {
-    padding-left: var(--mwnf-standalone-phone-sheet-value-indent, 0);
+  .mwnf-standalone-item .mwnf-sheet-section__body {
+    padding-left: var(--mwnf-standalone-phone-sheet-value-indent, 12px);
   }
 }
 

@@ -1105,7 +1105,7 @@
   /* --mwnf-standalone-phone-banner-title-line-height: 24px;  Its title's line height */
   /* --mwnf-standalone-phone-content-padding: var(--mwnf-content-padding);  The content's distance from the edges */
   /* --mwnf-standalone-phone-tiles-columns: 2;       The tiles across a row */
-  /* --mwnf-standalone-phone-sheet-value-indent: 0;  The item sheet values' indent under their labels */
+  /* --mwnf-standalone-phone-sheet-value-indent: 12px;  The item sheet values' indent under their labels */
   /* --mwnf-standalone-phone-related-margin: 0;     Related Content's margin under the sheet */
   /* --mwnf-standalone-phone-toggle-top: 13px;       The menu button's distance from the top */
   /* --mwnf-standalone-phone-toggle-color: #fff;     Its bars and its "×" */
