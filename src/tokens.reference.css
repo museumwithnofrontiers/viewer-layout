@@ -1154,6 +1154,7 @@
   /* --mwnf-standalone-phone-results-see-offset: 0px;  A blank line before "See Database Entry" */
   /* --mwnf-standalone-phone-results-gap: 20px;      The space before the next result */
   /* --mwnf-standalone-phone-pcr-heading-gap: 15px;  The space under a results page's heading */
+  /* --mwnf-standalone-phone-pmi-bottom: 4px;        Under a partner's items or a timeline gallery, up to 750px */
   /* --mwnf-standalone-phone-db-top: 16px;           The Database phone form's space over it (below 750px) */
   /* --mwnf-standalone-phone-db-bottom: 50px;        Its space under it */
   /* --mwnf-standalone-phone-db-row-gap: 18px;       The space between its rows */
