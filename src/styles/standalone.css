@@ -280,6 +280,43 @@
   }
 }
 
+/* Up to 750px legacy's two columns lose their padding: the links and the
+   record of the day span its 90.3% container, the links 15px under its top
+   and 14px over the record, the record 15px under them. Up to 539px the
+   record's picture spans the column, 15px over its words. */
+@media (max-width: 750px) {
+  .mwnf-standalone-home__links,
+  .mwnf-standalone-highlight {
+    margin-inline: calc(var(--mwnf-standalone-phone-home-inset, 4.85cqw) - var(--mwnf-standalone-phone-content-padding, var(--mwnf-content-padding, 1rem)));
+  }
+
+  .mwnf-standalone-home:has(> .mwnf-standalone-highlight) {
+    row-gap: 0;
+  }
+
+  .mwnf-standalone-home__links {
+    margin-block: var(--mwnf-standalone-phone-home-links-margin, 15px 14px);
+    padding-inline-start: var(--mwnf-standalone-phone-home-links-inset, 25px);
+  }
+
+  .mwnf-standalone-highlight {
+    margin-top: var(--mwnf-standalone-phone-highlight-offset, 15px);
+  }
+}
+
+@media (max-width: 539px) {
+  .mwnf-standalone-highlight__media {
+    float: none;
+    display: block;
+    margin: 0 0 var(--mwnf-standalone-phone-highlight-media-gap, 15px);
+  }
+
+  .mwnf-standalone-highlight__image {
+    width: 100%;
+    max-width: 100%;
+  }
+}
+
 /* ── The band above the footer, in columns ────────────────────────────────── */
 
 .mwnf-standalone .mwnf-sponsors {
@@ -336,6 +373,38 @@
   padding: 0.75rem 1rem;
   font-size: 0.875rem;
   background-color: var(--mwnf-color-background, #ffffff);
+}
+
+/* Below 768px legacy's columns are col-xs-12: one under another, each with
+   its padding; the words, the logos' size and their spacing are the site's. */
+@media (max-width: 47.9375rem) {
+  .mwnf-standalone-sponsors {
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--mwnf-standalone-phone-sponsors-gap, 0px);
+  }
+
+  .mwnf-standalone-sponsors__column {
+    flex: none;
+    min-width: 0;
+    padding-inline: var(--mwnf-standalone-phone-sponsors-column-padding, 0px);
+  }
+
+  .mwnf-standalone-sponsors__text,
+  .mwnf-standalone-sponsors__title {
+    margin-bottom: var(--mwnf-standalone-phone-sponsors-text-gap, 0px);
+    font-size: var(--mwnf-standalone-phone-sponsors-text-size, var(--mwnf-standalone-sponsors-text-size, 0.875rem));
+  }
+
+  .mwnf-standalone-sponsors__logos {
+    align-items: var(--mwnf-standalone-phone-sponsors-logo-align, center);
+    gap: var(--mwnf-standalone-phone-sponsors-logo-gap, var(--mwnf-standalone-sponsors-logo-gap, 1.25rem));
+    padding-bottom: var(--mwnf-standalone-phone-sponsors-logos-bottom, 0px);
+  }
+
+  .mwnf-standalone-sponsors__logos img {
+    max-width: var(--mwnf-standalone-phone-sponsors-logo-width, none);
+  }
 }
 
 /* ── Item sheet: pictures, sheet, the coloured Related Content column ─────── */
@@ -2025,13 +2094,15 @@
 }
 
 /* The map across the page: 30px under the profile and 20px over its
-   heading, 15px between them; 380px high, straight onto the footer. */
+   heading, 15px between them; 380px high, straight onto the footer.
+   Some sites have an empty paragraph between them
+   (`--mwnf-standalone-partner-map-extra`). */
 .mwnf-standalone-partner__map {
   margin-top: 50px;
 }
 
 .mwnf-standalone-partner__map-heading {
-  margin-bottom: 15px;
+  margin-bottom: calc(var(--mwnf-standalone-partner-map-gap, 15px) + var(--mwnf-standalone-partner-map-extra, 0px));
 }
 
 .mwnf-standalone-partner__map .mwnf-partner-map {
@@ -2097,11 +2168,27 @@
   }
 }
 
-/* Up to 750px legacy sets the partner's name in 16px. */
+/* Up to 750px legacy sets the partner's name and the map's heading in 16px,
+   the map 10px under its heading. */
 @media (max-width: 750px) {
-  .mwnf-standalone-partner__name {
+  .mwnf-standalone-partner__name,
+  .mwnf-standalone-partner__map-heading {
     font-size: 16px;
     font-weight: var(--mwnf-standalone-phone-partner-name-weight, 500);
+  }
+
+  .mwnf-standalone-partner__map-heading {
+    margin-bottom: calc(var(--mwnf-standalone-phone-partner-map-gap, 10px) + var(--mwnf-standalone-partner-map-extra, 0px));
+  }
+
+  /* The profile's two nested columns each keep 15px under them, and the map
+     comes the site's depth under it (legacy's sections' padding and margin). */
+  .mwnf-standalone-partner__body {
+    padding-bottom: var(--mwnf-standalone-phone-partner-body-bottom, 30px);
+  }
+
+  .mwnf-standalone-partner__map {
+    margin-top: var(--mwnf-standalone-phone-partner-map-offset, 74px);
   }
 }
 

@@ -1,3 +1,12 @@
+## 3.53.0 (2026-11-03)
+
+### Added
+
+- **The phone mode's home page** (below 750px): the links and the record of the day span legacy's 90.3% container, the links 15px under its top and 14px over the record. Below 540px the record's picture spans the column, 15px over its words (`--mwnf-standalone-phone-home-*`, `--mwnf-standalone-phone-highlight-*`).
+- **The phone mode's band** (below 768px): its columns one under another, as legacy's `col-xs-12`; each site's padding, words and logos are tokens (`--mwnf-standalone-phone-sponsors-*`).
+- **A partner page's map on a phone** (below 750px): its heading 16px, 10px over the map; the profile keeps 30px under it, and the map's heading comes a site's depth under that (`--mwnf-standalone-phone-partner-map-offset`, `--mwnf-standalone-phone-partner-body-bottom`).
+- `--mwnf-standalone-partner-map-gap` and `--mwnf-standalone-partner-map-extra`: the space between a partner's map heading and the map, and more of it for a site with an empty paragraph there.
+
 ## 3.52.0 (2026-11-03)
 
 ### Added
