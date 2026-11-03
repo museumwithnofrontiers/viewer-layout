@@ -1589,7 +1589,7 @@
   content: '';
   position: absolute;
   bottom: -2px;
-  left: -50%;
+  inset-inline-start: -50%;
   width: 100%;
   height: 2px;
   background: var(--mwnf-standalone-pl-rule, #e0b700);
@@ -1770,8 +1770,10 @@
   font-weight: 500;
 }
 
+/* Links that are addresses break rather than widen a phone's page. */
 .mwnf-standalone-page__body a {
   color: inherit;
+  overflow-wrap: anywhere;
 }
 
 .mwnf-standalone-page__body h3 {
@@ -2289,9 +2291,11 @@
   margin-bottom: calc(var(--mwnf-standalone-partner-map-gap, 15px) + var(--mwnf-standalone-partner-map-extra, 0px));
 }
 
+/* Across the window from either side: on a right-to-left page the
+   overconstrained margin is the left one, so the offset is the start's. */
 .mwnf-standalone-partner__map .mwnf-partner-map {
   width: 100cqw;
-  margin-left: calc(50% - 50cqw);
+  margin-inline-start: calc(50% - 50cqw);
   padding: 0;
 }
 
@@ -2624,7 +2628,7 @@
   font: 400 16px/22px Roboto, sans-serif;
   color: var(--mwnf-standalone-sp-text-color, #222);
 }
-.mwnf-standalone-sp__row a { color: var(--mwnf-standalone-sp-link-color, #018dce); text-decoration: none; }
+.mwnf-standalone-sp__row a { color: var(--mwnf-standalone-sp-link-color, #018dce); text-decoration: none; overflow-wrap: anywhere; }
 /* Legacy's remarks are one <i>: italic through every paragraph (the row's
    `font` resets it), a blank line (<br><br>) between them. */
 .mwnf-standalone-sp__remarks,
