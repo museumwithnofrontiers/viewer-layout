@@ -937,6 +937,8 @@
   /* --mwnf-standalone-pill-weight: 500;             Their weight */
   /* --mwnf-standalone-pill-separator: #000;         The "|" between the tabs */
   /* --mwnf-standalone-partner-back-gap: 15px;       The space between the profile's ways back */
+  /* --mwnf-standalone-partner-map-gap: 15px;        The space between the map's heading and the map */
+  /* --mwnf-standalone-partner-map-extra: 0px;       More of it, at every width (an empty paragraph of the site's) */
   /* --mwnf-standalone-heading-color: inherit;       The partner profile's name, place and map heading */
   /* --mwnf-standalone-results-border: rgba(255, 214, 0, 0.28);  The result tiles' frame and panel border */
   /* --mwnf-standalone-results-cell-width: 25%;      A tile's cell: a quarter of the row, or auto */
@@ -1099,12 +1101,28 @@
   /* --mwnf-standalone-phone-footer-padding: 33px;   The footer's depth above and below its words */
   /* --mwnf-standalone-phone-footer-inline: 17px;    Its words' distance from the sides */
   /* --mwnf-standalone-phone-home-footer-room: 70px; The home page's room under the words */
+  /* --mwnf-standalone-phone-home-inset: 4.85cqw;    The home page's links and record of the day: their distance from the sides (below 750px) */
+  /* --mwnf-standalone-phone-home-links-margin: 15px 14px;  The links' space above and below */
+  /* --mwnf-standalone-phone-home-links-inset: 25px;  Their indent */
+  /* --mwnf-standalone-phone-highlight-offset: 15px;  The record of the day's depth under them */
+  /* --mwnf-standalone-phone-highlight-media-gap: 15px;  Its picture, across the column, over its words (below 540px) */
+  /* --mwnf-standalone-phone-sponsors-gap: 0px;     The band's columns, one under another: the space between them */
+  /* --mwnf-standalone-phone-sponsors-column-padding: 0px;  A column's padding at the sides */
+  /* --mwnf-standalone-phone-sponsors-text-gap: 0px;  The space under its words */
+  /* --mwnf-standalone-phone-sponsors-text-size: var(--mwnf-standalone-sponsors-text-size);  Their size */
+  /* --mwnf-standalone-phone-sponsors-logo-align: center;  The logos' alignment in their row */
+  /* --mwnf-standalone-phone-sponsors-logo-gap: var(--mwnf-standalone-sponsors-logo-gap);  The space between them */
+  /* --mwnf-standalone-phone-sponsors-logos-bottom: 0px;  The space under them */
+  /* --mwnf-standalone-phone-sponsors-logo-width: none;  A logo's largest width */
   /* --mwnf-standalone-phone-footer-social-right: 10px;  The icons' distance from the right */
   /* --mwnf-standalone-phone-footer-social-bottom: 5px;  Their distance from the foot */
   /* --mwnf-standalone-phone-pill: #990000;          A partner page's tab, a pill of its own (below 620px) */
   /* --mwnf-standalone-phone-pill-active: #750101;   The open tab's */
   /* --mwnf-standalone-phone-partner-name-weight: 500;  The partner's name's weight (below 750px) */
   /* --mwnf-standalone-phone-partner-items: inline-flex;  "View Objects" (none hides it) */
+  /* --mwnf-standalone-phone-partner-map-gap: 10px;  The space under the map's heading (below 750px) */
+  /* --mwnf-standalone-phone-partner-map-offset: 74px;  The map's heading's depth under the profile */
+  /* --mwnf-standalone-phone-partner-body-bottom: 30px;  The space under the profile */
   /* --mwnf-standalone-phone-partner-text-offset: 23px;  The words' depth under the thumbnails */
   /* --mwnf-standalone-phone-results-frame-width: auto;  A result's picture frame, below 750px (auto: across the column) */
   /* --mwnf-standalone-phone-results-panel-display: table;  Its words (table: the rule as wide as they are; block: across) */
