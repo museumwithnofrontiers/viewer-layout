@@ -9,6 +9,9 @@ import { downloadWord, sheetDocument } from './wordExport.js'
 // related records as thumbnails grouped by type, whatever the site adds
 // (its default slot: the artistic introduction, the timeline, the
 // dynasties, where the record is on display), then the download links.
+// Legacy's "Related exhibition trails" and "See also" (MWNF tours and travel
+// books) are left out until the inventory holds those links:
+// museumwithnofrontiers/inventory-app#2451.
 //
 //   records: the related rows RecordView makes ({ id, image, imageAlt, name, badge, to })
 //   groups: [{ heading: entry, type }]   // which rows go under which heading, by `badge`
