@@ -131,6 +131,14 @@
   background-color: var(--mwnf-standalone-banner-title-background, transparent);
 }
 
+/* A right-to-left page keeps the title as far from the right edge (legacy's
+   Arabic pages); a phone's band has its own. */
+@media (min-width: 48rem) {
+  .mwnf-standalone-banner__title:dir(rtl) {
+    padding: var(--mwnf-standalone-banner-title-padding-rtl, 0.5rem 4rem 0.875rem 0);
+  }
+}
+
 /* ── Menu: equal cells, every other one in the second colour ──────────────── */
 
 .mwnf-standalone .mwnf-nav {
@@ -2447,6 +2455,123 @@
   .mwnf-standalone-sp__row,
   .mwnf-standalone-sp--labels .mwnf-standalone-sp__row { grid-template-columns: 100%; }
   .mwnf-standalone-sp__row > :first-child { grid-column-start: 1; }
+}
+
+/* StandalonePartnersEntrance: legacy's partners.php. Each project a
+   Bootstrap row: an empty col-md-1, the picture box in a col-md-4 (.partners:
+   130px high, 12px under the row and 8px over the next, a 5px white border,
+   the name 20px from its right edge), the links in a col-md-5
+   (.partners_link: a blank line, "About" floated right, one link a line).
+   col-sm-5 and col-sm-7 from 768px, stacked below. "About" opens the text
+   (#quick-view) half way down the links, 60px out to their left (at their
+   left edge up to 620px), over the dimmed page. Legacy's Arabic page kept
+   this layout left to right, and its texts left-aligned. */
+.mwnf-standalone-pe {
+  padding-bottom: var(--mwnf-standalone-pe-bottom, 64px);
+  direction: ltr;
+}
+.mwnf-standalone-pe__row {
+  display: grid;
+  grid-template-columns: 8.3333% 33.3333% 41.6667%;
+  margin: 0 -15px;
+}
+.mwnf-standalone-pe__row > div { min-width: 0; padding: 0 15px; }
+.mwnf-standalone-pe__box {
+  grid-column-start: 2;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  box-sizing: border-box;
+  height: 130px;
+  margin: 12px 15px 8px;
+  border: var(--mwnf-standalone-pe-border, 5px solid #fff);
+  background: var(--mwnf-standalone-pe-picture, none) 0 0 / cover no-repeat;
+  text-align: right;
+}
+.mwnf-standalone-pe__row > .mwnf-standalone-pe__box { padding: 0 20px 0 0; }
+.mwnf-standalone-pe__name {
+  margin: 0;
+  font: italic 400 19px Roboto, sans-serif;
+  color: var(--mwnf-standalone-pe-name-color, #fff);
+  unicode-bidi: plaintext;
+}
+.mwnf-standalone-pe__links { position: relative; align-self: start; }
+.mwnf-standalone-pe__links p {
+  margin: 0 0 1px;
+  font: 400 16px/22px Roboto, sans-serif;
+  color: var(--mwnf-standalone-pe-text-color, #222);
+  text-align: left;
+  unicode-bidi: plaintext;
+}
+.mwnf-standalone-pe__links a,
+.mwnf-standalone-pe__about button {
+  margin-left: 2px;
+  padding: 0 0 0 14px;
+  border: 0;
+  background: var(--mwnf-standalone-bullet, none) no-repeat 0 3px;
+  font: 400 16px/22px Roboto, sans-serif;
+  color: var(--mwnf-standalone-pe-link-color, #222);
+  text-decoration: none;
+  cursor: pointer;
+}
+.mwnf-standalone-pe__links a:hover,
+.mwnf-standalone-pe__about button:hover { text-decoration: underline; }
+.mwnf-standalone-pe__links .mwnf-standalone-pe__about { float: right; }
+.mwnf-standalone-pe__popup {
+  position: absolute;
+  top: 50%;
+  left: -60px;
+  z-index: 1001;
+  padding: 10px 20px;
+  background: var(--mwnf-standalone-pe-popup, #eec201);
+}
+.mwnf-standalone-pe__links .mwnf-standalone-pe__text p { color: var(--mwnf-standalone-pe-popup-color, #222); }
+.mwnf-standalone-pe__close {
+  position: absolute;
+  top: -17px;
+  right: -12px;
+  padding: 0;
+  border: 0;
+  background: none;
+  line-height: 0;
+  color: #fff;
+  filter: drop-shadow(-2px 1px 3.5px #2d2500);
+  cursor: pointer;
+}
+.mwnf-standalone-pe__shade {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  background: rgba(0, 0, 0, 0.5);
+  cursor: pointer;
+}
+@media (max-width: 991px) {
+  .mwnf-standalone-pe__row { grid-template-columns: 41.6667% 58.3333%; }
+  .mwnf-standalone-pe__box { grid-column-start: 1; }
+}
+@media (max-width: 767px) {
+  .mwnf-standalone-pe__row { grid-template-columns: 100%; }
+}
+/* Up to 750px each column keeps 15px under it, the empty first one too, and
+   the box loses its border. */
+@media (max-width: 750px) {
+  .mwnf-standalone-pe { padding-bottom: var(--mwnf-standalone-phone-pe-bottom, 58px); }
+  .mwnf-standalone-pe__row { padding-top: 16px; }
+  .mwnf-standalone-pe__row > div { margin-bottom: 15px; }
+  .mwnf-standalone-pe__row > .mwnf-standalone-pe__box {
+    margin-bottom: 23px;
+    border: var(--mwnf-standalone-phone-pe-border, 0);
+  }
+}
+/* Up to 620px the text spans the links' column, its words 20px in; legacy's
+   container (90.3% of the window) cuts its sides there, and its × with them.
+   The text is drawn as far as that edge, its × inside the window. */
+@media (max-width: 620px) {
+  .mwnf-standalone-pe__popup {
+    left: calc(15px + 4.85cqw - var(--mwnf-standalone-phone-content-padding, var(--mwnf-content-padding, 1rem)));
+    right: calc(15px + 4.85cqw - var(--mwnf-standalone-phone-content-padding, var(--mwnf-content-padding, 1rem)));
+    padding-inline: max(0px, calc(5px - 4.85cqw + var(--mwnf-standalone-phone-content-padding, var(--mwnf-content-padding, 1rem))));
+  }
 }
 
 /* StandaloneDatabaseForm: legacy's database.php. Its Bootstrap row

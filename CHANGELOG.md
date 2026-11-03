@@ -1,3 +1,14 @@
+## 3.54.0 (2026-11-03)
+
+### Added
+
+- **`StandalonePartnersEntrance`**: legacy's `partners.php`, the Partners entrance of Islamic Art and Baroque Art.
+  - Each project is a row: its name on the site's picture box, then a blank line, "About" on the right and the project's links.
+  - "About" opens the project's text over the dimmed page, halfway down the links. It closes from its ×, a click on the page, or Escape.
+  - Columns as legacy's Bootstrap rows at every width. In Arabic the layout stays left to right, as legacy's does.
+  - Tokens: `--mwnf-standalone-pe-*` (the picture, the text's colours, the space under the rows).
+- `--mwnf-standalone-banner-title-padding-rtl`: the banner title's padding on a right-to-left page from 768px. Legacy's Arabic titles keep their distance from the right edge.
+
 ## 3.53.0 (2026-11-03)
 
 ### Added

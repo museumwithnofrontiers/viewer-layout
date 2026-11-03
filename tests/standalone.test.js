@@ -7,7 +7,7 @@ import {
   RelatedContent, StandaloneHome, StandaloneItemSheet, StandalonePartnerPage, StandaloneShell, StandaloneSponsors, StandaloneSubNav,
   StandalonePagination, StandaloneResultsGrid, StandaloneTextPage, StandaloneTileGrid, TodayHighlight, byLanguage, dayOfYear, legacyHomeItemKey, pickForDay,
   StandaloneGlossarySpelling, StandalonePartnerList, StandaloneRefine, StandaloneResultsList, StandaloneSponsorList, StandaloneWindow,
-  StandaloneDatabaseForm, StandaloneTimelineEntrance, StandaloneTimelineResults, StandaloneHistoricalCrossRef,
+  StandaloneDatabaseForm, StandaloneTimelineEntrance, StandaloneTimelineResults, StandaloneHistoricalCrossRef, StandalonePartnersEntrance,
 } from '../src/standalone/index.js'
 import { timelineDocument } from '../src/standalone/wordExport.js'
 import { sheetDocument } from '../src/standalone/wordExport.js'
@@ -868,6 +868,43 @@ describe('StandaloneSponsorList', () => {
     expect(wrapper.find('.mwnf-standalone-sp__remarks em').text()).toBe('Main')
     expect(wrapper.findAll('.mwnf-standalone-sp__row')[1].findAll('.mwnf-standalone-sp__text p').map((p) => p.text())).toEqual(['Tyrol', 'Land Tirol'])
     expect(wrapper.find('.mwnf-standalone-sp__logo img').exists()).toBe(false)
+  })
+})
+
+describe('StandalonePartnersEntrance', () => {
+  const projects = [
+    {
+      name: 'Discover Islamic Art',
+      about: 'Information about the Partners who set up *Discover Islamic Art*.',
+      links: [
+        { label: 'Partner Museums', href: '#/partners/results?type=museum' },
+        { label: 'Credits', href: 'https://www.museumwnf.org/about/credits' },
+      ],
+    },
+    { name: 'Explore Islamic Art Collections', about: '', links: [{ label: 'Partners', href: '#/partners/explore' }] },
+  ]
+
+  it("draws legacy's rows: the name in its box, a blank line, About, then the links", async () => {
+    const wrapper = await mountWith(StandalonePartnersEntrance, { props: { projects, aboutLabel: 'About', closeLabel: 'Close' } })
+    const rows = wrapper.findAll('.mwnf-standalone-pe__row')
+    expect(rows.map((row) => row.find('.mwnf-standalone-pe__name').text())).toEqual(['Discover Islamic Art', 'Explore Islamic Art Collections'])
+    expect(rows[0].findAll('.mwnf-standalone-pe__links p').map((p) => p.text())).toEqual(['', 'About', 'Partner Museums', 'Credits'])
+    expect(rows[0].findAll('.mwnf-standalone-pe__links a').map((a) => a.attributes('href'))).toEqual(['#/partners/results?type=museum', 'https://www.museumwnf.org/about/credits'])
+    // A project without a text has no About.
+    expect(rows[1].find('.mwnf-standalone-pe__about').exists()).toBe(false)
+    expect(wrapper.find('.mwnf-standalone-pe__popup').exists()).toBe(false)
+  })
+
+  it('opens the text over the dimmed page, and closes it from the × or the page', async () => {
+    const wrapper = await mountWith(StandalonePartnersEntrance, { props: { projects, aboutLabel: 'About', closeLabel: 'Close' } })
+    await wrapper.find('.mwnf-standalone-pe__about button').trigger('click')
+    expect(wrapper.find('.mwnf-standalone-pe__text em').text()).toBe('Discover Islamic Art')
+    expect(wrapper.find('.mwnf-standalone-pe__close').attributes('aria-label')).toBe('Close')
+    await wrapper.find('.mwnf-standalone-pe__close').trigger('click')
+    expect(wrapper.find('.mwnf-standalone-pe__popup').exists()).toBe(false)
+    await wrapper.find('.mwnf-standalone-pe__about button').trigger('click')
+    await wrapper.find('.mwnf-standalone-pe__shade').trigger('click')
+    expect(wrapper.find('.mwnf-standalone-pe__shade').exists()).toBe(false)
   })
 })
 

@@ -874,6 +874,7 @@
   /* --mwnf-standalone-banner-title-background: transparent;  The title's own strip across the band */
   /* --mwnf-standalone-banner-title-line-height: 1.1;  Its line height */
   /* --mwnf-standalone-banner-title-padding: 0.5rem 0 0.875rem 4rem;  Band title padding */
+  /* --mwnf-standalone-banner-title-padding-rtl: 0.5rem 4rem 0.875rem 0;  The same on a right-to-left page (from 768px) */
   /* --mwnf-standalone-menu-background: transparent; Menu cells */
   /* --mwnf-standalone-menu-alt-background: var(--mwnf-standalone-menu-background);  Every other menu cell */
   /* --mwnf-standalone-menu-link: inherit;           Menu link colour */
@@ -976,6 +977,16 @@
   /* --mwnf-standalone-sp-heading-color: #222;        Its heading */
   /* --mwnf-standalone-sp-text-color: #222;           A sponsor's words */
   /* --mwnf-standalone-sp-link-color: #018dce;        Its web address */
+  /* --mwnf-standalone-pe-picture: none;              The Partners entrance's box: its picture (url(...)) */
+  /* --mwnf-standalone-pe-border: 5px solid #fff;     Its border */
+  /* --mwnf-standalone-pe-name-color: #fff;           The project's name on it */
+  /* --mwnf-standalone-pe-text-color: #222;           The links' lines */
+  /* --mwnf-standalone-pe-link-color: #222;           The links and About */
+  /* --mwnf-standalone-pe-popup: #eec201;             About's text: its ground */
+  /* --mwnf-standalone-pe-popup-color: #222;          Its words */
+  /* --mwnf-standalone-pe-bottom: 64px;               The space under the last row (legacy's padding and <br/>s) */
+  /* --mwnf-standalone-phone-pe-bottom: 58px;         The same below 750px */
+  /* --mwnf-standalone-phone-pe-border: 0;            The box's border below 750px */
   /* --mwnf-standalone-db-rows: 38px 37px 49px 49px 49px 49px 44px 69px 22px;  The Database entrance's row heights */
   /* --mwnf-standalone-db-options-rows: 38px 37px 49px 49px 49px 49px 63px 31px 61px 36px;  Theirs with an options row */
   /* --mwnf-standalone-db-heading-color: #222;        Its "Enter your criteria" heading */
