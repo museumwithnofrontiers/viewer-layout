@@ -1,3 +1,11 @@
+## 3.57.0 (2026-11-03)
+
+### Changed
+
+- **Sponsors** (`StandaloneSponsorList`):
+  - a sponsor's remarks are italic through every paragraph, as legacy's single `<i>`, with a blank line (22px) between paragraphs;
+  - up to 750px the stacked columns keep legacy's spacing: 15px under the back link, the heading full width with 10px under it, rows without a margin of their own, 15px under the text and the logo, and legacy's empty paragraph for a sponsor without a name;
+  - the page closes with the section's 24px (`--mwnf-standalone-phone-sp-bottom`).
 ## 3.56.0 (2026-11-03)
 
 ### Changed
