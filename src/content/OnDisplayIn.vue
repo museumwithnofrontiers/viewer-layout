@@ -1,5 +1,6 @@
 <script setup>
 import { computed } from 'vue'
+import { renderInline } from '@museumwnf/viewer-core'
 import { useI18n } from '@museumwnf/viewer-core/i18n'
 import SheetSection from './SheetSection.vue'
 import SmartLink from './SmartLink.vue'
@@ -13,7 +14,7 @@ import SmartLink from './SmartLink.vue'
 // With no `heading`, the groups render alone, under a heading the page draws
 // itself (the DXA item sheet's related block does).
 const props = defineProps({
-  /** `[{ heading? (entry name), links: [{ id?, label (inline HTML), to? | href?, external? }] }]` */
+  /** `[{ heading? (entry name, inline Markdown), links: [{ id?, label (inline HTML), to? | href?, external? }] }]` */
   groups: { type: Array, default: () => [] },
   heading: { type: String, default: 'record.related.onDisplayIn' },
   /** An entry name, shown after a name that has no address. */
@@ -34,7 +35,7 @@ const filled = computed(() => props.groups.filter((group) => group.links?.length
     class="mwnf-on-display"
   >
     <div v-for="(group, g) in filled" :key="group.heading ?? g" class="mwnf-on-display__group">
-      <p v-if="group.heading" class="mwnf-on-display__subheading">{{ t(group.heading) }}</p>
+      <p v-if="group.heading" class="mwnf-on-display__subheading" v-html="renderInline(t(group.heading))"></p>
       <ul class="mwnf-on-display__list">
         <li v-for="(link, i) in group.links" :key="link.id ?? i" class="mwnf-on-display__item">
           <SmartLink v-if="link.to || link.href" :to="link.to" :href="link.href" :external="Boolean(link.external)">

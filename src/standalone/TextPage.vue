@@ -7,7 +7,8 @@ import SmartLink from '../content/SmartLink.vue'
 // (`isl_missionstatement.php`, `recommendedlinks.php`): the shell's banner
 // carries its title; here, the body, an optional "→" link under it, and the
 // print link. `dropCap` opens the text with a large initial, as legacy's
-// mission statement does — never on a right-to-left page.
+// mission statement does — never on a right-to-left page. `narrow` sets the
+// text in legacy's col-md-8 inside its col-md-9, as the mission statement.
 //
 //   body: entry (Markdown), link: { label: entry or text: string, to | href }, print: entry
 const props = defineProps({
@@ -15,6 +16,7 @@ const props = defineProps({
   link: { type: Object, default: null },
   print: { type: String, default: '' },
   dropCap: { type: Boolean, default: false },
+  narrow: { type: Boolean, default: false },
 })
 const { t } = useI18n()
 const html = computed(() => renderBlock(t(props.body)))
@@ -25,7 +27,7 @@ function printPage() {
 </script>
 
 <template>
-  <article class="mwnf-standalone-page" :class="{ 'mwnf-standalone-page--drop-cap': dropCap }">
+  <article class="mwnf-standalone-page" :class="{ 'mwnf-standalone-page--drop-cap': dropCap, 'mwnf-standalone-page--narrow': narrow }">
     <div class="mwnf-standalone-page__body" v-html="html"></div>
     <p v-if="link" class="mwnf-standalone-page__link">
       <SmartLink :to="link.to" :href="link.href"><strong>{{ link.text ?? t(link.label) }}</strong></SmartLink>

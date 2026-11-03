@@ -1,3 +1,22 @@
+## 3.55.0 (2026-11-03)
+
+### Added
+
+- **A monument's special features as legacy's `.specials`** on the standalone item page:
+  - the heading a coloured label as wide as its words (`--mwnf-standalone-specials-heading-*`);
+  - each feature's name a label of the sheet over its description, indented as a value;
+  - its pictures at legacy's thumbnail size, out in the empty column before the sheet and top-aligned with the feature (`--mwnf-standalone-specials-pictures-width`). On a phone, where legacy's box falls off the screen, they follow the text.
+- **`RecordView`'s `after-<section>` slots**: content right after one of the sheet's sections, such as a monument's special features after its dating method.
+- **`StandaloneTextPage`'s `narrow`**: legacy's col-md-8 column inside the col-md-9.
+- Tokens: `--mwnf-standalone-pc-strong-weight`, `--mwnf-standalone-highlight-action-color`, `--mwnf-standalone-tlr-bottom`, `--mwnf-standalone-page-*`, `--mwnf-standalone-phone-page-padding`.
+
+### Changed
+
+- **Text pages** (`StandaloneTextPage`) as legacy's centred Bootstrap column: 16px text on 22px lines, a blank line between paragraphs, headings 19px and entries' names 15px with legacy's spacing. Below 992px the text takes the full width; on a phone it keeps the space of legacy's stacked columns.
+- **An item's languages** in the item sheet's band are in legacy's order: by code, last first.
+- **The timeline entrance**, the timeline results' bodies and the Collections entrance's bold words have legacy's spacing and weight.
+- **`StandalonePagination`** with a single page keeps legacy's empty listing and its 30px.
+- **`OnDisplayIn`**'s subheadings render inline Markdown.
 ## 3.54.0 (2026-11-03)
 
 ### Added

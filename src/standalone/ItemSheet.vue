@@ -65,13 +65,17 @@ const passed = computed(() => Object.keys(slots).filter((name) => !OWN.has(name)
 function goBack() {
   window.history.back()
 }
+
+// Legacy lists an item's languages by code, last first (getAvailableLang:
+// `ORDER BY lang DESC`), each floated right: they read by code on the band.
+const byCodeDescending = (languages) => [...languages].sort((a, b) => b.code.localeCompare(a.code))
 </script>
 
 <template>
   <RecordView :spec="sheetSpec" :id="id" class="mwnf-standalone-item">
     <template #header="{ languages, language, select }">
       <div class="mwnf-standalone-item__top">
-        <RecordLanguages :languages="languages" :language="language" :from="1" @select="select" />
+        <RecordLanguages :languages="byCodeDescending(languages)" :language="language" :from="1" @select="select" />
       </div>
     </template>
 
