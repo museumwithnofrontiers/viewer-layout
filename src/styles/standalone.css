@@ -1695,8 +1695,11 @@
 .mwnf-standalone-pages__previous::after { right: 0; }
 .mwnf-standalone-pages__next::before { left: 0; }
 
+/* Legacy sized only Previous and Next (16px): its numbers kept the page's
+   14px. */
 .mwnf-standalone-pages__number {
   padding: 0 5px;
+  font-size: 14px;
 }
 
 .mwnf-standalone-pages__number--active {
