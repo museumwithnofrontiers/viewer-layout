@@ -1,3 +1,11 @@
+## 3.57.3 (2026-11-03)
+
+### Fixed
+
+- **No page wider than the window**, measured on every compared page of Islamic Art, Baroque Art and Sharing History at 1366 and 390:
+  - right-to-left pages: the partner list's toggle rule and the partner page's full-width map took physical offsets that pushed them off the left edge; both are logical now;
+  - addresses break rather than widen a phone's page: the Source line's link, the credits' citation, a text page's links, a sponsor's link;
+  - on a phone a credited person's biography spans the credits from their left edge (a hidden box still widened the page).
 ## 3.57.2 (2026-11-03)
 
 ### Fixed

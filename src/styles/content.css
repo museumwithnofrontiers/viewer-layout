@@ -907,6 +907,32 @@
   line-height: var(--mwnf-line-height, 1.6);
 }
 
+/* The citation ends with the record's address: it breaks rather than widen
+   a phone's page. */
+.mwnf-credits__citation {
+  overflow-wrap: anywhere;
+}
+
+/* On a phone the biography spans the credits from their left edge: from the
+   name it would reach past the screen, and a hidden box still widens the
+   page. */
+@media (max-width: 47.9375rem) {
+  .mwnf-credits {
+    position: relative;
+  }
+
+  .mwnf-credits__person {
+    position: static;
+  }
+
+  .mwnf-credits__biography {
+    right: 0;
+    left: 0;
+    width: auto;
+    max-width: none;
+  }
+}
+
 .mwnf-related {
   margin-top: var(--mwnf-sheet-section-gap, 1.25rem);
   padding-top: var(--mwnf-sheet-section-padding, 1rem);
@@ -935,8 +961,10 @@
   font-weight: var(--mwnf-sheet-label-weight, 600);
 }
 
+/* Its link is an address: on a phone it breaks rather than widen the page. */
 .mwnf-source-credit a {
   color: var(--mwnf-source-credit-link-color, inherit);
+  overflow-wrap: anywhere;
 }
 
 /* Media (MediaGallery) */
