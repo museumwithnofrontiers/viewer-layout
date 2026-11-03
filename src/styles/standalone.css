@@ -592,7 +592,8 @@
 .mwnf-standalone-item__back {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.25rem 1rem;
+  /* Legacy's links wrap on their 22px lines, no space between. */
+  gap: 0 1rem;
   margin: 0 0 0.75rem;
   font-size: 0.875rem;
   font-weight: 500;
@@ -1269,6 +1270,17 @@
 
 @media (max-width: 47.9375rem) {
   .mwnf-standalone-pmi__heading { margin-bottom: 10px; }
+  /* The place follows the name, without the catalogue's gap under its heading. */
+  .mwnf-standalone-pcr.mwnf-standalone-pmi .mwnf-standalone-pmi__heading .mwnf-standalone-pcr__heading { margin-bottom: 0; }
+}
+
+/* Legacy's side column (Partner Profile, See Timeline) is `hidden_xs`: gone up to 750px. */
+@media (max-width: 750px) {
+  .mwnf-standalone-pmi .mwnf-catalogue__aside { display: none; }
+  /* The tiles' column keeps its 15px (col-xs-12) over the pager; the
+     section's 24px close the page. */
+  .mwnf-standalone-pmi .mwnf-catalogue__body { margin-bottom: 15px; }
+  .mwnf-standalone-pcr.mwnf-standalone-pmi { padding-bottom: var(--mwnf-standalone-phone-pmi-bottom, 4px); }
 }
 
 /* Phone: below 750px legacy lists each result under the one before
@@ -3075,6 +3087,10 @@
   .mwnf-standalone-tlr__body { grid-template-columns: 1fr; }
   .mwnf-standalone-tlr__related { margin: 15px 15px 0; }
   .mwnf-standalone-tlr__related::before { display: none; }
+}
+/* Legacy's `section.timeline_content_area .row`: 5px apart up to 750px. */
+@media (max-width: 750px) {
+  .mwnf-standalone-tlr__row { margin-bottom: 5px; }
 }
 @media print {
   .mwnf-standalone-tlr__band select,

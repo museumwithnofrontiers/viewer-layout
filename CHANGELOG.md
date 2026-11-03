@@ -1,3 +1,14 @@
+## 3.56.0 (2026-11-03)
+
+### Changed
+
+- **The phone mode's partner items and timeline gallery** (`mwnf-standalone-pmi`, up to 750px), as legacy's `pm_*_items.php` and `hcr_gallery.php`:
+  - the side column (Partner Profile, See Timeline) is hidden, as legacy's `hidden_xs`;
+  - the tiles' column keeps its 15px over the pager;
+  - the page closes with the section's 24px (`--mwnf-standalone-phone-pmi-bottom`);
+  - on a partner's page the place follows the name with no gap.
+- **The phone mode's timeline results**: rows 5px apart up to 750px (legacy's `section.timeline_content_area .row`).
+- **Back links** wrap on their 22px lines with no space between, as legacy's.
 ## 3.55.0 (2026-11-03)
 
 ### Added
