@@ -322,7 +322,9 @@
   /* --mwnf-sheet-list-indent: 1.5em;                Indent of a list in a block */
   /* --mwnf-sheet-toggle-color: #1c1c1c;             The short-description toggle */
   /* --mwnf-sheet-term-color: inherit;               A glossary term in a text */
-  /* --mwnf-sheet-term-underline: #1c1c1c;           Its dotted underline */
+  /* --mwnf-sheet-term-underline: #1c1c1c;           Its underline's colour */
+  /* --mwnf-sheet-term-underline-style: dotted;      Its underline's style (solid for a legacy link) */
+  /* --mwnf-sheet-term-underline-offset: 0.125em;    Its underline's distance under the text (auto for a legacy link) */
   /* --mwnf-sheet-section-gap: 1.25rem;              Space above a section, the credits, the related block */
   /* --mwnf-sheet-section-padding: 1rem;             Space under their top border */
   /* --mwnf-sheet-section-border: 1px solid #dddddd; That border */
@@ -884,6 +886,7 @@
   /* --mwnf-standalone-menu-padding: 0.3125rem 0;    Menu cell padding */
   /* --mwnf-standalone-bullet: none;                 The arrow before a side link (a url() to the site's picture) */
   /* --mwnf-standalone-back-arrow: none;             The arrow before a "Back" link (a url()) */
+  /* --mwnf-standalone-back-space: 4px;              The space between two ways back, after each one's 15px */
   /* --mwnf-standalone-home-gap: 2rem;               Gap between the home page's two columns */
   /* --mwnf-standalone-home-padding: 1.25rem 2.25rem;   Home content padding (top, bottom) */
   /* --mwnf-standalone-home-links-margin: 3.5rem 0 0;   Side links' margin */
@@ -943,7 +946,6 @@
   /* --mwnf-standalone-pill-muted: rgb(34 34 34 / 0.75);  The other tabs and the homepage */
   /* --mwnf-standalone-pill-weight: 500;             Their weight */
   /* --mwnf-standalone-pill-separator: #000;         The "|" between the tabs */
-  /* --mwnf-standalone-partner-back-gap: 15px;       The space between the profile's ways back */
   /* --mwnf-standalone-partner-map-gap: 15px;        The space between the map's heading and the map */
   /* --mwnf-standalone-partner-map-extra: 0px;       More of it, at every width (an empty paragraph of the site's) */
   /* --mwnf-standalone-heading-color: inherit;       The partner profile's name, place and map heading */

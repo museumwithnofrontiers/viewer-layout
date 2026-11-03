@@ -791,9 +791,9 @@
 .mwnf-sheet .gloss-term,
 .mwnf-sheet-section .gloss-term {
   color: var(--mwnf-sheet-term-color, inherit);
-  text-decoration: underline dotted;
+  text-decoration: underline var(--mwnf-sheet-term-underline-style, dotted);
   text-decoration-color: var(--mwnf-sheet-term-underline, #1c1c1c);
-  text-underline-offset: 0.125em;
+  text-underline-offset: var(--mwnf-sheet-term-underline-offset, 0.125em);
   cursor: pointer;
 }
 

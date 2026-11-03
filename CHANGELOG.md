@@ -1,3 +1,17 @@
+## 3.58.0 (2026-11-04)
+
+### Changed
+
+- **The ways back** (`.mwnf-standalone-item__back`) are spaced as legacy's: a 12px arrow before each link's text (it was 14px), 15px after each link, the last one's included, then the space before the next one (`--mwnf-standalone-back-space`, 4px, the width of a space in legacy's column font). The trailing 15px decides where the line wraps, as on legacy: Islamic Art's Arabic Sponsors page puts its third link on a second line on a phone, as legacy does.
+- The partner profile's ways back follow the same rule. `--mwnf-standalone-partner-back-gap` is gone.
+
+### Fixed
+
+- **A monument's special features** start 10px lower, under the margin of the paragraph legacy's `.specials` follows: Baroque Art's monument sheet now matches legacy down to its Source line at 1366.
+
+### Added
+
+- **A glossary term's underline** on the item sheet takes a style and an offset (`--mwnf-sheet-term-underline-style`, dotted; `--mwnf-sheet-term-underline-offset`, 0.125em), for a site whose legacy drew its terms as plain underlined links (Islamic Art: solid, the link's own colour).
 ## 3.57.3 (2026-11-03)
 
 ### Fixed
