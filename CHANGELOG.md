@@ -1,3 +1,8 @@
+## 3.57.2 (2026-11-03)
+
+### Fixed
+
+- **`StandalonePagination`**: the page numbers are 14px, as legacy's (it sized only Previous and Next, 16px).
 ## 3.57.1 (2026-11-03)
 
 ### Fixed
