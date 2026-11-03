@@ -2622,12 +2622,31 @@
   color: var(--mwnf-standalone-sp-text-color, #222);
 }
 .mwnf-standalone-sp__row a { color: var(--mwnf-standalone-sp-link-color, #018dce); text-decoration: none; }
-.mwnf-standalone-sp__remarks { font-style: italic; }
+/* Legacy's remarks are one <i>: italic through every paragraph (the row's
+   `font` resets it), a blank line (<br><br>) between them. */
+.mwnf-standalone-sp__remarks,
+.mwnf-standalone-sp__row .mwnf-standalone-sp__remarks p { font-style: italic; }
+.mwnf-standalone-sp__row .mwnf-standalone-sp__remarks p:not(:last-child) { margin-bottom: 22px; }
 .mwnf-standalone-sp__logo img { max-width: 100%; vertical-align: middle; }
 @media (max-width: 48rem) {
   .mwnf-standalone-sp__row,
   .mwnf-standalone-sp--labels .mwnf-standalone-sp__row { grid-template-columns: 100%; }
   .mwnf-standalone-sp__row > :first-child { grid-column-start: 1; }
+}
+/* Up to 750px legacy's stacked columns keep their col-xs-12 15px under the
+   back link, the heading's row 5px and its column 5px more, the text and the
+   logo 15px each; a row has no margin of its own, and its empty col-md-2s
+   keep their 1px (min-height). */
+@media (max-width: 750px) {
+  .mwnf-standalone-sp { padding-bottom: var(--mwnf-standalone-phone-sp-bottom, 4px); }
+  .mwnf-standalone-sp__back { margin-bottom: 30px; }
+  .mwnf-standalone-sp__heading { width: auto; margin-bottom: 10px; line-height: 19px; }
+  .mwnf-standalone-sp__row { margin-top: 0; padding-top: 1px; }
+  .mwnf-standalone-sp__label { min-height: 1px; }
+  .mwnf-standalone-sp__text,
+  .mwnf-standalone-sp__logo { min-height: 1px; margin-bottom: 15px; }
+  /* A sponsor without a name: legacy still prints its empty paragraph. */
+  .mwnf-standalone-sp__text:empty { min-height: 10px; }
 }
 
 /* StandalonePartnersEntrance: legacy's partners.php. Each project a
