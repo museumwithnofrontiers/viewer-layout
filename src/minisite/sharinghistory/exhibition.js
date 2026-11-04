@@ -111,6 +111,22 @@ export function placementCaption({ item, own, entry, lang, countryName }) {
 }
 
 /**
+ * The partners' logos on the home page's band, `{ url, link, tip }` each: the
+ * site's own when it lists them (`own`, its `minisite.logos`: each file under
+ * theme/assets/ with legacy's link and tooltip, inventory-app#2463), else the
+ * package's logo images (their `link`; the package has no tooltip). `picture`
+ * resolves a site file.
+ */
+export function homeLogos({ own, images = [], picture }) {
+  if (Array.isArray(own)) {
+    return own
+      .map((logo) => ({ url: picture(logo.image) ?? '', link: logo.link ?? '', tip: logo.tip ?? '' }))
+      .filter((logo) => logo.url)
+  }
+  return images.map((image) => ({ url: image.url, link: image.link ?? '', tip: image.alt_text ?? '' }))
+}
+
+/**
  * The Related Content box of the home page, the introduction and the
  * exhibition pages: the parent site's political context timeline, this
  * exhibition's thematic timeline (its tooltip the exhibition's title, as

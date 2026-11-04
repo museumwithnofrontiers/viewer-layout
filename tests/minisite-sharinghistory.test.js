@@ -1,7 +1,7 @@
 import { readdirSync, readFileSync } from 'node:fs'
 import { describe, expect, it } from 'vitest'
 import {
-  LABELS, sharinghistoryCaption, sharinghistoryListedSubthemes, sharinghistoryListedThemes,
+  LABELS, sharinghistoryCaption, sharinghistoryHomeLogos, sharinghistoryListedSubthemes, sharinghistoryListedThemes,
   sharinghistoryNavigation, sharinghistoryPageRoute, sharinghistoryPageWithNext, sharinghistoryReadingOrder,
   sharinghistoryRelatedLinks,
   sharinghistoryRoutes, sharinghistorySettings, sharinghistorySlotsOf,
@@ -111,6 +111,22 @@ describe("Sharing History's mini-sites", () => {
     expect(
       sharinghistoryCaption({ item: { type: 'monument' }, own: { ...own, architects: 'Sinan' }, entry: {}, lang: 'en', countryName }),
     ).toMatchObject({ place: 'Sharjah', artist: '', material: '', architects: 'Sinan' })
+  })
+
+  it("draw the partners' logos from the site's own files when it lists them, else from the package", () => {
+    const picture = (path) => ({ 'legacy/logos/a.png': '/assets/a.png' })[path] ?? null
+    const images = [{ url: 'https://p/pub/1.png', link: 'https://legacy/pm_partner.php?id=A', alt_text: null }]
+    const own = [
+      { image: 'legacy/logos/a.png', link: 'https://legacy/pm_partner.php?id=A', tip: 'A museum, Tunis' },
+      { image: 'legacy/logos/missing.png', link: '', tip: '' },
+    ]
+    expect(sharinghistoryHomeLogos({ own, images, picture })).toEqual([
+      { url: '/assets/a.png', link: 'https://legacy/pm_partner.php?id=A', tip: 'A museum, Tunis' },
+    ])
+    expect(sharinghistoryHomeLogos({ own: [], images, picture })).toEqual([])
+    expect(sharinghistoryHomeLogos({ own: undefined, images, picture })).toEqual([
+      { url: 'https://p/pub/1.png', link: 'https://legacy/pm_partner.php?id=A', tip: '' },
+    ])
   })
 
   it("link Related Content to the parent site's pages and the further reading here", () => {

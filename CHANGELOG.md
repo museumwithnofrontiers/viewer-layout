@@ -1,3 +1,8 @@
+## 3.59.0 (2026-11-04)
+
+### Added
+
+- **A Sharing History mini-site's own partner logos** (`minisite.logos`, `[{ image, link, tip }]`): the home page's band draws the site's files under theme/assets/, each with legacy's link and its tooltip (280px wide, as legacy's `ddrivetip`), in place of the package's logo images, which leave the data packages (inventory-app#2463). A site that lists none still draws the package's. `sharinghistoryHomeLogos` is the rule.
 ## 3.58.0 (2026-11-04)
 
 ### Changed

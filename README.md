@@ -938,9 +938,11 @@ export default {
   gallery, narrowed to the page's theme and subtheme
   (`sharinghistoryRelatedLinks`).
 - **The site's own values**: `profiles`, the parent's country profiles its
-  footer menu lists, and `partnerLinks`, where each partner logo leads on the
-  parent site, both written by inventory-app's
-  `scripts/minisites/sharinghistory-minisite.mjs`.
+  footer menu lists, `logos`, the partners' logos on the home page's band
+  (`{ image, link, tip }`: the file under theme/assets/, legacy's link and
+  tooltip; without it the band draws the package's logo images), and
+  `partnerLinks`, where each partner logo leads on the parent site, all
+  written by inventory-app's `scripts/minisites/sharinghistory-minisite.mjs`.
 - **The theme**: `minisite-sharinghistory.css` reads `--sh-*` tokens, the
   exhibition's `sh_exhibitions_styles`; its pictures are the site's chrome
   files under the names legacy gave them (`legacy/home_bg.jpg`,
