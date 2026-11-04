@@ -4,7 +4,7 @@
 // theme, which opens on its overview and subthemes — beside Related Content;
 // the band with the windows and the partners' logos.
 import { computed, ref } from 'vue'
-import { useSharingHistoryExhibition } from './exhibition.js'
+import { homeLogos, useSharingHistoryExhibition } from './exhibition.js'
 import Related from './Related.vue'
 import Windows from './Windows.vue'
 import { vTip } from '../tip.js'
@@ -16,7 +16,8 @@ const { data, imagesOf, label, picture, root, settings, subthemesOf, text, theme
 const logoHref = (logo) => settings.partnerLinks?.[logo.link] ?? logo.link
 
 const quote = computed(() => (root.value ? text(root.value.id).extra?.subtitle ?? '' : ''))
-const logos = computed(() => imagesOf('logo'))
+// The partners' logos: the site's own (`settings.logos`), else the package's.
+const logos = computed(() => homeLogos({ own: settings.logos, images: imagesOf('logo'), picture }))
 // Legacy's accordion opened with every theme closed.
 const open = ref(-1)
 </script>
@@ -64,7 +65,7 @@ const open = ref(-1)
       <div class="mwnf-sh-band__logos">
         <template v-for="(logo, i) in logos" :key="logo.url">
           <span v-if="i > 0" class="mwnf-sh-band__gap" />
-          <a v-if="logo.link" v-tip="{ text: logo.alt_text ?? '' }" :href="logoHref(logo)"><img :src="logo.url" alt=""></a>
+          <a v-if="logo.link" v-tip="{ text: logo.tip, width: 280 }" :href="logoHref(logo)"><img :src="logo.url" alt=""></a>
           <img v-else :src="logo.url" alt="">
         </template>
       </div>
