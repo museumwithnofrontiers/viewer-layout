@@ -62,31 +62,42 @@ const TILE = '.mwnf-dxa-grid__entry'
 const GALLERY_PAGE = 20
 const firstPage = (count) => Math.min(GALLERY_PAGE, Number(count))
 
+// An exhibition's tiles: the platform's record grid, nine a page.
+const EXHIBITION_TILE = '.mwnf-grid__tile'
+
 // The collection results: the tiles, the "filter further by" column, the
-// summary and the page links. The first page holds twenty tiles, or every
-// object when there are fewer; a site may pin its count of page links.
-// (`collection.tiles` is no longer read: it counted the old nine a page.)
-function collectionTest(mountSite, collection = {}) {
+// summary and the page links. A gallery's first page holds twenty tiles, or
+// every object when there are fewer, and offers page links only when there
+// is a second page, as legacy; a site may pin its count of page links.
+// (A gallery's `collection.tiles` is no longer read: it counted the old nine
+// a page. An exhibition may still pin its own.)
+function collectionTest(mountSite, collection = {}, { gallery = false } = {}) {
+  const tile = gallery ? TILE : EXHIBITION_TILE
   it('renders the collection results on the composed results view', async () => {
     const { app, host } = await mountSite('#/collection-results')
-    await vi.waitFor(() => expect(host.querySelector(TILE)).not.toBeNull(), WAIT)
+    await vi.waitFor(() => expect(host.querySelector(tile)).not.toBeNull(), WAIT)
     expect(host.querySelector('.mwnf-catalogue')).not.toBeNull()
     expect(host.querySelector('.mwnf-catalogue__aside .mwnf-filter')).not.toBeNull()
     const count = host.querySelector('.mwnf-summary__count')
     expect(count).not.toBeNull()
-    const tiles = host.querySelectorAll(TILE).length
-    expect(tiles).toBe(firstPage(count.textContent.replace(/\D/g, '')))
+    const objects = Number(count.textContent.replace(/\D/g, ''))
+    const tiles = host.querySelectorAll(tile).length
     const paginations = host.querySelectorAll('.mwnf-pagination').length
-    if (collection.paginations) expect(paginations).toBe(collection.paginations)
+    if (gallery) expect(tiles).toBe(firstPage(objects))
+    else if (collection.tiles) expect(tiles).toBe(collection.tiles)
+    else expect(tiles).toBeGreaterThan(0)
+    if (gallery && objects <= GALLERY_PAGE) expect(paginations).toBe(0)
+    else if (collection.paginations) expect(paginations).toBe(collection.paginations)
     else expect(paginations).toBeGreaterThan(0)
     app.unmount()
   }, 60000)
 }
 
-function searchTests(mountSite, loadItems) {
+function searchTests(mountSite, loadItems, { gallery = false } = {}) {
+  const tile = gallery ? TILE : EXHIBITION_TILE
   it('returns every renderable object for the all-objects sentinel', async () => {
     const { app, host } = await mountSite('#/search?q=all-objects')
-    await vi.waitFor(() => expect(host.querySelector(TILE)).not.toBeNull(), WAIT)
+    await vi.waitFor(() => expect(host.querySelector(tile)).not.toBeNull(), WAIT)
     expect(host.textContent).toContain('All objects')
     app.unmount()
   }, 30000)
@@ -95,7 +106,7 @@ function searchTests(mountSite, loadItems) {
     const item = await loadItems()
     const term = firstWord(item.internal_name)
     const { app, host } = await mountSite(`#/search?q=${encodeURIComponent(term)}`)
-    await vi.waitFor(() => expect(host.querySelector(TILE)).not.toBeNull(), WAIT)
+    await vi.waitFor(() => expect(host.querySelector(tile)).not.toBeNull(), WAIT)
     expect(host.textContent).toContain(`“${term}”`)
     app.unmount()
   }, 30000)
@@ -187,8 +198,9 @@ function configTests(config, routes) {
  *     results offer and a `galleryItem` text on the gallery's first page;
  *   - `partner`: `{ id, name, city, country, objects }` — a partner with
  *     objects, a position and a translated city;
- *   - optionally `collection: { paginations }`, and the `about` and
- *     `credits` texts their pages show.
+ *   - optionally `collection: { paginations }` (read only when the results
+ *     have a second page), and the `about` and `credits` texts their pages
+ *     show.
  * A first page of tiles holds legacy's twenty, or every object when there
  * are fewer; the suite counts that itself, so `collection.tiles`,
  * `timeline.galleryTiles` and `partner.tiles` are no longer read.
@@ -210,7 +222,7 @@ export function describeGallerySmoke({ config, sharedTexts, ownTexts, manifest, 
       app.unmount()
     }, 20000)
 
-    collectionTest(mountSite, picks.collection)
+    collectionTest(mountSite, picks.collection, { gallery: true })
 
     it('renders the collection entrance on the composed search form view', async () => {
       const { app, host } = await mountSite('#/collection')
@@ -223,7 +235,7 @@ export function describeGallerySmoke({ config, sharedTexts, ownTexts, manifest, 
       app.unmount()
     }, 30000)
 
-    searchTests(mountSite, async () => (await loadEntities(['items']))[0][0])
+    searchTests(mountSite, async () => (await loadEntities(['items']))[0][0], { gallery: true })
 
     it("renders the about page as legacy's text page", async () => {
       const { app, host } = await mountSite('#/about')
@@ -356,11 +368,12 @@ export function describeGallerySmoke({ config, sharedTexts, ownTexts, manifest, 
     }
 
     // (`timeline.galleryTiles` is no longer read: it counted the old nine a
-    // page; the first page holds twenty of the `gallery` count, or all.)
+    // page. The `gallery` count is the results' own period's, while this
+    // address takes every date, so only legacy's twenty a page is checked.)
     it('renders the timeline gallery on the composed results view', async () => {
       const { app, host } = await mountSite(`#/timeline/gallery?country=${timeline.code}`)
       await vi.waitFor(() => expect(host.querySelectorAll(TILE).length).toBeGreaterThan(0), WAIT)
-      if (timeline.gallery) expect(host.querySelectorAll(TILE).length).toBe(firstPage(timeline.gallery))
+      expect(host.querySelectorAll(TILE).length).toBeLessThanOrEqual(GALLERY_PAGE)
       expect(host.querySelector('.mwnf-summary').textContent).toContain(timeline.country)
       if (timeline.galleryItem) expect(host.textContent).toContain(timeline.galleryItem)
       app.unmount()
