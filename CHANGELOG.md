@@ -1,3 +1,32 @@
+## 3.61.0 (2026-11-05)
+
+The galleries' item sheet as legacy's DatabaseItem.vue (inventory-app#2423), measured equal to legacy on Ceramics at 1366, 900 and 390. Needs `@museumwnf/viewer-core` 2.17.0 (`siblingSiteUrl`, `projectLinks().homeSite`) and reads `@museumwnf/viewer-i18n` 6.7.0's gallery sheet entries.
+
+### Changed
+
+- **The gallery item sheet** (`dxa/gallery/ItemDetail.vue`):
+  - the language band on the gallery's dark tone, the languages at its right, the current one on the light tone; Back bold in a 60px band;
+  - the pictures 39.4% wide, 60px thumbnails 10px apart, and under them legacy's "Source (<home site>)" and "Add to My Collection" links, where the chip line above the sheet was;
+  - bold labels, each value indented under its label;
+  - the holding museum a link to the partner's page, with no "About …" line;
+  - "View Short Description" bold, legacy's words;
+  - under the sheet, legacy's "Citation of this web page:", the sentence with its project in italics and the record's address, the credits as "Prepared by: …" lines, "MWNF Working Number: …", and the Source box on the record's project colour (`projectColors`), no "Source:" line of the page's own;
+  - the record's address is its page on its project's home site (`manifest.projects`' `home_site`, a sibling of this site), or this page when the project has none of its own;
+  - the sidebar's lines at the font's own height, its description in the headings' colour, "Glossary", "Islamic Dynasties / Period" as a plain line, entries with legacy's arrow and no marker;
+  - "On display in" lists every gallery the item is in, this one included, as "MWNF Galleries", each linked to the record on that gallery's site;
+  - from 974px the sidebar goes under the sheet, from 724px the pictures go above the fields, from 599px the margins narrow to 30px, as legacy's.
+- **The gallery menu**: entries at legacy's 28px, the notice under them at its text's own line — the banner now starts where legacy's did, on every gallery page.
+
+### Added
+
+- **`RecordView`**: an `after-media` slot, wrapped with the pictures in `.mwnf-record__media`; a `credits` slot receiving the credits, working number and citation; `spec.shortDescriptionLabels` (`{ view, hide }`); `spec.sourceCredit: false`.
+- **`RecordSheet`**: `toggleLabels`.
+- **`ItemDetailView`**: `spec.related.glossaryLabels`, `.dynastiesHeading`, `.onDisplayIn.href(ref, record)`, `.onDisplayIn.exhibitionsHeading`, `.onDisplayIn.galleriesHeading`.
+- **`--theme-text`** (gallery palette): legacy's `text-color`, the medium-dark tone in nine galleries, for the sidebar's headings; `--mwnf-dxa-languages-background`.
+
+### Testing
+
+- The gallery smoke suite checks legacy's links under the pictures, the citation's project, the Source box's colour and address (home site, or this page), and no page source line.
 ## 3.60.0 (2026-11-05)
 
 The galleries' Partners, About, Credits, How to search and Timeline pages as legacy's (inventory-app#2423), each measured equal to legacy on Ceramics at 1366 and 390.
