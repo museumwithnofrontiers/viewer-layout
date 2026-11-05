@@ -39,10 +39,18 @@ export function chromeImage(path, size = 'hi_res') {
 }
 
 export const {
-  FACETS, haystack, tile, collectionResults, countryIdForCode,
+  FACETS, haystack, tile, legacyOrder, collectionResults, countryIdForCode,
 } = collection
 
-export { FACET_CATEGORIES, FACET_LABEL_KEYS, GALLERY_ERA_WORDS, GALLERY_PAGE_SIZE, PAGE_SIZE, useFacetLabels } from '@museumwnf/viewer-core/dxa'
+// Legacy's lists of objects (dxa-api): twenty tiles a page, and the records
+// of one year in legacy's order (viewer-core's `legacyOrder`) — what every
+// gallery page of objects lays over its spec (inventory-app#2423).
+export const legacyPaging = {
+  pageSize: 20,
+  sort: { undated: 'first', tiebreak: (a, b) => legacyOrder(a, b) },
+}
+
+export { FACET_CATEGORIES, FACET_LABEL_KEYS, GALLERY_ERA_WORDS, PAGE_SIZE, useFacetLabels } from '@museumwnf/viewer-core/dxa'
 
 export const { timelineResults, timelineGallery } = timeline
 

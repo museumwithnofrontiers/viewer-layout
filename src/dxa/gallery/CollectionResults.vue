@@ -9,7 +9,7 @@ import Pagination from '../../content/Pagination.vue'
 import CatalogueResultsView from '../../views/CatalogueResultsView.vue'
 import ObjectGrid from './ObjectGrid.vue'
 import {
-  labelOf, timelines, FACET_CATEGORIES, collectionResults, countryIdForCode, useFacetLabels,
+  labelOf, timelines, FACET_CATEGORIES, collectionResults, countryIdForCode, legacyPaging, useFacetLabels,
 } from './data.js'
 
 // Results plus "filter further by" (epic #1731, from carpets/amulets —
@@ -41,7 +41,7 @@ function showTimelineLink(filters) {
 </script>
 
 <template>
-  <CatalogueResultsView :spec="collectionResults" class="mwnf-dxa-collection-results">
+  <CatalogueResultsView :spec="{ ...collectionResults, ...legacyPaging }" class="mwnf-dxa-collection-results">
     <template #before>
       <BackLink />
     </template>

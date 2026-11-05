@@ -55,19 +55,28 @@ function rightsTest(mountSite, manifest, messages) {
   }, 20000)
 }
 
+// A gallery's tiles (legacy's ObjectGrid, dxa/gallery/ObjectGrid.vue), and
+// how many a first page holds: legacy's twenty, or fewer when there are
+// fewer (inventory-app#2423).
+const TILE = '.mwnf-dxa-grid__entry'
+const GALLERY_PAGE = 20
+const firstPage = (count) => Math.min(GALLERY_PAGE, Number(count))
+
 // The collection results: the tiles, the "filter further by" column, the
-// summary and the page links. A site may pin its own counts.
+// summary and the page links. The first page holds twenty tiles, or every
+// object when there are fewer; a site may pin its count of page links.
+// (`collection.tiles` is no longer read: it counted the old nine a page.)
 function collectionTest(mountSite, collection = {}) {
   it('renders the collection results on the composed results view', async () => {
     const { app, host } = await mountSite('#/collection-results')
-    await vi.waitFor(() => expect(host.querySelector('.mwnf-grid__tile')).not.toBeNull(), WAIT)
+    await vi.waitFor(() => expect(host.querySelector(TILE)).not.toBeNull(), WAIT)
     expect(host.querySelector('.mwnf-catalogue')).not.toBeNull()
     expect(host.querySelector('.mwnf-catalogue__aside .mwnf-filter')).not.toBeNull()
-    expect(host.querySelector('.mwnf-summary__count')).not.toBeNull()
-    const tiles = host.querySelectorAll('.mwnf-grid__tile').length
+    const count = host.querySelector('.mwnf-summary__count')
+    expect(count).not.toBeNull()
+    const tiles = host.querySelectorAll(TILE).length
+    expect(tiles).toBe(firstPage(count.textContent.replace(/\D/g, '')))
     const paginations = host.querySelectorAll('.mwnf-pagination').length
-    if (collection.tiles) expect(tiles).toBe(collection.tiles)
-    else expect(tiles).toBeGreaterThan(0)
     if (collection.paginations) expect(paginations).toBe(collection.paginations)
     else expect(paginations).toBeGreaterThan(0)
     app.unmount()
@@ -77,7 +86,7 @@ function collectionTest(mountSite, collection = {}) {
 function searchTests(mountSite, loadItems) {
   it('returns every renderable object for the all-objects sentinel', async () => {
     const { app, host } = await mountSite('#/search?q=all-objects')
-    await vi.waitFor(() => expect(host.querySelector('.mwnf-grid__tile')).not.toBeNull(), WAIT)
+    await vi.waitFor(() => expect(host.querySelector(TILE)).not.toBeNull(), WAIT)
     expect(host.textContent).toContain('All objects')
     app.unmount()
   }, 30000)
@@ -86,7 +95,7 @@ function searchTests(mountSite, loadItems) {
     const item = await loadItems()
     const term = firstWord(item.internal_name)
     const { app, host } = await mountSite(`#/search?q=${encodeURIComponent(term)}`)
-    await vi.waitFor(() => expect(host.querySelector('.mwnf-grid__tile')).not.toBeNull(), WAIT)
+    await vi.waitFor(() => expect(host.querySelector(TILE)).not.toBeNull(), WAIT)
     expect(host.textContent).toContain(`“${term}”`)
     app.unmount()
   }, 30000)
@@ -175,13 +184,14 @@ function configTests(config, routes) {
  *     items in: its legacy two-letter code, its inventory id, its name; and,
  *     optionally, the exact `rows` the results' first page shows, the events
  *     `found` when that is more, an `event` text, the `gallery` count the
- *     results offer, the `galleryTiles` the gallery's first page shows and a
- *     `galleryItem` text on it;
+ *     results offer and a `galleryItem` text on the gallery's first page;
  *   - `partner`: `{ id, name, city, country, objects }` — a partner with
- *     objects, a position and a translated city — and `tiles`, its objects
- *     page's first page, when that is fewer than `objects`;
- *   - optionally `collection: { tiles, paginations }`, and the `about` and
+ *     objects, a position and a translated city;
+ *   - optionally `collection: { paginations }`, and the `about` and
  *     `credits` texts their pages show.
+ * A first page of tiles holds legacy's twenty, or every object when there
+ * are fewer; the suite counts that itself, so `collection.tiles`,
+ * `timeline.galleryTiles` and `partner.tiles` are no longer read.
  */
 export function describeGallerySmoke({ config, sharedTexts, ownTexts, manifest, namespace, picks }) {
   const { messages, mountSite } = mounter(config, sharedTexts, ownTexts)
@@ -215,17 +225,17 @@ export function describeGallerySmoke({ config, sharedTexts, ownTexts, manifest, 
 
     searchTests(mountSite, async () => (await loadEntities(['items']))[0][0])
 
-    it('renders the about page on the composed text page view', async () => {
+    it("renders the about page as legacy's text page", async () => {
       const { app, host } = await mountSite('#/about')
-      const prose = host.querySelector('.mwnf-prose')
+      const prose = host.querySelector('.mwnf-dxa-gallery-text__body')
       expect(prose.textContent.trim().length).toBeGreaterThan(0)
       if (picks.about) expect(host.textContent).toContain(picks.about)
       app.unmount()
     }, 20000)
 
-    it('renders the credits page on the composed text page view', async () => {
+    it("renders the credits page as legacy's text page", async () => {
       const { app, host } = await mountSite('#/credits')
-      const prose = host.querySelector('.mwnf-prose')
+      const prose = host.querySelector('.mwnf-dxa-gallery-text__body')
       expect(prose.textContent.trim().length).toBeGreaterThan(0)
       if (picks.credits) expect(host.textContent).toContain(picks.credits)
       app.unmount()
@@ -297,14 +307,14 @@ export function describeGallerySmoke({ config, sharedTexts, ownTexts, manifest, 
       app.unmount()
     }, 60000)
 
-    // A borrowed item's tile names its project. A long name is truncated on
-    // the tile, so a prefix is matched.
+    // A borrowed item's tile names its project on its card.
     it('shows the source project on a collection-results tile, from the manifest', async () => {
       const [items] = await loadEntities(['items'])
       const item = items.find((i) => i.id === chip.item)
       const { app, host } = await mountSite(`#/search?q=${encodeURIComponent(item.internal_name.replace(/[*_]/g, ''))}`)
-      await vi.waitFor(() => expect(host.querySelector('.mwnf-grid__tile')).not.toBeNull(), WAIT)
-      expect(host.textContent).toContain(`for project ${chip.project.slice(0, 15)}`)
+      await vi.waitFor(() => expect(host.querySelector(TILE)).not.toBeNull(), WAIT)
+      const projects = [...host.querySelectorAll('.mwnf-dxa-grid__project span')].map((span) => span.textContent)
+      expect(projects.some((name) => name.startsWith(chip.project.slice(0, 15)))).toBe(true)
       app.unmount()
     }, 30000)
 
@@ -345,37 +355,42 @@ export function describeGallerySmoke({ config, sharedTexts, ownTexts, manifest, 
       }, 60000)
     }
 
+    // (`timeline.galleryTiles` is no longer read: it counted the old nine a
+    // page; the first page holds twenty of the `gallery` count, or all.)
     it('renders the timeline gallery on the composed results view', async () => {
       const { app, host } = await mountSite(`#/timeline/gallery?country=${timeline.code}`)
-      await vi.waitFor(() => expect(host.querySelectorAll('.mwnf-grid__tile').length).toBeGreaterThan(0), WAIT)
-      if (timeline.galleryTiles) expect(host.querySelectorAll('.mwnf-grid__tile').length).toBe(timeline.galleryTiles)
+      await vi.waitFor(() => expect(host.querySelectorAll(TILE).length).toBeGreaterThan(0), WAIT)
+      if (timeline.gallery) expect(host.querySelectorAll(TILE).length).toBe(firstPage(timeline.gallery))
       expect(host.querySelector('.mwnf-summary').textContent).toContain(timeline.country)
       if (timeline.galleryItem) expect(host.textContent).toContain(timeline.galleryItem)
       app.unmount()
     }, 60000)
 
-    // The entrance's country control writes the inventory id, and the results
-    // it submits to filter on it.
-    it("submits the timeline entrance's country control (an id) to a results address that actually filters", async () => {
+    // Legacy's entrance (TimelinePage.vue): the country list, then Go, which
+    // fills in the first and last dates on offer; the results filter on the
+    // country chosen.
+    it("submits the timeline entrance's country with Go to results that actually filter", async () => {
       const { app, host } = await mountSite('#/timeline')
-      await vi.waitFor(() => expect(host.querySelector('.mwnf-facet__select')).not.toBeNull(), WAIT)
-      const countrySelect = host.querySelectorAll('.mwnf-facet__select')[0]
-      countrySelect.value = timeline.id
+      await vi.waitFor(() => expect(host.querySelectorAll('.mwnf-dxa-timeline__country option').length).toBeGreaterThan(2), WAIT)
+      const countrySelect = host.querySelector('.mwnf-dxa-timeline__country')
+      const option = [...countrySelect.options].find((o) => o.value === timeline.id || o.value === timeline.code)
+      countrySelect.value = option.value
       countrySelect.dispatchEvent(new window.Event('change', { bubbles: true }))
-      host.querySelector('form.mwnf-timeline__filters').dispatchEvent(new window.Event('submit', { bubbles: true, cancelable: true }))
+      host.querySelector('.mwnf-dxa-timeline__go button').click()
       await vi.waitFor(() => expect(host.querySelectorAll('.mwnf-timeline__row').length).toBeGreaterThan(0), WAIT)
-      if (timeline.rows) expect(host.querySelectorAll('.mwnf-timeline__row').length).toBe(timeline.rows)
       expect(host.querySelector('.mwnf-timeline__caption').textContent).toContain(timeline.country)
       app.unmount()
     }, 60000)
 
-    // The object count is the gallery's own entry over the shared one.
-    it('renders the partners list on the composed partner-list view', async () => {
+    // Legacy's list (PartnersPage.vue): each partner's name and its links,
+    // View objects for one holding something; no object count.
+    it("renders the partners list as legacy's", async () => {
       const { app, host } = await mountSite('#/partners')
-      await vi.waitFor(() => expect(host.querySelector('.mwnf-partner-list__row')).not.toBeNull(), WAIT)
+      await vi.waitFor(() => expect(host.querySelector('.mwnf-dxa-gallery-partners__partner')).not.toBeNull(), WAIT)
       expect(host.textContent).toContain(partner.country)
       expect(host.textContent).toContain(partner.name)
-      expect(host.textContent).toContain(`${partner.objects} object(s) in this site`)
+      expect(host.querySelector(`.mwnf-dxa-gallery-partners__links a[href="#/partner/${partner.id}/objects"]`)).not.toBeNull()
+      expect(host.textContent).not.toContain('object(s) in this site')
       app.unmount()
     }, 60000)
 
@@ -390,9 +405,10 @@ export function describeGallerySmoke({ config, sharedTexts, ownTexts, manifest, 
       app.unmount()
     }, 60000)
 
-    it("renders a partner's objects on the composed grid results view", async () => {
+    // (`partner.tiles` is no longer read: the first page holds twenty, or all.)
+    it("renders a partner's objects on legacy's grid", async () => {
       const { app, host } = await mountSite(`#/partner/${partner.id}/objects`)
-      await vi.waitFor(() => expect(host.querySelectorAll('.mwnf-grid__tile').length).toBe(partner.tiles ?? partner.objects), WAIT)
+      await vi.waitFor(() => expect(host.querySelectorAll(TILE).length).toBe(firstPage(partner.objects)), WAIT)
       expect(host.textContent).toContain(partner.name)
       app.unmount()
     }, 60000)

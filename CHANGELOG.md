@@ -16,6 +16,11 @@ The galleries' Partners, About, Credits, How to search and Timeline pages as leg
 - **The gallery family loads Roboto Condensed upright only**, as legacy did: its italics are the upright face slanted, as wide as legacy's.
 - **Back's arrow** is its own element (`.mwnf-back-link__arrow`). In a gallery it takes the place of legacy's icon: 20px wide, 4px from the label, and as tall as the text.
 
+### Changed (the gallery smoke suite, `dxa/testing`)
+
+- It checks the pages above as legacy's: legacy's tiles (`.mwnf-dxa-grid__entry`), the text pages, the Timeline entrance's Go, the partners list without a count.
+- A first page of tiles holds twenty, or every object when there are fewer; the suite counts that itself, so a site's `collection.tiles`, `timeline.galleryTiles` and `partner.tiles` are no longer read (they counted the old nine a page). Nothing to change in a site.
+
 ### Added
 
 - `PartnerListView`'s `tiebreak`: the second sort key for two rows of the same name.

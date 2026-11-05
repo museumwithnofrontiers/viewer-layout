@@ -4,7 +4,7 @@ import BackLink from '../../content/BackLink.vue'
 import Pagination from '../../content/Pagination.vue'
 import CatalogueResultsView from '../../views/CatalogueResultsView.vue'
 import ObjectGrid from './ObjectGrid.vue'
-import { timelineGallery } from './data.js'
+import { legacyPaging, timelineGallery } from './data.js'
 
 // The member items whose dates overlap the timeline search's country and
 // period (epic #1731, from carpets/amulets — byte-identical), on the
@@ -15,7 +15,7 @@ import { timelineGallery } from './data.js'
 </script>
 
 <template>
-  <CatalogueResultsView :spec="timelineGallery" class="mwnf-dxa-timeline-gallery">
+  <CatalogueResultsView :spec="{ ...timelineGallery, ...legacyPaging }" class="mwnf-dxa-timeline-gallery">
     <template #before>
       <BackLink />
     </template>

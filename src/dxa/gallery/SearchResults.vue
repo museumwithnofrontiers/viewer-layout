@@ -5,7 +5,7 @@ import { useKeywordIndex } from '@museumwnf/viewer-core'
 import BackLink from '../../content/BackLink.vue'
 import CatalogueResultsView from '../../views/CatalogueResultsView.vue'
 import ObjectGrid from './ObjectGrid.vue'
-import { loadEnglish, GALLERY_PAGE_SIZE, haystack, tile } from './data.js'
+import { loadEnglish, legacyPaging, haystack, tile } from './data.js'
 
 // The header search bar's results (epic #1731, from carpets/amulets — byte-
 // identical), on the platform's composed results view. Legacy ran MySQL
@@ -31,7 +31,7 @@ const searchResultsSpec = computed(() => ({
     if (!ready.value) return []
     return isAllObjects(filters.q) ? list : index.search(filters.q)
   },
-  pageSize: GALLERY_PAGE_SIZE,
+  pageSize: legacyPaging.pageSize,
   variant: 'grid',
   recordRoute: 'item',
   actionLabel: 'catalogue.results.seeDatabaseEntry',

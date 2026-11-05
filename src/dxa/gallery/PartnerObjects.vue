@@ -5,7 +5,7 @@ import Pagination from '../../content/Pagination.vue'
 import CatalogueResultsView from '../../views/CatalogueResultsView.vue'
 import BackLink from '../../content/BackLink.vue'
 import ObjectGrid from './ObjectGrid.vue'
-import { partnerById, partnerDetail, partnerRoute, tr, defaultLang, partnerObjects } from './data.js'
+import { legacyPaging, partnerById, partnerDetail, partnerRoute, tr, defaultLang, partnerObjects } from './data.js'
 
 // The member items one partner holds, as legacy's PartnerObjects.vue
 // (inventory-app#2423): Back, the partner's name and, in italics, where it
@@ -18,6 +18,7 @@ const route = useRoute()
 const partner = computed(() => partnerById.value.get(route.params.id) ?? null)
 const spec = computed(() => ({
   ...partnerObjects,
+  ...legacyPaging,
   scope: (item) => item.partner_id === route.params.id,
 }))
 
