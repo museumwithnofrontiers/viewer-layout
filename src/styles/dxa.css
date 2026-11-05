@@ -19,6 +19,93 @@
   padding-bottom: 2.5rem;
 }
 
+/* A gallery's text pages (dxa/gallery/TextPage.vue), as legacy's: a white
+   panel, Back at its top left, the text in a centred column half the page
+   wide, wider as the screen narrows, its paragraphs a blank line apart.
+   About keeps Back 30px from the panel's edge with a 30px band above and
+   below; Credits and How to search 50px in, centred in a 60px band. */
+
+.mwnf-dxa-gallery-text {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  background: var(--mwnf-dxa-gallery-text-background, #ffffff);
+  color: #000000;
+  font-size: 1rem;
+  line-height: normal;
+}
+
+.mwnf-dxa-gallery-text > .mwnf-back-link {
+  display: flex;
+  align-items: center;
+  align-self: stretch;
+  padding: 30px 50px 30px 30px;
+}
+
+.mwnf-dxa-gallery-text .mwnf-back-link__button {
+  font: inherit;
+  font-weight: 700;
+  color: #000000;
+  line-height: normal;
+}
+
+.mwnf-dxa-gallery-text--credits > .mwnf-back-link,
+.mwnf-dxa-gallery-text--how-to > .mwnf-back-link {
+  height: 60px;
+  padding: 0 50px;
+}
+
+.mwnf-dxa-gallery-text__body {
+  display: block;
+  width: 50%;
+  padding: 0 50px 50px;
+}
+
+.mwnf-dxa-gallery-text--credits .mwnf-dxa-gallery-text__body {
+  padding: 50px 50px 100px;
+}
+
+.mwnf-dxa-gallery-text--how-to .mwnf-dxa-gallery-text__body {
+  padding: 50px;
+}
+
+.mwnf-dxa-gallery-text__body p,
+.mwnf-dxa-gallery-text__body ul,
+.mwnf-dxa-gallery-text__body ol {
+  margin: 0;
+}
+
+.mwnf-dxa-gallery-text__body a {
+  color: var(--mwnf-link-text, #0000ff);
+  text-decoration: underline;
+  overflow-wrap: break-word;
+}
+
+@media only screen and (max-width: 1199px) {
+  .mwnf-dxa-gallery-text__body { width: 70%; }
+}
+
+@media only screen and (max-width: 974px) {
+  .mwnf-dxa-gallery-text__body { width: 80%; }
+}
+
+@media only screen and (max-width: 849px) {
+  .mwnf-dxa-gallery-text__body { width: 88%; }
+}
+
+@media only screen and (max-width: 724px) {
+  .mwnf-dxa-gallery-text__body { width: 100%; }
+}
+
+@media only screen and (max-width: 599px) {
+  .mwnf-dxa-gallery-text--about .mwnf-dxa-gallery-text__body { padding: 0 30px 30px; }
+  .mwnf-dxa-gallery-text--credits .mwnf-dxa-gallery-text__body { padding: 30px 30px 50px; }
+  .mwnf-dxa-gallery-text--how-to .mwnf-dxa-gallery-text__body { padding: 30px; }
+  .mwnf-dxa-gallery-text--credits > .mwnf-back-link,
+  .mwnf-dxa-gallery-text--how-to > .mwnf-back-link { padding: 0 30px; }
+}
+
 /* Partners list */
 
 .mwnf-dxa-partners {
@@ -57,6 +144,245 @@
 
 .mwnf-dxa-partners .mwnf-partner-panel--line .mwnf-partner-panel__name {
   font-weight: 700;
+}
+
+/* The gallery partners list, as legacy's PartnersPage.vue: a white page in a
+   50px gutter, Back and the country-order toggle on one line, then the
+   introduction and the countries in a centred column half the page wide,
+   wider as the screen narrows. Each country is a band in the gallery's page
+   colour over its partners, each partner a 100px block of text — the name,
+   the project badge, the links — beside its logo, a grey rule between two
+   partners. */
+
+.mwnf-dxa-gallery-partners {
+  background: var(--mwnf-dxa-gallery-partners-background, #ffffff);
+  color: #000000;
+  padding: 0 3.125rem;
+  font-size: 1rem;
+  line-height: normal;
+}
+
+.mwnf-dxa-gallery-partners .mwnf-partner-list,
+.mwnf-dxa-gallery-partners .mwnf-partner-list__groups {
+  gap: 0;
+}
+
+.mwnf-dxa-gallery-partners__options {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.mwnf-dxa-gallery-partners__options > * {
+  display: flex;
+  align-items: center;
+  height: 50px;
+  padding: 30px 0 0;
+}
+
+/* Legacy's Partners page styled its own Back: 2px all round, a 16px icon. */
+.mwnf-dxa-gallery-partners .mwnf-back-link__button,
+.mwnf-dxa-gallery-partners__order button {
+  padding: 2px;
+}
+
+.mwnf-dxa-gallery-partners .mwnf-back-link__arrow {
+  width: 16px;
+}
+
+.mwnf-dxa-gallery-partners .mwnf-back-link__button,
+.mwnf-dxa-gallery-partners__order button {
+  background: transparent;
+  border: none;
+  font: inherit;
+  font-weight: 700;
+  color: #000000;
+  cursor: pointer;
+  line-height: normal;
+}
+
+.mwnf-dxa-gallery-partners__intro,
+.mwnf-dxa-gallery-partners .mwnf-partner-list__groups {
+  width: 50%;
+  margin-inline: auto;
+}
+
+.mwnf-dxa-gallery-partners__intro {
+  display: block;
+  padding-top: 30px;
+}
+
+.mwnf-dxa-gallery-partners .mwnf-partner-list__groups {
+  padding: 30px 0 50px;
+}
+
+.mwnf-dxa-gallery-partners .mwnf-partner-list__group {
+  margin-bottom: 30px;
+  padding: 0;
+  border: none;
+}
+
+.mwnf-dxa-gallery-partners .mwnf-partner-list__group-heading {
+  cursor: auto;
+}
+
+.mwnf-dxa-gallery-partners__country {
+  background: var(--mwnf-dxa-band-background, #f0f0f0);
+  padding: 5px 10px;
+  font-size: 160%;
+  font-weight: 700;
+}
+
+.mwnf-dxa-gallery-partners .mwnf-partner-list__tier,
+.mwnf-dxa-gallery-partners .mwnf-partner-list__row-block {
+  gap: 0;
+  padding: 0;
+}
+
+.mwnf-dxa-gallery-partners__partner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 30px 10px;
+}
+
+.mwnf-dxa-gallery-partners .mwnf-partner-list__row-block:not(:last-child) .mwnf-dxa-gallery-partners__partner {
+  border-bottom: 1px solid #707070;
+}
+
+.mwnf-dxa-gallery-partners .mwnf-partner-list__row {
+  display: block;
+}
+
+.mwnf-dxa-gallery-partners__text {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: space-between;
+  width: 100%;
+  height: 100px;
+}
+
+.mwnf-dxa-gallery-partners__partner a {
+  color: #000000;
+  text-decoration: none;
+}
+
+.mwnf-dxa-gallery-partners__name {
+  font-size: 120%;
+  font-weight: 700;
+}
+
+.mwnf-dxa-gallery-partners__name:hover {
+  text-decoration: underline;
+}
+
+.mwnf-dxa-gallery-partners__city {
+  font-weight: 400;
+}
+
+.mwnf-dxa-gallery-partners__links {
+  display: flex;
+  align-items: center;
+}
+
+.mwnf-dxa-gallery-partners__divider {
+  padding: 0 8px;
+}
+
+.mwnf-dxa-gallery-partners__logo {
+  flex-shrink: 0;
+  min-width: 100px;
+  max-width: 150px;
+  height: 100px;
+}
+
+.mwnf-dxa-gallery-partners__logo img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+/* The project badge: the project's name in italics, its status upright, on
+   the project's colour (legacy's $dia-yellow, $sh-red, …); a project legacy
+   gave no colour stays on the page. */
+
+.mwnf-dxa-partner-badge {
+  border-radius: 10px;
+  padding: 0 10px;
+  font-size: 90%;
+  font-weight: 700;
+  font-style: italic;
+}
+
+.mwnf-dxa-partner-badge__status {
+  font-style: normal;
+}
+
+.mwnf-dxa-partner-badge--dga { background: var(--mwnf-dxa-badge-dga, #0059bf); color: #ffffff; }
+.mwnf-dxa-partner-badge--isl { background: var(--mwnf-dxa-badge-isl, #ffcc00); color: #000000; }
+.mwnf-dxa-partner-badge--awe { background: var(--mwnf-dxa-badge-awe, #900000); color: #ffffff; }
+.mwnf-dxa-partner-badge--dba { background: var(--mwnf-dxa-badge-dba, #001d66); color: #ffffff; }
+.mwnf-dxa-partner-badge--galleries { background: var(--mwnf-dxa-badge-galleries, #263238); color: #ffffff; }
+.mwnf-dxa-partner-badge--dca { background: var(--mwnf-dxa-badge-dca, #6b612b); color: #ffffff; }
+.mwnf-dxa-partner-badge--exh { background: var(--mwnf-dxa-badge-exh, #7f01d4); color: #ffffff; }
+
+@media only screen and (max-width: 1199px) {
+  .mwnf-dxa-gallery-partners__intro,
+  .mwnf-dxa-gallery-partners .mwnf-partner-list__groups { width: 70%; }
+  .mwnf-dxa-gallery-partners__country { font-size: 150%; }
+  .mwnf-dxa-gallery-partners__name { font-size: 110%; }
+}
+
+@media only screen and (max-width: 974px) {
+  .mwnf-dxa-gallery-partners__intro,
+  .mwnf-dxa-gallery-partners .mwnf-partner-list__groups { width: 80%; }
+  .mwnf-dxa-gallery-partners .mwnf-partner-list__group { margin-bottom: 15px; }
+}
+
+@media only screen and (max-width: 849px) {
+  .mwnf-dxa-gallery-partners__intro,
+  .mwnf-dxa-gallery-partners .mwnf-partner-list__groups { width: 88%; }
+  .mwnf-dxa-gallery-partners__country { font-size: 130%; }
+  .mwnf-dxa-gallery-partners__name { font-size: 105%; }
+}
+
+@media only screen and (max-width: 724px) {
+  .mwnf-dxa-gallery-partners__intro,
+  .mwnf-dxa-gallery-partners .mwnf-partner-list__groups { width: 100%; }
+  .mwnf-dxa-gallery-partners__country { font-size: 120%; }
+  .mwnf-dxa-gallery-partners__name { font-size: 100%; }
+}
+
+@media only screen and (max-width: 599px) {
+  .mwnf-dxa-gallery-partners { padding: 0 30px; }
+  .mwnf-dxa-gallery-partners .mwnf-partner-list__groups { padding-bottom: 30px; }
+}
+
+@media only screen and (max-width: 499px) {
+  .mwnf-dxa-gallery-partners__partner { padding: 18px 10px; }
+  .mwnf-dxa-gallery-partners__text { height: 125px; }
+  .mwnf-dxa-partner-badge { border-radius: 0; padding: 5px; }
+  .mwnf-dxa-gallery-partners__logo { height: 125px; max-width: 100px; margin-left: 5px; }
+}
+
+@media only screen and (max-width: 399px) {
+  .mwnf-dxa-gallery-partners__options { flex-direction: column; align-items: flex-start; }
+  .mwnf-dxa-gallery-partners__order { height: auto; padding-top: 20px; }
+  .mwnf-dxa-gallery-partners__order button { text-align: left; }
+  .mwnf-dxa-gallery-partners__intro { padding-top: 20px; }
+  .mwnf-dxa-gallery-partners__partner { flex-direction: column-reverse; }
+  .mwnf-dxa-gallery-partners__text { height: auto; margin-top: 10px; }
+  .mwnf-dxa-gallery-partners__text > * { margin-bottom: 8px; }
+  .mwnf-dxa-gallery-partners__logo {
+    width: 100%;
+    max-width: 100%;
+    height: 90px;
+    margin-left: 0;
+    border: 1px solid var(--mwnf-dxa-band-background, #f0f0f0);
+  }
 }
 
 /* Partner profile */
@@ -550,34 +876,102 @@
   color: var(--mwnf-link-text, #0000ff);
 }
 
+/* A gallery's, as legacy's TimelinePage.vue: on a white panel, the form in
+   the left 40% — the country list and the two dates at most 350px wide, the
+   dates side by side, a round Go in the light tone — and the introduction in
+   the rest, its paragraphs 15px apart; a narrow screen stacks the two. */
+
 .mwnf-dxa-timeline {
   display: flex;
-  background: var(--mwnf-color-background, #ffffff);
+  align-items: flex-start;
+  justify-content: center;
   width: 100%;
-  min-height: 25rem;
+  background: var(--mwnf-dxa-gallery-text-background, #ffffff);
+  color: #000000;
+  font-size: 1rem;
+  line-height: normal;
 }
 
 .mwnf-dxa-timeline__form {
   width: 40%;
-  padding: 3.125rem;
-  max-width: 21.875rem;
+  padding: 50px;
+}
+
+.mwnf-dxa-timeline__entrance {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.mwnf-dxa-timeline__country,
+.mwnf-dxa-timeline__dates {
+  width: 100%;
+  max-width: 350px;
+}
+
+.mwnf-dxa-timeline__entrance select {
+  padding: 4px;
+  font: inherit;
+}
+
+.mwnf-dxa-timeline__dates {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 15px 0;
+}
+
+.mwnf-dxa-timeline__dates select {
+  width: 48%;
+}
+
+.mwnf-dxa-timeline__go button {
+  padding: 4px 15px;
+  border: none;
+  border-radius: 100px;
+  background: var(--mwnf-dxa-timeline-go-background, var(--theme-light, #64a9c1));
+  color: #ffffff;
+  font: inherit;
+  cursor: pointer;
 }
 
 .mwnf-dxa-timeline .mwnf-dxa-timeline__intro {
   width: 60%;
-  padding: 3.125rem 4.6875rem 3.125rem 0;
+  padding: 50px 75px 50px 0;
+  line-height: normal;
 }
 
-@media only screen and (max-width: 53.0625rem) {
+.mwnf-dxa-timeline .mwnf-dxa-timeline__intro p {
+  margin: 0;
+}
+
+.mwnf-dxa-timeline .mwnf-dxa-timeline__intro p + p {
+  margin-top: 15px;
+}
+
+@media only screen and (max-width: 849px) {
   .mwnf-dxa-timeline {
     flex-direction: column;
   }
 
-  .mwnf-dxa-timeline__form,
-  .mwnf-dxa-timeline .mwnf-dxa-timeline__intro {
+  .mwnf-dxa-timeline__form {
     width: 100%;
-    max-width: none;
-    padding: 1.875rem;
+  }
+
+  .mwnf-dxa-timeline .mwnf-dxa-timeline__intro {
+    align-self: center;
+    width: 100%;
+    padding: 0 50px 50px;
+  }
+}
+
+@media only screen and (max-width: 599px) {
+  .mwnf-dxa-timeline__form {
+    padding: 30px;
+  }
+
+  .mwnf-dxa-timeline .mwnf-dxa-timeline__intro {
+    padding: 0 30px 30px;
   }
 }
 /* An exhibition's popup notice: legacy centred its text and sized each

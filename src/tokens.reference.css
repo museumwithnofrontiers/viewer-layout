@@ -717,6 +717,7 @@
   /* --mwnf-back-link-size: 0.875rem;                  Back link text size */
   /* --mwnf-back-link-line-height: 1;                  Back link line height */
   /* --mwnf-back-link-color: var(--mwnf-link-text);    Back link color */
+  /* --mwnf-back-link-arrow-gap: 0.25em;               Back link: the space after its arrow */
 
   /* ---------- Content: SearchFormView ---------- */
   /* --mwnf-search-form-row-gap: 0.5rem;             Gap between a row's own parts, and between facet columns */
@@ -821,7 +822,16 @@
 
   /* ---------- DXA family pages (src/dxa/) ---------- */
   /* --mwnf-dxa-heading-color: #1c1c1c;              Partner name / profile heading color */
-  /* --mwnf-dxa-band-background: #f0f0f0;            Language switcher / tab strip / timeline-link box background */
+  /* --mwnf-dxa-band-background: #f0f0f0;            Language switcher / tab strip / timeline-link box / gallery partner list country band background */
+  /* --mwnf-dxa-gallery-partners-background: #ffffff; The gallery partner list's page ground */
+  /* --mwnf-dxa-gallery-text-background: #ffffff;    A gallery's About / Credits / How to search / Timeline panel */
+  /* --mwnf-dxa-timeline-go-background: var(--theme-light); A gallery's Timeline: the Go button */  /* --mwnf-dxa-badge-dga: #0059bf;                  Partner badge colours by project, as legacy's (white text): Discover Glass Art */
+  /* --mwnf-dxa-badge-isl: #ffcc00;                  Discover Islamic Art, Explore Islamic Art Collections (black text) */
+  /* --mwnf-dxa-badge-awe: #900000;                  Sharing History */
+  /* --mwnf-dxa-badge-dba: #001d66;                  Discover Baroque Art */
+  /* --mwnf-dxa-badge-galleries: #263238;            MWNF Galleries */
+  /* --mwnf-dxa-badge-dca: #6b612b;                  Discover Carpet Art */
+  /* --mwnf-dxa-badge-exh: #7f01d4;                  Any online exhibition's project */
   /* --mwnf-dxa-item-background: #ffffff;            Item page ground (white on a gallery's tinted page) */
   /* --mwnf-dxa-item-link: var(--mwnf-link-text);   Item sheet value links */
   /* --mwnf-dxa-item-padding: 3.125rem 1.25rem;      Item page: the photo and sheet columns' side padding */

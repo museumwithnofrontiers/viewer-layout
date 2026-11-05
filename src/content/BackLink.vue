@@ -62,10 +62,10 @@ function handleBarClick(event) {
   <a v-if="variant === 'bar'" :href="barHref" class="mwnf-back-bar mwnf-back-bar--link" @click="handleBarClick"><span class="mwnf-back-bar__arrow" aria-hidden="true">{{ arrow }}</span> <slot>{{ $t(label) }}</slot></a>
   <div v-else class="mwnf-back-link">
     <SmartLink v-if="hasFallback && !goesBack()" :to="to" :href="href" class="mwnf-back-link__button">
-      ↩ {{ $t(label) }}
+      <span class="mwnf-back-link__arrow" aria-hidden="true">↩</span>{{ $t(label) }}
     </SmartLink>
     <button v-else class="mwnf-back-link__button" @click="handleClick">
-      ↩ {{ $t(label) }}
+      <span class="mwnf-back-link__arrow" aria-hidden="true">↩</span>{{ $t(label) }}
     </button>
   </div>
 </template>

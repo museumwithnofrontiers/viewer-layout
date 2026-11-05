@@ -1683,6 +1683,28 @@ describe('PartnerListView', () => {
     ])
   })
 
+  it('tiebreak orders two rows of the same name (a partner listed once per project)', async () => {
+    const order = async (keys) => {
+      const { wrapper } = await mountView(PartnerListView, {
+        props: {
+          spec: {
+            entity: 'partners',
+            scope: (partner) => ['p1', 'p7'].includes(partner.id),
+            group: { tier: false, order: 'country' },
+            label: countryOrOther,
+            record: (partner) => ({ name: 'Same Museum', city: partner.id }),
+            tiebreak: (partner) => keys[partner.id],
+          },
+        },
+        route: '/partners',
+      })
+      await settle(() => wrapper.findAll('.mwnf-partner-panel__name').length === 2)
+      return wrapper.findAll('.mwnf-partner-panel__name').map((n) => n.text())
+    }
+    expect(await order({ p1: 'Discover Islamic Art', p7: 'Sharing History' })).toEqual(['Same Museum, p1', 'Same Museum, p7'])
+    expect(await order({ p1: 'Water in Islam', p7: 'Sharing History' })).toEqual(['Same Museum, p7', 'Same Museum, p1'])
+  })
+
   it('shows the empty state when scope leaves nothing, and the caller can name its own entry', async () => {
     const { wrapper } = await mountView(PartnerListView, {
       props: {
@@ -2015,13 +2037,14 @@ describe('TimelineResultsView', () => {
       route: '/timeline/results',
     })
     await settle(() => wrapper.findAll('.mwnf-facet__select').length >= 3)
-    // The options function receives the year range and builds options from it.
-    // Fixture years for country scope: 900 (min) to 1350 (max).
+    // The options function receives the year range and builds options from it:
+    // the earliest start (900) to the latest end (1350), as legacy's
+    // events/years did; the latest start is 1300.
     const selects = wrapper.findAll('.mwnf-facet__select')
     const beginOptions = selects[1].findAll('option').map((o) => o.text())
     const endOptions = selects[2].findAll('option').map((o) => o.text())
     expect(beginOptions).toContain('From 900')
-    expect(endOptions).toContain('Until 1300')
+    expect(endOptions).toContain('Until 1350')
   })
 
   it('hands #summary, #cross-link, #event, #before and #after the shared context', async () => {

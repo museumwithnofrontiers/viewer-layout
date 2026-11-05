@@ -1,3 +1,28 @@
+## 3.60.0 (2026-11-05)
+
+The galleries' Partners, About, Credits, How to search and Timeline pages as legacy's (inventory-app#2423), each measured equal to legacy on Ceramics at 1366 and 390.
+
+### Changed
+
+- **The gallery partner list** is legacy's PartnersPage.vue:
+  - a white page: Back and the country-order toggle on one line;
+  - the introduction and the countries in a centred column, each country a band in the gallery's page colour;
+  - each partner: the name and city, its project badge ("Discover Islamic Art Partner", "Sharing History Affiliate", on the project's colour, from the package's `own_project`), Read more · View objects (View objects only for a partner holding something), the logo on the right;
+  - no object count, which legacy never printed.
+- **A gallery's About, Credits and How to search** (`dxa/gallery/TextPage.vue`): a white panel, Back at its top left, the text in a centred column, each page placing them as legacy's did. The Credits keep legacy's two blank lines where it had two (viewer-core 2.16.0's `blank-lines`). Back goes through history, as legacy's did.
+- **A gallery's Timeline entrance** is legacy's TimelinePage.vue: "Select a Country" then "All Countries", the start and end dates side by side, and a round Go that checks what legacy's checked. Beside it, the introduction, its paragraphs 15px apart, on a white panel.
+- **The gallery family loads Roboto Condensed upright only**, as legacy did: its italics are the upright face slanted, as wide as legacy's.
+- **Back's arrow** is its own element (`.mwnf-back-link__arrow`). In a gallery it takes the place of legacy's icon: 20px wide, 4px from the label, and as tall as the text.
+
+### Added
+
+- `PartnerListView`'s `tiebreak`: the second sort key for two rows of the same name.
+- `TimelineResultsView`'s entrance `form` slot, for a family that draws its own form.
+
+### Fixed
+
+- **The timeline's year lists** run to the latest end year, as legacy's did (they stopped at the latest start year).
+
 ## 3.59.0 (2026-11-04)
 
 ### Added
