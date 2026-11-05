@@ -839,6 +839,7 @@
   /* --mwnf-dxa-related-background: #f0f0f0;         Its background */
   /* --mwnf-dxa-related-text: inherit;               Its text and links */
   /* --mwnf-dxa-related-heading-color: inherit;      Its underlined headings */
+  /* --mwnf-dxa-languages-background: var(--theme-dark); A gallery item page's language band (legacy's dark tone) */
   /* --mwnf-dxa-glossary-image: none;                The glossary entry header's picture (set by ItemDetailView from the site's world.png) */
   /* --mwnf-dxa-popup-image-width: 13.25rem;        An exhibition popup notice's pictures: their widest (legacy sized them 191 to 211px) */
   /* --mwnf-dxa-theme-background: #ffffff;           Exhibition theme pages: the ground (legacy's secondary colour) */

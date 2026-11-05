@@ -60,6 +60,11 @@ import { limitPictures } from './pictureLimit.js'
 // section (a monument's special features after its dating method, as the
 // standalone sites' legacy put them). `source`, under the citation, defaults to
 // `SourceCredit` — nothing unless the website declares `site.origin`.
+// `after-media`, when filled, follows the pictures in one block with them
+// (`mwnf-record__media`), so a page laying the pictures out in a column of
+// their own keeps what follows under them. `credits` replaces the credits and
+// citation, receiving them as `credits`, `workingNumber`, `workingNumberLabel`,
+// `citation` and `citationHtml` beside the context.
 // A website whose page is not this shape registers its own component instead.
 
 const props = defineProps({
@@ -283,7 +288,7 @@ function defaultRelated({ record: other, justification }) {
 }
 
 // The slots that reach the sheet: every slot that is not this view's own.
-const OWN_SLOTS = new Set(['header', 'before-sheet', 'after-sheet', 'aside', 'source', 'related', 'after', 'default'])
+const OWN_SLOTS = new Set(['header', 'before-sheet', 'after-sheet', 'after-media', 'credits', 'aside', 'source', 'related', 'after', 'default'])
 const rowSlots = computed(() => Object.keys(slots).filter((name) => !OWN_SLOTS.has(name)))
 </script>
 
@@ -299,7 +304,11 @@ const rowSlots = computed(() => Object.keys(slots).filter((name) => !OWN_SLOTS.h
 
     <div class="mwnf-record__body">
       <div class="mwnf-record__main">
-        <MediaGallery v-if="images.length" :images="images" :variant="spec.mediaVariant ?? ''" />
+        <div v-if="$slots['after-media']" class="mwnf-record__media">
+          <MediaGallery v-if="images.length" :images="images" :variant="spec.mediaVariant ?? ''" />
+          <slot name="after-media" v-bind="ctx" />
+        </div>
+        <MediaGallery v-else-if="images.length" :images="images" :variant="spec.mediaVariant ?? ''" />
         <p v-if="!ready" class="mwnf-record__status">{{ t('core.status.loading') }}</p>
 
         <slot name="before-sheet" v-bind="ctx" />
@@ -328,14 +337,26 @@ const rowSlots = computed(() => Object.keys(slots).filter((name) => !OWN_SLOTS.h
 
         <slot name="after-sheet" v-bind="ctx" />
 
-        <RecordCredits
-          :credits="credits"
-          :working-number="workingNumber"
-          :working-number-label="sheetT(spec.workingNumberLabel ?? 'sheet.field.workingNumber')"
-          :citation="citationText"
-          :citation-html="citationHtml"
-          :citation-heading="spec.citation?.heading ? sheetT(spec.citation.heading) : ''"
-        />
+        <slot
+          name="credits"
+          v-bind="{
+            ...ctx,
+            credits,
+            workingNumber,
+            workingNumberLabel: sheetT(spec.workingNumberLabel ?? 'sheet.field.workingNumber'),
+            citation: citationText,
+            citationHtml,
+          }"
+        >
+          <RecordCredits
+            :credits="credits"
+            :working-number="workingNumber"
+            :working-number-label="sheetT(spec.workingNumberLabel ?? 'sheet.field.workingNumber')"
+            :citation="citationText"
+            :citation-html="citationHtml"
+            :citation-heading="spec.citation?.heading ? sheetT(spec.citation.heading) : ''"
+          />
+        </slot>
 
         <slot name="source" v-bind="ctx">
           <SourceCredit />
