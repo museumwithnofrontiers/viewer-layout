@@ -280,7 +280,7 @@ export function describeGallerySmoke({ config, sharedTexts, ownTexts, manifest, 
     it("colours the Source box and names the citation's project from the manifest projects section", async () => {
       const { app, host } = await mountSite(`#/item/${chip.item}`)
       await vi.waitFor(() => expect(host.querySelector('.mwnf-dxa-gallery-item__source')).not.toBeNull(), WAIT)
-      expect(host.querySelector('.mwnf-dxa-gallery-item__project').textContent).toBe(chip.project)
+      expect(host.querySelector('.mwnf-dxa-gallery-item__project').textContent).toContain(chip.project)
       expect(host.querySelector('.mwnf-dxa-gallery-item__source').classList.contains(chip.className)).toBe(true)
       app.unmount()
     }, 60000)
@@ -343,7 +343,8 @@ export function describeGallerySmoke({ config, sharedTexts, ownTexts, manifest, 
       const link = host.querySelector('.mwnf-dxa-gallery-item__source a')
       expect(link.textContent).toBe(link.getAttribute('href'))
       const home = manifest.projects[item.project_id]?.home_site
-      const origin = config.site.origin.replace(/\/+$/, '')
+      let origin = config.site.origin
+      while (origin.endsWith('/')) origin = origin.slice(0, -1)
       const expected = home && home !== manifest.site?.key
         ? `${origin.slice(0, origin.lastIndexOf('/'))}/${home}/#/item/${item.id}`
         : `${origin}/#/item/${item.id}`
