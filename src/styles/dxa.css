@@ -711,6 +711,233 @@
   text-decoration: underline;
 }
 
+/* The pictures and what a page puts under them (RecordView's `after-media`)
+   are one block in the first column. */
+.mwnf-dxa-item .mwnf-record__main > .mwnf-record__media {
+  grid-column: 1;
+  grid-row: 1 / span 12;
+}
+
+/* A gallery's sheet, as legacy's DatabaseItem.vue set it (inventory-app#2423):
+   bold labels, each value under its label indented and spaced, the lines at
+   the font's own height; then the citation, the credits, the working number
+   and the Source box on the record's project colour. Under the pictures,
+   the Source and My Collection links. */
+.mwnf-dxa-gallery-item {
+  row-gap: 0;
+  --mwnf-media-gap: 0.625rem;
+  --mwnf-media-thumb-size: 3.75rem;
+  --mwnf-media-thumb-gap: 0.625rem;
+}
+
+/* Roboto Condensed's own line, fixed, so the arrows (a fallback font's,
+   whose line is taller) leave each line legacy's height. */
+.mwnf-dxa-gallery-item__links,
+.mwnf-dxa-gallery-item__credits {
+  line-height: 1.171875;
+}
+
+.mwnf-dxa-gallery-item .mwnf-record__main {
+  grid-template-columns: 39.4% minmax(0, 1fr);
+}
+
+.mwnf-dxa-gallery-item > .mwnf-dxa-item__languages {
+  padding: 0 0.625rem 0 0;
+  background: var(--mwnf-dxa-languages-background, var(--theme-dark, #1c1c1c));
+}
+
+.mwnf-dxa-gallery-item .mwnf-languages {
+  justify-content: flex-end;
+  gap: 0;
+  margin: 0;
+}
+
+.mwnf-dxa-gallery-item .mwnf-languages__button {
+  padding: 0.25rem 0.5rem;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  color: #ffffff;
+  font-size: 95%;
+  line-height: normal;
+}
+
+.mwnf-dxa-gallery-item .mwnf-languages__button--active {
+  background: var(--mwnf-dxa-related-background, var(--theme-light, #64a9c1));
+}
+
+.mwnf-dxa-gallery-item > .mwnf-back-link {
+  display: flex;
+  align-items: center;
+  height: 3.75rem;
+  padding-block: 0;
+}
+
+.mwnf-dxa-gallery-item > .mwnf-back-link .mwnf-back-link__button {
+  font: inherit;
+  font-weight: 700;
+  color: #000000;
+}
+
+.mwnf-dxa-gallery-item .mwnf-sheet__rows {
+  font-size: 1rem;
+}
+
+.mwnf-dxa-gallery-item .mwnf-sheet--list .mwnf-sheet__label {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: normal;
+}
+
+.mwnf-dxa-gallery-item .mwnf-sheet--list .mwnf-sheet__value {
+  margin: 0 0 0.625rem;
+  padding-inline-start: 0.625rem;
+  line-height: normal;
+}
+
+.mwnf-dxa-gallery-item .mwnf-sheet__toggle {
+  font-style: normal;
+  font-weight: 700;
+  text-decoration: none;
+  color: inherit;
+}
+
+.mwnf-dxa-gallery-item .mwnf-sheet__toggle::before {
+  content: '➤ ';
+}
+
+.mwnf-dxa-gallery-item .mwnf-sheet__value a.mwnf-dxa-gallery-item__museum,
+.mwnf-dxa-gallery-item__links a,
+.mwnf-dxa-gallery-item__source a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.mwnf-dxa-gallery-item .mwnf-sheet__value a.mwnf-dxa-gallery-item__museum:hover,
+.mwnf-dxa-gallery-item__links a:hover,
+.mwnf-dxa-gallery-item__source a:hover {
+  text-decoration: underline;
+}
+
+.mwnf-dxa-gallery-item__icon {
+  display: inline-block;
+  margin-inline-end: 0.3125rem;
+  text-decoration: none;
+}
+
+.mwnf-dxa-gallery-item__links {
+  margin-top: 1.25rem;
+}
+
+.mwnf-dxa-gallery-item__links p {
+  margin: 0;
+  padding: 0.125rem 0.3125rem 0.125rem 0;
+}
+
+.mwnf-dxa-gallery-item__credits p {
+  margin: 0;
+}
+
+.mwnf-dxa-gallery-item__label {
+  font-weight: 700;
+}
+
+.mwnf-dxa-gallery-item__label::after,
+.mwnf-dxa-gallery-item__credit-label::after,
+.mwnf-dxa-gallery-item__number-label::after {
+  content: ':';
+}
+
+.mwnf-dxa-gallery-item__credits .mwnf-dxa-gallery-item__citation {
+  margin-bottom: 0.625rem;
+  padding-inline-start: 0.625rem;
+}
+
+.mwnf-dxa-gallery-item__project,
+.mwnf-dxa-gallery-item__address {
+  font-style: italic;
+}
+
+.mwnf-dxa-gallery-item__address {
+  display: block;
+  overflow-wrap: break-word;
+  word-break: break-all;
+}
+
+.mwnf-dxa-gallery-item__credit {
+  display: flex;
+}
+
+.mwnf-dxa-gallery-item__credit-label {
+  padding-inline-start: 0.625rem;
+  margin-inline-end: 0.1875rem;
+}
+
+.mwnf-dxa-gallery-item__credits .mwnf-dxa-gallery-item__number {
+  padding: 0.625rem 0 0;
+  padding-inline-start: 0.625rem;
+}
+
+.mwnf-dxa-gallery-item__source {
+  margin-top: 0.625rem;
+  padding: 0.625rem;
+  overflow-wrap: break-word;
+  word-break: break-all;
+}
+
+/* The sidebar, as legacy's: every line at the font's own height, the
+   description in the headings' colour, the entries flush with no marker,
+   spaced as legacy's `related-margin`/`conditional-margin` spaced them, and
+   the dynasty heading a plain line. */
+.mwnf-dxa-gallery-item .mwnf-record__aside {
+  line-height: 1.171875;
+}
+
+.mwnf-dxa-gallery-item .mwnf-record__aside .mwnf-dynasty-list {
+  display: block;
+}
+
+.mwnf-dxa-gallery-item .mwnf-record__aside .mwnf-sheet-related__description {
+  margin: 0 0 0.625rem;
+  font-size: 90%;
+  color: var(--mwnf-dxa-related-heading-color, inherit);
+}
+
+.mwnf-dxa-gallery-item .mwnf-record__aside .mwnf-sheet-related__line,
+.mwnf-dxa-gallery-item .mwnf-record__aside .mwnf-sheet-timeline__trigger,
+.mwnf-dxa-gallery-item .mwnf-record__aside .mwnf-glossary-tool__toggle,
+.mwnf-dxa-gallery-item .mwnf-record__aside .mwnf-dynasty__summary {
+  margin: 0;
+  font-weight: 400;
+  list-style: none;
+}
+
+.mwnf-dxa-gallery-item .mwnf-record__aside summary::-webkit-details-marker {
+  display: none;
+}
+
+.mwnf-dxa-gallery-item .mwnf-record__aside .mwnf-glossary-tool__toggle::before,
+.mwnf-dxa-gallery-item .mwnf-record__aside .mwnf-dynasty__summary::before {
+  content: '➤ ';
+}
+
+.mwnf-dxa-gallery-item .mwnf-record__aside .mwnf-sheet-related__description + .mwnf-sheet-related__line {
+  margin-bottom: 0.625rem;
+}
+
+.mwnf-dxa-gallery-item .mwnf-record__aside .mwnf-sheet-timeline {
+  margin: 0.625rem 0;
+}
+
+.mwnf-dxa-gallery-item .mwnf-record__aside .mwnf-dynasty-list__heading {
+  margin: 0.625rem 0 0;
+  font-size: 1rem;
+  font-weight: 400;
+  text-transform: none;
+  color: inherit;
+}
+
 /* The glossary entry's header: the gallery's own world map on its right
    (`theme/assets/world.png`, ItemDetailView's `--mwnf-dxa-glossary-image`). */
 .mwnf-dxa-item .mwnf-popover__title {
@@ -728,6 +955,53 @@
   .mwnf-dxa-item .mwnf-record__main {
     display: block;
     padding-inline: 1.25rem;
+  }
+}
+
+/* A gallery's sheet on a narrower screen, as legacy's: from 974px the
+   sidebar goes under the sheet within the page's side margins, the pictures
+   keeping 40% beside the fields; from 724px the pictures go above them; from
+   599px the margins narrow to 30px. */
+@media only screen and (max-width: 60.875rem) {
+  .mwnf-dxa-gallery-item {
+    display: block;
+  }
+
+  .mwnf-dxa-gallery-item > .mwnf-back-link,
+  .mwnf-dxa-gallery-item .mwnf-record__main {
+    padding-inline: 3.125rem;
+  }
+
+  .mwnf-dxa-gallery-item .mwnf-record__main {
+    display: grid;
+    grid-template-columns: calc(40% - 0.625rem) minmax(0, 1fr);
+    padding-bottom: 1.875rem;
+  }
+
+  .mwnf-dxa-gallery-item .mwnf-record__aside {
+    width: auto;
+    margin: 0 3.125rem 3.125rem;
+  }
+}
+
+@media only screen and (max-width: 45.25rem) {
+  .mwnf-dxa-gallery-item .mwnf-record__main {
+    display: block;
+  }
+
+  .mwnf-dxa-gallery-item .mwnf-record__main > .mwnf-record__media {
+    padding-bottom: 1.875rem;
+  }
+}
+
+@media only screen and (max-width: 37.4375rem) {
+  .mwnf-dxa-gallery-item > .mwnf-back-link,
+  .mwnf-dxa-gallery-item .mwnf-record__main {
+    padding-inline: 1.875rem;
+  }
+
+  .mwnf-dxa-gallery-item .mwnf-record__aside {
+    margin-inline: 1.875rem;
   }
 }
 

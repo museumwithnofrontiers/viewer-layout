@@ -195,17 +195,19 @@ function relatedInfo(record, ctx) {
     name: ref.project_id ? projects.label(ref.project_id) : null,
     chipClass: s.outsideChip ? s.outsideChip(ref, ctx) : null,
   }))
-  // A place with a legacy host links out to it; one without is named, with the
+  // A place with a legacy host links out to it — or wherever the spec's
+  // `onDisplayIn.href(ref, record)` says; one without is named, with the
   // spec's "link pending" note (OnDisplayIn's pendingLabel).
+  const placeHref = (ref) => (s.onDisplayIn?.href ? s.onDisplayIn.href(ref, record) : ref.legacy_host) || ''
   const place = (ref) => ({
-    id: ref.id, label: mdInline(ref.name ?? ''), href: ref.legacy_host || '', external: Boolean(ref.legacy_host),
+    id: ref.id, label: mdInline(ref.name ?? ''), href: placeHref(ref), external: Boolean(placeHref(ref)),
   })
   const onDisplayIn = s.onDisplayIn && s.onDisplayIn !== false
     ? {
       pendingLabel: s.onDisplayIn.linkPendingLabel ?? '',
       groups: [
-        { heading: 'record.related.exhibitions', links: exhibitionReferences(record).map(place) },
-        { heading: 'record.related.galleries', links: galleryReferences(record).map(place) },
+        { heading: s.onDisplayIn.exhibitionsHeading ?? 'record.related.exhibitions', links: exhibitionReferences(record).map(place) },
+        { heading: s.onDisplayIn.galleriesHeading ?? 'record.related.galleries', links: galleryReferences(record).map(place) },
       ].filter((group) => group.links.length),
     }
     : null
@@ -229,7 +231,9 @@ function relatedInfo(record, ctx) {
       : null,
     timeline: s.timeline ? s.timeline(record, ctx) : null,
     glossary: s.glossary !== false,
+    glossaryLabels: s.glossaryLabels ?? {},
     dynasties: s.dynasties ? s.dynasties(record, ctx.language, ctx) : null,
+    dynastiesHeading: t(s.dynastiesHeading ?? 'record.dynasty.list'),
     media: s.media !== false ? (record.media ?? []) : [],
     onDisplayIn,
     database,
@@ -319,11 +323,11 @@ function printSheet() {
 
             <TimelineLookup v-if="rel.timeline" :key="relCtx.record.id" :info="rel.timeline" />
 
-            <GlossaryTool v-if="rel.glossary" :language="relCtx.language" :dir="relCtx.dir" />
+            <GlossaryTool v-if="rel.glossary" :language="relCtx.language" :labels="rel.glossaryLabels" :dir="relCtx.dir" />
 
             <DynastyList
               v-if="rel.dynasties?.records?.length"
-              :heading="t('record.dynasty.list')"
+              :heading="rel.dynastiesHeading"
               :dynasties="rel.dynasties.records"
               :tr="rel.dynasties.tr"
               :dir="relCtx.dir"

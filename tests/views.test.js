@@ -634,6 +634,33 @@ describe('RecordView', () => {
       restore()
     }
   })
+
+  it('wraps the pictures and an #after-media slot in one block, only when the slot is filled', async () => {
+    const { wrapper: plain } = await mountView(RecordView, { props: { spec, id: 'o1' }, route: '/objects/o1' })
+    await settle(() => plain.text().includes('Prepared by'))
+    expect(plain.find('.mwnf-record__media').exists()).toBe(false)
+
+    const { wrapper } = await mountView(RecordView, {
+      props: { spec, id: 'o1' },
+      slots: { 'after-media': '<template #after-media="{ record }"><p class="under">{{ record.id }}</p></template>' },
+      route: '/objects/o1',
+    })
+    await settle(() => wrapper.text().includes('Prepared by'))
+    expect(wrapper.find('.mwnf-record__media .under').text()).toBe('o1')
+  })
+
+  it('lets a #credits slot replace the credits and citation, handing it both', async () => {
+    const { wrapper } = await mountView(RecordView, {
+      props: { spec, id: 'o1' },
+      slots: {
+        credits: '<template #credits="{ credits, citation }"><p class="own-credits">{{ credits[0].label }}|{{ citation }}</p></template>',
+      },
+      route: '/objects/o1',
+    })
+    await settle(() => wrapper.find('.own-credits').exists())
+    expect(wrapper.find('.own-credits').text()).toMatch(/^Prepared by\|.*in /)
+    expect(wrapper.find('.mwnf-credits').exists()).toBe(false)
+  })
 })
 
 describe('ItemDetailView', () => {

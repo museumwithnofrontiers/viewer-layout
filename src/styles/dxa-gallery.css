@@ -20,6 +20,9 @@
  *   --theme-light         light menu items
  *   --background-color    page background
  *
+ * and, where legacy's `text-color` mixin took the medium-dark tone rather
+ * than the dark one, `--theme-text` (the item sidebar's headings).
+ *
  * Every token below can be set again in the gallery's theme/tokens.css; the
  * gallery's value wins. Legacy drew white text on both menu shades and on the
  * header buttons whatever the palette, and so does this file.
@@ -227,10 +230,12 @@
   --mwnf-dxa-heading-color: var(--theme-dark);
   --mwnf-dxa-band-background: var(--background-color);
   /* The item sheet's Related Content sidebar: white on the light tone, its
-     headings underlined in the dark tone (legacy's `$theme-light`). */
+     headings underlined and its description in the gallery's text colour
+     (legacy's `$theme-light` and `text-color` mixin, which ten galleries set
+     to their medium-dark tone: a gallery sets `--theme-text` for that). */
   --mwnf-dxa-related-background: var(--theme-light);
   --mwnf-dxa-related-text: #ffffff;
-  --mwnf-dxa-related-heading-color: var(--theme-dark);
+  --mwnf-dxa-related-heading-color: var(--theme-text, var(--theme-dark));
 }
 
 /* ── Page reset ──────────────────────────────────────────────────────────── */
@@ -306,11 +311,16 @@ a { color: inherit; }
 }
 .mwnf-nav__links li:nth-child(odd) { background: var(--theme-medium-dark); }
 .mwnf-nav__links li:nth-child(even) { background: var(--theme-light); }
+/* Legacy's entries are their 28px line, no taller; the notice under them its
+   text's own line (inventory-app#2423). */
 .mwnf-nav__link {
   width: 100%;
   text-align: center;
-  padding: 2px 4px;
+  padding: 0 4px;
   text-transform: uppercase;
+}
+.mwnf-nav__notice {
+  line-height: normal;
 }
 .mwnf-nav__link--active {
   background: rgba(0, 0, 0, 0.18);

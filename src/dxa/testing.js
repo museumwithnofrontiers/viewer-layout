@@ -264,22 +264,24 @@ export function describeGallerySmoke({ config, sharedTexts, ownTexts, manifest, 
       // is never shown.
       expect(host.querySelector('.mwnf-record__aside .mwnf-sheet-related')).not.toBeNull()
       expect(host.textContent).not.toContain('mwnf3:')
-      // The "Source database" line names the item's project from the manifest.
+      // Legacy's sheet (inventory-app#2423): Source and My Collection under
+      // the pictures, and the citation names the item's project from the
+      // manifest.
+      expect(host.querySelectorAll('.mwnf-record__media .mwnf-dxa-gallery-item__links a')).toHaveLength(2)
       const projectName = manifest.projects[items[0].project_id]?.name?.en ?? ''
-      expect(host.querySelector('.mwnf-sheet-source').textContent).toContain(projectName)
+      expect(host.querySelector('.mwnf-dxa-gallery-item__credits').textContent).toContain(projectName)
       app.unmount()
     }, 60000)
 
     outsideReferenceTest(mountSite, manifest, sharedTexts)
 
-    // The chip's colour and text come from `projectColors` and the manifest's
-    // project name, keyed by the item's `project_id`.
-    it('colours and names the source-database chip from the manifest projects section', async () => {
+    // The Source box takes the colour `projectColors` gives the item's
+    // project, and the citation its name from the manifest.
+    it("colours the Source box and names the citation's project from the manifest projects section", async () => {
       const { app, host } = await mountSite(`#/item/${chip.item}`)
-      await vi.waitFor(() => expect(host.querySelector('.mwnf-sheet-source .mwnf-chip')).not.toBeNull(), WAIT)
-      const line = host.querySelector('.mwnf-sheet-source__line')
-      expect(line.textContent).toContain(chip.project)
-      expect(line.querySelector('.mwnf-chip').classList.contains(chip.className)).toBe(true)
+      await vi.waitFor(() => expect(host.querySelector('.mwnf-dxa-gallery-item__source')).not.toBeNull(), WAIT)
+      expect(host.querySelector('.mwnf-dxa-gallery-item__project').textContent).toContain(chip.project)
+      expect(host.querySelector('.mwnf-dxa-gallery-item__source').classList.contains(chip.className)).toBe(true)
       app.unmount()
     }, 60000)
 
@@ -287,12 +289,12 @@ export function describeGallerySmoke({ config, sharedTexts, ownTexts, manifest, 
     // lists, and stays off every other.
     it.skipIf(!noticeItem)('shows the explore-partner notice only for the project dataset.config.js lists', async () => {
       const epm = await mountSite(`#/item/${noticeItem}`)
-      await vi.waitFor(() => expect(epm.host.querySelector('.mwnf-sheet-source')).not.toBeNull(), WAIT)
+      await vi.waitFor(() => expect(epm.host.querySelector('.mwnf-dxa-gallery-item__source')).not.toBeNull(), WAIT)
       expect(epm.host.querySelector('.mwnf-sheet-notice')).not.toBeNull()
       epm.app.unmount()
 
       const other = await mountSite(`#/item/${chip.item}`)
-      await vi.waitFor(() => expect(other.host.querySelector('.mwnf-sheet-source')).not.toBeNull(), WAIT)
+      await vi.waitFor(() => expect(other.host.querySelector('.mwnf-dxa-gallery-item__source')).not.toBeNull(), WAIT)
       expect(other.host.querySelector('.mwnf-sheet-notice')).toBeNull()
       other.app.unmount()
     }, 60000)
@@ -330,14 +332,24 @@ export function describeGallerySmoke({ config, sharedTexts, ownTexts, manifest, 
       app.unmount()
     }, 30000)
 
-    it('renders the source credit on the item sheet, addressed to this deployed site', async () => {
+    // Legacy's Source box pointed at the record in its home database: now the
+    // record's page on its project's home site, a sibling of this one
+    // (`manifest.projects`' `home_site`), or this page when it has none.
+    it("points the Source box at the record's home site, or this page", async () => {
       const [items] = await loadEntities(['items'])
       const item = items[0]
       const { app, host } = await mountSite(`#/item/${item.id}`)
-      await vi.waitFor(() => expect(host.querySelector('.mwnf-source-credit')).not.toBeNull(), WAIT)
-      const link = host.querySelector('.mwnf-source-credit a')
+      await vi.waitFor(() => expect(host.querySelector('.mwnf-dxa-gallery-item__source a')).not.toBeNull(), WAIT)
+      const link = host.querySelector('.mwnf-dxa-gallery-item__source a')
       expect(link.textContent).toBe(link.getAttribute('href'))
-      expect(link.getAttribute('href').startsWith(`${config.site.origin}/#/item/${item.id}`)).toBe(true)
+      const home = manifest.projects[item.project_id]?.home_site
+      let origin = config.site.origin
+      while (origin.endsWith('/')) origin = origin.slice(0, -1)
+      const expected = home && home !== manifest.site?.key
+        ? `${origin.slice(0, origin.lastIndexOf('/'))}/${home}/#/item/${item.id}`
+        : `${origin}/#/item/${item.id}`
+      expect(link.getAttribute('href').startsWith(expected)).toBe(true)
+      expect(host.querySelector('.mwnf-source-credit')).toBeNull()
       app.unmount()
     }, 60000)
 
