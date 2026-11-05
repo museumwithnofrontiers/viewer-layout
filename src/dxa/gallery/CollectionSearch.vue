@@ -2,7 +2,7 @@
 import { computed } from 'vue'
 import { I18nText, useFacets } from '@museumwnf/viewer-core'
 import SearchFormView from '../../views/SearchFormView.vue'
-import { items, FACETS, FACET_CATEGORIES, FACET_LABEL_KEYS } from './data.js'
+import { items, FACETS, FACET_CATEGORIES, FACET_LABEL_KEYS, GALLERY_ERA_WORDS } from './data.js'
 
 // The collection entrance (epic #1731, from carpets/amulets — byte-
 // identical), on the platform's composed search form (`mode: 'facets'`):
@@ -22,7 +22,12 @@ const visibleFacets = computed(() => FACET_CATEGORIES.filter((c) => (options.val
 const collectionSearchSpec = computed(() => ({
   mode: 'facets',
   target: 'collection-results',
+  // The from/to year lists are built from the gallery's items, as legacy's
+  // were (they had stayed empty without an entity to read), with legacy's
+  // "A.D." and "B.C.".
+  entity: 'items',
   dates: 'buckets',
+  eraWords: GALLERY_ERA_WORDS,
   facets: [
     { key: 'country', label: 'catalogue.facet.selectCountry', options: options.value.country },
     ...visibleFacets.value.map((category) => ({ key: category, label: FACET_LABEL_KEYS[category], options: options.value[category] })),

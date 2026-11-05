@@ -18,10 +18,12 @@ The galleries' Partners, About, Credits, How to search and Timeline pages as leg
 
 - `PartnerListView`'s `tiebreak`: the second sort key for two rows of the same name.
 - `TimelineResultsView`'s entrance `form` slot, for a family that draws its own form.
+- `eraWords` on `TimelineResultsView` (an event's dates) and `SearchFormView` (the year lists): a family's own era words. The galleries read legacy's "A.D." and "B.C." (viewer-core 2.16.0's `GALLERY_ERA_WORDS`, viewer-i18n 6.6.0). Needs viewer-core 2.16.0.
 
 ### Fixed
 
 - **The timeline's year lists** run to the latest end year, as legacy's did (they stopped at the latest start year).
+- **A gallery's collection entrance** has its from/to year lists again: they had stayed empty, with no entity to build them from.
 
 ## 3.59.0 (2026-11-04)
 

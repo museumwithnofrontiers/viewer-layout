@@ -181,6 +181,17 @@ describe('GalleryTimeline (entrance)', () => {
     expect(query.end).toBe(end.findAll('option').at(-1)?.element.value)
     alert.mockRestore()
   })
+
+  it("labels the years with the galleries' own era words, as legacy did", async () => {
+    const { wrapper } = await mountPage(GalleryTimeline, {
+      route: '/timeline',
+      messages: { ...texts, 'gallery.era.ad': 'A.D.', 'catalogue.era.ad': 'AD' },
+    })
+    await settle(() => wrapper.findAll('.mwnf-dxa-timeline select')[1]?.findAll('option').length > 1)
+    const years = wrapper.findAll('.mwnf-dxa-timeline select')[1].findAll('option').slice(1).map((o) => o.text())
+    expect(years.length).toBeGreaterThan(0)
+    expect(years.every((label) => label.endsWith('A.D.'))).toBe(true)
+  })
 })
 
 describe('GalleryTimelineResults', () => {

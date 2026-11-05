@@ -42,7 +42,7 @@ export const {
   FACETS, haystack, tile, collectionResults, countryIdForCode,
 } = collection
 
-export { FACET_CATEGORIES, FACET_LABEL_KEYS, PAGE_SIZE, useFacetLabels } from '@museumwnf/viewer-core/dxa'
+export { FACET_CATEGORIES, FACET_LABEL_KEYS, GALLERY_ERA_WORDS, PAGE_SIZE, useFacetLabels } from '@museumwnf/viewer-core/dxa'
 
 export const { timelineResults, timelineGallery } = timeline
 

@@ -42,6 +42,7 @@ import TimelineEventList from '../content/TimelineEventList.vue'
 //                                                      // shown once `items` says objects exist for this country/period —
 //                                                      // an item's own shape is the site's, never this view's
 //     summary: (ctx) => [{ label, count?, value? }],
+//     eraWords: { 'catalogue.era.ad': entry, … },     // a family's own era words for the events' dates
 //     errorSelect, errorPeriod,                        // entry names for the entrance's own validation
 //     title, filterTitle, applyLabel, resetLabel, submitLabel, empty,  // entry names
 //     pagination: { window, jump, ends },
@@ -177,11 +178,15 @@ const pageInfo = usePagination(events, {
   size: () => spec.value.pageSize ?? 15,
 })
 
+// `eraWords`: a family's own era words for an event's dates (viewer-core's
+// `GALLERY_ERA_WORDS`).
+const eraT = (key) => t(spec.value.eraWords?.[key] ?? key)
+
 function defaultEventRow(event) {
   const label = spec.value.countryLabel && event.country_id ? spec.value.countryLabel(event.country_id) : ''
   return {
     id: event.id,
-    date: eventDateLabel(event, event.text, t),
+    date: eventDateLabel(event, event.text, eraT),
     caption: label ? renderInline(String(label)) : '',
     description: event.text?.description ? renderBlock(String(event.text.description), { breaks: true }) : '',
   }
