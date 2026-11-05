@@ -2,16 +2,18 @@
 import { computed } from 'vue'
 import { useRoute, RouterLink } from 'vue-router'
 import Pagination from '../../content/Pagination.vue'
-import PartnerPanel from '../../content/PartnerPanel.vue'
 import CatalogueResultsView from '../../views/CatalogueResultsView.vue'
 import BackLink from '../../content/BackLink.vue'
+import ObjectGrid from './ObjectGrid.vue'
 import { partnerById, partnerDetail, partnerRoute, tr, defaultLang, partnerObjects } from './data.js'
 
-// The member items one partner holds (epic #1731, from carpets/amulets —
-// byte-identical), on the platform's composed results view: the join, the
-// sort and the pages are the view's, from `partnerObjects`
-// (dxa/gallery/data.js), `scope` added here over the route's own id —
-// `CatalogueResultsView` takes no record id of its own, unlike `RecordView`.
+// The member items one partner holds, as legacy's PartnerObjects.vue
+// (inventory-app#2423): Back, the partner's name and, in italics, where it
+// is; legacy's tile grid (ObjectGrid.vue) beside the way to the partner's
+// page; the pages above and below the grid only when there is more than
+// one. The join, the sort and the pages are the composed view's, from
+// `partnerObjects` (dxa/gallery/data.js), `scope` added here over the
+// route's own id.
 const route = useRoute()
 const partner = computed(() => partnerById.value.get(route.params.id) ?? null)
 const spec = computed(() => ({
@@ -19,27 +21,36 @@ const spec = computed(() => ({
   scope: (item) => item.partner_id === route.params.id,
 }))
 
-// The page's head is the partner's `summary` (inventory-app#2034): the name,
-// linked to its page, and "city, country".
 const view = computed(() => (partner.value ? partnerDetail.view(partner.value, tr('partners', partner.value.id, defaultLang)) : null))
+const place = computed(() => [view.value?.city, view.value?.country].filter(Boolean).join(', '))
 </script>
 
 <template>
-  <div class="mwnf-dxa-partner-objects" v-if="partner">
+  <div v-if="partner" class="mwnf-dxa-partner-objects mwnf-dxa-gallery-objects">
     <CatalogueResultsView :spec="spec">
       <template #before>
         <BackLink />
-        <PartnerPanel class="mwnf-dxa-partner-objects-header" variant="summary" :heading="1" :partner="view" />
+        <div class="mwnf-dxa-gallery-objects__header">
+          <p class="mwnf-dxa-gallery-objects__name" v-html="view.name"></p>
+          <p v-if="place" class="mwnf-dxa-gallery-objects__place">{{ place }}</p>
+        </div>
       </template>
 
       <template #actions="{ pageInfo, goToPage }">
-        <Pagination class="mwnf-dxa-pages" :page-info="pageInfo" jump @navigate="goToPage" />
+        <Pagination v-if="pageInfo.lastPage > 1" class="mwnf-dxa-pages" :page-info="pageInfo" jump @navigate="goToPage" />
       </template>
 
-      <template #after>
-        <div class="mwnf-dxa-profile-link-container">
-          <RouterLink class="mwnf-dxa-profile-link" :to="partnerRoute(partner)">➤ {{ $t('partner.action.partnerProfile') }}</RouterLink>
-        </div>
+      <template #records="{ rows }">
+        <ObjectGrid :rows="rows" />
+      </template>
+
+      <template #pagination="{ pageInfo, goToPage }">
+        <Pagination v-if="pageInfo.lastPage > 1" class="mwnf-dxa-pages" :page-info="pageInfo" jump @navigate="goToPage" />
+        <div v-else class="mwnf-dxa-gallery-objects__end"></div>
+      </template>
+
+      <template #aside>
+        <RouterLink class="mwnf-dxa-gallery-objects__profile" :to="partnerRoute(partner)"><span class="mwnf-dxa-gallery-objects__profile-arrow" aria-hidden="true">➦</span>{{ $t('partner.action.partnerProfile') }}</RouterLink>
       </template>
     </CatalogueResultsView>
   </div>

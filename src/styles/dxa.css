@@ -1001,3 +1001,273 @@
     padding-inline: 1.25rem;
   }
 }
+
+/* The galleries' tile grid (dxa/gallery/ObjectGrid.vue), as legacy's
+   ObjectGrid.vue: four 175px frames a row, 15px apart, each picture whole
+   inside a rule in the page colour; the card a tile opens on hover sits over
+   it, on the page colour with legacy's shadow. Below 975px it is a list,
+   each card beside its picture on white. */
+
+.mwnf-dxa-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 15px;
+  color: #000000;
+  line-height: normal;
+}
+
+.mwnf-dxa-grid__entry {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 175px;
+}
+
+.mwnf-dxa-grid__frame {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.mwnf-dxa-grid__image {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  border: 1px solid var(--mwnf-dxa-band-background, #f0f0f0);
+}
+
+.mwnf-dxa-grid__card {
+  display: none;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  z-index: 50;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  background: var(--mwnf-dxa-band-background, #f0f0f0);
+  font-size: 95%;
+  box-shadow: 2px 2px 5px #707070;
+}
+
+.mwnf-dxa-grid__card--open {
+  display: flex;
+}
+
+.mwnf-dxa-grid__card-image {
+  width: 100%;
+}
+
+.mwnf-dxa-grid__card-image img {
+  display: block;
+  width: 100%;
+  height: 175px;
+  object-fit: contain;
+}
+
+.mwnf-dxa-grid__text {
+  width: 100%;
+  padding: 10px 10px 0;
+}
+
+.mwnf-dxa-grid__text p {
+  margin: 0;
+}
+
+.mwnf-dxa-grid__name,
+.mwnf-dxa-grid__partner {
+  font-weight: 700;
+}
+
+.mwnf-dxa-grid__text .mwnf-dxa-grid__date {
+  margin-bottom: 10px;
+}
+
+.mwnf-dxa-grid__project span {
+  font-weight: 700;
+  font-style: italic;
+}
+
+.mwnf-dxa-grid__link {
+  display: block;
+  padding: 10px 0;
+  color: var(--mwnf-link-text, #0000ff);
+  text-decoration: underline;
+}
+
+@media only screen and (max-width: 974px) {
+  .mwnf-dxa-grid {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0;
+  }
+
+  .mwnf-dxa-grid__entry {
+    width: 100%;
+    height: 150px;
+    margin-bottom: 20px;
+  }
+
+  .mwnf-dxa-grid__frame {
+    width: 38%;
+  }
+
+  .mwnf-dxa-grid__card,
+  .mwnf-dxa-grid__card--open {
+    display: flex;
+    justify-content: flex-start;
+    position: static;
+    width: 62%;
+    height: 100%;
+    padding-left: 20px;
+    background: #ffffff;
+    box-shadow: none;
+  }
+
+  .mwnf-dxa-grid__card-image {
+    display: none;
+  }
+
+  .mwnf-dxa-grid__text {
+    padding: 0;
+  }
+}
+
+@media only screen and (max-width: 849px) {
+  .mwnf-dxa-grid__entry { height: 200px; }
+}
+
+@media only screen and (max-width: 599px) {
+  .mwnf-dxa-grid__frame { width: 30%; }
+  .mwnf-dxa-grid__card,
+  .mwnf-dxa-grid__card--open { width: 70%; }
+}
+
+@media only screen and (max-width: 499px) {
+  .mwnf-dxa-grid__entry {
+    flex-direction: column;
+    height: 325px;
+    margin-bottom: 10px;
+  }
+  .mwnf-dxa-grid__frame { width: 100%; height: 45%; }
+  .mwnf-dxa-grid__card,
+  .mwnf-dxa-grid__card--open {
+    width: 100%;
+    height: 55%;
+    margin-top: 10px;
+    padding-left: 0;
+  }
+}
+
+@media only screen and (max-width: 399px) {
+  .mwnf-dxa-grid__entry { height: 350px; }
+  .mwnf-dxa-grid__frame { height: 40%; }
+  .mwnf-dxa-grid__card,
+  .mwnf-dxa-grid__card--open { height: 60%; }
+}
+
+/* A partner's objects, as legacy's PartnerObjects.vue: white; Back in a
+   50px band, then the name and, in italics, where the partner is; the grid
+   in the left 78% and the way to the partner's page in the rest, both under
+   a 50px gutter; below 975px the link above the grid. */
+
+.mwnf-dxa-gallery-objects {
+  padding-bottom: 0;
+  background: var(--mwnf-dxa-gallery-text-background, #ffffff);
+  color: #000000;
+  font-size: 1rem;
+  line-height: normal;
+}
+
+.mwnf-dxa-gallery-objects .mwnf-catalogue {
+  gap: 0;
+}
+
+.mwnf-dxa-gallery-objects .mwnf-back-link {
+  display: flex;
+  align-items: center;
+  height: 50px;
+  padding: 30px 50px 0;
+}
+
+.mwnf-dxa-gallery-objects .mwnf-back-link__button {
+  font: inherit;
+  font-weight: 700;
+  color: #000000;
+}
+
+.mwnf-dxa-gallery-objects__header {
+  padding: 10px 50px 0;
+}
+
+.mwnf-dxa-gallery-objects__header p {
+  margin: 0;
+}
+
+.mwnf-dxa-gallery-objects__name {
+  font-size: 110%;
+}
+
+.mwnf-dxa-gallery-objects__place {
+  font-style: italic;
+}
+
+.mwnf-dxa-gallery-objects .mwnf-catalogue__body {
+  display: flex;
+  align-items: flex-start;
+  gap: 0;
+  padding: 0 50px;
+}
+
+.mwnf-dxa-gallery-objects .mwnf-catalogue__results {
+  flex: none;
+  width: 78%;
+  padding: 30px 0;
+}
+
+.mwnf-dxa-gallery-objects .mwnf-catalogue__aside {
+  flex: none;
+  width: 22%;
+  padding: 30px 0 30px 25px;
+}
+
+.mwnf-dxa-gallery-objects__profile {
+  color: #000000;
+  text-decoration: none;
+}
+
+.mwnf-dxa-gallery-objects__profile:hover {
+  text-decoration: underline;
+}
+
+.mwnf-dxa-gallery-objects__profile-arrow {
+  display: inline-block;
+  padding-right: 4px;
+  font-size: 75%;
+}
+
+.mwnf-dxa-gallery-objects__end {
+  margin-bottom: 75px;
+}
+
+@media only screen and (max-width: 1199px) {
+  .mwnf-dxa-gallery-objects__name { font-size: 105%; }
+  .mwnf-dxa-gallery-objects .mwnf-catalogue__results { width: 80%; }
+  .mwnf-dxa-gallery-objects .mwnf-catalogue__aside { width: 20%; }
+}
+
+@media only screen and (max-width: 974px) {
+  .mwnf-dxa-gallery-objects .mwnf-catalogue__body { flex-direction: column-reverse; }
+  .mwnf-dxa-gallery-objects .mwnf-catalogue__results,
+  .mwnf-dxa-gallery-objects .mwnf-catalogue__aside { width: 100%; }
+  .mwnf-dxa-gallery-objects .mwnf-catalogue__aside { padding: 30px 0 0; }
+}
+
+@media only screen and (max-width: 599px) {
+  .mwnf-dxa-gallery-objects .mwnf-back-link { padding: 30px 30px 0; }
+  .mwnf-dxa-gallery-objects__header { padding: 10px 30px 0; }
+  .mwnf-dxa-gallery-objects .mwnf-catalogue__body { padding: 0 30px; }
+}

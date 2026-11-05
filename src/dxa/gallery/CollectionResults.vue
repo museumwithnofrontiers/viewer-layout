@@ -7,6 +7,7 @@ import FacetSelect from '../../content/FacetSelect.vue'
 import FilterPanel from '../../content/FilterPanel.vue'
 import Pagination from '../../content/Pagination.vue'
 import CatalogueResultsView from '../../views/CatalogueResultsView.vue'
+import ObjectGrid from './ObjectGrid.vue'
 import {
   labelOf, timelines, FACET_CATEGORIES, collectionResults, countryIdForCode, useFacetLabels,
 } from './data.js'
@@ -49,9 +50,12 @@ function showTimelineLink(filters) {
       <Pagination class="mwnf-dxa-pages" :page-info="pageInfo" jump @navigate="goToPage" />
     </template>
 
-    <template #empty>
-      {{ $t('catalogue.results.noResults') }}
-      <button class="mwnf-dxa-linkish" @click="resetFilters()">{{ $t('catalogue.results.resetFilters') }}</button>
+    <template #records="{ rows }">
+      <ObjectGrid v-if="rows.length" :rows="rows" />
+      <p v-else class="mwnf-record-grid__empty">
+        {{ $t('catalogue.results.noResults') }}
+        <button class="mwnf-dxa-linkish" @click="resetFilters()">{{ $t('catalogue.results.resetFilters') }}</button>
+      </p>
     </template>
 
     <template #aside="{ filters, apply, matching, options }">
