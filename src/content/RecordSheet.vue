@@ -23,8 +23,13 @@ const props = defineProps({
   shortDescriptionAfter: { type: String, default: 'description' },
   /** Show the short description open. */
   shortDescriptionOpen: { type: Boolean, default: false },
+  /** The toggle's words, as entry names: `{ view, hide }`. */
+  toggleLabels: { type: Object, default: () => ({}) },
 })
 const { t } = useI18n()
+const toggleLabel = (open) => t(open
+  ? props.toggleLabels.hide ?? 'record.action.hideShortDescription'
+  : props.toggleLabels.view ?? 'record.action.viewShortDescription')
 
 const showShort = ref(props.shortDescriptionOpen)
 watch(() => props.shortDescription, () => { showShort.value = props.shortDescriptionOpen })
@@ -49,7 +54,7 @@ const isCustom = (row) => row.render === 'custom' || row.render === 'link'
           <tr v-if="shortDescription && row.key === shortDescriptionAfter" class="mwnf-sheet__row mwnf-sheet__row--short">
             <th class="mwnf-sheet__label" scope="row">
               <button type="button" class="mwnf-sheet__toggle" :aria-expanded="showShort ? 'true' : 'false'" @click="showShort = !showShort">
-                {{ showShort ? t('record.action.hideShortDescription') : t('record.action.viewShortDescription') }}
+                {{ toggleLabel(showShort) }}
               </button>
             </th>
             <td class="mwnf-sheet__value"><div v-if="showShort" class="mwnf-sheet__block" v-html="shortDescription.html"></div></td>
@@ -68,7 +73,7 @@ const isCustom = (row) => row.render === 'custom' || row.render === 'link'
           <template v-if="shortDescription && row.key === shortDescriptionAfter">
             <dt class="mwnf-sheet__label mwnf-sheet__label--short">
               <button type="button" class="mwnf-sheet__toggle" :aria-expanded="showShort ? 'true' : 'false'" @click="showShort = !showShort">
-                {{ showShort ? t('record.action.hideShortDescription') : t('record.action.viewShortDescription') }}
+                {{ toggleLabel(showShort) }}
               </button>
             </dt>
             <dd class="mwnf-sheet__value"><div v-if="showShort" class="mwnf-sheet__block" v-html="shortDescription.html"></div></dd>

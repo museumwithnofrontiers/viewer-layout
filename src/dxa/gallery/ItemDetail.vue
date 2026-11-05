@@ -37,6 +37,8 @@ const siteConfig = useSiteConfig()
 const spec = {
   ...itemDetail,
   sourceDatabase: false,
+  sourceCredit: false,
+  shortDescriptionLabels: { view: 'gallery.sheet.viewShortDescription', hide: 'gallery.sheet.hideShortDescription' },
   related: {
     ...itemDetail.related,
     glossaryLabels: { tool: 'gallery.related.glossary' },
@@ -138,6 +140,5 @@ function museumLink(ctx) {
       </div>
     </template>
 
-    <template #source></template>
   </ItemDetailView>
 </template>

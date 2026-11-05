@@ -796,6 +796,17 @@
   line-height: normal;
 }
 
+.mwnf-dxa-gallery-item .mwnf-sheet__toggle {
+  font-style: normal;
+  font-weight: 700;
+  text-decoration: none;
+  color: inherit;
+}
+
+.mwnf-dxa-gallery-item .mwnf-sheet__toggle::before {
+  content: '➤ ';
+}
+
 .mwnf-dxa-gallery-item .mwnf-sheet__value a.mwnf-dxa-gallery-item__museum,
 .mwnf-dxa-gallery-item__links a,
 .mwnf-dxa-gallery-item__source a {
