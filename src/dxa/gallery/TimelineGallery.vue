@@ -3,7 +3,8 @@ import { RouterLink } from 'vue-router'
 import BackLink from '../../content/BackLink.vue'
 import Pagination from '../../content/Pagination.vue'
 import CatalogueResultsView from '../../views/CatalogueResultsView.vue'
-import { timelineGallery } from './data.js'
+import ObjectGrid from './ObjectGrid.vue'
+import { legacyPaging, timelineGallery } from './data.js'
 
 // The member items whose dates overlap the timeline search's country and
 // period (epic #1731, from carpets/amulets — byte-identical), on the
@@ -14,7 +15,7 @@ import { timelineGallery } from './data.js'
 </script>
 
 <template>
-  <CatalogueResultsView :spec="timelineGallery" class="mwnf-dxa-timeline-gallery">
+  <CatalogueResultsView :spec="{ ...timelineGallery, ...legacyPaging }" class="mwnf-dxa-timeline-gallery">
     <template #before>
       <BackLink />
     </template>
@@ -26,6 +27,11 @@ import { timelineGallery } from './data.js'
         </RouterLink>
       </p>
       <Pagination class="mwnf-dxa-pages" :page-info="pageInfo" jump @navigate="goToPage" />
+    </template>
+
+    <template #records="{ rows, empty }">
+      <ObjectGrid v-if="rows.length" :rows="rows" />
+      <p v-else class="mwnf-record-grid__empty">{{ empty }}</p>
     </template>
   </CatalogueResultsView>
 </template>

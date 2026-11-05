@@ -7,8 +7,9 @@ import FacetSelect from '../../content/FacetSelect.vue'
 import FilterPanel from '../../content/FilterPanel.vue'
 import Pagination from '../../content/Pagination.vue'
 import CatalogueResultsView from '../../views/CatalogueResultsView.vue'
+import ObjectGrid from './ObjectGrid.vue'
 import {
-  labelOf, timelines, FACET_CATEGORIES, collectionResults, countryIdForCode, useFacetLabels,
+  labelOf, timelines, FACET_CATEGORIES, collectionResults, countryIdForCode, legacyPaging, useFacetLabels,
 } from './data.js'
 
 // Results plus "filter further by" (epic #1731, from carpets/amulets —
@@ -40,7 +41,7 @@ function showTimelineLink(filters) {
 </script>
 
 <template>
-  <CatalogueResultsView :spec="collectionResults" class="mwnf-dxa-collection-results">
+  <CatalogueResultsView :spec="{ ...collectionResults, ...legacyPaging }" class="mwnf-dxa-collection-results">
     <template #before>
       <BackLink />
     </template>
@@ -49,9 +50,12 @@ function showTimelineLink(filters) {
       <Pagination class="mwnf-dxa-pages" :page-info="pageInfo" jump @navigate="goToPage" />
     </template>
 
-    <template #empty>
-      {{ $t('catalogue.results.noResults') }}
-      <button class="mwnf-dxa-linkish" @click="resetFilters()">{{ $t('catalogue.results.resetFilters') }}</button>
+    <template #records="{ rows }">
+      <ObjectGrid v-if="rows.length" :rows="rows" />
+      <p v-else class="mwnf-record-grid__empty">
+        {{ $t('catalogue.results.noResults') }}
+        <button class="mwnf-dxa-linkish" @click="resetFilters()">{{ $t('catalogue.results.resetFilters') }}</button>
+      </p>
     </template>
 
     <template #aside="{ filters, apply, matching, options }">

@@ -4,7 +4,8 @@ import { RouterLink } from 'vue-router'
 import { useKeywordIndex } from '@museumwnf/viewer-core'
 import BackLink from '../../content/BackLink.vue'
 import CatalogueResultsView from '../../views/CatalogueResultsView.vue'
-import { loadEnglish, PAGE_SIZE, haystack, tile } from './data.js'
+import ObjectGrid from './ObjectGrid.vue'
+import { loadEnglish, legacyPaging, haystack, tile } from './data.js'
 
 // The header search bar's results (epic #1731, from carpets/amulets — byte-
 // identical), on the platform's composed results view. Legacy ran MySQL
@@ -30,7 +31,7 @@ const searchResultsSpec = computed(() => ({
     if (!ready.value) return []
     return isAllObjects(filters.q) ? list : index.search(filters.q)
   },
-  pageSize: PAGE_SIZE,
+  pageSize: legacyPaging.pageSize,
   variant: 'grid',
   recordRoute: 'item',
   actionLabel: 'catalogue.results.seeDatabaseEntry',
@@ -64,8 +65,9 @@ const searchResultsSpec = computed(() => ({
 
     <!-- Was one sentence with two links threaded through it. The message
          stands on its own and the two ways out are links beside it. -->
-    <template #empty>
-      <p class="mwnf-dxa-no-results">
+    <template #records="{ rows }">
+      <ObjectGrid v-if="rows.length" :rows="rows" />
+      <p v-else class="mwnf-dxa-no-results">
         {{ $t('catalogue.results.noResultsSearch') }}
         <RouterLink :to="{ name: 'search-how-to' }">{{ $t('catalogue.search.howTo') }}</RouterLink>
         <span class="mwnf-dxa-no-results-divider">|</span>

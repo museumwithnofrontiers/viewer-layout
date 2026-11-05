@@ -1,3 +1,37 @@
+## 3.60.0 (2026-11-05)
+
+The galleries' Partners, About, Credits, How to search and Timeline pages as legacy's (inventory-app#2423), each measured equal to legacy on Ceramics at 1366 and 390.
+
+### Changed
+
+- **The gallery partner list** is legacy's PartnersPage.vue:
+  - a white page: Back and the country-order toggle on one line;
+  - the introduction and the countries in a centred column, each country a band in the gallery's page colour;
+  - each partner: the name and city, its project badge ("Discover Islamic Art Partner", "Sharing History Affiliate", on the project's colour, from the package's `own_project`), Read more · View objects (View objects only for a partner holding something), the logo on the right;
+  - no object count, which legacy never printed.
+- **A gallery's About, Credits and How to search** (`dxa/gallery/TextPage.vue`): a white panel, Back at its top left, the text in a centred column, each page placing them as legacy's did. The Credits keep legacy's two blank lines where it had two (viewer-core 2.16.0's `blank-lines`). Back goes through history, as legacy's did.
+- **A gallery's lists of objects** — collection results, search results, the timeline gallery and a partner's objects — draw legacy's ObjectGrid (`dxa/gallery/ObjectGrid.vue`): four 175px frames a row, the card a tile opens on hover (the name, date, holder, place, "for *project*", See Database Entry >), a list below 975px; twenty a page.
+- **A partner's objects page** is legacy's PartnerObjects.vue: Back, the name and the italic place, the grid beside Partner Profile, the pages only when there is more than one, no count. Measured equal to legacy at 1366, its order and its hover card included.
+- **A gallery's Timeline entrance** is legacy's TimelinePage.vue: "Select a Country" then "All Countries", the start and end dates side by side, and a round Go that checks what legacy's checked. Beside it, the introduction, its paragraphs 15px apart, on a white panel.
+- **The gallery family loads Roboto Condensed upright only**, as legacy did: its italics are the upright face slanted, as wide as legacy's.
+- **Back's arrow** is its own element (`.mwnf-back-link__arrow`). In a gallery it takes the place of legacy's icon: 20px wide, 4px from the label, and as tall as the text.
+
+### Changed (the gallery smoke suite, `dxa/testing`)
+
+- It checks the pages above as legacy's: legacy's tiles (`.mwnf-dxa-grid__entry`), the text pages, the Timeline entrance's Go, the partners list without a count.
+- A first page of tiles holds twenty, or every object when there are fewer; the suite counts that itself, so a site's `collection.tiles`, `timeline.galleryTiles` and `partner.tiles` are no longer read (they counted the old nine a page). Nothing to change in a site.
+
+### Added
+
+- `PartnerListView`'s `tiebreak`: the second sort key for two rows of the same name.
+- `TimelineResultsView`'s entrance `form` slot, for a family that draws its own form.
+- `eraWords` on `TimelineResultsView` (an event's dates) and `SearchFormView` (the year lists): a family's own era words. The galleries read legacy's "A.D." and "B.C." (viewer-core 2.16.0's `GALLERY_ERA_WORDS`, viewer-i18n 6.6.0). Needs viewer-core 2.16.0.
+
+### Fixed
+
+- **The timeline's year lists** run to the latest end year, as legacy's did (they stopped at the latest start year).
+- **A gallery's collection entrance** has its from/to year lists again: they had stayed empty, with no entity to build them from.
+
 ## 3.59.0 (2026-11-04)
 
 ### Added

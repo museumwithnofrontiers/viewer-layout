@@ -24,7 +24,10 @@
  * gallery's value wins. Legacy drew white text on both menu shades and on the
  * header buttons whatever the palette, and so does this file.
  */
-@import url('https://fonts.googleapis.com/css2?family=Roboto+Condensed:ital,wght@0,300;0,400;0,700;1,400&family=Roboto:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap');
+/* Roboto Condensed upright only, as legacy loaded it (400 and 700): its
+   italics are the upright face slanted, as wide as the upright text. A true
+   italic face is narrower (inventory-app#2423, the partner badges). */
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@300;400;700&family=Roboto:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap');
 
 /* ── Theme: the family's tokens, read from the palette ───────────────────── */
 :root {
@@ -344,6 +347,21 @@ a { color: inherit; }
   .mwnf-nav__links { display: none; }
   .mwnf-nav--open .mwnf-nav__links { display: grid; grid-template-columns: 1fr; }
   .mwnf-nav__toggle { width: 100%; justify-content: center; font-size: 20px; }
+}
+
+/* Back as legacy's BackComponent: bold, flush left with 8px after the label;
+   the arrow takes the place of its icon, 20px wide and 4px from the label,
+   and no taller than the text (the glyph comes from a fallback font whose
+   line is taller). */
+.mwnf-back-link__button {
+  padding: 2px 8px 2px 0;
+}
+.mwnf-back-link__arrow {
+  display: inline-block;
+  width: 20px;
+  margin-inline-end: 4px;
+  line-height: 0;
+  text-align: center;
 }
 
 /* ── The header mark and tools, the footer's icons (inventory-app#2233) ──── */

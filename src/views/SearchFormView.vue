@@ -33,6 +33,8 @@ import SmartLink from '../content/SmartLink.vue'
 //                                        // already-built `{ from, to }`) or, 'buckets', one list
 //                                        // built from `entity`'s own records through `yearBuckets`
 //                                        // and used for both ends, as the facet galleries do
+//     eraWords: { 'catalogue.era.ad': entry, … },  // a family's own era words for those
+//                                        // year labels (viewer-core's GALLERY_ERA_WORDS)
 //     language: 'items' | false,        // an entity name: the search-language select over
 //                                        // `useSearchLanguage`, restricting to a language the
 //                                        // records were actually written in
@@ -103,7 +105,9 @@ const presets = computed(() => {
 function numberOptions(list) {
   return (list ?? []).map((year) => ({ value: year, label: String(year) }))
 }
-const bucketOptions = computed(() => (isBucketDates.value ? yearBuckets(records.value, t) : []))
+// `eraWords`: a family's own era words (viewer-core's `GALLERY_ERA_WORDS`).
+const eraT = (key) => t(spec.value.eraWords?.[key] ?? key)
+const bucketOptions = computed(() => (isBucketDates.value ? yearBuckets(records.value, eraT) : []))
 const dateFromOptions = computed(() => (isBucketDates.value ? bucketOptions.value : numberOptions(presets.value?.from)))
 const dateToOptions = computed(() => (isBucketDates.value ? bucketOptions.value : numberOptions(presets.value?.to)))
 const showDates = computed(() => Boolean(spec.value.dates))

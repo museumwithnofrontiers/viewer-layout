@@ -42,10 +42,16 @@ import TimelineEventList from '../content/TimelineEventList.vue'
 //                                                      // shown once `items` says objects exist for this country/period —
 //                                                      // an item's own shape is the site's, never this view's
 //     summary: (ctx) => [{ label, count?, value? }],
+//     eraWords: { 'catalogue.era.ad': entry, … },     // a family's own era words for the events' dates
 //     errorSelect, errorPeriod,                        // entry names for the entrance's own validation
 //     title, filterTitle, applyLabel, resetLabel, submitLabel, empty,  // entry names
 //     pagination: { window, jump, ends },
 //   }
+//
+// The entrance's `form` slot replaces its whole form, for a family that
+// drew and checked its own (the galleries' Go): given `{ filters, countries,
+// options, go, t }`, `options` the `begin`/`end` controls' options by key,
+// `go(query)` the navigation to `route`.
 //
 // Slots — `summary`, `cross-link`, `event`, `before`, `after` — each given
 // `{ filters, active, apply, reset, goToPage, events, pageInfo, countries,
@@ -152,16 +158,19 @@ const events = computed(() => {
 // Compute year range from loaded events for bucketed controls.
 // The range is the data's span, not the filtered event list: entrance's
 // rightly-empty list should not suppress the bucketed options.
+// The span runs from the earliest start to the latest end, as legacy's
+// `events/years` did (min of from_ad, max of to_ad): an event that starts
+// in 1927 and ends in 1968 puts 1950 on the list.
 const eventYearRange = computed(() => {
   const allEvents = timeline.findEvents({
     country: undefined,
     collection: undefined,
   })
-  const years = allEvents
-    .map((e) => e.year_from)
-    .filter((v) => Number.isFinite(v) && v !== 0)
-  if (!years.length) return [null, null]
-  return [Math.min(...years), Math.max(...years)]
+  const usable = (v) => Number.isFinite(v) && v !== 0
+  const starts = allEvents.map((e) => e.year_from).filter(usable)
+  const ends = allEvents.map((e) => (usable(e.year_to) ? e.year_to : e.year_from)).filter(usable)
+  if (!starts.length) return [null, null]
+  return [Math.min(...starts), Math.max(...ends)]
 })
 
 const pageInfo = usePagination(events, {
@@ -169,11 +178,15 @@ const pageInfo = usePagination(events, {
   size: () => spec.value.pageSize ?? 15,
 })
 
+// `eraWords`: a family's own era words for an event's dates (viewer-core's
+// `GALLERY_ERA_WORDS`).
+const eraT = (key) => t(spec.value.eraWords?.[key] ?? key)
+
 function defaultEventRow(event) {
   const label = spec.value.countryLabel && event.country_id ? spec.value.countryLabel(event.country_id) : ''
   return {
     id: event.id,
-    date: eventDateLabel(event, event.text, t),
+    date: eventDateLabel(event, event.text, eraT),
     caption: label ? renderInline(String(label)) : '',
     description: event.text?.description ? renderBlock(String(event.text.description), { breaks: true }) : '',
   }
@@ -277,7 +290,17 @@ function controlLabel(control, fallback) {
 
     <h1 v-if="spec.title" class="mwnf-timeline__title">{{ t(spec.title) }}</h1>
 
+    <slot
+      v-if="isEntrance && $slots.form"
+      name="form"
+      :filters="activeFilters"
+      :countries="countryOptions"
+      :options="controlOptions"
+      :go="(query) => router.push({ name: spec.route, query })"
+      :t="t"
+    />
     <FilterPanel
+      v-else
       class="mwnf-timeline__filters"
       :title="spec.filterTitle ? t(spec.filterTitle) : ''"
       :apply-label="isEntrance ? t(spec.submitLabel ?? 'core.action.search') : (spec.applyLabel ? t(spec.applyLabel) : '')"

@@ -33,6 +33,9 @@ import PartnerPanel from '../content/PartnerPanel.vue'
 //                                           // the toggle reverses the country
 //                                           // order (group.order: 'country')
 //                                           // or the one flat list ('name')
+//     tiebreak: (partner) => string,       // the second sort key, for two rows
+//                                           // of the same name (a partner listed
+//                                           // once per project)
 //     nested: true | false,                // an associated partner rendered
 //                                           // under its own parent
 //                                           // (partnerHierarchy) instead of the
@@ -197,7 +200,9 @@ const groups = computed(() => {
   // tier - sorting them is this view's concern, not that derivation's - and
   // both families sort every tier by name; only the country order (or, with
   // no country at all, the whole flat list) is what the toggle reverses.
+  const tiebreak = s.tiebreak ?? (() => '')
   const byRowName = (a, b) => plainOf(a.row.name).localeCompare(plainOf(b.row.name))
+    || String(tiebreak(a.partner)).localeCompare(String(tiebreak(b.partner)))
 
   return raw.map((group) => {
     let main = group.main.map(buildEntry).sort(byRowName)

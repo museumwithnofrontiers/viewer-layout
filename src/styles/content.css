@@ -2612,6 +2612,10 @@ a.mwnf-partner-panel__name:hover,
   text-decoration: underline;
 }
 
+.mwnf-back-link__arrow {
+  margin-inline-end: var(--mwnf-back-link-arrow-gap, 0.25em);
+}
+
 .mwnf-search-form__row {
   display: flex;
   align-items: center;
