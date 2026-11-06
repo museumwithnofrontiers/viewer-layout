@@ -3,6 +3,7 @@ import { exhibitionConfig, galleryConfig, standardRoutes } from '../src/dxa/inde
 import * as content from '../src/content/index.js'
 import * as views from '../src/views/index.js'
 import * as dxa from '../src/dxa/index.js'
+import { withLegacyTagOrder } from '../src/dxa/legacyFacets.js'
 
 // The DXA family layer's route table and site declarations
 // (inventory-app#2053/#2054/#2055). Names, paths and `meta` are pinned: a
@@ -157,6 +158,15 @@ describe('exhibitionConfig', () => {
       { category_id: 4, category: 'Footer 4', alt: 'B' },
     ], t)
     expect(groups.map((group) => group.title)).toEqual(['In association with', 'Footer 4'])
+  })
+})
+
+describe('withLegacyTagOrder', () => {
+  it("sorts a tag list as dxa-api's PHP sort(), capitals first, and leaves the countries alone", () => {
+    const facets = withLegacyTagOrder({ country: { field: 'country_id' }, type: { field: 'type', sort: 'label' } })
+    expect(facets.country).toEqual({ field: 'country_id' })
+    const labels = ['Sleigh', 'SUV', 'Sedan Chair', 'Racing Car'].map((label) => ({ value: label, label }))
+    expect(labels.sort(facets.type.sort).map((option) => option.label)).toEqual(['Racing Car', 'SUV', 'Sedan Chair', 'Sleigh'])
   })
 })
 

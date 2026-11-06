@@ -269,7 +269,9 @@ export function describeGallerySmoke({ config, sharedTexts, ownTexts, manifest, 
       const dates = host.querySelectorAll('.mwnf-dxa-gallery-collection__dates select')
       expect(dates).toHaveLength(2)
       expect(dates[0].options.length).toBeGreaterThan(1)
-      expect(host.textContent).toContain('this Gallery’s database')
+      // Legacy's text, naming the gallery: "… exploring the <name> database."
+      expect(host.querySelector('.mwnf-dxa-gallery-collection__description em')?.textContent).toBeTruthy()
+      expect(host.querySelector('.mwnf-dxa-gallery-collection__description').textContent).toContain(' database. A range of filters')
       app.unmount()
     }, 30000)
 

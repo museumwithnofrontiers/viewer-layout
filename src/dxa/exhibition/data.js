@@ -1,5 +1,6 @@
 import { partnerView, renderInline, useSiteConfig } from '@museumwnf/viewer-core'
 import { chromePicture } from '../../chrome.js'
+import { withLegacyTagOrder } from '../legacyFacets.js'
 import {
   useExhibitionData, useExhibitionCollection, useExhibitionTimeline, useExhibitionPartner,
   useExhibitionItemDetail, useExhibitionThemes,
@@ -40,8 +41,11 @@ export function chromeImage(path, size = 'hi_res') {
 }
 
 export const {
-  FACETS, haystack, tile, collectionResults, countryIdForCode,
+  haystack, tile, countryIdForCode,
 } = collection
+// The tag lists in legacy's order (dxa/legacyFacets.js), on the entrance and the results page.
+export const FACETS = withLegacyTagOrder(collection.FACETS)
+export const collectionResults = { ...collection.collectionResults, facets: FACETS }
 
 // Legacy's lists of an exhibition's records (dxa-api Items::GetSome, as the
 // galleries'): twenty tiles a page, by start date, the undated first, and
