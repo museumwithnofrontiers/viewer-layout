@@ -37,6 +37,14 @@ import { mwnfSocialLinks } from '../sections/socialLinks.js'
 // partner record; the language segment is dropped, the page number moves to
 // the query, and the timeline gallery's `start`/`end` path segments become
 // the platform's `begin`/`end` keys.
+// A logo category's heading a site names in its own locale; null when it
+// does not (the dictionary answers the entry's own name).
+function ownSectionTitle(t, categoryId) {
+  const key = `exhibition.sponsors.section${Number(categoryId)}`
+  const text = t(key)
+  return text && text !== key ? text : null
+}
+
 function timelineGalleryRedirect({ country, start, end, page }) {
   const query = { country }
   if (start !== 'any') query.begin = start
@@ -257,9 +265,12 @@ export function exhibitionConfig({
     // package's list draws the site's files (README, "Site chrome").
     sponsorLogos,
     // Legacy's header shows category 0 ("Header") beside the MWNF mark and
-    // leaves the other categories to the footer strip. Only categories 1 and
-    // 2 carry real copy; 3 and 4 hold legacy placeholders, which fall back to
-    // the category's own name.
+    // leaves the other categories to the footer strip, each under its
+    // exhibition's own heading (legacy's footer_logo_section_<n>). Categories
+    // 1 and 2 have shared words a site may word its own way; 3 and 4 held
+    // legacy placeholders, so a site that fills them names them in its own
+    // locale (`exhibition.sponsors.section3`, `.section4`), else the
+    // category's own name stands.
     logos: {
       header: (logo) => Number(logo.category_id) === 0 && logo.visible !== false,
       headerTitle: 'exhibition.sponsors.coOrganisers',
@@ -278,7 +289,7 @@ export function exhibitionConfig({
           .map(([categoryId, group]) => ({
             title: Number(categoryId) === 1 ? t('exhibition.sponsors.patronage')
               : Number(categoryId) === 2 ? t('exhibition.sponsors.support')
-                : (group[0].category ?? ''),
+                : ownSectionTitle(t, categoryId) ?? (group[0].category ?? ''),
             sponsors: [...group]
               .sort((a, b) => (a.display_order ?? 0) - (b.display_order ?? 0))
               .map((logo) => ({ name: logo.alt, href: logo.href, logo: logo.image })),

@@ -22,6 +22,7 @@ The exhibitions' pages as legacy's exhibitions client (inventory-app#2379), meas
 - **`TimelineResultsView`**: the `form` slot on the results page, a `gallery` and a `pagination` slot, and the page's `rows` in every slot.
 - **`AppHeader`**: a search toggle, shown by a family that folds the box away on a phone.
 - **`dxa/gallery/onDisplay.js`**: `galleryExhibitionSections(record, lang, ownSite)`.
+- **The exhibition logo strip**: a site names logo categories 3 and 4 in its own locale (`exhibition.sponsors.section3`, `.section4`), as legacy's footer_logo_section_3/4.
 
 ### Testing
 

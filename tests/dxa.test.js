@@ -148,6 +148,16 @@ describe('exhibitionConfig', () => {
     expect(groups.map((group) => group.title)).toEqual(['exhibition.sponsors.patronage', 'exhibition.sponsors.support'])
     expect(groups[1].sponsors.map((sponsor) => sponsor.name)).toEqual(['C', 'B'])
   })
+
+  it("names categories 3 and 4 as the site's locale does, else by the category's own name", () => {
+    const own = { 'exhibition.sponsors.section3': 'In association with' }
+    const t = (key) => own[key] ?? key
+    const groups = config.logos.sponsorGroups([
+      { category_id: 3, category: 'Footer 3', alt: 'A' },
+      { category_id: 4, category: 'Footer 4', alt: 'B' },
+    ], t)
+    expect(groups.map((group) => group.title)).toEqual(['In association with', 'Footer 4'])
+  })
 })
 
 describe('the family-only blocks (inventory-app#2055)', () => {
