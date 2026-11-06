@@ -1,5 +1,5 @@
 <script setup>
-import { computed } from 'vue'
+import { computed, watchEffect } from 'vue'
 import { useI18n, useSection, useSiteConfig } from '@museumwnf/viewer-core'
 import SiteShell from '../../components/SiteShell.vue'
 import PopupLogo from '../PopupLogo.vue'
@@ -42,26 +42,35 @@ const currentYear = new Date().getFullYear()
 // captioned with the curator's own line where there is one, and with the
 // banner item's sheet where there is not.
 const homeImage = computed(() => (isHome.value ? exhibition.value?.homepage_image_path : null))
+
+// Legacy painted the exhibition's home image behind the whole window, on
+// every page (App.vue's `#app::before`); the stylesheet draws it from this.
+watchEffect(() => {
+  if (typeof document === 'undefined') return
+  const path = exhibition.value?.homepage_image_path
+  const url = path ? chromeImage(path, 'hi_res') : ''
+  if (url) document.documentElement.style.setProperty('--mwnf-dxa-exhibition-backdrop', `url("${url.replace(/"/g, '%22')}")`)
+  else document.documentElement.style.removeProperty('--mwnf-dxa-exhibition-backdrop')
+})
 const bannerImage = computed(() => (
   homeImage.value
     ? chromeImage(homeImage.value, 'hi_res')
     : chromeImage(exhibition.value?.banner_image_path, 'hi_res')
 ))
 const banner = computed(() => {
-  const curated = homeImage.value ? '' : bannerCaption(locale.value)
-  if (curated) return curated
   const itemId = homeImage.value ? exhibition.value?.homepage_item_id : exhibition.value?.banner_item_id
   const item = itemById.value.get(itemId)
-  if (!item) return ''
+  if (!item) return homeImage.value ? '' : bannerCaption(locale.value)
   const sheet = tr('items', item.id, defaultLang)
-  // Legacy's caption: the item's own holding museum (a monument has none, and
-  // its institution is not printed), the location, on every page but the home
-  // page the province, and the country.
+  // Legacy's caption, on the home banner and on every other page's alike
+  // (BannerComponent, SubBanner): the banner item's name, then its own
+  // holding museum (a monument has none, and its institution is not
+  // printed), the location and the country (inventory-app#2379).
   return {
     name: labelOf('items', item.id),
     holder: sheet.holder ?? '',
     location: sheet.location ?? '',
-    province: homeImage.value ? '' : (sheet.province ?? ''),
+    province: '',
     country: labelOf('countries', item.country_id),
   }
 })

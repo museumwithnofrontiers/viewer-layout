@@ -2,6 +2,7 @@ import {
   languageLabels, loadEntities, mwnfLinks, offeredLanguages, useDataPackage,
 } from '@museumwnf/viewer-core'
 import { itemFromUidPath as itemFromUidList, partnerFromKey as partnerFromLists } from '@museumwnf/viewer-core/legacy'
+import { romanFor } from '@museumwnf/viewer-core/dxa'
 import GalleryShell from './gallery/Shell.vue'
 import ExhibitionShell from './exhibition/Shell.vue'
 import { itemFromUidPath, partnerFromKey } from './gallery/data.js'
@@ -233,6 +234,20 @@ export function exhibitionConfig({
     },
     banner: {
       variant: ({ section }) => (section === 'home' ? 'split' : 'section'),
+      // Legacy's SubBanner over a theme page: "Theme I ▪ Subtheme 1", "▪
+      // Overview" on a theme's own page, "▪ Gallery" on its gallery, the
+      // numeral the address's own (inventory-app#2379). Anywhere else the
+      // section's title.
+      title: ({ route, t }) => {
+        if (route?.name !== 'theme' && route?.name !== 'theme-gallery') return ''
+        const id = Number(route.params.id)
+        if (!Number.isInteger(id) || id < 1) return ''
+        const head = `${t('exhibition.theme.romanLabel')} ${romanFor(id + 1)}`
+        if (route.name === 'theme-gallery') return `${head} ▪ ${t('exhibition.theme.galleryLabel')}`
+        const sub = route.params.subtheme
+        if (sub && sub !== 'overview') return `${head} ▪ ${t('exhibition.theme.subthemeLabel')} ${sub}`
+        return `${head} ▪ ${t('exhibition.theme.overview')}`
+      },
     },
     // The site's own chrome files (inventory-app#2233 D7); the header mark is
     // legacy exhibitions-client's black logo, `theme/assets/logo_black.png`.

@@ -98,15 +98,15 @@
   --mwnf-header-logo-gap: 0.625rem;
   --mwnf-header-logo-height: 2.875rem;
   --mwnf-header-title-line-height: 1.1;
-  --mwnf-header-tools-size: 0.875rem;
+  --mwnf-header-tools-size: 1rem;
   --mwnf-header-link-color: #000000;
   --mwnf-header-links-separator: "|";
   --mwnf-header-control-border: 2px solid #000000;
   --mwnf-header-control-background: #ffffff;
   --mwnf-header-control-text: #000000;
-  --mwnf-header-button-border: 2px solid var(--contrast-color);
-  --mwnf-header-button-background: var(--contrast-color);
-  --mwnf-header-button-text: var(--contrast-text-color);
+  --mwnf-header-button-border: 2px solid #000000;
+  --mwnf-header-button-background: transparent;
+  --mwnf-header-button-text: #000000;
   --mwnf-header-button-active-background: var(--main-color);
   --mwnf-header-button-active-text: var(--main-text-color);
 
@@ -117,19 +117,22 @@
   --mwnf-banner-split-body-width: 40%;
   --mwnf-banner-split-min-height: 43.75rem;
   --mwnf-banner-split-padding: 3.125rem 1.25rem;
-  --mwnf-banner-split-gap: 1.5625rem;
-  --mwnf-banner-split-title-size: calc(0.75rem + 1.2vw);
-  --mwnf-banner-split-subtitle-size: 65%;
-  --mwnf-banner-body-background: var(--main-color);
+  --mwnf-banner-split-gap: 0;
+  --mwnf-banner-split-title-size: calc(12px + 1.5vw);
+  --mwnf-banner-split-subtitle-size: 1.5625rem;
+  --mwnf-banner-body-background: color-mix(in srgb, var(--main-color) 55%, transparent);
   --mwnf-banner-body-text: var(--main-text-color);
   --mwnf-banner-body-accent: var(--contrast-color);
-  --mwnf-banner-headline-width: 28.75rem;
-  --mwnf-banner-headline-size: 0.9375rem;
-  --mwnf-banner-enter-size: 1.25rem;
+  --mwnf-banner-headline-width: none;
+  --mwnf-banner-headline-size: 1.25rem;
+  --mwnf-banner-enter-size: 1.5625rem;
   --mwnf-banner-strapline-size: 0.875rem;
-  --mwnf-banner-caption-background: var(--main-color);
+  --mwnf-banner-caption-background: color-mix(in srgb, var(--main-color) 80%, transparent);
   --mwnf-banner-caption-text: var(--main-text-color);
-  --mwnf-banner-caption-width: 35%;
+  --mwnf-banner-caption-width: 25%;
+  --mwnf-banner-caption-size: 1rem;
+  --mwnf-banner-caption-margin: 15px;
+  --mwnf-banner-caption-padding: 15px;
   --mwnf-banner-overlay-text: var(--contrast-text-color);
   --mwnf-banner-overlay-background: color-mix(in srgb, var(--contrast-color) 60%, transparent);
   --mwnf-banner-section-height: 20vh;
@@ -271,12 +274,32 @@
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 body {
-  background: var(--secondary-color);
+  background: #ffffff;
   color: var(--secondary-text-color);
   display: flex;
   justify-content: center;
   align-items: flex-start;
   overflow-x: hidden;
+}
+
+/* Behind the page column, as legacy's App.vue: the exhibition's home image
+   over the whole window at half strength, veiled by the main colour at 40%.
+   The Shell sets the picture (`--mwnf-dxa-exhibition-backdrop`). */
+body::before,
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+}
+body::before {
+  background: var(--mwnf-dxa-exhibition-backdrop, none) center / cover no-repeat;
+  opacity: 0.5;
+}
+body::after {
+  background: var(--main-color);
+  opacity: 0.4;
 }
 
 html[dir='rtl'] body { direction: rtl; }
@@ -294,16 +317,71 @@ a { color: inherit; }
 .mwnf-page {
   width: 1350px;
   max-width: 100vw;
-  box-shadow: 0 2px 8px 2px #707070;
+  box-shadow: 0 2px 8px 2px var(--main-color);
 }
 
-/* The header stays put while the page scrolls, and carries the platform's
-   5px accent rule under it rather than the solid dark bar the galleries use. */
+/* The home banner, as legacy's BannerComponent: the text panel over the main
+   colour at 55%; the title and subtitle in the contrast colour, the subtitle
+   10px under the title; the headline in the main text colour with 50px all
+   round; ENTER over its arrow; the tagline 20px off the panel's foot, gone
+   from 1199px. */
+.mwnf-banner--split .mwnf-banner__body {
+  position: relative;
+  line-height: normal;
+}
+.mwnf-banner--split .mwnf-banner__subtitle {
+  margin-top: 10px;
+}
+.mwnf-banner--split .mwnf-banner__headline {
+  width: 100%;
+  padding: 50px;
+  color: var(--main-text-color);
+}
+/* Legacy set a blank line between the headline's paragraphs. */
+.mwnf-banner--split .mwnf-banner__headline p + p {
+  margin-top: 1lh;
+}
+.mwnf-banner--split .mwnf-banner__enter {
+  font-weight: 400;
+  text-transform: uppercase;
+  color: var(--main-text-color);
+}
+.mwnf-banner--split .mwnf-banner__enter::after {
+  content: '\2193';
+  line-height: 25px;
+}
+.mwnf-banner--split .mwnf-banner__enter:hover {
+  color: var(--contrast-color);
+}
+.mwnf-banner--split .mwnf-banner__strapline {
+  position: absolute;
+  inset-inline: 0;
+  bottom: 20px;
+  font-style: normal;
+  color: var(--contrast-color);
+}
+.mwnf-banner--split .mwnf-banner__caption-name {
+  margin-bottom: 10px;
+}
+@media only screen and (min-width: 124.9375rem) {
+  .mwnf-banner--split .mwnf-banner__title { font-size: 38px; }
+  .mwnf-banner--split .mwnf-banner__subtitle { font-size: 22px; }
+}
+@media only screen and (max-width: 74.9375rem) {
+  .mwnf-banner--split .mwnf-banner__title { font-size: 34px; }
+  .mwnf-banner--split .mwnf-banner__subtitle { font-size: 20px; }
+  .mwnf-banner--split .mwnf-banner__strapline { display: none; }
+}
+@media only screen and (max-width: 60.875rem) {
+  .mwnf-banner--split .mwnf-banner__title { font-size: 30px; }
+}
+
+/* The header stays put while the page scrolls; legacy drew its 5px accent
+   rule under it only on a phone (from 599px). */
 .mwnf-header {
   position: sticky;
   top: 0;
   z-index: 90;
-  border-bottom: 5px solid var(--contrast-color);
 }
 .mwnf-nav {
   z-index: 89;
@@ -329,14 +407,13 @@ a { color: inherit; }
   align-items: center;
   justify-content: center;
   background: var(--contrast-color);
-  border: 1px solid rgba(0, 0, 0, 0.05);
   line-height: 28px;
 }
+/* Legacy's entries: bold, their 28px line and no taller. */
 .mwnf-nav__link {
   width: 100%;
   text-align: center;
-  padding: 2px 4px;
-  font-size: 96%;
+  padding: 0;
   text-transform: uppercase;
 }
 .mwnf-nav__link--active {
@@ -347,12 +424,64 @@ a { color: inherit; }
 /* The header row and the three banded sections are edge to edge inside the
    column, each managing its own gutters. */
 .mwnf-header__inner {
+  position: relative;
   min-height: 80px;
-  padding-inline: 14px 12px;
+  padding-inline: 10px;
 }
-.mwnf-banner,
-.mwnf-hyperlinks,
-.mwnf-sponsors {
+
+/* Legacy's header (exhibitions-client App.vue): the logo at its own size,
+   10px in; "A MWNF Online Exhibition" centred on the page, whatever stands
+   either side; the links at 16px, each 10px either side of its bar; the
+   search box and its outlined button. */
+.mwnf-header__brand {
+  padding-bottom: 4px;
+}
+.mwnf-header__brand-logo {
+  height: auto;
+}
+.mwnf-header__lockup {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  max-width: 45%;
+  padding: 10px;
+  transform: translate(-50%, -50%);
+  flex: none;
+}
+.mwnf-header__tools {
+  margin-inline-start: auto;
+  gap: 0;
+}
+.mwnf-header__links {
+  gap: 0;
+}
+.mwnf-header__links li + li::before {
+  content: " | ";
+  white-space: pre;
+  padding-inline-end: 0;
+}
+.mwnf-header__link {
+  padding: 0 10px;
+}
+.mwnf-header__search {
+  padding-top: 10px;
+  padding-inline-end: 5px;
+}
+.mwnf-header__search-input,
+.mwnf-header__search-submit {
+  border-radius: 4px;
+  font-size: 13.3333px;
+  line-height: normal;
+}
+.mwnf-header__search-input {
+  width: 143px;
+  padding: 5px;
+}
+.mwnf-header__search-submit {
+  width: 36px;
+  padding: 5px 8px;
+}
+.mwnf-banner {
   padding-inline: 0;
 }
 
@@ -365,10 +494,129 @@ a { color: inherit; }
   text-shadow: -1px 0 2px #000000;
 }
 
-/* The footer: one centred line of links and the copyright. */
+/* The bottom band, as legacy's BottomBanner: 50px in, three equal columns
+   10px apart at 20px, the exhibition's title and each link's label bold,
+   the labels in capitals. */
+.mwnf-hyperlinks--tiles {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  align-items: start;
+  padding: 50px;
+  font-size: 1.25rem;
+  line-height: normal;
+}
+.mwnf-hyperlinks--tiles .mwnf-hyperlinks__lockup,
+.mwnf-hyperlinks--tiles .mwnf-hyperlinks__link {
+  width: auto;
+}
+.mwnf-hyperlinks--tiles .mwnf-hyperlinks__list {
+  display: grid;
+  grid-column: span 2;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
+.mwnf-hyperlinks--tiles .mwnf-hyperlinks__title,
+.mwnf-hyperlinks--tiles .mwnf-hyperlinks__subtitle,
+.mwnf-hyperlinks--tiles .mwnf-hyperlinks__label,
+.mwnf-hyperlinks--tiles .mwnf-hyperlinks__description {
+  font-size: inherit;
+}
+.mwnf-hyperlinks--tiles .mwnf-hyperlinks__label {
+  text-transform: uppercase;
+}
+
+/* The logo strip, as legacy's LogosComponent: white, 50px in, each group a
+   quarter of the column less its 20px margins, its heading bold, each logo
+   in a 125x90 box 10px/20px apart. */
+.mwnf-sponsors {
+  padding: 0 50px 20px;
+  border-bottom: 5px solid #ffffff;
+  line-height: normal;
+}
+.mwnf-sponsors__groups {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0;
+}
+.mwnf-sponsors__group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+  width: calc(25% - 20px);
+  min-width: 175px;
+  margin: 20px 10px;
+}
+.mwnf-sponsors__group-title {
+  font-size: 1rem;
+  font-weight: 700;
+}
+.mwnf-sponsors__list {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+}
+.mwnf-sponsors__item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 90px;
+  max-width: 125px;
+  margin: 10px 20px;
+}
+.mwnf-sponsors__logo {
+  display: block;
+  width: 100%;
+  height: 100%;
+  max-height: none;
+  object-fit: contain;
+}
+
+/* The footer, as legacy's: one 40px line, the links and the copyright
+   between bars 15px in, then the network icons 5px apart. */
 .mwnf-footer {
   justify-content: center;
+  align-items: center;
+  gap: 0;
+  height: 40px;
+  padding: 0;
   text-align: center;
+  line-height: normal;
+}
+.mwnf-footer__links {
+  gap: 0;
+  padding-inline-start: 15px;
+}
+.mwnf-footer__links li + li::before,
+.mwnf-footer__text::before {
+  content: " | ";
+  white-space: pre;
+  padding: 0;
+}
+.mwnf-footer__text {
+  padding-inline-end: 15px;
+}
+.mwnf-footer__social {
+  gap: 0;
+  padding: 0 15px;
+}
+.mwnf-footer__social-link {
+  margin: 0 5px;
+}
+
+/* Up to 1199px legacy's menu wraps, four entries a row, each at 96% inside a
+   faint rule. */
+@media only screen and (max-width: 74.9375rem) {
+  .mwnf-nav__links { grid-auto-flow: row; grid-template-columns: repeat(4, 1fr); }
+  .mwnf-nav__links li { border: 1px solid rgba(0, 0, 0, 0.05); }
+  .mwnf-nav__link { font-size: 96%; }
+}
+
+@media only screen and (max-width: 37.4375rem) {
+  .mwnf-header { border-bottom: 5px solid var(--contrast-color); }
 }
 
 @media only screen and (max-width: 48rem) {
@@ -386,4 +634,688 @@ a { color: inherit; }
   overflow: hidden;
   clip-path: inset(50%);
   white-space: nowrap;
+}
+
+/* ── The theme page, as legacy's ThemeComponent (inventory-app#2379) ────────
+   The band of pictures on the main colour, 125px thumbnails 5px apart and
+   30px in, the chosen one framed in the contrast colour, a related work
+   marked by a contrast corner, each captioned under the pointer; the switch
+   under it. Below, the chosen picture on the main colour (30px in, at most
+   600px) over a contrast rule, its caption, and, in the other half on the
+   secondary colour, the text at 20px. From 974px 42/58; from 774px 16px
+   text and the band in fifths of the width; from 699px one column. */
+.mwnf-dxa-theme-page {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  background-color: var(--secondary-color);
+  font-size: 20px;
+  line-height: normal;
+}
+.mwnf-dxa-theme-page__band {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  background-color: var(--main-color);
+}
+.mwnf-dxa-theme-page__thumbs-frame {
+  position: relative;
+  width: 100%;
+}
+.mwnf-dxa-theme-page__thumbs {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  padding: 30px;
+  background-color: var(--main-color);
+}
+.mwnf-dxa-theme-page__thumbs--scroll {
+  justify-content: flex-start;
+  flex-wrap: nowrap;
+  overflow: hidden;
+}
+.mwnf-dxa-theme-page__arrows {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  pointer-events: none;
+}
+.mwnf-dxa-theme-page__arrow {
+  height: 125px;
+  width: 28px;
+  border: none;
+  background-color: var(--contrast-color);
+  color: #ffffff;
+  font-size: 20px;
+  cursor: pointer;
+  pointer-events: auto;
+  z-index: 1;
+}
+.mwnf-dxa-theme-page__thumb {
+  position: relative;
+  flex-shrink: 0;
+  height: 125px;
+  width: 125px;
+  margin: 5px;
+}
+.mwnf-dxa-theme-page__thumb img,
+.mwnf-dxa-theme-page__related-image img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  cursor: pointer;
+}
+.mwnf-dxa-theme-page__thumb--selected {
+  border: 5px solid var(--contrast-color);
+}
+.mwnf-dxa-theme-page__thumb--related::after,
+.mwnf-dxa-theme-page__related-image:not(.mwnf-dxa-theme-page__related-image--main)::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  border-bottom: 20px solid var(--contrast-color);
+  border-left: 20px solid transparent;
+  pointer-events: none;
+}
+.mwnf-dxa-theme-page__tip {
+  position: absolute;
+  bottom: 0;
+  left: 75%;
+  z-index: 65;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 175px;
+  padding: 5px 10px;
+  border-radius: 6px;
+  background-color: var(--main-color);
+  color: var(--main-text-color);
+  font-size: 16px;
+  text-align: center;
+  visibility: hidden;
+  pointer-events: none;
+}
+.mwnf-dxa-theme-page__tip::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  right: 100%;
+  transform: translateY(-50%);
+  border: 5px solid transparent;
+  border-right-color: var(--main-color);
+}
+.mwnf-dxa-theme-page__tip--left {
+  left: -125%;
+}
+.mwnf-dxa-theme-page__tip--left::after {
+  right: -10px;
+  border-right-color: transparent;
+  border-left-color: var(--main-color);
+}
+.mwnf-dxa-theme-page__thumb--related .mwnf-dxa-theme-page__tip {
+  background-color: var(--contrast-color);
+  color: var(--contrast-text-color);
+}
+.mwnf-dxa-theme-page__thumb--related .mwnf-dxa-theme-page__tip::after {
+  border-right-color: var(--contrast-color);
+}
+.mwnf-dxa-theme-page__thumb--related .mwnf-dxa-theme-page__tip--left::after {
+  border-right-color: transparent;
+  border-left-color: var(--contrast-color);
+}
+.mwnf-dxa-theme-page__thumb:hover .mwnf-dxa-theme-page__tip {
+  visibility: visible;
+}
+.mwnf-dxa-theme-page__controls {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  color: var(--main-text-color);
+}
+.mwnf-dxa-theme-page__control {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  margin: 0 10px 30px;
+  cursor: pointer;
+}
+.mwnf-dxa-theme-page__switch {
+  position: relative;
+  display: flex;
+  width: 55px;
+  height: 30px;
+  margin-right: 10px;
+}
+.mwnf-dxa-theme-page__switch input {
+  width: 0;
+  height: 0;
+  opacity: 0;
+}
+.mwnf-dxa-theme-page__slider {
+  position: absolute;
+  inset: 0;
+  border-radius: 30px;
+  background-color: #707070;
+  transition: 0.3s;
+  cursor: pointer;
+}
+.mwnf-dxa-theme-page__slider::before {
+  content: '';
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  height: 24px;
+  width: 24px;
+  border-radius: 50%;
+  background-color: #ffffff;
+  transition: 0.3s;
+}
+.mwnf-dxa-theme-page__switch input:checked + .mwnf-dxa-theme-page__slider {
+  background-color: var(--contrast-color);
+}
+.mwnf-dxa-theme-page__switch input:checked + .mwnf-dxa-theme-page__slider::before {
+  transform: translateX(24px);
+}
+.mwnf-dxa-theme-page__body {
+  display: flex;
+  justify-content: flex-end;
+  width: 100%;
+  background-color: var(--main-color);
+}
+.mwnf-dxa-theme-page__selected {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  width: 50%;
+  padding-top: 30px;
+  background-color: var(--contrast-color);
+}
+.mwnf-dxa-theme-page__picture {
+  max-height: 600px;
+  width: 100%;
+  padding: 30px;
+  background-color: var(--main-color);
+  cursor: zoom-in;
+}
+.mwnf-hover-zoom {
+  position: relative;
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+}
+.mwnf-hover-zoom__normal {
+  display: block;
+  width: 100%;
+  height: 100%;
+  max-height: 540px;
+  object-fit: contain;
+  object-position: center;
+}
+.mwnf-hover-zoom__zoom {
+  position: absolute;
+  top: 0;
+  left: 0;
+  max-width: none;
+  transform-origin: top left;
+}
+.mwnf-dxa-theme-page__lightbox {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 200;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  width: 100%;
+  background-color: rgba(0, 0, 0, 0.9);
+}
+.mwnf-dxa-theme-page__lightbox-frame {
+  height: 90%;
+  width: 90%;
+}
+.mwnf-dxa-theme-page__lightbox-frame img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+.mwnf-dxa-theme-page__details {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  padding: 0 30px 30px;
+  background-color: var(--main-color);
+  color: var(--main-text-color);
+}
+.mwnf-dxa-theme-page__detail--title {
+  font-weight: 700;
+}
+.mwnf-dxa-theme-page__entry {
+  margin-top: 20px;
+  font-style: italic;
+  color: var(--contrast-color);
+  text-decoration: none;
+}
+.mwnf-dxa-theme-page__entry:hover {
+  text-decoration: underline;
+}
+.mwnf-dxa-theme-page__empty {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 50%;
+  color: var(--main-text-color);
+}
+.mwnf-dxa-theme-page__content {
+  width: 50%;
+  padding: 0 30px 30px;
+  background-color: var(--secondary-color);
+  color: var(--secondary-text-color);
+}
+.mwnf-dxa-theme-page__theme-title {
+  margin: 30px 0 10px;
+  padding: 5px;
+  background-color: var(--contrast-color);
+  color: var(--contrast-text-color);
+  font-size: 25px;
+  font-weight: 700;
+}
+.mwnf-dxa-theme-page__title {
+  font-weight: 700;
+}
+.mwnf-dxa-theme-page__quote {
+  font-style: italic;
+}
+.mwnf-dxa-theme-page__presentation p,
+.mwnf-dxa-theme-page__justification p {
+  margin: 0;
+}
+.mwnf-dxa-theme-page__justification {
+  margin-bottom: 20px;
+}
+.mwnf-dxa-theme-page__reciprocal {
+  font-size: 16px;
+  font-weight: 700;
+}
+.mwnf-dxa-theme-page__related-heading {
+  margin: 30px 0 10px;
+  font-weight: 700;
+  color: var(--contrast-color);
+}
+.mwnf-dxa-theme-page__related-images {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.mwnf-dxa-theme-page__related-image {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100px;
+  width: 100px;
+}
+.mwnf-dxa-theme-page__related-image--main {
+  border: 5px solid var(--main-color);
+}
+.mwnf-dxa-theme-page__tour {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  margin-top: 50px;
+  font-size: 16px;
+  font-weight: 700;
+}
+.mwnf-dxa-theme-page__tour-link {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  color: var(--secondary-text-color);
+  text-decoration: none;
+  text-transform: uppercase;
+}
+.mwnf-dxa-theme-page__tour-link--next {
+  justify-content: flex-end;
+}
+.mwnf-dxa-theme-page__tour-link:hover,
+.mwnf-dxa-theme-page__links a:hover {
+  color: var(--contrast-color);
+  text-decoration: underline;
+}
+.mwnf-dxa-theme-page__links {
+  align-self: flex-start;
+  margin-top: 20px;
+  padding-top: 30px;
+  background-color: var(--contrast-color);
+}
+.mwnf-dxa-theme-page__links-inner {
+  padding-top: 30px;
+  background-color: var(--secondary-color);
+}
+.mwnf-dxa-theme-page__links-label {
+  padding-top: 10px;
+  font-weight: 700;
+}
+.mwnf-dxa-theme-page__links a {
+  color: var(--secondary-text-color);
+  text-decoration: none;
+}
+.mwnf-dxa-theme-page__links a.mwnf-dxa-theme-page__link--current {
+  font-weight: 700;
+  color: var(--contrast-color);
+}
+@media only screen and (max-width: 60.875rem) {
+  .mwnf-dxa-theme-page__selected { width: 42%; }
+  .mwnf-dxa-theme-page__content { width: 58%; }
+  .mwnf-dxa-theme-page__tip { display: none; }
+}
+@media only screen and (max-width: 48.375rem) {
+  .mwnf-dxa-theme-page,
+  .mwnf-dxa-theme-page__presentation,
+  .mwnf-dxa-theme-page__tour { font-size: 16px; }
+  .mwnf-dxa-theme-page__theme-title { font-size: 22px; }
+  .mwnf-dxa-theme-page__control { margin-bottom: 20px; }
+  .mwnf-dxa-theme-page__reciprocal { font-size: 14px; }
+  .mwnf-dxa-theme-page__arrow { height: 20vw; }
+  .mwnf-dxa-theme-page__thumb { height: 20vw; width: 20vw; }
+}
+@media only screen and (max-width: 43.6875rem) {
+  .mwnf-dxa-theme-page__body { flex-direction: column; }
+  .mwnf-dxa-theme-page__selected,
+  .mwnf-dxa-theme-page__content { width: 100%; }
+  .mwnf-dxa-theme-page__picture { height: 450px; }
+}
+@media only screen and (max-width: 37.4375rem) {
+  .mwnf-dxa-theme-page__thumbs { padding: 20px; }
+  .mwnf-dxa-theme-page__arrow { height: 18vw; }
+  .mwnf-dxa-theme-page__thumb { height: 18vw; width: 18vw; }
+}
+
+/* The section banner, as legacy's SubBanner: the title at 38px, 10px round
+   and 50px in; on the right the banner picture's caption, italic, centred
+   in the band's height, 50px in; the caption gone from 1099px (34px title
+   from 1199, 30px from 849, a 40px band at 724, 35px at 599). */
+.mwnf-banner--section .mwnf-banner__body {
+  align-items: stretch;
+  min-height: 50px;
+  padding: 0;
+  line-height: normal;
+}
+.mwnf-banner--section .mwnf-banner__title {
+  align-self: center;
+  padding: 10px 10px 10px 50px;
+  font-size: 38px;
+  font-weight: 400;
+}
+.mwnf-banner--section .mwnf-banner__body .mwnf-banner__caption {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  max-width: 600px;
+  padding-right: 50px;
+  font-size: 16px;
+  font-style: italic;
+  text-align: start;
+}
+@media only screen and (max-width: 74.9375rem) {
+  .mwnf-banner--section .mwnf-banner__title { font-size: 34px; }
+}
+@media only screen and (max-width: 68.6875rem) {
+  .mwnf-banner--section .mwnf-banner__body .mwnf-banner__caption { display: none; }
+}
+@media only screen and (max-width: 53.0625rem) {
+  .mwnf-banner--section .mwnf-banner__title { font-size: 30px; }
+}
+@media only screen and (max-width: 45.25rem) {
+  .mwnf-banner--section .mwnf-banner__media { max-height: 100px; }
+  .mwnf-banner--section .mwnf-banner__body { min-height: 40px; }
+  .mwnf-banner--section .mwnf-banner__title { padding: 5px 5px 5px 50px; }
+}
+@media only screen and (max-width: 37.4375rem) {
+  .mwnf-banner--section .mwnf-banner__media { max-height: 80px; }
+  .mwnf-banner--section .mwnf-banner__body { min-height: 35px; }
+  .mwnf-banner--section .mwnf-banner__title { padding: 5px 5px 5px 30px; }
+}
+
+/* The themes page, as legacy's ThemesPage: the left half of the band in the
+   main colour behind a column 95% wide, 30px/50px in; each theme 20px in
+   with 10px under it, its bar 20px bold on the contrast colour; closed,
+   four 70px strips of its cover; opened, the picture (at most 400px) in the
+   left half with its caption, and the text at 20px 30px in. From 1199px the
+   column is the band's width, 30px in; from 849px 16px text, 15px in; from
+   649px one column. */
+.mwnf-dxa-themes-page {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  background-color: var(--secondary-color);
+  line-height: normal;
+}
+.mwnf-dxa-themes-page::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 50%;
+  background-color: var(--main-color);
+}
+.mwnf-dxa-themes-page__container {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 95%;
+  padding: 30px 50px 50px;
+}
+.mwnf-dxa-themes-page__show-all {
+  display: flex;
+  justify-content: flex-end;
+  width: 100%;
+  padding: 0 20px;
+  color: var(--secondary-text-color);
+  cursor: pointer;
+}
+.mwnf-dxa-themes-page__theme {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 100%;
+  margin-bottom: 10px;
+  padding: 20px;
+}
+.mwnf-dxa-themes-page__title {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  padding: 10px;
+  background-color: var(--contrast-color);
+  color: var(--contrast-text-color);
+  font-size: 20px;
+  font-weight: 700;
+  text-align: center;
+  cursor: pointer;
+}
+.mwnf-dxa-themes-page__title--fixed {
+  cursor: default;
+}
+.mwnf-dxa-themes-page__strips {
+  display: flex;
+  height: 70px;
+  width: 100%;
+  background-color: var(--secondary-color);
+}
+.mwnf-dxa-themes-page__strips img {
+  display: block;
+  height: 100%;
+  width: 25%;
+  object-fit: cover;
+}
+.mwnf-dxa-themes-page__strips img:nth-child(1) { object-position: top; }
+.mwnf-dxa-themes-page__strips img:nth-child(2) { object-position: 50% 25%; }
+.mwnf-dxa-themes-page__strips img:nth-child(3) { object-position: 50% 50%; }
+.mwnf-dxa-themes-page__strips img:nth-child(4) { object-position: bottom; }
+.mwnf-dxa-themes-page__open {
+  display: flex;
+  width: 100%;
+}
+.mwnf-dxa-themes-page__image {
+  display: flex;
+  flex-direction: column;
+  max-height: 400px;
+  width: 50%;
+  margin-top: 30px;
+  padding-right: 30px;
+}
+.mwnf-dxa-themes-page__image img {
+  display: block;
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+}
+.mwnf-dxa-themes-page__caption {
+  padding: 5px 0;
+  color: var(--main-text-color);
+  font-style: italic;
+}
+.mwnf-dxa-themes-page__info {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  color: var(--secondary-text-color);
+}
+.mwnf-dxa-themes-page__description,
+.mwnf-dxa-themes-page__subthemes,
+.mwnf-dxa-themes-page__gallery {
+  margin: 30px 30px 0;
+  font-size: 20px;
+}
+.mwnf-dxa-themes-page__subthemes-label {
+  font-weight: 700;
+}
+.mwnf-dxa-themes-page__link {
+  color: var(--contrast-text-color);
+  text-decoration: none;
+}
+.mwnf-dxa-themes-page__see-more {
+  font-weight: 700;
+  text-decoration: underline;
+}
+.mwnf-dxa-themes-page__link:hover,
+.mwnf-dxa-themes-page__gallery a:hover {
+  color: var(--contrast-color);
+  text-decoration: underline;
+}
+.mwnf-dxa-themes-page__gallery {
+  font-style: italic;
+  font-weight: 700;
+}
+.mwnf-dxa-themes-page__gallery a {
+  color: var(--secondary-text-color);
+  text-decoration: none;
+}
+@media only screen and (max-width: 74.9375rem) {
+  .mwnf-dxa-themes-page__container { width: 100%; padding: 30px; }
+}
+@media only screen and (max-width: 56.1875rem) {
+  .mwnf-dxa-themes-page__strips img { width: 50%; }
+  .mwnf-dxa-themes-page__strips img:nth-child(2) { object-position: 50% 50%; }
+}
+@media only screen and (max-width: 53.0625rem) {
+  .mwnf-dxa-themes-page__container { padding: 30px 15px 15px; }
+  .mwnf-dxa-themes-page__theme { padding: 10px; }
+  .mwnf-dxa-themes-page__title,
+  .mwnf-dxa-themes-page__description,
+  .mwnf-dxa-themes-page__subthemes,
+  .mwnf-dxa-themes-page__gallery { font-size: 16px; }
+}
+@media only screen and (max-width: 40.5625rem) {
+  .mwnf-dxa-themes-page::before { background-color: transparent; }
+  .mwnf-dxa-themes-page__open { flex-direction: column; }
+  .mwnf-dxa-themes-page__image {
+    width: 100%;
+    height: 250px;
+    margin: 0;
+    padding: 20px 0;
+    background-color: var(--main-color);
+  }
+  .mwnf-dxa-themes-page__caption { display: none; }
+  .mwnf-dxa-themes-page__description,
+  .mwnf-dxa-themes-page__subthemes,
+  .mwnf-dxa-themes-page__gallery { margin: 20px 0 0; }
+}
+@media only screen and (max-width: 31.1875rem) {
+  .mwnf-dxa-themes-page__strips img { width: 100%; }
+  .mwnf-dxa-themes-page__strips img:nth-child(1) { object-position: 50% 50%; }
+}
+
+/* Legacy's theme texts left a blank line between paragraphs. */
+.mwnf-dxa-theme-page__presentation p + p,
+.mwnf-dxa-theme-page__justification p + p {
+  margin-top: 1lh;
+}
+
+/* The welcome window, as legacy's #exhibition-popup: 125px from the top,
+   white with a 3px black border and 5px corners, 75px in, as wide as its
+   text allows at most 750px; its round 45px close button at the top right,
+   ringed in the contrast colour. Legacy's notices were centred 14pt text
+   with a blank line between paragraphs and their logos inline. */
+.mwnf-popup-logo {
+  top: 125px;
+  transform: translate(-50%, 0);
+  z-index: 300;
+  width: auto;
+  max-width: 750px;
+  max-height: none;
+  overflow: visible;
+  padding: 75px;
+  border: 3px solid #000000;
+  border-radius: 5px;
+  background-color: #ffffff;
+  color: #000000;
+  box-shadow: none;
+}
+.mwnf-popup-logo__close {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  top: -10px;
+  right: -15px;
+  height: 45px;
+  width: 45px;
+  border: 3px solid var(--contrast-color);
+  border-radius: 100%;
+  background-color: #ffffff;
+  color: #000000;
+  font-size: 16px;
+}
+.mwnf-popup-logo__content {
+  font-size: 18.6667px;
+  line-height: normal;
+  text-align: center;
+}
+.mwnf-popup-logo__content p {
+  margin: 0;
+}
+.mwnf-popup-logo__content p + p {
+  margin-top: 1lh;
+}
+.mwnf-popup-logo__content img {
+  display: inline;
+  vertical-align: baseline;
+}
+@media only screen and (max-width: 31.1875rem) {
+  .mwnf-popup-logo { width: 90%; }
 }
