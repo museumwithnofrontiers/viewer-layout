@@ -29,7 +29,7 @@ export const {
   visiblePartnerById, isHiddenPartner,
   itemRoute, partnerRoute, partnerObjectsRoute,
   countryLabelFromCode,
-  exhibitionTitle, exhibitionSubtitle, exhibitionHeadline, bannerCaption,
+  exhibitionTitle, exhibitionSubtitle, exhibitionHeadline, bannerCaption, projectName,
 } = data
 
 // A chrome picture the package names by its legacy path: the site's own copy
@@ -42,6 +42,33 @@ export function chromeImage(path, size = 'hi_res') {
 export const {
   FACETS, haystack, tile, collectionResults, countryIdForCode,
 } = collection
+
+// Legacy's lists of an exhibition's records (dxa-api Items::GetSome, as the
+// galleries'): twenty tiles a page, by start date, the undated first, and
+// the records of one year by country, partner, then legacy key
+// (inventory-app#2379).
+const compareText = (a, b) => String(a ?? '').localeCompare(String(b ?? ''), 'en', { sensitivity: 'base' })
+function compareKeys(a, b) {
+  const left = String(a ?? '').split(':')
+  const right = String(b ?? '').split(':')
+  for (let i = 0; i < Math.max(left.length, right.length); i++) {
+    const x = left[i] ?? ''
+    const y = right[i] ?? ''
+    if (x === y) continue
+    if (/^\d+$/.test(x) && /^\d+$/.test(y)) return Number(x) - Number(y)
+    return x.localeCompare(y, 'en')
+  }
+  return 0
+}
+export function legacyOrder(a, b) {
+  return compareText(labelOf('countries', a.country_id), labelOf('countries', b.country_id))
+    || compareText(labelOf('partners', a.partner_id), labelOf('partners', b.partner_id))
+    || compareKeys(a.backward_compatibility, b.backward_compatibility)
+}
+export const legacyPaging = {
+  pageSize: 20,
+  sort: { undated: 'first', tiebreak: (a, b) => legacyOrder(a, b) },
+}
 
 export { FACET_CATEGORIES, FACET_LABEL_KEYS, PAGE_SIZE, useFacetLabels } from '@museumwnf/viewer-core/dxa'
 

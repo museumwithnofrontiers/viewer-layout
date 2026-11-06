@@ -1572,3 +1572,279 @@ a { color: inherit; }
   .mwnf-dxa-exhibition-credits .mwnf-back-link { padding-left: 30px; }
   .mwnf-dxa-exhibition-credits__body { padding: 30px 30px 50px; }
 }
+
+/* An exhibition's collection entrance, as legacy's: 20px on the secondary
+   colour, 30px under it; a 40% column 50px in with "Filter by:" bold and the
+   300px dropdowns at 16px, 10px apart, the dates side by side; the text in
+   the other 60%, 40px down. From 849px the text under two columns of
+   dropdowns; 30px in from 599px; stacked from 499px. */
+.mwnf-dxa-exhibition-collection {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  padding-bottom: 30px;
+  background-color: var(--secondary-color);
+  color: var(--secondary-text-color);
+  font-size: 20px;
+  line-height: normal;
+}
+.mwnf-dxa-exhibition-collection__dropdowns {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  align-self: flex-start;
+  width: 40%;
+  padding: 50px;
+}
+.mwnf-dxa-exhibition-collection__label {
+  height: 35px;
+  width: 100%;
+  max-width: 300px;
+  padding-bottom: 10px;
+  font-size: 20px;
+  font-weight: 700;
+}
+.mwnf-dxa-exhibition-collection__selects {
+  width: 100%;
+  max-width: 300px;
+}
+.mwnf-dxa-exhibition-collection__select {
+  height: 35px;
+  width: 100%;
+  max-width: 300px;
+  margin: 10px 0 0;
+  padding: 5px;
+  border: 1px solid #767676;
+  border-radius: 0;
+  background-color: #ffffff;
+  color: #000000;
+  font: inherit;
+  font-size: 16px;
+}
+.mwnf-dxa-exhibition-collection__dates {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  max-width: 300px;
+}
+.mwnf-dxa-exhibition-collection__dates .mwnf-dxa-exhibition-collection__select:first-child { margin-right: 5px; }
+.mwnf-dxa-exhibition-collection__dates .mwnf-dxa-exhibition-collection__select:last-child { margin-left: 5px; }
+.mwnf-dxa-exhibition-collection__description {
+  align-self: flex-start;
+  width: 60%;
+  max-width: none;
+  margin-top: 40px;
+  padding: 50px 75px 50px 0;
+  font-size: 20px;
+  line-height: normal;
+}
+.mwnf-dxa-exhibition-collection__description p {
+  margin: 0;
+}
+.mwnf-dxa-exhibition-collection__description p + p {
+  margin-top: 1lh;
+}
+.mwnf-dxa-exhibition-collection__description a {
+  color: var(--secondary-text-color);
+}
+.mwnf-dxa-exhibition-collection__description a:hover {
+  color: var(--contrast-color);
+}
+@media only screen and (max-width: 53.0625rem) {
+  .mwnf-dxa-exhibition-collection { flex-direction: column; }
+  .mwnf-dxa-exhibition-collection__dropdowns { width: 100%; }
+  .mwnf-dxa-exhibition-collection__label { max-width: 100%; }
+  .mwnf-dxa-exhibition-collection__selects {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    column-gap: 5px;
+    max-width: 100%;
+  }
+  .mwnf-dxa-exhibition-collection__description {
+    align-self: center;
+    width: 100%;
+    margin-top: 0;
+    padding: 0 50px 50px;
+  }
+}
+@media only screen and (max-width: 37.4375rem) {
+  .mwnf-dxa-exhibition-collection__dropdowns { padding: 30px; }
+  .mwnf-dxa-exhibition-collection__label { font-size: 115%; }
+  .mwnf-dxa-exhibition-collection__description { padding: 0 30px 50px; }
+}
+@media only screen and (max-width: 31.1875rem) {
+  .mwnf-dxa-exhibition-collection__selects {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+  .mwnf-dxa-exhibition-collection__select,
+  .mwnf-dxa-exhibition-collection__dates { width: 100%; max-width: none; }
+}
+
+/* An exhibition's collection results (exhibitions-client CollectionResults.vue,
+   inventory-app#2379): the galleries' geometry (dxa.css
+   `.mwnf-dxa-gallery-results`) in the exhibition's colours, the lines above
+   the grid at 20px, the dropdowns and the reset at 16px, and above the
+   filters, once one is set, the theme and its sub-themes. */
+.mwnf-dxa-exhibition-results {
+  background: var(--secondary-color);
+  color: var(--secondary-text-color);
+}
+.mwnf-dxa-exhibition-results .mwnf-dxa-collection-results {
+  background: var(--secondary-color);
+}
+.mwnf-dxa-exhibition-results .mwnf-dxa-gallery-results__info {
+  font-size: 20px;
+}
+.mwnf-dxa-exhibition-results .mwnf-filter__title,
+.mwnf-dxa-exhibition-results .mwnf-dxa-options-label {
+  color: var(--secondary-text-color);
+}
+.mwnf-dxa-exhibition-results .mwnf-facet__select,
+.mwnf-dxa-exhibition-results .mwnf-filter__actions {
+  font-size: 16px;
+}
+.mwnf-dxa-exhibition-results__themes {
+  width: 100%;
+  margin-bottom: 20px;
+  padding: 30px 50px 0 25px;
+}
+.mwnf-dxa-exhibition-results__themes + .mwnf-filter {
+  padding-top: 0;
+}
+.mwnf-dxa-exhibition-results .mwnf-filter__button {
+  border-color: var(--contrast-color);
+  background-color: var(--contrast-color);
+  color: var(--contrast-text-color);
+}
+@media only screen and (max-width: 60.875rem) {
+  .mwnf-dxa-exhibition-results__themes { padding: 30px 50px 0; }
+}
+.mwnf-dxa-exhibition-results .mwnf-back-link {
+  padding: 30px 50px 30px 30px;
+}
+.mwnf-dxa-exhibition-results .mwnf-back-link__button {
+  font-weight: 700;
+  color: var(--main-color);
+}
+@media only screen and (max-width: 37.4375rem) {
+  .mwnf-dxa-exhibition-results .mwnf-back-link { padding: 30px 30px 0; }
+}
+
+/* An exhibition's pages (exhibitions-client PagesComponent.vue): centred
+   16px underlined words in the secondary text colour, the current page bold
+   and the unavailable ones grey; 30px below, and 30px above the upper one. */
+.mwnf-dxa-exhibition-pages {
+  display: flex;
+  font-size: 16px;
+  justify-content: center;
+  align-items: center;
+  padding-bottom: 30px;
+}
+.mwnf-dxa-exhibition-pages--top {
+  margin-top: 30px;
+}
+.mwnf-dxa-exhibition-pages__numbers {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.mwnf-dxa-exhibition-pages__button {
+  margin: 0 5px;
+  padding: 5px;
+  border: none;
+  background: none;
+  color: var(--secondary-text-color);
+  font: inherit;
+  font-size: 16px;
+  text-decoration: underline;
+  cursor: pointer;
+}
+.mwnf-dxa-exhibition-pages__button.is-disabled {
+  color: #707070;
+  cursor: default;
+}
+.mwnf-dxa-exhibition-pages__numbers .is-disabled {
+  font-weight: 700;
+  text-decoration: none;
+}
+.mwnf-dxa-exhibition-results__refine {
+  width: 100%;
+}
+.mwnf-dxa-exhibition-results__open,
+.mwnf-dxa-exhibition-results__close {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 0;
+  border: none;
+  cursor: pointer;
+  font-size: 20px;
+}
+.mwnf-dxa-exhibition-results__open svg,
+.mwnf-dxa-exhibition-results__close svg {
+  height: 1em;
+  fill: currentColor;
+}
+.mwnf-dxa-exhibition-results__open {
+  width: 40px;
+  height: 40px;
+  margin: 15px 15px 0 0;
+  border-radius: 50px;
+  background-color: var(--contrast-color);
+  color: var(--contrast-text-color);
+}
+.mwnf-dxa-exhibition-results__close {
+  width: 30px;
+  height: 30px;
+  margin: 5px;
+  background: none;
+  color: var(--secondary-text-color);
+}
+@media only screen and (max-width: 31.1875rem) {
+  .mwnf-dxa-exhibition-results {
+    position: relative;
+    min-height: 350px;
+  }
+  .mwnf-dxa-exhibition-results__refine {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 52;
+    background-color: var(--contrast-color);
+  }
+  .mwnf-dxa-exhibition-results .mwnf-filter__controls {
+    display: flex;
+    flex-direction: column;
+  }
+  .mwnf-dxa-exhibition-results .mwnf-facet,
+  .mwnf-dxa-exhibition-results .mwnf-dxa-date-wrapper { width: 100%; }
+  .mwnf-dxa-exhibition-results .mwnf-filter__button {
+    border: none;
+    background-color: var(--secondary-color);
+  }
+}
+@media only screen and (max-width: 37.4375rem) {
+  .mwnf-dxa-exhibition-results__themes { padding: 30px 30px 0; }
+}
+@media only screen and (max-width: 60.875rem) {
+  .mwnf-dxa-exhibition-results__theme-selects {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0 5px;
+  }
+}
+@media only screen and (max-width: 53.0625rem) {
+  .mwnf-dxa-exhibition-results__theme-selects { grid-template-columns: repeat(2, 1fr); }
+}
+@media only screen and (max-width: 31.1875rem) {
+  .mwnf-dxa-exhibition-results__theme-selects { display: flex; flex-direction: column; }
+}

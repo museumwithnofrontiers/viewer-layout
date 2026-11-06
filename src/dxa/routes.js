@@ -214,12 +214,12 @@ function exhibitionRoutes(config) {
       component: ExhibitionTimelineGallery,
       meta: meta('timeline', 'timelines', 'timeline_events'),
     },
-    { path: '/collection', name: 'collection', component: ExhibitionCollectionSearch, meta: meta('collection', 'tags') },
+    { path: '/collection', name: 'collection', component: ExhibitionCollectionSearch, meta: meta('collection', 'tags', 'themes') },
     {
       path: '/collection-results',
       name: 'collection-results',
       component: ExhibitionCollectionResults,
-      meta: meta('collection', 'tags', 'timelines'),
+      meta: meta('collection', 'tags', 'timelines', 'themes'),
     },
   ]
 }
