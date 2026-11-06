@@ -11,8 +11,13 @@ import SmartLink from '../../content/SmartLink.vue'
 // "for <project>" and See Database Entry. A narrow screen lists them, each
 // card beside its picture. `rows` are the gallery's tiles (viewer-core's
 // `tile()`).
+//
+// The exhibitions' pages of objects draw legacy's exhibitions-client
+// ObjectGrid: the same grid in the exhibition's colours (`family` set to
+// `exhibition`), where a row with no project prints no "for" line.
 defineProps({
   rows: { type: Array, default: () => [] },
+  family: { type: String, default: 'gallery' },
 })
 
 const { t } = useI18n()
@@ -20,7 +25,7 @@ const open = ref(-1)
 </script>
 
 <template>
-  <div class="mwnf-dxa-grid">
+  <div class="mwnf-dxa-grid" :class="{ 'mwnf-dxa-grid--exhibition': family === 'exhibition' }">
     <div
       v-for="(row, index) in rows"
       :key="row.id"
@@ -40,7 +45,7 @@ const open = ref(-1)
           <p class="mwnf-dxa-grid__date">{{ row.date }}</p>
           <p class="mwnf-dxa-grid__partner">{{ row.partner }}</p>
           <p class="mwnf-dxa-grid__place">{{ row.place }}</p>
-          <p class="mwnf-dxa-grid__project">{{ t('gallery.results.for') }} <span>{{ row.project }}</span></p>
+          <p v-if="family !== 'exhibition' || row.project" class="mwnf-dxa-grid__project">{{ t('gallery.results.for') }} <span>{{ row.project }}</span></p>
           <SmartLink class="mwnf-dxa-grid__link" :to="row.to">{{ t('catalogue.results.seeDatabaseEntry') }} &gt;</SmartLink>
         </div>
       </div>

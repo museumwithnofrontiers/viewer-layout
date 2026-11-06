@@ -234,18 +234,18 @@ export function exhibitionConfig({
     },
     banner: {
       variant: ({ section }) => (section === 'home' ? 'split' : 'section'),
-      // Legacy's SubBanner over a theme page: "Theme I ▪ Subtheme 1", "▪
-      // Overview" on a theme's own page, "▪ Gallery" on its gallery, the
-      // numeral the address's own (inventory-app#2379). Anywhere else the
-      // section's title.
+      // Legacy's SubBanner over a theme page: "Theme I ▪ Subtheme 1" when the
+      // address names a sub-theme (its gallery's too), else "▪ Gallery" on a
+      // theme's gallery and "▪ Overview" on its own page, the numeral the
+      // address's own (inventory-app#2379). Anywhere else the section's title.
       title: ({ route, t }) => {
         if (route?.name !== 'theme' && route?.name !== 'theme-gallery') return ''
         const id = Number(route.params.id)
         if (!Number.isInteger(id) || id < 1) return ''
         const head = `${t('exhibition.theme.romanLabel')} ${romanFor(id + 1)}`
-        if (route.name === 'theme-gallery') return `${head} ▪ ${t('exhibition.theme.galleryLabel')}`
         const sub = route.params.subtheme
         if (sub && sub !== 'overview') return `${head} ▪ ${t('exhibition.theme.subthemeLabel')} ${sub}`
+        if (route.name === 'theme-gallery') return `${head} ▪ ${t('exhibition.theme.galleryLabel')}`
         return `${head} ▪ ${t('exhibition.theme.overview')}`
       },
     },

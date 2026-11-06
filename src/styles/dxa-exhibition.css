@@ -1319,3 +1319,256 @@ a { color: inherit; }
 @media only screen and (max-width: 31.1875rem) {
   .mwnf-popup-logo { width: 90%; }
 }
+
+/* The tile grid in an exhibition's colours, as legacy's exhibitions-client
+   ObjectGrid: the frames ringed in a faint grey, the card on the main colour
+   at 16px with its link in the main text colour, unlined; listed below
+   975px on the secondary colour. */
+.mwnf-dxa-grid--exhibition {
+  color: var(--secondary-text-color);
+}
+.mwnf-dxa-grid--exhibition .mwnf-dxa-grid__image {
+  border-color: rgba(112, 112, 112, 0.2);
+}
+.mwnf-dxa-grid--exhibition .mwnf-dxa-grid__card {
+  background: var(--main-color);
+  color: var(--main-text-color);
+  font-size: 16px;
+  box-shadow: 2px 2px 5px rgba(112, 112, 112, 0.2);
+}
+.mwnf-dxa-grid--exhibition .mwnf-dxa-grid__card a,
+.mwnf-dxa-grid--exhibition .mwnf-dxa-grid__link {
+  color: var(--main-text-color);
+}
+.mwnf-dxa-grid--exhibition .mwnf-dxa-grid__link {
+  text-decoration: none;
+}
+@media only screen and (max-width: 60.875rem) {
+  .mwnf-dxa-grid--exhibition .mwnf-dxa-grid__card,
+  .mwnf-dxa-grid--exhibition .mwnf-dxa-grid__card--open {
+    background: var(--secondary-color);
+  }
+  .mwnf-dxa-grid--exhibition .mwnf-dxa-grid__text,
+  .mwnf-dxa-grid--exhibition .mwnf-dxa-grid__link {
+    color: var(--secondary-text-color);
+  }
+}
+
+/* A theme's gallery, as legacy's ThemeGallery: the line under Back at 20px,
+   50px in; the grid in 78% beside a 22% column ("Filter by Subtheme:" over a
+   225px list at 16px, the round "See all Items in this Theme" in the
+   contrast colour); the round way back to the top, 50px from the right.
+   From 1199px 80/20; from 974px the column above the grid; from 599px 30px
+   in. */
+.mwnf-dxa-theme-gallery-page {
+  position: relative;
+  width: 100%;
+  background-color: var(--secondary-color);
+  color: var(--secondary-text-color);
+  line-height: normal;
+}
+.mwnf-dxa-theme-gallery-page__header {
+  padding: 10px 50px 0;
+  font-size: 20px;
+}
+.mwnf-dxa-theme-gallery-page__bold {
+  font-weight: 700;
+}
+.mwnf-dxa-theme-gallery-page__wrapper {
+  width: 100%;
+  padding: 0 50px;
+}
+.mwnf-dxa-theme-gallery-page__content {
+  display: flex;
+  align-items: flex-start;
+  width: 100%;
+}
+.mwnf-dxa-theme-gallery-page__objects {
+  width: 78%;
+  padding: 30px 0;
+}
+.mwnf-dxa-theme-gallery-page__filter {
+  width: 22%;
+  padding: 30px 0 30px 25px;
+}
+.mwnf-dxa-theme-gallery-page__label {
+  width: 100%;
+  max-width: 225px;
+  padding-bottom: 10px;
+  font-weight: 700;
+}
+.mwnf-dxa-theme-gallery-page__select {
+  width: 100%;
+  max-width: 225px;
+  margin-top: 6px;
+  padding: 4px;
+  border: 1px solid #767676;
+  border-radius: 0;
+  background-color: #ffffff;
+  color: #000000;
+  font: inherit;
+  font-size: 16px;
+}
+.mwnf-dxa-theme-gallery-page__reset {
+  width: 100%;
+  max-width: 225px;
+  margin-top: 6px;
+  padding-top: 10px;
+}
+.mwnf-dxa-theme-gallery-page__reset button {
+  padding: 6px 10px;
+  border: 1px solid var(--contrast-color);
+  border-radius: 50px;
+  background-color: var(--contrast-color);
+  color: var(--contrast-text-color);
+  font: inherit;
+  font-size: 16px;
+  cursor: pointer;
+}
+.mwnf-dxa-theme-gallery-page__top {
+  position: sticky;
+  bottom: 25px;
+  z-index: 55;
+  display: flex;
+  justify-content: flex-end;
+  padding: 0 50px 50px 0;
+}
+.mwnf-dxa-theme-gallery-page__top button {
+  height: 45px;
+  width: 45px;
+  border: none;
+  border-radius: 50px;
+  background-color: var(--contrast-color);
+  color: var(--contrast-text-color);
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.4);
+  cursor: pointer;
+}
+@media only screen and (max-width: 74.9375rem) {
+  .mwnf-dxa-theme-gallery-page__objects { width: 80%; }
+  .mwnf-dxa-theme-gallery-page__filter { width: 20%; }
+}
+@media only screen and (max-width: 60.875rem) {
+  .mwnf-dxa-theme-gallery-page__content { flex-direction: column-reverse; }
+  .mwnf-dxa-theme-gallery-page__filter { width: 100%; padding: 30px 0 0; }
+  .mwnf-dxa-theme-gallery-page__objects { width: 100%; }
+}
+@media only screen and (max-width: 37.4375rem) {
+  .mwnf-dxa-theme-gallery-page__header { padding: 10px 30px 0; }
+  .mwnf-dxa-theme-gallery-page__wrapper { padding: 0 30px; }
+}
+
+/* Back, as legacy's BackComponent on every exhibition page: 30px round and
+   50px on the right, 16px bold in the main colour, its arrow 20px wide and
+   4px from the word; from 599px only 30px under it. */
+.mwnf-back-link {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: 30px 50px 30px 30px;
+}
+.mwnf-back-link__button {
+  margin-right: 10px;
+  padding: 2px 8px 2px 0;
+  border: none;
+  background: none;
+  color: var(--main-color);
+  font: inherit;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: normal;
+  cursor: pointer;
+}
+.mwnf-back-link__arrow {
+  display: inline-block;
+  width: 20px;
+  margin-inline-end: 4px;
+  line-height: 0;
+  text-align: center;
+}
+@media only screen and (max-width: 37.4375rem) {
+  .mwnf-back-link { padding: 0 0 30px; }
+}
+/* The related content, as legacy's RelatedContent: a centred column half the
+   page wide, 50px in, at 20px; each category 30px from the next, its name
+   bold 10px over its entries, the entries 10px apart, the links underlined
+   in the main colour. Wider from 1199px (70%), 974px (80%), 849px (88%);
+   the full width at 16px from 724px; 30px in from 599px. */
+.mwnf-dxa-related-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  background-color: var(--secondary-color);
+  color: var(--secondary-text-color);
+  line-height: normal;
+}
+.mwnf-dxa-related-page__container {
+  width: 50%;
+  padding: 50px;
+  font-size: 20px;
+}
+.mwnf-dxa-related-page__container a {
+  color: var(--main-color);
+  text-decoration: underline;
+}
+.mwnf-dxa-related-page__container a:hover {
+  color: var(--contrast-color);
+}
+.mwnf-dxa-related-page__container p {
+  margin: 0;
+}
+.mwnf-dxa-related-page__category {
+  margin-bottom: 30px;
+}
+.mwnf-dxa-related-page__heading {
+  margin-bottom: 10px;
+  font-weight: 700;
+}
+.mwnf-dxa-related-page__entry {
+  margin-bottom: 10px;
+}
+@media only screen and (max-width: 74.9375rem) { .mwnf-dxa-related-page__container { width: 70%; } }
+@media only screen and (max-width: 60.875rem) { .mwnf-dxa-related-page__container { width: 80%; } }
+@media only screen and (max-width: 53.0625rem) { .mwnf-dxa-related-page__container { width: 88%; } }
+@media only screen and (max-width: 45.25rem) { .mwnf-dxa-related-page__container { width: 100%; font-size: 16px; } }
+@media only screen and (max-width: 37.4375rem) { .mwnf-dxa-related-page__container { padding: 30px 30px 50px; } }
+
+/* The credits, as legacy's CreditsPage: a centred column half the page wide,
+   50px in and 100px under it, at 20px, its links unlined. Wider from 1199px
+   (70%), 974px (80%), 849px (88%); the full width at 16px from 724px; 30px
+   in from 599px. */
+.mwnf-dxa-exhibition-credits {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  background-color: var(--secondary-color);
+  color: var(--secondary-text-color);
+  line-height: normal;
+}
+.mwnf-dxa-exhibition-credits__body {
+  width: 50%;
+  padding: 50px 50px 100px;
+  font-size: 20px;
+}
+.mwnf-dxa-exhibition-credits__body p {
+  margin: 0;
+}
+.mwnf-dxa-exhibition-credits__body a {
+  color: inherit;
+  text-decoration: none;
+  overflow-wrap: break-word;
+  word-break: break-all;
+}
+.mwnf-dxa-exhibition-credits__body a:hover {
+  color: var(--contrast-color);
+  text-decoration: underline;
+}
+@media only screen and (max-width: 74.9375rem) { .mwnf-dxa-exhibition-credits__body { width: 70%; } }
+@media only screen and (max-width: 60.875rem) { .mwnf-dxa-exhibition-credits__body { width: 80%; } }
+@media only screen and (max-width: 53.0625rem) { .mwnf-dxa-exhibition-credits__body { width: 88%; } }
+@media only screen and (max-width: 45.25rem) { .mwnf-dxa-exhibition-credits__body { width: 100%; font-size: 16px; } }
+@media only screen and (max-width: 37.4375rem) {
+  .mwnf-dxa-exhibition-credits .mwnf-back-link { padding-left: 30px; }
+  .mwnf-dxa-exhibition-credits__body { padding: 30px 30px 50px; }
+}
