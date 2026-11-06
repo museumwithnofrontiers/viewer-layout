@@ -2387,3 +2387,124 @@ a { color: inherit; }
   .mwnf-dxa-exhibition-partner-objects__header { padding: 10px 30px 0; }
   .mwnf-dxa-exhibition-partner-objects__content { padding: 0 30px; }
 }
+
+/* An exhibition's timeline entrance (exhibitions-client TimelinePage.vue):
+   the galleries' (dxa.css `.mwnf-dxa-timeline`) on the secondary colour at
+   20px, the lists and Go at 16px, Go on the contrast colour, the text's
+   paragraphs a blank line apart. */
+.mwnf-dxa-exhibition-timeline {
+  background: var(--secondary-color);
+  color: var(--secondary-text-color);
+  font-size: 20px;
+}
+.mwnf-dxa-exhibition-timeline .mwnf-dxa-timeline__entrance select { font-size: 16px; }
+.mwnf-dxa-exhibition-timeline .mwnf-dxa-timeline__country { margin: 0 0 15px; }
+.mwnf-dxa-exhibition-timeline .mwnf-dxa-timeline__dates { margin: 0 0 15px; }
+.mwnf-dxa-exhibition-timeline .mwnf-dxa-timeline__go button {
+  background: var(--contrast-color);
+  color: var(--contrast-text-color);
+  font-size: 16px;
+}
+.mwnf-dxa-exhibition-timeline .mwnf-dxa-timeline__intro p + p { margin-top: 1lh; }
+.mwnf-dxa-exhibition-timeline .mwnf-dxa-timeline__intro a { color: var(--secondary-text-color); }
+.mwnf-dxa-exhibition-timeline .mwnf-dxa-timeline__intro a:hover {
+  color: var(--contrast-color);
+  text-decoration: underline;
+}
+
+/* An exhibition's timeline results (exhibitions-client TimelineResults.vue):
+   the band of the search on the contrast colour, its line at 110%, the
+   fields at 16px with Go and Reset on the secondary colour; Back; the pager;
+   "Date" and "Description" at 110% over the events, three quarters of the
+   width: the year on a 2px rule of the contrast colour, its label on that
+   colour, the text beside it; the related box on the contrast colour at the
+   right. */
+.mwnf-dxa-exhibition-timeline-results {
+  background: var(--secondary-color);
+  color: var(--secondary-text-color);
+  font-size: 16px;
+  line-height: normal;
+}
+.mwnf-dxa-exhibition-timeline-results .mwnf-timeline { gap: 0; padding: 0; background: none; }
+.mwnf-dxa-exhibition-timeline-results p { margin: 0; }
+.mwnf-dxa-exhibition-timeline-results__band {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 20px 50px;
+  background: var(--contrast-color);
+  color: var(--contrast-text-color);
+}
+.mwnf-dxa-exhibition-timeline-results__current { font-size: 110%; }
+.mwnf-dxa-exhibition-timeline-results__fields {
+  display: flex;
+  align-items: center;
+  margin-top: 15px;
+}
+.mwnf-dxa-exhibition-timeline-results__fields span {
+  margin-right: 10px;
+  padding: 4px 4px 4px 0;
+}
+.mwnf-dxa-exhibition-timeline-results__fields select {
+  margin-right: 20px;
+  padding: 4px;
+  font: inherit;
+  font-size: 16px;
+}
+.mwnf-dxa-exhibition-timeline-results__fields button {
+  padding: 4px 15px;
+  border: none;
+  border-radius: 100px;
+  background: var(--secondary-color);
+  color: var(--secondary-text-color);
+  font: inherit;
+  font-size: 16px;
+  cursor: pointer;
+}
+.mwnf-dxa-exhibition-timeline-results__fields button + button { margin-left: 10px; }
+.mwnf-dxa-exhibition-timeline-results__pages { margin-bottom: 30px; }
+.mwnf-dxa-exhibition-timeline-results__body {
+  position: relative;
+  min-height: 200px;
+  padding: 0 50px 30px;
+}
+.mwnf-dxa-exhibition-timeline-results__labels,
+.mwnf-dxa-exhibition-timeline-results__event { display: flex; align-items: flex-start; width: 75%; }
+.mwnf-dxa-exhibition-timeline-results__labels { margin-bottom: 20px; font-size: 110%; }
+.mwnf-dxa-exhibition-timeline-results__labels > :first-child,
+.mwnf-dxa-exhibition-timeline-results__year { width: 30%; margin-right: 2%; }
+.mwnf-dxa-exhibition-timeline-results__labels > :last-child,
+.mwnf-dxa-exhibition-timeline-results__text { width: 70%; }
+.mwnf-dxa-exhibition-timeline-results__year { border-top: 2px solid var(--contrast-color); }
+.mwnf-dxa-exhibition-timeline-results__year span {
+  padding: 2px 10px;
+  background: var(--contrast-color);
+  color: var(--contrast-text-color);
+}
+.mwnf-dxa-exhibition-timeline-results__country {
+  padding: 2px 10px;
+  background: var(--contrast-color);
+  color: var(--contrast-text-color);
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+.mwnf-dxa-exhibition-timeline-results__description { padding: 15px 0 25px; }
+.mwnf-dxa-exhibition-timeline-results__description p { margin: 0; }
+.mwnf-dxa-exhibition-timeline-results__related {
+  position: absolute;
+  top: -23px;
+  right: 0;
+  width: 25%;
+  padding: 20px 20px 40px;
+  background: var(--contrast-color);
+  color: var(--contrast-text-color);
+}
+.mwnf-dxa-exhibition-timeline-results__related a { color: var(--contrast-text-color); text-decoration: none; }
+.mwnf-dxa-exhibition-timeline-results .mwnf-dxa-exhibition-timeline-results__related-header {
+  margin: 30px 0 10px;
+  color: var(--main-color);
+  font-size: 110%;
+  font-weight: 700;
+  text-decoration: underline;
+}
+.mwnf-dxa-exhibition-timeline-results__end { padding-bottom: 65px; }

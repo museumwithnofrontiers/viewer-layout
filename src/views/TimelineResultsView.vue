@@ -230,6 +230,7 @@ const baseCtx = computed(() => ({
   reset: isEntrance.value ? resetEntrance : listQuery.reset,
   goToPage: isEntrance.value ? () => {} : listQuery.goToPage,
   events: events.value,
+  rows: rows.value,
   pageInfo: pageInfo.value,
   countries: countryOptions.value,
   collections: collectionOptions.value,
@@ -290,9 +291,12 @@ function controlLabel(control, fallback) {
 
     <h1 v-if="spec.title" class="mwnf-timeline__title">{{ t(spec.title) }}</h1>
 
+    <!-- A site's own form, on the entrance or the results page; on the
+         results page it reads the page's context as well. -->
     <slot
-      v-if="isEntrance && $slots.form"
+      v-if="$slots.form"
       name="form"
+      v-bind="isEntrance ? {} : slotProps"
       :filters="activeFilters"
       :countries="countryOptions"
       :options="controlOptions"
@@ -359,11 +363,15 @@ function controlLabel(control, fallback) {
         <ResultsSummary :parts="summary" />
       </slot>
 
-      <SmartLink v-if="galleryInfo" class="mwnf-timeline__gallery" :to="galleryInfo.to">
-        <slot name="cross-link" v-bind="slotProps">
-          {{ galleryInfo.label }}<template v-if="galleryInfo.count != null"> ({{ galleryInfo.count }})</template>
-        </slot>
-      </SmartLink>
+      <!-- A site's slot replaces the link even when it draws nothing (its
+           link elsewhere): Vue would fall back on an empty slot. -->
+      <slot name="gallery" v-bind="slotProps">
+        <SmartLink v-if="galleryInfo && !$slots.gallery" class="mwnf-timeline__gallery" :to="galleryInfo.to">
+          <slot name="cross-link" v-bind="slotProps">
+            {{ galleryInfo.label }}<template v-if="galleryInfo.count != null"> ({{ galleryInfo.count }})</template>
+          </slot>
+        </SmartLink>
+      </slot>
 
       <slot name="event" v-bind="slotProps">
         <TimelineEventList :events="rows">
@@ -371,13 +379,15 @@ function controlLabel(control, fallback) {
         </TimelineEventList>
       </slot>
 
-      <Pagination
-        :page-info="pageInfo"
-        :window="pagination.window"
-        :jump="pagination.jump"
-        :ends="pagination.ends"
-        @navigate="listQuery.goToPage"
-      />
+      <slot name="pagination" v-bind="slotProps">
+        <Pagination
+          :page-info="pageInfo"
+          :window="pagination.window"
+          :jump="pagination.jump"
+          :ends="pagination.ends"
+          @navigate="listQuery.goToPage"
+        />
+      </slot>
     </template>
 
     <slot name="after" v-bind="slotProps" />
