@@ -17,11 +17,14 @@ const PROJECT_TONES = {
   DCA: 'dca',
 }
 
+const GALLERY_WORDS = { partner: 'gallery.partners.statusPartner', affiliate: 'gallery.partners.statusAffiliate' }
+
 /**
  * `{ name, status, tone }` for `partner`, or null: `status` is the entry name
- * of the status word, `tone` the colour's class suffix ('' for none).
+ * of the status word, `tone` the colour's class suffix ('' for none). A
+ * family passes its own entry names for the two words (`words`).
  */
-export function partnerBadge(partner) {
+export function partnerBadge(partner, words = GALLERY_WORDS) {
   const project = partner?.own_project
   if (!project?.name) return null
   const code = String(project.backward_compatibility ?? '').split(':').pop().toUpperCase()
@@ -29,7 +32,7 @@ export function partnerBadge(partner) {
   const isPartner = project.level === 'partner' || Boolean(project.exhibition)
   return {
     name: project.name,
-    status: isPartner ? 'gallery.partners.statusPartner' : 'gallery.partners.statusAffiliate',
+    status: isPartner ? words.partner : words.affiliate,
     tone,
   }
 }

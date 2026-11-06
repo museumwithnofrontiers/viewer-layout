@@ -155,7 +155,7 @@ describe('ExhibitionCollectionSearch', () => {
 })
 
 describe('ExhibitionPartnerObjects', () => {
-  it('renders the partner-variant summary (the shared partner.item.objectsInSite entry) and profile link', async () => {
+  it("names the partner from its first record and links its profile, with no count, as legacy's page", async () => {
     const { wrapper } = await mountPage(ExhibitionPartnerObjects, {
       props: { texts: partnerObjectsTexts },
       route: '/partner/p1/objects',
@@ -163,19 +163,19 @@ describe('ExhibitionPartnerObjects', () => {
     })
     await settle(() => wrapper.text().includes('Zed Museum'))
     expect(wrapper.text()).toContain('Zed Museum')
-    expect(wrapper.text()).toContain('object(s) in this site')
+    expect(wrapper.text()).not.toContain('object(s) in this site')
     expect(wrapper.text()).toContain('Partner profile')
     expect(wrapper.html()).toContain('href="/partner/p1"')
   })
 
-  it('renders the institution-variant summary (config.partnerObjects.institutionSummary) and profile link', async () => {
+  it("links an institution's own profile", async () => {
     const { wrapper } = await mountPage(ExhibitionPartnerObjects, {
       props: { variant: 'institution', texts: partnerObjectsTexts },
       route: '/institution/p1/monuments',
       messages: texts,
     })
     await settle(() => wrapper.text().includes('Zed Museum'))
-    expect(wrapper.text()).toContain('monument(s) in this exhibition')
+    expect(wrapper.text()).not.toContain('monument(s) in this exhibition')
     expect(wrapper.text()).toContain('Institution profile')
   })
 

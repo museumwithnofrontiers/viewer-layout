@@ -1,7 +1,7 @@
 <script setup>
 import { computed, onBeforeUnmount, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
-import { I18nText, renderInline, useI18n, yearBuckets } from '@museumwnf/viewer-core'
+import { I18nText, useI18n, yearBuckets } from '@museumwnf/viewer-core'
 import BackLink from '../../content/BackLink.vue'
 import FacetSelect from '../../content/FacetSelect.vue'
 import FilterPanel from '../../content/FilterPanel.vue'
@@ -9,7 +9,7 @@ import CatalogueResultsView from '../../views/CatalogueResultsView.vue'
 import ObjectGrid from '../gallery/ObjectGrid.vue'
 import Pages from './Pages.vue'
 import {
-  items, itemById, labelOf, tr, defaultLang, collectionResults, itemRoute, legacyPaging, projectName,
+  items, itemById, collectionResults, legacyPaging, legacyTile,
 } from './data.js'
 import { useThemeFilter } from './themeFilter.js'
 
@@ -50,9 +50,6 @@ const eraT = (key) => t(ERA_WORDS[key] ?? key)
 const allYears = computed(() => yearBuckets(items.value ?? [], eraT))
 const total = computed(() => itemById.value.size)
 
-// Legacy cut a date longer than eighty characters.
-const shortDate = (text) => (text && text.length > 80 ? `${text.slice(0, 80)}...` : (text ?? ''))
-
 const spec = {
   ...collectionResults,
   ...legacyPaging,
@@ -62,20 +59,7 @@ const spec = {
     return !scope || scope.has(item.id)
   },
   summary: () => [],
-  record: (item) => {
-    const text = tr('items', item.id, defaultLang)
-    return {
-      id: item.id,
-      image: item.images?.[0]?.url ?? '',
-      imageAlt: labelOf('items', item.id),
-      name: renderInline(text.name ?? item.internal_name ?? ''),
-      date: shortDate(text.dates),
-      partner: labelOf('partners', item.partner_id),
-      place: [text.location, labelOf('countries', item.country_id)].filter(Boolean).join(', '),
-      project: projectName(item, defaultLang) ?? '',
-      to: itemRoute(item),
-    }
-  },
+  record: legacyTile,
 }
 
 const isFirstSearch = (filters) => spec.keys.every((k) => !filters[k])

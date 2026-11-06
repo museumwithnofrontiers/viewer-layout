@@ -1,35 +1,86 @@
 <script setup>
 import { I18nText } from '@museumwnf/viewer-core'
-import PartnerListView from '../../views/PartnerListView.vue'
 import BackLink from '../../content/BackLink.vue'
+import SmartLink from '../../content/SmartLink.vue'
+import PartnerListView from '../../views/PartnerListView.vue'
+import { partnerBadge } from '../partnerBadge.js'
 import { partnerObjectsRoute, partnerListSpec } from './data.js'
 
-// The partners list (epic #1731, from colours/water-in-islam), on the
-// platform's composed list view: the country grouping and the A–Z / Z–A
-// toggle are `PartnerListView`'s, driven by `partnerListSpec`
-// (dxa/exhibition/data.js). Each row is `PartnerPanel`'s `line`
-// (inventory-app#2034) with what legacy printed under every name: the
-// object count, or the "no objects" line — the MWNF-384 branch lists a
-// partner whether or not it holds anything — then Read more · View objects.
+// An exhibition's partners list as legacy's (exhibitions-client
+// PartnersPage.vue, inventory-app#2379): the galleries' page (Back and the
+// country-order toggle on one line, the introduction and the countries in a
+// centred column, each partner its name and city, its project badge, Read
+// more · View Items, and its logo) in the exhibition's colours and sizes. An
+// institution (a monument's) is badged "Partner Institution (Monuments)" or
+// "Affiliate Institution (Monuments)" rather than by a project. A partner
+// holding nothing here (MWNF-384) keeps its row without View Items. The
+// grouping and the order are PartnerListView's, from `partnerListSpec`
+// (dxa/exhibition/data.js); legacy sorted a partner listed once per project
+// by the project's name. Legacy wrote the words here in English on every
+// language's page; they are the exhibition's own entries.
 const spec = {
   ...partnerListSpec,
   objectsRoute: partnerObjectsRoute,
-  actions: true,
-  emptyLabel: 'exhibition.partner.noObjectsInExhibition',
+  orderToggle: false,
+  tiebreak: (partner) => partner.own_project?.name ?? '',
+}
+
+const STATUS = { partner: 'exhibition.partners.statusPartner', affiliate: 'exhibition.partners.statusAffiliate' }
+
+function badge(partner) {
+  if (partner.type === 'institution') {
+    return {
+      name: '',
+      status: partner.level === 'partner' ? 'exhibition.partners.institutionPartner' : 'exhibition.partners.institutionAffiliate',
+      tone: 'institution',
+    }
+  }
+  return partnerBadge(partner, STATUS)
 }
 </script>
 
 <template>
-  <div class="mwnf-dxa-partners">
+  <div class="mwnf-dxa-partners mwnf-dxa-gallery-partners mwnf-dxa-exhibition-partners">
     <PartnerListView :spec="spec">
-      <template #before>
-        <div class="mwnf-dxa-partners-options">
+      <template #before="{ t, orderDir, toggleOrder }">
+        <div class="mwnf-dxa-gallery-partners__options">
           <BackLink />
+          <div class="mwnf-dxa-gallery-partners__order">
+            <button type="button" @click="toggleOrder">
+              {{ t(orderDir === 'asc' ? 'partner.list.sortDescending' : 'partner.list.sortAscending') }}
+            </button>
+          </div>
         </div>
-        <!-- A shared entry, not this exhibition's own: the only thing that
-             made the old `txtPartners` exhibition-specific was an absolute
-             URL to its own Themes page, which is `#/themes` now. -->
-        <I18nText id="mwnf-dxa-partners-intro" class="mwnf-prose" dir="auto" keypath="exhibition.partners.intro" />
+        <I18nText id="mwnf-dxa-partners-intro" class="mwnf-dxa-gallery-partners__intro" dir="auto" keypath="exhibition.partners.intro" />
+      </template>
+
+      <template #group-heading="{ group }">
+        <div class="mwnf-dxa-gallery-partners__country">{{ group.label }}</div>
+      </template>
+
+      <template #row="{ partner, view, t }">
+        <div class="mwnf-dxa-gallery-partners__partner">
+          <div class="mwnf-dxa-gallery-partners__text">
+            <SmartLink class="mwnf-dxa-gallery-partners__name" :to="view.route">
+              <span v-html="view.name"></span><span v-if="view.city" class="mwnf-dxa-gallery-partners__city">, {{ view.city }}</span>
+            </SmartLink>
+            <div
+              v-if="badge(partner)"
+              class="mwnf-dxa-partner-badge"
+              :class="badge(partner).tone && `mwnf-dxa-partner-badge--${badge(partner).tone}`"
+            ><template v-if="badge(partner).name">{{ badge(partner).name + ' ' }}</template><span class="mwnf-dxa-partner-badge__status">{{ t(badge(partner).status) }}</span></div>
+            <div class="mwnf-dxa-gallery-partners__links">
+              <SmartLink :to="view.route">{{ t('partner.action.readMore') }}</SmartLink>
+              <template v-if="partner.item_count > 0 && view.objectsRoute">
+                <span class="mwnf-dxa-gallery-partners__divider" aria-hidden="true">|</span>
+                <SmartLink :to="view.objectsRoute">{{ t('exhibition.partners.viewItems') }}</SmartLink>
+              </template>
+            </div>
+          </div>
+          <div class="mwnf-dxa-gallery-partners__logo">
+            <img v-if="view.logos?.[0]" :src="view.logos[0].url" :alt="view.plainName" loading="lazy" />
+          </div>
+        </div>
       </template>
     </PartnerListView>
   </div>

@@ -2134,3 +2134,256 @@ a { color: inherit; }
   max-height: 325px;
   object-position: left;
 }
+
+/* An exhibition's partners list (exhibitions-client PartnersPage.vue): the
+   galleries' page (dxa.css `.mwnf-dxa-gallery-partners`) on the secondary
+   colour with the exhibition's own Back, the text at 16px, the introduction
+   at 20px, each country 30px on the contrast colour, the partners' names at
+   20px, the rule between two partners in the secondary text colour, links
+   turning to the contrast colour. */
+.mwnf-dxa-exhibition-partners {
+  background: var(--secondary-color);
+  font-size: 16px;
+}
+.mwnf-dxa-exhibition-partners .mwnf-dxa-gallery-partners__options > * {
+  height: 50px;
+  padding: 0;
+}
+.mwnf-dxa-exhibition-partners .mwnf-dxa-gallery-partners__options > .mwnf-back-link {
+  height: auto;
+  padding: 30px 50px 30px 0;
+}
+.mwnf-dxa-exhibition-partners .mwnf-back-link__button {
+  padding: 2px 8px 2px 0;
+  font-size: 16px;
+  color: var(--main-color);
+}
+.mwnf-dxa-exhibition-partners .mwnf-back-link__arrow { width: 20px; }
+.mwnf-dxa-exhibition-partners .mwnf-dxa-gallery-partners__order button { font-size: 16px; }
+.mwnf-dxa-exhibition-partners .mwnf-dxa-gallery-partners__intro { font-size: 20px; }
+.mwnf-dxa-exhibition-partners .mwnf-dxa-gallery-partners__intro a { color: #000000; }
+.mwnf-dxa-exhibition-partners .mwnf-dxa-gallery-partners__intro a:hover,
+.mwnf-dxa-exhibition-partners .mwnf-dxa-gallery-partners__partner a:hover {
+  color: var(--contrast-color);
+  text-decoration: underline;
+}
+.mwnf-dxa-exhibition-partners .mwnf-dxa-gallery-partners__country {
+  background: var(--contrast-color);
+  color: var(--contrast-text-color);
+  font-size: 30px;
+}
+.mwnf-dxa-exhibition-partners .mwnf-partner-list__row-block:not(:last-child) .mwnf-dxa-gallery-partners__partner {
+  border-bottom-color: var(--secondary-text-color);
+}
+.mwnf-dxa-exhibition-partners .mwnf-dxa-gallery-partners__name { font-size: 20px; }
+.mwnf-dxa-exhibition-partners .mwnf-dxa-partner-badge { font-size: 16px; }
+.mwnf-dxa-partner-badge--institution { background: var(--mwnf-dxa-badge-institution, #006950); color: #ffffff; }
+@media only screen and (max-width: 74.9375rem) {
+  .mwnf-dxa-exhibition-partners .mwnf-dxa-gallery-partners__country { font-size: 38px; }
+  .mwnf-dxa-exhibition-partners .mwnf-dxa-gallery-partners__name { font-size: 20px; }
+}
+@media only screen and (max-width: 53.0625rem) {
+  .mwnf-dxa-exhibition-partners .mwnf-dxa-gallery-partners__country { font-size: 20px; }
+  .mwnf-dxa-exhibition-partners .mwnf-dxa-gallery-partners__name { font-size: 16px; }
+}
+@media only screen and (max-width: 45.25rem) {
+  .mwnf-dxa-exhibition-partners .mwnf-dxa-gallery-partners__country { font-size: 20px; }
+  .mwnf-dxa-exhibition-partners .mwnf-dxa-gallery-partners__name { font-size: 16px; }
+}
+@media only screen and (max-width: 37.4375rem) {
+  .mwnf-dxa-exhibition-partners .mwnf-dxa-gallery-partners__options > .mwnf-back-link { padding: 0 0 30px; }
+}
+.mwnf-dxa-exhibition-partners .mwnf-dxa-gallery-partners__options > .mwnf-back-link { width: auto; }
+.mwnf-dxa-exhibition-partners .mwnf-dxa-gallery-partners__intro p { margin: 0; }
+.mwnf-dxa-exhibition-partners .mwnf-dxa-gallery-partners__intro p + p { margin-top: 1lh; }
+
+/* An exhibition's partner page (exhibitions-client PartnerProfile.vue):
+   white, the text black at 16px; the languages on the main colour at the
+   right, the chosen one on white; the name at 20px and the place bold and
+   italic under it; About · Contact · Logo and the homepage in one pill on the
+   contrast colour, View Items in another 50px after the first 40% of the
+   width; the pictures in that 40%, a thumbnail for each, the open panel
+   beside them; the map under its line, the page's whole width. */
+.mwnf-dxa-exhibition-profile {
+  padding-bottom: 0;
+  background: #ffffff;
+  color: #000000;
+  font-size: 16px;
+  line-height: normal;
+}
+.mwnf-dxa-exhibition-profile .mwnf-dxa-profile-languages {
+  justify-content: flex-end;
+  gap: 0;
+  padding: 0;
+  background: var(--main-color);
+}
+.mwnf-dxa-exhibition-profile .mwnf-languages { justify-content: flex-end; gap: 0; margin: 0; }
+.mwnf-dxa-exhibition-profile .mwnf-languages__button {
+  padding: 4px 8px;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  color: var(--main-text-color);
+  font-size: 16px;
+  line-height: normal;
+}
+.mwnf-dxa-exhibition-profile .mwnf-languages__button--active {
+  background: #ffffff;
+  color: #000000;
+}
+.mwnf-dxa-exhibition-profile > .mwnf-back-link {
+  padding: 30px 50px 30px 50px;
+}
+.mwnf-dxa-exhibition-profile .mwnf-partner-panel {
+  gap: 0;
+  padding-top: 20px;
+}
+.mwnf-dxa-exhibition-profile .mwnf-partner-panel__header { gap: 0; }
+.mwnf-dxa-exhibition-profile .mwnf-partner-panel--full .mwnf-partner-panel__name {
+  color: #000000;
+  font-family: inherit;
+  font-size: 20px;
+  font-weight: 400;
+}
+.mwnf-dxa-exhibition-profile .mwnf-partner-panel__location {
+  margin: 0;
+  font-style: italic;
+  font-weight: 700;
+}
+.mwnf-dxa-exhibition-profile .mwnf-partner-panel__bar {
+  display: grid;
+  grid-template-columns: 40% 60%;
+  align-items: center;
+  gap: 0;
+  margin: 20px 0;
+  padding: 0;
+  background: none;
+  color: var(--contrast-text-color);
+}
+.mwnf-dxa-exhibition-profile .mwnf-partner-panel__tabs,
+.mwnf-dxa-exhibition-profile .mwnf-partner-panel__actions .mwnf-button {
+  justify-self: start;
+  padding: 2px 12px;
+  border-radius: 50px;
+  background: var(--contrast-color);
+  color: var(--contrast-text-color);
+}
+.mwnf-dxa-exhibition-profile .mwnf-partner-panel__tabs { flex-wrap: nowrap; }
+.mwnf-dxa-exhibition-profile .mwnf-partner-panel__tab,
+.mwnf-dxa-exhibition-profile .mwnf-partner-panel__tab--active,
+.mwnf-dxa-exhibition-profile .mwnf-partner-panel__homepage {
+  color: var(--contrast-text-color);
+  font-size: 16px;
+  font-weight: 400;
+  text-decoration: none;
+}
+.mwnf-dxa-exhibition-profile .mwnf-partner-panel__divider { margin: 0 10px; }
+.mwnf-dxa-exhibition-profile .mwnf-partner-panel__actions {
+  grid-column: 2;
+  padding-left: 50px;
+}
+.mwnf-dxa-exhibition-profile .mwnf-partner-panel__actions .mwnf-button {
+  display: inline-block;
+  min-height: 0;
+  border: none;
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  line-height: normal;
+  text-decoration: none;
+}
+.mwnf-dxa-exhibition-profile .mwnf-partner-panel__body { gap: 0; }
+.mwnf-dxa-exhibition-profile .mwnf-partner-panel__pictures {
+  flex: 0 0 40%;
+  max-width: 40%;
+  --mwnf-media-thumb-size: 60px;
+  --mwnf-media-thumb-gap: 10px;
+  --mwnf-media-gap: 10px;
+  --mwnf-media-background: transparent;
+  --mwnf-media-thumb-border: none;
+  --mwnf-media-thumb-active-border: none;
+}
+.mwnf-dxa-exhibition-profile .mwnf-partner-panel__panels {
+  flex: 0 0 60%;
+  padding-left: 50px;
+  line-height: normal;
+}
+.mwnf-dxa-exhibition-profile .mwnf-partner-panel__panels .mwnf-prose { font-size: 16px; max-width: none; }
+.mwnf-dxa-exhibition-profile .mwnf-partner-panel__panels a { color: #000000; text-decoration: none; }
+.mwnf-dxa-exhibition-profile .mwnf-partner-panel__panels a:hover {
+  color: var(--contrast-color);
+  text-decoration: underline;
+}
+.mwnf-dxa-exhibition-profile .mwnf-dxa-profile-map-label {
+  margin: 0;
+  padding: 30px 0 20px;
+  font-size: 20px;
+}
+.mwnf-dxa-exhibition-profile .mwnf-dxa-profile-map {
+  margin-inline: -50px;
+  padding: 0;
+  --mwnf-partner-map-height: min(50vh, 400px);
+  --mwnf-partner-map-border: none;
+}
+.mwnf-dxa-exhibition-profile .mwnf-dxa-profile-no-map { margin: 0 0 100px; }
+
+.mwnf-dxa-exhibition-profile { row-gap: 0; }
+.mwnf-dxa-exhibition-profile .mwnf-partner-panel__actions { display: flex; margin: 0; }
+.mwnf-dxa-exhibition-profile .mwnf-partner-panel__panels .mwnf-prose { line-height: normal; }
+.mwnf-dxa-exhibition-profile .mwnf-partner-panel__panels .mwnf-prose p { margin: 0; }
+.mwnf-dxa-exhibition-profile .mwnf-partner-panel__panels .mwnf-prose p + p { margin-top: 1lh; }
+
+/* A partner's items (exhibitions-client PartnerObjects.vue): on the secondary
+   colour, the name at 20px over the place in italics, the tile grid in 78%
+   of the width and "Partner Profile" in the rest; below 975px the link above
+   the grid. */
+.mwnf-dxa-exhibition-partner-objects {
+  background: var(--secondary-color);
+  color: var(--secondary-text-color);
+  font-size: 16px;
+  line-height: normal;
+}
+.mwnf-dxa-exhibition-partner-objects .mwnf-dxa-partner-objects {
+  min-height: 0;
+  padding-bottom: 0;
+  background: none;
+  gap: 0;
+}
+.mwnf-dxa-exhibition-partner-objects .mwnf-summary { margin: 0; }
+.mwnf-dxa-exhibition-partner-objects .mwnf-catalogue__body { display: block; padding: 0; }
+.mwnf-dxa-exhibition-partner-objects .mwnf-catalogue__results { width: 100%; padding: 0; }
+.mwnf-dxa-exhibition-partner-objects p { margin: 0; }
+.mwnf-dxa-exhibition-partner-objects__header { padding: 10px 50px 0; }
+.mwnf-dxa-exhibition-partner-objects__name { font-size: 20px; }
+.mwnf-dxa-exhibition-partner-objects__place { font-style: italic; }
+.mwnf-dxa-exhibition-partner-objects__content {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 0 50px;
+}
+.mwnf-dxa-exhibition-partner-objects__grid { width: 78%; padding: 30px 0; }
+.mwnf-dxa-exhibition-partner-objects__profile { width: 22%; padding: 30px 0 30px 25px; }
+.mwnf-dxa-exhibition-partner-objects__profile a {
+  color: var(--secondary-text-color);
+  text-decoration: none;
+}
+.mwnf-dxa-exhibition-partner-objects__profile a:hover {
+  color: var(--contrast-color);
+  text-decoration: underline;
+}
+.mwnf-dxa-exhibition-partner-objects__end { padding-bottom: 75px; }
+@media only screen and (max-width: 74.9375rem) {
+  .mwnf-dxa-exhibition-partner-objects__grid { width: 80%; }
+  .mwnf-dxa-exhibition-partner-objects__profile { width: 20%; }
+}
+@media only screen and (max-width: 60.875rem) {
+  .mwnf-dxa-exhibition-partner-objects__content { flex-direction: column-reverse; }
+  .mwnf-dxa-exhibition-partner-objects__profile { width: 100%; padding: 30px 0 0; }
+  .mwnf-dxa-exhibition-partner-objects__grid { width: 100%; }
+}
+@media only screen and (max-width: 37.4375rem) {
+  .mwnf-dxa-exhibition-partner-objects .mwnf-back-link { padding: 30px 30px 0; }
+  .mwnf-dxa-exhibition-partner-objects__header { padding: 10px 30px 0; }
+  .mwnf-dxa-exhibition-partner-objects__content { padding: 0 30px; }
+}

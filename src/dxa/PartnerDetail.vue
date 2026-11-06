@@ -2,6 +2,7 @@
 import { computed } from 'vue'
 import { NotFoundView, useI18n } from '@museumwnf/viewer-core'
 import BackLink from '../content/BackLink.vue'
+import PartnerMap from '../content/PartnerMap.vue'
 import PartnerPanel from '../content/PartnerPanel.vue'
 import RecordLanguages from '../content/RecordLanguages.vue'
 import SmartLink from '../content/SmartLink.vue'
@@ -26,7 +27,13 @@ import RecordView from '../views/RecordView.vue'
 //                                 exhibitions' hidden rule)
 //     view(partner, text),        viewer-core's partnerView() with the
 //                                 family's routes, over its English text
-//     labels: { partner, institution? }  → { objects, homepage } entries }
+//     labels: { partner, institution? }  → { objects, homepage } entries
+//     className,                  the family's own class on the page
+//     media,                      the pictures' strip (PartnerPanel's `media`)
+//     legacyMap: { label },       legacy's map instead of the panel's: under
+//                                 its label (an entry name), Google's, the
+//                                 page's whole width, as the exhibitions
+//                                 drew it }
 
 const props = defineProps({
   id: { type: String, required: true },
@@ -42,10 +49,10 @@ const labels = computed(() => props.family.labels?.[props.variant] ?? props.fami
 </script>
 
 <template>
-  <RecordView v-if="family.visible(id)" :spec="family.spec" :id="id" class="mwnf-dxa-partner-profile">
+  <RecordView v-if="family.visible(id)" :spec="family.spec" :id="id" class="mwnf-dxa-partner-profile" :class="family.className">
     <template #header="{ languages, language, select }">
       <div class="mwnf-dxa-profile-languages">
-        <RecordLanguages :languages="languages" :language="language" @select="select" />
+        <RecordLanguages :languages="languages" :language="language" :from="family.legacyMap ? 1 : 2" @select="select" />
       </div>
       <BackLink />
     </template>
@@ -60,12 +67,28 @@ const labels = computed(() => props.family.labels?.[props.variant] ?? props.fami
         :partner="family.view(record, text)"
         :heading="1"
         :homepage-label="labels.homepage ?? 'partner.nav.homepage'"
+        :media="family.media ?? {}"
+        :show="family.legacyMap ? { map: false } : {}"
         :dir="dir"
       >
         <template #actions="{ partner }">
           <SmartLink v-if="partner.objectsRoute" class="mwnf-button" :to="partner.objectsRoute">
             {{ t(labels.objects ?? 'partner.action.viewObjects') }}
           </SmartLink>
+        </template>
+        <template v-if="family.legacyMap" #after="{ partner }">
+          <template v-if="partner.map">
+            <p class="mwnf-dxa-profile-map-label">{{ t(family.legacyMap.label) }}</p>
+            <PartnerMap
+              class="mwnf-dxa-profile-map"
+              provider="google"
+              :latitude="partner.map.latitude"
+              :longitude="partner.map.longitude"
+              :zoom="partner.map.zoom"
+              :label="partner.map.label"
+            />
+          </template>
+          <p v-else class="mwnf-dxa-profile-no-map"></p>
         </template>
       </PartnerPanel>
     </template>
