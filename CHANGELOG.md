@@ -1,3 +1,13 @@
+## 3.65.0 (2026-11-06)
+
+Reads `@museumwnf/viewer-i18n` 6.12.0's `gallery.partner.homepage`, `.viewObjects` and `.mapLabel`.
+
+### Changed
+
+- **A gallery's partner profile** is legacy's (dxa-client PartnerProfile.vue, inventory-app#2423): the exhibitions' template in the gallery's colours. The languages on the dark band, the chosen one on the light colour; Back bold with its icon; the name at 110% and the place bold and italic; About · Contact · Logo and "Go to the Partner's homepage" in one pill on the light colour, "View Objects" in another; the picture cropped to 325px with a thumbnail for each; Google's map under "Museum on Google Maps", the page's whole width; no source credit. Below 1200px the pill takes two centred rows, below 725px everything stacks, below 600px the gutter is 30px. Measured equal to legacy on Ceramics at 1366, 900 and 390px, but for the icons' few pixels and the languages' order, which legacy takes from its database's storage order (a `GROUP_CONCAT` with no `ORDER BY`).
+- **Both families' partner profile** keeps legacy's 30px gutter below 600px (it was 20px), the map spanning the page over it.
+- The gallery smoke suite checks the profile as legacy's.
+
 ## 3.64.0 (2026-11-06)
 
 Reads `@museumwnf/viewer-i18n` 6.11.0: `gallery.related.audio`/`videos` and `exhibition.sheet.relatedAudio`/`relatedVideos` (6.10.0), `gallery.notice.searchThe`/`database` and `gallery.collection.introBeforeName`/`introAfterName` (6.11.0). Found in C1's live check of Historical Cars and Glass against legacy (inventory-app#2423).

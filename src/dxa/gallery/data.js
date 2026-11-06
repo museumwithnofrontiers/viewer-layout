@@ -107,12 +107,19 @@ export function featuredPartners(count) {
 }
 
 export const partnerDetail = {
-  spec: { ...partnerSheet, media: () => [] },
+  spec: { ...partnerSheet, media: () => [], sourceCredit: false },
   visible: () => true,
   // The English the family loads up front, under the record's own language:
   // the page draws at once, and switches when that language arrives.
   view: (partner, text) => partnerView(partner, { ...tr('partners', partner.id, defaultLang), ...text }, partnerViewCtx),
+  // Legacy's dxa-client PartnerProfile, the exhibitions' same template in the
+  // gallery's colours (inventory-app#2423): its words in English on every
+  // page, a thumbnail for one picture too, the photographer and copyright
+  // only in its tooltip, and Google's map under its own line.
   labels: {
-    partner: { objects: 'partner.action.viewObjects', homepage: 'partner.nav.homepage' },
+    partner: { objects: 'gallery.partner.viewObjects', homepage: 'gallery.partner.homepage' },
   },
+  className: 'mwnf-dxa-gallery-profile',
+  media: { thumbsFrom: 1, creditCaption: false },
+  legacyMap: { label: 'gallery.partner.mapLabel' },
 }
