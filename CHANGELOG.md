@@ -1,3 +1,9 @@
+## 3.63.1 (2026-11-06)
+
+### Fixed
+
+- **An exhibition's partner profile** prints the partner's place in the profile's own text colour, as legacy does. It took the site's muted colour, which Arts in Dialogue sets to yellow for text on its green page, so it printed yellow on white. Found by the parity tool's new layout gate (inventory-app#2379).
+
 ## 3.63.0 (2026-11-06)
 
 The exhibitions' pages as legacy's exhibitions client (inventory-app#2379), measured equal to legacy on With Brush and Qalam (and on The Use of Colours in Art for the timeline) at 1366, with the 900 and 390px steps. Reads `@museumwnf/viewer-i18n` 6.9.0's `exhibition.*` entries, and the exhibition packages' `exhibition_references` and partners' `own_project` (inventory-app#2479; a package without them lists no exhibitions under "On display in" and draws no partner badge).
