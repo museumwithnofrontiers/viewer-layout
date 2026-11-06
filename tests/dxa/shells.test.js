@@ -49,6 +49,9 @@ async function mountChrome(component, { section = 'collection', slots = { defaul
     routes: [
       { path: '/', name: 'home', component: { template: '<p>home</p>' }, meta: { section: 'home' } },
       { path: '/collection', name: 'collection', component: { template: '<p>collection</p>' }, meta: { section: 'collection' } },
+      // The home's featured partners link to their profile and their objects.
+      { path: '/partner/:id', name: 'partner', component: { template: '<p>partner</p>' } },
+      { path: '/partner/:id/objects', name: 'partner-objects', component: { template: '<p>objects</p>' } },
     ],
   })
   await router.push(section === 'home' ? '/' : '/collection')
