@@ -2,6 +2,7 @@ import { partnerView, useSiteConfig } from '@museumwnf/viewer-core'
 import { chromePicture } from '../../chrome.js'
 import {
   useGalleryData, useGalleryCollection, useGalleryTimeline, useGalleryPartner, useGalleryItemDetail,
+  FACET_CATEGORIES as DXA_FACET_CATEGORIES,
 } from '@museumwnf/viewer-core/dxa'
 
 // The gallery family's own instance of the shared DXA data layer (epics
@@ -51,6 +52,10 @@ export const legacyPaging = {
 }
 
 export { FACET_CATEGORIES, FACET_LABEL_KEYS, GALLERY_ERA_WORDS, PAGE_SIZE, useFacetLabels } from '@museumwnf/viewer-core/dxa'
+
+// The categories a gallery's dropdowns list, as legacy's (dxa-client
+// CollectionSearch.vue, CollectionResults.vue): no artist.
+export const GALLERY_FACET_CATEGORIES = DXA_FACET_CATEGORIES.filter((category) => category !== 'artist')
 
 export const { timelineResults, timelineGallery } = timeline
 

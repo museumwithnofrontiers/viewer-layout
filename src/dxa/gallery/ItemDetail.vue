@@ -7,6 +7,7 @@ import BackLink from '../../content/BackLink.vue'
 import RecordLanguages from '../../content/RecordLanguages.vue'
 import ItemDetailView from '../ItemDetailView.vue'
 import { itemDetail } from './data.js'
+import { galleryExhibitionSections } from './onDisplay.js'
 
 // A gallery's item page (D4): `ItemDetailView` over the family's spec
 // (viewer-core's `useGalleryItemDetail`), with legacy's sheet
@@ -48,6 +49,9 @@ const spec = {
       exhibitionsHeading: 'gallery.related.exhibitions',
       galleriesHeading: 'core.project.galleries',
       href: (ref, record) => (ref.site ? siblingSiteUrl(ref.site, `/item/${record.id}`) : ref.legacy_host),
+      // Legacy's exhibitions: the pages of our mini-sites and online
+      // exhibitions that show the item, not the exhibitions it belongs to.
+      exhibitions: (record, ctx) => galleryExhibitionSections(record, ctx.language),
     },
   },
 }

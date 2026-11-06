@@ -206,9 +206,14 @@ function relatedInfo(record, ctx) {
     ? {
       pendingLabel: s.onDisplayIn.linkPendingLabel ?? '',
       groups: [
-        { heading: s.onDisplayIn.exhibitionsHeading ?? 'record.related.exhibitions', links: exhibitionReferences(record).map(place) },
+        // `onDisplayIn.exhibitions(record, ctx)` lists the exhibitions as the
+        // spec's family does, in captioned sections (OnDisplayIn's
+        // `sections`); without it, the exhibitions the record is a member of.
+        s.onDisplayIn.exhibitions
+          ? { heading: s.onDisplayIn.exhibitionsHeading ?? 'record.related.exhibitions', sections: s.onDisplayIn.exhibitions(record, ctx) }
+          : { heading: s.onDisplayIn.exhibitionsHeading ?? 'record.related.exhibitions', links: exhibitionReferences(record).map(place) },
         { heading: s.onDisplayIn.galleriesHeading ?? 'record.related.galleries', links: galleryReferences(record).map(place) },
-      ].filter((group) => group.links.length),
+      ].filter((group) => (group.sections ?? [group]).some((section) => section.links?.length)),
     }
     : null
   const database = s.databaseLabel && relatedDatabaseUrl(record)

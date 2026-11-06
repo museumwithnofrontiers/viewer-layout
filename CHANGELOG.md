@@ -1,3 +1,25 @@
+## 3.62.0 (2026-11-06)
+
+The galleries' "On display in" exhibitions and collection pages as legacy's (inventory-app#2423), measured equal to legacy on Ceramics at 1366, 900 and 390. Reads the gallery packages' `exhibition_references` (inventory-app#2478; a package without them shows galleries only, as before) and `@museumwnf/viewer-i18n` 6.8.0's `gallery.collection.*` entries.
+
+### Changed
+
+- **The gallery item sheet's "On display in"**: under "Exhibition(s)", a mini-site's pages under its project in italics ("The Muslim West | *Settlements and Domestic Life*", in English in every language, as legacy), then each online exhibition's title in italics over its "Theme | *sub-theme*" lines, in the page's language where the exhibition has it, else English, alphabetical without "a", "an", "the"; each line links to the page of our site that shows the item. The lines with no gap, 10px between the exhibitions and the galleries.
+- **The gallery item sheet's lines** keep the font's normal height, as legacy's (it is rounded to the screen's pixels, so no fixed figure matches every screen); the arrows (↗, ➤, ➦) come from a symbol font held within that line (`mwnf-arrows`), so a line with an arrow is no taller.
+- **The gallery collection entrance** (`dxa/gallery/CollectionSearch.vue`) is legacy's page: "Filter by:" over 300px dropdowns 10px apart, each opening on its name ("Select Country", "Type", …, "Start Date", "End Date") and going straight to the results, the dates side by side, the text beside them on white; no artist list, which legacy's had not; legacy's three narrower steps.
+- **The gallery collection results**: Back, "Collection | **<choices>**" (joined with " & ", dates "(Start)"/"(End)", else "All Objects" or "No Results") and "<n> result(s) out of <total> objects"; the tiles in 78% beside legacy's 22% column ("Filter by:" until a filter is set, then "Filter further by:", 225px dropdowns at 90%, the dates one under the other, the round "Reset filters", which shows every object again, and "Timeline for this Search"); no artist list; the years in legacy's "A.D."/"B.C."; legacy's steps at 1199, 974, 849 and 599px.
+- **The gallery tile grid** below 975px keeps legacy's 15px between rows.
+
+### Added
+
+- **`OnDisplayIn`**: a group's `sections` (`[{ caption, links }]`), each under its caption.
+- **`ItemDetailView`**: `spec.related.onDisplayIn.exhibitions(record, ctx)`, the exhibitions as the family lists them.
+- **`dxa/gallery/onDisplay.js`**: `galleryExhibitionSections(record, lang)`.
+
+### Testing
+
+- The gallery smoke suite checks an item's exhibition lines, legacy's collection entrance (dropdowns opening on their names, the dates) and reads the results' count from legacy's line.
+
 ## 3.61.0 (2026-11-05)
 
 The galleries' item sheet as legacy's DatabaseItem.vue (inventory-app#2423), measured equal to legacy on Ceramics at 1366, 900 and 390. Needs `@museumwnf/viewer-core` 2.17.0 (`siblingSiteUrl`, `projectLinks().homeSite`) and reads `@museumwnf/viewer-i18n` 6.7.0's gallery sheet entries.

@@ -78,9 +78,10 @@ function collectionTest(mountSite, collection = {}, { gallery = false } = {}) {
     await vi.waitFor(() => expect(host.querySelector(tile)).not.toBeNull(), WAIT)
     expect(host.querySelector('.mwnf-catalogue')).not.toBeNull()
     expect(host.querySelector('.mwnf-catalogue__aside .mwnf-filter')).not.toBeNull()
-    const count = host.querySelector('.mwnf-summary__count')
+    // A gallery prints legacy's "<n> result(s) out of <total> objects".
+    const count = host.querySelector(gallery ? '.mwnf-dxa-gallery-results__info p + p' : '.mwnf-summary__count')
     expect(count).not.toBeNull()
-    const objects = Number(count.textContent.replace(/\D/g, ''))
+    const objects = Number(count.textContent.match(/\d+/)?.[0] ?? NaN)
     const tiles = host.querySelectorAll(tile).length
     const paginations = host.querySelectorAll('.mwnf-pagination').length
     if (gallery) expect(tiles).toBe(firstPage(objects))
@@ -224,13 +225,17 @@ export function describeGallerySmoke({ config, sharedTexts, ownTexts, manifest, 
 
     collectionTest(mountSite, picks.collection, { gallery: true })
 
-    it('renders the collection entrance on the composed search form view', async () => {
+    it("renders the collection entrance as legacy's", async () => {
       const { app, host } = await mountSite('#/collection')
-      await vi.waitFor(() => expect(host.querySelector('.mwnf-search-form')).not.toBeNull(), WAIT)
-      // The country dropdown plus at least one populated tag category, and
-      // the shared from/to year buckets.
-      expect(host.querySelectorAll('.mwnf-search-form .mwnf-facet').length).toBeGreaterThan(1)
-      expect(host.querySelector('.mwnf-search-form__dates')).not.toBeNull()
+      await vi.waitFor(() => expect(host.querySelector('.mwnf-dxa-gallery-collection__select')).not.toBeNull(), WAIT)
+      // The country dropdown plus at least one populated category, each
+      // opening on its name, and the start and end dates with their years.
+      const lists = [...host.querySelectorAll('.mwnf-dxa-gallery-collection__select')]
+      expect(lists.length).toBeGreaterThan(3)
+      for (const list of lists) expect(list.selectedOptions[0]?.disabled).toBe(true)
+      const dates = host.querySelectorAll('.mwnf-dxa-gallery-collection__dates select')
+      expect(dates).toHaveLength(2)
+      expect(dates[0].options.length).toBeGreaterThan(1)
       expect(host.textContent).toContain('this Gallery’s database')
       app.unmount()
     }, 30000)
@@ -270,6 +275,24 @@ export function describeGallerySmoke({ config, sharedTexts, ownTexts, manifest, 
       expect(host.querySelectorAll('.mwnf-record__media .mwnf-dxa-gallery-item__links a')).toHaveLength(2)
       const projectName = manifest.projects[items[0].project_id]?.name?.en ?? ''
       expect(host.querySelector('.mwnf-dxa-gallery-item__credits').textContent).toContain(projectName)
+      app.unmount()
+    }, 60000)
+
+    // On display in (inventory-app#2423): the exhibition pages that show an
+    // item, a mini-site's under its project, each an online exhibition's under
+    // its title. A package exported before the field has none to show.
+    it('lists the exhibition pages that show an item under On display in', async () => {
+      const [items] = await loadEntities(['items'])
+      const item = items.find((i) => i.exhibition_references?.some((ref) => ref.list !== 'exhibition'))
+        ?? items.find((i) => i.exhibition_references?.length)
+      if (!item) return
+      const { app, host } = await mountSite(`#/item/${item.id}`)
+      await vi.waitFor(() => expect(host.querySelector('.mwnf-on-display__caption')).not.toBeNull(), WAIT)
+      const lines = [...host.querySelectorAll('.mwnf-on-display__item')].map((li) => li.textContent)
+      for (const ref of item.exhibition_references.filter((r) => r.list !== 'exhibition')) {
+        const name = ref.exhibition.titles.en ?? Object.values(ref.exhibition.titles)[0]
+        if (name) expect(lines.some((line) => line.includes(name))).toBe(true)
+      }
       app.unmount()
     }, 60000)
 

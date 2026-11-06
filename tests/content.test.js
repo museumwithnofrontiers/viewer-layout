@@ -1120,6 +1120,35 @@ describe('OnDisplayIn', () => {
     expect(items[1].find('a').attributes()).toMatchObject({ href: 'https://textiles.example.org', target: '_blank', rel: 'noopener' })
   })
 
+  it("splits a group's places into sections, each under its caption, and drops an empty one", () => {
+    const wrapper = mount(OnDisplayIn, {
+      props: {
+        heading: '',
+        groups: [{
+          heading: 'record.related.exhibitions',
+          sections: [
+            { caption: 'Discover Islamic Art', links: [{ id: 'a', label: 'The Muslim West | <span>Settlements</span>', href: 'https://a.example.org', external: true }] },
+            { caption: 'Empty', links: [] },
+            { caption: '<em>The Table Is Set</em>', links: [{ id: 'b', label: 'Religion', href: 'https://b.example.org', external: true }] },
+          ],
+        }],
+      },
+      ...globalWithI18n(texts),
+    })
+    const group = wrapper.find('.mwnf-on-display__group')
+    expect(group.element.children.length).toBe(5)
+    expect([...group.element.children].map((node) => node.className)).toEqual([
+      'mwnf-on-display__subheading',
+      'mwnf-on-display__caption', 'mwnf-on-display__list',
+      'mwnf-on-display__caption', 'mwnf-on-display__list',
+    ])
+    expect(wrapper.findAll('.mwnf-on-display__caption').map((p) => p.html())).toEqual([
+      '<p class="mwnf-on-display__caption">Discover Islamic Art</p>',
+      '<p class="mwnf-on-display__caption"><em>The Table Is Set</em></p>',
+    ])
+    expect(wrapper.findAll('.mwnf-on-display__item').map((li) => li.text())).toEqual(['↗ The Muslim West | Settlements', '↗ Religion'])
+  })
+
   it('renders a name with no address as plain text when there is no pending note, and nothing with no place', () => {
     const wrapper = mount(OnDisplayIn, {
       props: { heading: 'record.related.galleries', groups: [{ links: [{ label: 'Water in Islam' }] }] },

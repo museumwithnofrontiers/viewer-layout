@@ -48,7 +48,11 @@ const texts = {
   'core.section.database': 'Database',
   'core.section.collection': 'Collection',
   'core.section.timeline': 'Timeline',
-  'gallery.collection.intro': 'Search this gallery [How to search](#/how-to-search).',
+  'gallery.collection.intro': 'Search this gallery.',
+  'gallery.collection.filterBy': 'Filter by:',
+  'gallery.collection.selectCountry': 'Select Country',
+  'gallery.collection.startDate': 'Start Date',
+  'gallery.collection.endDate': 'End Date',
 }
 
 beforeAll(async () => {
@@ -222,11 +226,15 @@ describe('GalleryCollectionResults', () => {
 })
 
 describe('GalleryCollectionSearch', () => {
-  it('renders the collection entrance intro and country facet', async () => {
+  it("renders legacy's entrance: Filter by:, dropdowns opening on their names, the dates, the text", async () => {
     const { wrapper } = await mountPage(GalleryCollectionSearch, { messages: texts })
     await settle(() => true, 5)
+    expect(wrapper.find('.mwnf-dxa-gallery-collection__label').text()).toBe('Filter by:')
+    const lists = wrapper.findAll('.mwnf-dxa-gallery-collection__select')
+    expect(lists[0].element.selectedOptions[0].text).toBe('Select Country')
+    expect(lists[0].element.selectedOptions[0].disabled).toBe(true)
+    expect(wrapper.findAll('.mwnf-dxa-gallery-collection__dates select').map((s) => s.element.options[0].text)).toEqual(['Start Date', 'End Date'])
     expect(wrapper.text()).toContain('Search this gallery')
-    expect(wrapper.text()).toContain('Select a country')
   })
 })
 
