@@ -1,3 +1,33 @@
+## 3.63.0 (2026-11-06)
+
+The exhibitions' pages as legacy's exhibitions client (inventory-app#2379), measured equal to legacy on With Brush and Qalam (and on The Use of Colours in Art for the timeline) at 1366, with the 900 and 390px steps. Reads `@museumwnf/viewer-i18n` 6.9.0's `exhibition.*` entries, and the exhibition packages' `exhibition_references` and partners' `own_project` (inventory-app#2479; a package without them lists no exhibitions under "On display in" and draws no partner badge).
+
+### Changed
+
+- **The exhibition shell**: the header as legacy's (the logo at its own size, "A MWNF Online Exhibition" centred, gone below 1200px; the links " | " apart; the search box and its outlined button), the menu's 28px rows four to a row below 1200px, the page backdrop (the home picture under the main colour), the home's split banner, the bottom band, the logo strip and the footer; below 600px the header stays at the top with the logo, the stacked links and a magnifier opening the search under it, and the menu folds into a drawer behind the hamburger. The section banner names the theme ("Theme I ▪ Subtheme 2", "▪ Overview", "▪ Gallery") with the banner picture's record as its caption, and the welcome window is legacy's.
+- **The theme page** (`dxa/exhibition/Theme.vue`, About too) is legacy's ThemeComponent: the thumbnail band with its arrows and the "Add/Hide Related Works" switch, the picture with its hover zoom and lightbox and its details, the theme's bar, title, quote, presentation, related works and relation text, the tour and "In This Theme". A related work the visitor chose stays chosen when only the address's query changes.
+- **The themes page**, **a theme's gallery**, **the related content** and **the credits** are legacy's pages.
+- **The collection entrance and results**: "Filter by:" over the theme (About, then each theme with its numeral), country, type, material and dates, going straight to the results; the results' "Collection | <choices>" and "<n> result(s) out of <total> items", the tile grid with the theme and sub-theme filter and "Filter further by:", twenty a page in legacy's order, legacy's pager above and below; below 500px the filters behind a pen.
+- **The search results** are legacy's page: the record in focus beside two columns of results, the search box with Search and Reset, "Search Term Tips", legacy's empty result; `all-items` is the exhibitions' empty search. **The search tips** at 20px in their column.
+- **The item sheet** is the galleries' legacy sheet (now `dxa/LegacyItemSheet.vue`, shared by both families) in the exhibition's words and colours; under "On display in", this exhibition's own pages open on this site.
+- **The partners list** is the galleries' legacy list in the exhibition's sizes and colours, an institution badged "Partner/Affiliate Institution (Monuments)"; **the partner page** has legacy's pills, pictures, text and Google map under "Museum on Google Maps"; **a partner's items** are legacy's page.
+- **The timeline entrance, results and gallery** are legacy's pages (A.D./B.C., the search band, the events beside their years, See Gallery, See Timeline).
+- **Both families' item sheet**: a thumbnail for a single picture too, the photographer and copyright only in its tooltip, the language band for a record in one language, a language the build does not declare named in itself, the notice as italic text, and the related database named by its site ("Discover Islamic Art" for an Explore Islamic Art Collections record), as legacy.
+
+### Added
+
+- **`dxa/exhibition/Pages.vue`**: legacy's exhibition pager.
+- **`MediaGallery`** `creditCaption`; **`RecordView`** `spec.mediaThumbsFrom`, `spec.mediaCreditCaption`; **`PartnerPanel`** `media`.
+- **`PartnerDetail`**: a family's `className`, `media` and `legacyMap`.
+- **`TimelineResultsView`**: the `form` slot on the results page, a `gallery` and a `pagination` slot, and the page's `rows` in every slot.
+- **`AppHeader`**: a search toggle, shown by a family that folds the box away on a phone.
+- **`dxa/gallery/onDisplay.js`**: `galleryExhibitionSections(record, lang, ownSite)`.
+- **The exhibition logo strip**: a site names logo categories 3 and 4 in its own locale (`exhibition.sponsors.section3`, `.section4`), as legacy's footer_logo_section_3/4.
+
+### Testing
+
+- The exhibition smoke suite checks the pages as legacy's: a site's own tests that read the old composed views' markup need the same update.
+
 ## 3.62.0 (2026-11-06)
 
 The galleries' "On display in" exhibitions and collection pages as legacy's (inventory-app#2423), measured equal to legacy on Ceramics at 1366, 900 and 390. Reads the gallery packages' `exhibition_references` (inventory-app#2478; a package without them shows galleries only, as before) and `@museumwnf/viewer-i18n` 6.8.0's `gallery.collection.*` entries.

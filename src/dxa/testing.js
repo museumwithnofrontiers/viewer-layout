@@ -62,40 +62,73 @@ const TILE = '.mwnf-dxa-grid__entry'
 const GALLERY_PAGE = 20
 const firstPage = (count) => Math.min(GALLERY_PAGE, Number(count))
 
-// An exhibition's tiles: the platform's record grid, nine a page.
-const EXHIBITION_TILE = '.mwnf-grid__tile'
-
-// The collection results: the tiles, the "filter further by" column, the
-// summary and the page links. A gallery's first page holds twenty tiles, or
-// every object when there are fewer, and offers page links only when there
-// is a second page, as legacy; a site may pin its count of page links.
-// (A gallery's `collection.tiles` is no longer read: it counted the old nine
-// a page. An exhibition may still pin its own.)
-function collectionTest(mountSite, collection = {}, { gallery = false } = {}) {
-  const tile = gallery ? TILE : EXHIBITION_TILE
-  it('renders the collection results on the composed results view', async () => {
+// The collection results as legacy's: the tiles, the "filter further by"
+// column, "<n> result(s) out of <total>" and the page links. The first page
+// holds twenty tiles, or every record when there are fewer, and page links
+// come only with a second page, above and below the grid. A gallery's pages
+// are the platform's pagination, an exhibition's legacy's own pager
+// (inventory-app#2423, #2379). `collection` is no longer read: it pinned the
+// old nine a page.
+function collectionTest(mountSite, collection = {}, { pager = '.mwnf-pagination' } = {}) {
+  void collection
+  it('renders the collection results as legacy', async () => {
     const { app, host } = await mountSite('#/collection-results')
-    await vi.waitFor(() => expect(host.querySelector(tile)).not.toBeNull(), WAIT)
+    await vi.waitFor(() => expect(host.querySelector(TILE)).not.toBeNull(), WAIT)
     expect(host.querySelector('.mwnf-catalogue')).not.toBeNull()
     expect(host.querySelector('.mwnf-catalogue__aside .mwnf-filter')).not.toBeNull()
-    // A gallery prints legacy's "<n> result(s) out of <total> objects".
-    const count = host.querySelector(gallery ? '.mwnf-dxa-gallery-results__info p + p' : '.mwnf-summary__count')
+    const count = host.querySelector('.mwnf-dxa-gallery-results__info p + p')
     expect(count).not.toBeNull()
     const objects = Number(count.textContent.match(/\d+/)?.[0] ?? NaN)
-    const tiles = host.querySelectorAll(tile).length
-    const paginations = host.querySelectorAll('.mwnf-pagination').length
-    if (gallery) expect(tiles).toBe(firstPage(objects))
-    else if (collection.tiles) expect(tiles).toBe(collection.tiles)
-    else expect(tiles).toBeGreaterThan(0)
-    if (gallery && objects <= GALLERY_PAGE) expect(paginations).toBe(0)
-    else if (collection.paginations) expect(paginations).toBe(collection.paginations)
-    else expect(paginations).toBeGreaterThan(0)
+    expect(host.querySelectorAll(TILE).length).toBe(firstPage(objects))
+    const paginations = host.querySelectorAll(pager).length
+    if (objects <= GALLERY_PAGE) expect(paginations).toBe(0)
+    else expect(paginations).toBe(2)
     app.unmount()
   }, 60000)
 }
 
-function searchTests(mountSite, loadItems, { gallery = false } = {}) {
-  const tile = gallery ? TILE : EXHIBITION_TILE
+// An exhibition's search as legacy's (inventory-app#2379): the record in
+// focus beside two columns of results, the empty search (`all-items`) every
+// record, the empty result's three paragraphs with its link back to every
+// record, and the tips under a Back button.
+const EXHIBITION_RESULT = '.mwnf-dxa-exhibition-search__result'
+function exhibitionSearchTests(mountSite, loadItems) {
+  it('returns every renderable record for the all-items sentinel', async () => {
+    const { app, host } = await mountSite('#/search?q=all-items')
+    await vi.waitFor(() => expect(host.querySelector(EXHIBITION_RESULT)).not.toBeNull(), WAIT)
+    expect(host.textContent).toContain('Results of your search')
+    expect(host.querySelector('.mwnf-dxa-exhibition-search__main')).not.toBeNull()
+    app.unmount()
+  }, 30000)
+
+  it('finds a record by a word of its name', async () => {
+    const item = await loadItems()
+    const term = firstWord(item.internal_name)
+    const { app, host } = await mountSite(`#/search?q=${encodeURIComponent(term)}`)
+    await vi.waitFor(() => expect(host.querySelector(EXHIBITION_RESULT)).not.toBeNull(), WAIT)
+    expect(host.querySelector('.mwnf-dxa-exhibition-search__input').value).toBe(term)
+    app.unmount()
+  }, 30000)
+
+  it('offers every record again after an empty keyword search', async () => {
+    const { app, host } = await mountSite('#/search?q=zzz-nonexistent-keyword-zzz')
+    await vi.waitFor(() => expect(host.querySelector('.mwnf-dxa-exhibition-search__none')).not.toBeNull(), WAIT)
+    expect(host.textContent).toContain('No results found.')
+    expect(host.querySelector('a[href="#/search?q=all-items"]')).not.toBeNull()
+    expect(host.querySelector('a[href="#/how-to-search"]')).not.toBeNull()
+    app.unmount()
+  }, 30000)
+
+  it('renders the search tips under a Back button', async () => {
+    const { app, host } = await mountSite('#/how-to-search')
+    await vi.waitFor(() => expect(host.textContent).toContain('Boolean Full Text Search'), WAIT)
+    expect(host.querySelector('.mwnf-dxa-exhibition-how-to .mwnf-back-link__button')).not.toBeNull()
+    app.unmount()
+  }, 30000)
+}
+
+function searchTests(mountSite, loadItems) {
+  const tile = TILE
   it('returns every renderable object for the all-objects sentinel', async () => {
     const { app, host } = await mountSite('#/search?q=all-objects')
     await vi.waitFor(() => expect(host.querySelector(tile)).not.toBeNull(), WAIT)
@@ -601,29 +634,39 @@ export function describeExhibitionSmoke({
       app.unmount()
     }, 20000)
 
-    collectionTest(mountSite, collection)
+    collectionTest(mountSite, collection, { pager: '.mwnf-dxa-exhibition-pages' })
 
-    it('renders the item sheet on the composed record view', async () => {
+    // Legacy's sheet, the galleries' (inventory-app#2379): Source and My
+    // Collection under the pictures, the citation naming the item's project,
+    // the related content in the sidebar.
+    it('renders the item sheet as legacy', async () => {
       const items = await loadItems()
       const item = items.find((i) => i.project_id) ?? items[0]
       const { app, host } = await mountSite(`#/item/${item.id}`)
       await vi.waitFor(() => expect(host.querySelector('.mwnf-sheet__label')).not.toBeNull(), WAIT)
       expect(host.querySelector('.mwnf-record')).not.toBeNull()
-      expect(host.querySelector('.mwnf-dxa-item__languages')).not.toBeNull()
-      expect(host.querySelector('.mwnf-sheet-related')).not.toBeNull()
-      // Related content is legacy's sidebar, and the record's internal key
-      // is never shown.
+      expect(host.querySelector('.mwnf-dxa-item__languages .mwnf-languages__button')).not.toBeNull()
       expect(host.querySelector('.mwnf-record__aside .mwnf-sheet-related')).not.toBeNull()
       expect(host.textContent).not.toContain('mwnf3:')
+      expect(host.querySelectorAll('.mwnf-record__media .mwnf-dxa-gallery-item__links a')).toHaveLength(2)
       const projectName = manifest.projects?.[item.project_id]?.name?.en
-      if (projectName) expect(host.querySelector('.mwnf-sheet-source__line').textContent).toContain(projectName)
+      if (projectName) expect(host.querySelector('.mwnf-dxa-gallery-item__credits').textContent).toContain(projectName)
       // The glossary tool is the layout's own, on every sheet.
       expect(host.querySelector('.mwnf-glossary-tool')).not.toBeNull()
-      // The source credit: origin plus this item's route.
-      const creditLink = host.querySelector('.mwnf-source-credit a')
-      expect(creditLink).not.toBeNull()
-      expect(creditLink.textContent.startsWith(config.site.origin)).toBe(true)
-      expect(creditLink.textContent.endsWith(`#/item/${item.id}`)).toBe(true)
+      expect(host.querySelector('.mwnf-dxa-gallery-item__source a')).not.toBeNull()
+      app.unmount()
+    }, 60000)
+
+    // On display in: this exhibition's own pages that show the item open
+    // here, as legacy's did.
+    it("lists the exhibition's own pages that show an item under On display in", async () => {
+      const items = await loadItems()
+      const item = items.find((i) => i.exhibition_references?.some((ref) => ref.site === manifest.site?.key))
+      if (!item) return
+      const { app, host } = await mountSite(`#/item/${item.id}`)
+      await vi.waitFor(() => expect(host.querySelector('.mwnf-on-display__caption')).not.toBeNull(), WAIT)
+      const own = item.exhibition_references.find((ref) => ref.site === manifest.site.key)
+      expect(host.querySelector(`.mwnf-on-display a[href="#${own.path}"]`)).not.toBeNull()
       app.unmount()
     }, 60000)
 
@@ -667,13 +710,13 @@ export function describeExhibitionSmoke({
       app.unmount()
     }, 60000)
 
-    it('renders the partners list on the composed list view', async () => {
+    it("renders the partners list as legacy's", async () => {
       const partner = (await visiblePartners()).find((p) => partnerNames[p.id]?.name)
       const { app, host } = await mountSite('#/partners')
-      await vi.waitFor(() => expect(host.querySelector('.mwnf-partner-list')).not.toBeNull(), WAIT)
-      // Country groups, all open, and the A-Z / Z-A toggle.
-      expect(host.querySelectorAll('.mwnf-partner-list__group-heading').length).toBeGreaterThan(0)
-      expect(host.querySelector('.mwnf-partner-list__toggle-button')).not.toBeNull()
+      await vi.waitFor(() => expect(host.querySelector('.mwnf-dxa-gallery-partners__partner')).not.toBeNull(), WAIT)
+      // Country bands, the A-Z / Z-A toggle beside Back.
+      expect(host.querySelectorAll('.mwnf-dxa-gallery-partners__country').length).toBeGreaterThan(0)
+      expect(host.querySelector('.mwnf-dxa-gallery-partners__order button')).not.toBeNull()
       expect(host.textContent).toContain(partnerNames[partner.id].name)
       app.unmount()
     }, 30000)
@@ -689,91 +732,85 @@ export function describeExhibitionSmoke({
       app.unmount()
     }, 30000)
 
-    it('renders a partner objects page on the composed results view', async () => {
+    it("renders a partner's items on legacy's grid", async () => {
       const partner = (await visiblePartners()).find((p) => p.item_count > 0)
       const { app, host } = await mountSite(`#/partner/${partner.id}/objects`)
-      await vi.waitFor(() => expect(host.querySelector('.mwnf-grid__tile')).not.toBeNull(), WAIT)
-      expect(host.querySelector('.mwnf-catalogue')).not.toBeNull()
+      await vi.waitFor(() => expect(host.querySelector(TILE)).not.toBeNull(), WAIT)
+      expect(host.querySelectorAll(TILE).length).toBeLessThanOrEqual(GALLERY_PAGE)
+      expect(host.querySelector('.mwnf-dxa-exhibition-partner-objects__profile a')).not.toBeNull()
       expect(host.textContent).toContain(partnerNames[partner.id]?.name ?? partner.id)
       app.unmount()
     }, 30000)
 
-    it('renders the collection entrance on the composed search form view', async () => {
+    it("renders the collection entrance as legacy's", async () => {
       const { app, host } = await mountSite('#/collection')
-      await vi.waitFor(() => expect(host.querySelector('.mwnf-search-form')).not.toBeNull(), WAIT)
-      expect(host.querySelectorAll('.mwnf-search-form .mwnf-facet').length).toBeGreaterThan(1)
-      expect(host.querySelector('.mwnf-search-form__dates')).not.toBeNull()
-      expect(host.querySelector('.mwnf-search-form__how-to')).not.toBeNull()
+      await vi.waitFor(() => expect(host.querySelector('.mwnf-dxa-exhibition-collection')).not.toBeNull(), WAIT)
+      expect(host.querySelectorAll('.mwnf-dxa-exhibition-collection__select').length).toBeGreaterThan(3)
+      expect(host.querySelector('.mwnf-dxa-exhibition-collection__dates')).not.toBeNull()
       expect(host.textContent).toContain('Have you already been at')
       app.unmount()
     }, 30000)
 
-    searchTests(mountSite, async () => (await loadItems()).find((i) => !i.languages?.length || i.languages.includes('en')))
+    exhibitionSearchTests(mountSite, async () => (await loadItems()).find((i) => !i.languages?.length || i.languages.includes('en')))
 
-    it('renders the themes list on the composed accordion', async () => {
+    it("renders the themes list as legacy's", async () => {
       const { app, host } = await mountSite('#/themes')
-      await vi.waitFor(() => expect(host.querySelector('.mwnf-cards--accordion')).not.toBeNull(), WAIT)
-      expect(host.querySelectorAll('.mwnf-cards__details').length).toBeGreaterThan(0)
+      await vi.waitFor(() => expect(host.querySelector('.mwnf-dxa-themes-page__theme')).not.toBeNull(), WAIT)
+      expect(host.querySelectorAll('.mwnf-dxa-themes-page__theme').length).toBeGreaterThan(0)
+      expect(host.querySelector('.mwnf-dxa-themes-page__show-all')).not.toBeNull()
       app.unmount()
     }, 30000)
 
-    it('renders a theme on the composed essay view', async () => {
+    // Legacy's ThemeComponent (inventory-app#2379): the thumbnails, the
+    // chosen picture and its details, the theme's bar with its numeral, its
+    // texts, the tour and "In This Theme".
+    it("renders a theme as legacy's", async () => {
       const [, , , themes] = await loadEntities(['exhibition', 'items', 'partners', 'themes'])
       const theme = themePick
         ? themes.find((t) => t.id === themePick.id)
         : themes.find((t) => t.display_order > 1) ?? themes[0]
       const { app, host } = await mountSite(`#/theme/${themePick ? themePick.id : theme.display_order - 1}`)
-      await vi.waitFor(() => expect(host.querySelector('.mwnf-essay')).not.toBeNull(), WAIT)
-      expect(host.querySelector('.mwnf-essay').className).not.toContain('mwnf-essay--about')
-      // The Roman label beside the theme's own title.
-      expect(host.querySelector('.mwnf-dxa-theme__heading').textContent).toMatch(/[IVX]/)
-      expect(host.querySelector('.mwnf-essay__side')).not.toBeNull()
-      expect(host.querySelector('.mwnf-picture-gallery__selected, .mwnf-picture-gallery__empty')).not.toBeNull()
-      expect(host.querySelector('.mwnf-essay__nav')).not.toBeNull()
-      // The selected picture's caption is its parent record's label.
+      await vi.waitFor(() => expect(host.querySelector('.mwnf-dxa-theme-page__content')).not.toBeNull(), WAIT)
+      // The numeral is in the section banner's "Theme I ▪ …", as legacy's SubBanner.
+      await vi.waitFor(() => expect(host.querySelector('.mwnf-banner').textContent).toMatch(/ [IVX]+ ▪ /), WAIT)
+      expect(host.querySelector('.mwnf-dxa-theme-page__selected, .mwnf-dxa-theme-page__empty')).not.toBeNull()
+      expect(host.querySelector('.mwnf-dxa-theme-page__tour')).not.toBeNull()
       if (themePick?.pictureTitle) {
-        expect(host.querySelector('.mwnf-picture-gallery__detail--title').textContent).toContain(themePick.pictureTitle)
-      } else {
-        expect(host.querySelector('.mwnf-picture-gallery__detail--title, .mwnf-picture-gallery__empty')).not.toBeNull()
+        expect(host.querySelector('.mwnf-dxa-theme-page__details').textContent).toContain(themePick.pictureTitle)
       }
-      const subNav = host.querySelector('.mwnf-dxa-theme__subthemes')
-      for (const title of themePick?.subthemes ?? []) expect(subNav.textContent).toContain(title)
-      if (subNav) expect(subNav.textContent.trim().length).toBeGreaterThan(0)
+      const inThisTheme = host.querySelector('.mwnf-dxa-theme-page__links')
+      for (const title of themePick?.subthemes ?? []) expect(inThisTheme.textContent).toContain(title)
       // The texts are read through the tree's own entity: a wrong one renders
       // internal names or nothing.
-      const prose = host.querySelector('.mwnf-essay__prose, .mwnf-essay__body')
-      expect(prose?.textContent?.trim()).toBeTruthy()
-      const title = host.querySelector('.mwnf-essay__title')
-      if (title && theme) expect(title.textContent).not.toBe(theme.internal_name)
-      const creditLink = host.querySelector('.mwnf-source-credit a')
-      expect(creditLink).not.toBeNull()
-      expect(creditLink.textContent.startsWith(config.site.origin)).toBe(true)
+      const title = host.querySelector('.mwnf-dxa-theme-page__title')
+      expect(title?.textContent?.trim()).toBeTruthy()
+      if (theme) expect(title.textContent).not.toBe(theme.internal_name)
       app.unmount()
     }, 30000)
 
-    it('renders the theme gallery on the composed results view', async () => {
+    it("renders a theme's gallery on legacy's grid", async () => {
       const { app, host } = await mountSite('#/theme-gallery/1')
-      await vi.waitFor(() => expect(host.querySelector('.mwnf-grid__tile')).not.toBeNull(), WAIT)
-      expect(host.querySelector('.mwnf-catalogue')).not.toBeNull()
+      await vi.waitFor(() => expect(host.querySelector(TILE)).not.toBeNull(), WAIT)
+      expect(host.querySelector('.mwnf-dxa-theme-gallery-page')).not.toBeNull()
       app.unmount()
     }, 30000)
 
-    it('renders the timeline entrance on the composed timeline view, as a form', async () => {
+    // The timeline pages as legacy's (inventory-app#2379). An exhibition
+    // without a chronology keeps the pages reachable by address, empty.
+    const EVENT = '.mwnf-dxa-exhibition-timeline-results__event'
+    it("renders the timeline entrance as legacy's form", async () => {
       const { app, host } = await mountSite('#/timeline')
-      await vi.waitFor(() => expect(host.querySelector('.mwnf-timeline')).not.toBeNull(), WAIT)
-      expect(host.querySelector('.mwnf-timeline__filters')).not.toBeNull()
-      // The entrance renders the form alone: no results row, no summary.
-      expect(host.querySelector('.mwnf-timeline__row')).toBeNull()
-      expect(host.querySelector('.mwnf-summary')).toBeNull()
+      await vi.waitFor(() => expect(host.querySelector('.mwnf-dxa-timeline__dates')).not.toBeNull(), WAIT)
+      expect(host.querySelector('.mwnf-dxa-timeline__go button')).not.toBeNull()
+      expect(host.querySelector(EVENT)).toBeNull()
       expect(host.textContent).toContain('Have you already been at')
       app.unmount()
     }, 30000)
 
-    it('renders the timeline results on the composed timeline view', async () => {
+    it("renders the timeline results as legacy's", async () => {
       const { app, host } = await mountSite('#/timeline-results')
-      await vi.waitFor(() => expect(host.querySelector('.mwnf-summary')).not.toBeNull(), WAIT)
-      expect(host.querySelector('.mwnf-timeline')).not.toBeNull()
-      expect(host.textContent).toContain('Events found')
+      await vi.waitFor(() => expect(host.querySelector('.mwnf-dxa-exhibition-timeline-results__band')).not.toBeNull(), WAIT)
+      expect(host.querySelector('.mwnf-dxa-exhibition-timeline-results__current').textContent).toContain('Results')
       app.unmount()
     }, 30000)
 
@@ -782,19 +819,23 @@ export function describeExhibitionSmoke({
       const { app, host } = await mountSite(
         `#/timeline-results?country=${dated.country_id}&begin=${dated.start_date}&end=${dated.end_date ?? dated.start_date}`,
       )
-      await vi.waitFor(() => expect(host.querySelector('.mwnf-timeline__gallery')).not.toBeNull(), WAIT)
-      expect(host.querySelector('.mwnf-timeline__gallery').textContent).toContain('See Gallery')
+      await vi.waitFor(() => expect(host.querySelector('.mwnf-dxa-exhibition-timeline-results__body')).not.toBeNull(), WAIT)
+      // Legacy offered the box only beside events.
+      if (host.querySelector(EVENT)) {
+        await vi.waitFor(() => expect(host.querySelector('.mwnf-dxa-exhibition-timeline-results__related a')).not.toBeNull(), WAIT)
+        expect(host.querySelector('.mwnf-dxa-exhibition-timeline-results__related').textContent).toContain('See Gallery')
+      }
       app.unmount()
     }, 30000)
 
-    it('renders the timeline gallery on the composed results view', async () => {
+    it("renders the timeline gallery on legacy's grid", async () => {
       const dated = await datedItem()
       const { app, host } = await mountSite(
         `#/timeline/gallery?country=${dated.country_id}&begin=${dated.start_date}&end=${dated.end_date ?? dated.start_date}`,
       )
-      await vi.waitFor(() => expect(host.querySelector('.mwnf-catalogue')).not.toBeNull(), WAIT)
       // The item that seeded the query overlaps its own period.
-      expect(host.querySelector('.mwnf-grid__tile')).not.toBeNull()
+      await vi.waitFor(() => expect(host.querySelector(TILE)).not.toBeNull(), WAIT)
+      expect(host.querySelector('.mwnf-dxa-exhibition-timeline-gallery')).not.toBeNull()
       app.unmount()
     }, 30000)
 
@@ -805,39 +846,31 @@ export function describeExhibitionSmoke({
       if (!greek) return
       const period = `begin=${greek.start_date}&end=${greek.end_date ?? greek.start_date}`
       const byId = await mountSite(`#/timeline-results?country=grc&${period}`)
-      await vi.waitFor(() => expect(byId.host.querySelector('.mwnf-summary')).not.toBeNull(), WAIT)
+      await vi.waitFor(() => expect(byId.host.querySelector('.mwnf-dxa-exhibition-timeline-results__body')).not.toBeNull(), WAIT)
       const byCode = await mountSite(`#/timeline-results?country=gr&${period}`)
-      await vi.waitFor(() => expect(byCode.host.querySelector('.mwnf-summary')).not.toBeNull(), WAIT)
-      expect(byId.host.querySelectorAll('.mwnf-timeline__row').length).toBe(byCode.host.querySelectorAll('.mwnf-timeline__row').length)
-      const galleryId = byId.host.querySelector('.mwnf-timeline__gallery')
-      const galleryCode = byCode.host.querySelector('.mwnf-timeline__gallery')
+      await vi.waitFor(() => expect(byCode.host.querySelector('.mwnf-dxa-exhibition-timeline-results__body')).not.toBeNull(), WAIT)
+      expect(byId.host.querySelectorAll(EVENT).length).toBe(byCode.host.querySelectorAll(EVENT).length)
+      const galleryId = byId.host.querySelector('.mwnf-dxa-exhibition-timeline-results__related a')
+      const galleryCode = byCode.host.querySelector('.mwnf-dxa-exhibition-timeline-results__related a')
       if (galleryId && galleryCode) expect(galleryId.textContent).toBe(galleryCode.textContent)
-      const firstRow = byId.host.querySelector('.mwnf-timeline__row')
-      if (firstRow) expect(firstRow.textContent).toContain('Greece')
       byId.app.unmount()
       byCode.app.unmount()
     }, 60000)
 
-    it('renders the related content on the composed link list', async () => {
+    it("renders the related content as legacy's", async () => {
       const { app, host } = await mountSite('#/related')
-      await vi.waitFor(() => expect(host.querySelector('.mwnf-link-list')).not.toBeNull(), WAIT)
+      await vi.waitFor(() => expect(host.querySelector('.mwnf-dxa-related-page')).not.toBeNull(), WAIT)
       if (relatedContent) {
-        expect(host.querySelector('.mwnf-link-list__groups')).not.toBeNull()
-        expect(host.querySelectorAll('.mwnf-link-list__item').length).toBeGreaterThan(0)
-      } else {
-        expect(host.querySelector('.mwnf-link-list__groups, .mwnf-link-list__empty')).not.toBeNull()
+        await vi.waitFor(() => expect(host.querySelectorAll('.mwnf-dxa-related-page__entry').length).toBeGreaterThan(0), WAIT)
       }
       app.unmount()
     }, 30000)
 
-    it('renders about on the composed essay view, in about mode', async () => {
+    // Legacy's AboutPage is its ThemeComponent on the About theme.
+    it("renders about as legacy's theme page", async () => {
       const { app, host } = await mountSite('#/about')
-      await vi.waitFor(() => expect(host.querySelector('.mwnf-essay')).not.toBeNull(), WAIT)
-      expect(host.querySelector('.mwnf-essay').className).toContain('mwnf-essay--about')
-      // About mode keeps legacy's picture column (the About theme's pictures
-      // and their captions) and drops the tour and the picture narrative.
-      expect(host.querySelector('.mwnf-essay__side .mwnf-picture-gallery')).not.toBeNull()
-      expect(host.querySelector('.mwnf-picture-narrative')).toBeNull()
+      await vi.waitFor(() => expect(host.querySelector('.mwnf-dxa-about .mwnf-dxa-theme-page__content')).not.toBeNull(), WAIT)
+      expect(host.querySelector('.mwnf-dxa-theme-page__selected, .mwnf-dxa-theme-page__empty')).not.toBeNull()
       expect(host.textContent).toContain(config.siteName)
       app.unmount()
     }, 30000)

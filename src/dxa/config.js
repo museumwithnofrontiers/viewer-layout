@@ -2,6 +2,7 @@ import {
   languageLabels, loadEntities, mwnfLinks, offeredLanguages, useDataPackage,
 } from '@museumwnf/viewer-core'
 import { itemFromUidPath as itemFromUidList, partnerFromKey as partnerFromLists } from '@museumwnf/viewer-core/legacy'
+import { romanFor } from '@museumwnf/viewer-core/dxa'
 import GalleryShell from './gallery/Shell.vue'
 import ExhibitionShell from './exhibition/Shell.vue'
 import { itemFromUidPath, partnerFromKey } from './gallery/data.js'
@@ -36,6 +37,14 @@ import { mwnfSocialLinks } from '../sections/socialLinks.js'
 // partner record; the language segment is dropped, the page number moves to
 // the query, and the timeline gallery's `start`/`end` path segments become
 // the platform's `begin`/`end` keys.
+// A logo category's heading a site names in its own locale; null when it
+// does not (the dictionary answers the entry's own name).
+function ownSectionTitle(t, categoryId) {
+  const key = `exhibition.sponsors.section${Number(categoryId)}`
+  const text = t(key)
+  return text && text !== key ? text : null
+}
+
 function timelineGalleryRedirect({ country, start, end, page }) {
   const query = { country }
   if (start !== 'any') query.begin = start
@@ -224,15 +233,29 @@ export function exhibitionConfig({
         about: 'core.section.about',
         credits: 'core.section.credits',
       },
-      // `all-objects` is legacy's sentinel for an empty search, and the value
-      // the results page matches on.
-      search: { route: 'search-results', key: 'q', placeholder: 'catalogue.search.placeholder', submitLabel: 'catalogue.search.submit', empty: 'all-objects' },
+      // `all-items` is the exhibitions' legacy sentinel for an empty search,
+      // and the value the results page matches on.
+      search: { route: 'search-results', key: 'q', placeholder: 'catalogue.search.placeholder', submitLabel: 'catalogue.search.submit', empty: 'all-items' },
       // Legacy's exhibitions put the menu above the banner on every page.
       placement: 'before-banner',
       socialLinks: mwnfSocialLinks,
     },
     banner: {
       variant: ({ section }) => (section === 'home' ? 'split' : 'section'),
+      // Legacy's SubBanner over a theme page: "Theme I ▪ Subtheme 1" when the
+      // address names a sub-theme (its gallery's too), else "▪ Gallery" on a
+      // theme's gallery and "▪ Overview" on its own page, the numeral the
+      // address's own (inventory-app#2379). Anywhere else the section's title.
+      title: ({ route, t }) => {
+        if (route?.name !== 'theme' && route?.name !== 'theme-gallery') return ''
+        const id = Number(route.params.id)
+        if (!Number.isInteger(id) || id < 1) return ''
+        const head = `${t('exhibition.theme.romanLabel')} ${romanFor(id + 1)}`
+        const sub = route.params.subtheme
+        if (sub && sub !== 'overview') return `${head} ▪ ${t('exhibition.theme.subthemeLabel')} ${sub}`
+        if (route.name === 'theme-gallery') return `${head} ▪ ${t('exhibition.theme.galleryLabel')}`
+        return `${head} ▪ ${t('exhibition.theme.overview')}`
+      },
     },
     // The site's own chrome files (inventory-app#2233 D7); the header mark is
     // legacy exhibitions-client's black logo, `theme/assets/logo_black.png`.
@@ -242,9 +265,12 @@ export function exhibitionConfig({
     // package's list draws the site's files (README, "Site chrome").
     sponsorLogos,
     // Legacy's header shows category 0 ("Header") beside the MWNF mark and
-    // leaves the other categories to the footer strip. Only categories 1 and
-    // 2 carry real copy; 3 and 4 hold legacy placeholders, which fall back to
-    // the category's own name.
+    // leaves the other categories to the footer strip, each under its
+    // exhibition's own heading (legacy's footer_logo_section_<n>). Categories
+    // 1 and 2 have shared words a site may word its own way; 3 and 4 held
+    // legacy placeholders, so a site that fills them names them in its own
+    // locale (`exhibition.sponsors.section3`, `.section4`), else the
+    // category's own name stands.
     logos: {
       header: (logo) => Number(logo.category_id) === 0 && logo.visible !== false,
       headerTitle: 'exhibition.sponsors.coOrganisers',
@@ -263,7 +289,7 @@ export function exhibitionConfig({
           .map(([categoryId, group]) => ({
             title: Number(categoryId) === 1 ? t('exhibition.sponsors.patronage')
               : Number(categoryId) === 2 ? t('exhibition.sponsors.support')
-                : (group[0].category ?? ''),
+                : ownSectionTitle(t, categoryId) ?? (group[0].category ?? ''),
             sponsors: [...group]
               .sort((a, b) => (a.display_order ?? 0) - (b.display_order ?? 0))
               .map((logo) => ({ name: logo.alt, href: logo.href, logo: logo.image })),

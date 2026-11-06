@@ -1,30 +1,23 @@
 <script setup>
 import { computed } from 'vue'
 import { useRoute, RouterLink } from 'vue-router'
+import { I18nText } from '@museumwnf/viewer-core'
 import BackLink from '../../content/BackLink.vue'
-import Pagination from '../../content/Pagination.vue'
-import PartnerPanel from '../../content/PartnerPanel.vue'
 import CatalogueResultsView from '../../views/CatalogueResultsView.vue'
+import ObjectGrid from '../gallery/ObjectGrid.vue'
+import Pages from './Pages.vue'
 import {
-  visiblePartnerById, partnerDetail, partnerRoute, tr, defaultLang, PAGE_SIZE, tile,
+  visiblePartnerById, partnerRoute, tr, defaultLang, labelOf, legacyPaging, legacyTile,
 } from './data.js'
 
-// The member items one partner holds (epic #1731, from colours/water-in-
-// islam — byte-identical modulo the site-namespaced entry names below).
-// Legacy split this into PartnerObjects and InstitutionMonuments, one per
-// endpoint; here it is one component and `variant` supplies the count
-// line's wording — `standardRoutes('exhibition', config)` registers the
-// `institution-monuments` route against this same component with
-// `props: { variant: 'institution' }`. The partner is a route param, not a
-// filter the URL carries, so the spec is built per-route rather than kept
-// as a static export like `collectionResults`.
-//
-// `texts` carries the five entry names this family's `PartnerObjects.vue`
-// never shared across sites (colours' own were `colours.partnerObjects.
-// emptyPartner`/`.emptyInstitution`, `colours.partner.monumentsInExhibition`,
-// `colours.partnerObjects.partnerProfile`/`.institutionProfile`) — every
-// other text here stays a literal shared entry. The partner-variant summary
-// count reads the shared `partner.item.objectsInSite`, unaffected by `texts`.
+// The items one partner holds, as legacy's PartnerObjects
+// (exhibitions-client, inventory-app#2379): Back; the partner's name at
+// 20px and, in italics, "location, country" as its first record gives
+// them; legacy's pager above and below; the exhibition's tile grid with,
+// on its right, "➦ Partner Profile". Twenty a page in legacy's order. One
+// component for a museum and an institution (legacy's
+// InstitutionMonuments), which `variant` names; `texts` carries the
+// family's entries for the empty page and the profile link.
 const props = defineProps({
   variant: { type: String, default: 'partner' },
   texts: { type: Object, required: true },
@@ -35,43 +28,59 @@ const isInstitutionView = computed(() => props.variant === 'institution')
 const route = useRoute()
 const partner = computed(() => visiblePartnerById(route.params.id))
 
-// The page's head is the partner's `summary` (inventory-app#2034): the name,
-// linked to its page, and "city, country".
-const view = computed(() => (partner.value ? partnerDetail.view(partner.value, tr('partners', partner.value.id, defaultLang)) : null))
-
-const objectsSpec = computed(() => ({
+const spec = computed(() => ({
   entity: 'items',
   scope: (item) => item.partner_id === partner.value?.id,
-  sort: { undated: 'first' },
-  pageSize: PAGE_SIZE,
-  variant: 'grid',
-  recordRoute: 'item',
-  actionLabel: 'catalogue.results.seeDatabaseEntry',
-  empty: isInstitutionView.value ? props.texts.emptyInstitution : props.texts.emptyPartner,
-  record: (item, { t }) => tile(item, t),
-  summary: ({ pageInfo, t }) => [
-    { count: pageInfo.total, value: t(isInstitutionView.value ? props.texts.institutionSummary : 'partner.item.objectsInSite') },
-  ],
+  ...legacyPaging,
+  summary: () => [],
+  record: legacyTile,
 }))
+
+// Legacy's header read its first record: the holder's name, and that
+// record's location and country.
+function header(rows) {
+  const first = rows[0]
+  if (!first) return null
+  const text = tr('items', first.id, defaultLang)
+  return {
+    name: labelOf('partners', partner.value?.id),
+    place: [text.location, labelOf('countries', first.country_id)].filter(Boolean).join(', '),
+  }
+}
 </script>
 
 <template>
-  <CatalogueResultsView v-if="partner" :spec="objectsSpec" class="mwnf-dxa-partner-objects">
-    <template #before>
-      <BackLink />
-      <PartnerPanel class="mwnf-dxa-partner-objects-header" variant="summary" :heading="1" :partner="view" />
-    </template>
+  <div v-if="partner" class="mwnf-dxa-exhibition-partner-objects">
+    <CatalogueResultsView :spec="spec" class="mwnf-dxa-partner-objects">
+      <template #before="{ matching, pageInfo, goToPage }">
+        <BackLink />
+        <div v-if="header(matching)" class="mwnf-dxa-exhibition-partner-objects__header">
+          <p class="mwnf-dxa-exhibition-partner-objects__name">{{ header(matching).name }}</p>
+          <p class="mwnf-dxa-exhibition-partner-objects__place">{{ header(matching).place }}</p>
+        </div>
+        <Pages class="mwnf-dxa-exhibition-pages--top" :page-info="pageInfo" @navigate="goToPage" />
+      </template>
 
-    <template #actions="{ pageInfo, goToPage }">
-      <Pagination class="mwnf-dxa-pages" :page-info="pageInfo" jump @navigate="goToPage" />
-    </template>
+      <template #records="{ rows }">
+        <div class="mwnf-dxa-exhibition-partner-objects__content">
+          <div class="mwnf-dxa-exhibition-partner-objects__grid">
+            <ObjectGrid v-if="rows.length" :rows="rows" family="exhibition" />
+            <I18nText v-else :keypath="isInstitutionView ? texts.emptyInstitution : texts.emptyPartner" />
+          </div>
+          <div class="mwnf-dxa-exhibition-partner-objects__profile">
+            <RouterLink :to="partnerRoute(partner)">
+              <span aria-hidden="true">➦</span> {{ $t(isInstitutionView ? texts.institutionProfileLabel : texts.partnerProfileLabel) }}
+            </RouterLink>
+          </div>
+        </div>
+      </template>
 
-    <template #after>
-      <div class="mwnf-dxa-profile-link-container">
-        <RouterLink class="mwnf-dxa-profile-link" :to="partnerRoute(partner)">
-          ➤ {{ isInstitutionView ? $t(props.texts.institutionProfileLabel) : $t(props.texts.partnerProfileLabel) }}
-        </RouterLink>
-      </div>
-    </template>
-  </CatalogueResultsView>
+      <template #pagination></template>
+
+      <template #after="{ pageInfo, goToPage }">
+        <Pages v-if="pageInfo.lastPage > 1" :page-info="pageInfo" @navigate="goToPage" />
+        <div v-else class="mwnf-dxa-exhibition-partner-objects__end"></div>
+      </template>
+    </CatalogueResultsView>
+  </div>
 </template>

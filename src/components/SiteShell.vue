@@ -183,7 +183,7 @@ function onSearch(term) {
 // ── The banner: every field optional, `title` falling back to `sectionTitles` ─
 
 function resolveBannerField(value) {
-  if (typeof value === 'function') return value({ section: section.value, locale: locale.value, t })
+  if (typeof value === 'function') return value({ section: section.value, locale: locale.value, t, route: router.currentRoute.value })
   if (typeof value === 'string') return t(value)
   return value
 }

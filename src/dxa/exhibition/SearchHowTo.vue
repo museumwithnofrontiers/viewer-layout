@@ -1,19 +1,16 @@
 <script setup>
-import TextPageView from '../../views/TextPageView.vue'
+import { I18nText } from '@museumwnf/viewer-core'
+import BackLink from '../../content/BackLink.vue'
 
-// Editorial page, shared by every exhibition (epic #1731, from colours/
-// water-in-islam — byte-identical). The essay is about MySQL boolean
-// full-text operators, which is why the collection composable implements
-// that grammar rather than a plain substring match. `back` points at the
-// collection entrance, the only page that links here — the view's `back`
-// is a fixed destination, not `router.back()`, so there is no
-// page-agnostic answer.
-const searchHowToSpec = {
-  body: 'catalogue.search.howToEssay',
-  back: { label: 'core.action.back', to: { name: 'collection' } },
-}
+// The search tips as legacy's SearchHowTo (exhibitions-client,
+// inventory-app#2379): Back, then the text at 20px in a column 60% of the
+// page wide. The text is about MySQL boolean full-text operators, which is
+// why the search runs that grammar rather than a plain substring match.
 </script>
 
 <template>
-  <TextPageView :spec="searchHowToSpec" class="mwnf-dxa-editorial" />
+  <div class="mwnf-dxa-exhibition-how-to">
+    <BackLink />
+    <I18nText class="mwnf-dxa-exhibition-how-to__text" dir="auto" keypath="catalogue.search.howToEssay" />
+  </div>
 </template>

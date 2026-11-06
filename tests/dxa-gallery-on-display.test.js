@@ -95,3 +95,17 @@ describe('galleryExhibitionSections', () => {
     expect(galleryExhibitionSections({ exhibition_references: [] }, 'en')).toEqual([])
   })
 })
+
+describe("galleryExhibitionSections on an exhibition's own sheet", () => {
+  it("opens the exhibition's own pages on its site, and the others' on theirs", () => {
+    const record = {
+      exhibition_references: [
+        online(qalam, titled('t4', { en: 'Islam in China' }), titled('s1', { en: 'Hui Muslims' }), 1, '/theme/4/1/1'),
+        online(table, titled('t1', { en: 'Ceramics' }), titled('s2', { en: 'Plates' }), 2, '/theme/1/2/1'),
+      ].map((ref, index) => (index === 0 ? { ...ref, site: 'with-brush-and-qalam' } : ref)),
+    }
+    const [tableSection, qalamSection] = galleryExhibitionSections(record, 'en', 'with-brush-and-qalam')
+    expect(qalamSection.links[0]).toEqual({ id: '/theme/4/1/1', label: expect.stringContaining('Islam in China'), to: '/theme/4/1/1' })
+    expect(tableSection.links[0]).toMatchObject({ href: siblingSiteUrl('the-table-is-set', '/theme/1/2/1'), external: true })
+  })
+})

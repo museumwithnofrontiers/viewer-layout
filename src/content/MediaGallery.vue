@@ -15,6 +15,8 @@ const props = defineProps({
   variant: { type: String, default: '' },
   /** The thumbnails are drawn from this many images; legacy's standalone sheet drew one for a single image. */
   thumbsFrom: { type: Number, default: 2 },
+  /** The photographer and copyright under the picture; without, only in the thumbnail's tooltip, as legacy's DXA sheet. */
+  creditCaption: { type: Boolean, default: true },
 })
 const { t } = useI18n()
 
@@ -87,9 +89,9 @@ onBeforeUnmount(() => document.removeEventListener('keydown', onKey))
           </button>
         </li>
       </ul>
-      <p v-if="image.caption || credit" class="mwnf-media__caption">
+      <p v-if="image.caption || (creditCaption && credit)" class="mwnf-media__caption">
         <span v-if="image.caption">{{ image.caption }}</span>
-        <span v-if="credit" class="mwnf-media__credit">{{ credit }}</span>
+        <span v-if="creditCaption && credit" class="mwnf-media__credit">{{ credit }}</span>
       </p>
       <div v-if="open" class="mwnf-lightbox" role="dialog" aria-modal="true" @click.self="closeLightbox">
         <button ref="closeButton" type="button" class="mwnf-lightbox__close" :aria-label="t('core.action.close')" @click="closeLightbox">✕</button>

@@ -65,10 +65,15 @@ function submit() {
   emit('search', term.value)
   term.value = ''
 }
+
+// A family that folds the search box away on a phone shows this button
+// there (the stylesheet; it is in the document at every width), and the box
+// opens under the header.
+const searchOpen = ref(false)
 </script>
 
 <template>
-  <header v-if="visible()" class="mwnf-header">
+  <header v-if="visible()" class="mwnf-header" :class="{ 'mwnf-header--search-open': searchOpen }">
     <slot>
       <div class="mwnf-header__inner">
         <div v-if="slots.brand || brand || brandLogo?.src || logos.length" class="mwnf-header__brand">
@@ -121,6 +126,20 @@ function submit() {
               >{{ link.label }}</a>
             </li>
           </ul>
+          <button
+            v-if="search"
+            type="button"
+            class="mwnf-header__search-toggle"
+            :aria-expanded="searchOpen ? 'true' : 'false'"
+            :aria-label="search.submitLabel ?? ''"
+            @click="searchOpen = !searchOpen"
+          >
+            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+              <circle cx="10" cy="10" r="7" fill="none" stroke="currentColor" stroke-width="2.5" />
+              <path d="M15 15l6.5 6.5" stroke="currentColor" stroke-width="3" stroke-linecap="round" />
+              <path :d="searchOpen ? 'M6.5 10h7' : 'M6.5 10h7M10 6.5v7'" stroke="currentColor" stroke-width="2" />
+            </svg>
+          </button>
           <form v-if="search" class="mwnf-header__search" role="search" @submit.prevent="submit">
             <input
               v-model="term"

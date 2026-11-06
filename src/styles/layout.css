@@ -155,6 +155,12 @@
   text-decoration: underline;
 }
 
+/* The search box's toggle: shown only by a family that folds the box away
+   on a phone (dxa-exhibition.css). */
+.mwnf-header__search-toggle {
+  display: none;
+}
+
 .mwnf-header__search {
   display: flex;
   gap: var(--mwnf-header-search-gap, 0.3125rem);

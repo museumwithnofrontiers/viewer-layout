@@ -1,34 +1,38 @@
 <script setup>
-import { computed, onMounted, ref, watch } from 'vue'
+import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { RouterLink, useRoute, useRouter } from 'vue-router'
-import { useI18n } from '@museumwnf/viewer-core'
-import EssayView from '../../views/EssayView.vue'
-import PictureGallery from '../PictureGallery.vue'
-import PictureNarrative from '../PictureNarrative.vue'
-import SourceCredit from '../../content/SourceCredit.vue'
-import { exhibitionSubtitle, exhibitionTitle, themes, tr } from './data.js'
-import { aboutSpec, themeNodeRoute, themeSpec } from './themeSpecs.js'
+import {
+  glossaryEntries, glossaryTermsForText, renderBlock, renderInline, useGlossaryPopup, useI18n,
+} from '@museumwnf/viewer-core'
+import GlossaryPopover from '../../content/GlossaryPopover.vue'
+import HoverZoom from './HoverZoom.vue'
+import { exhibitionSubtitle, exhibitionTitle, labelOf, themes, tr } from './data.js'
+import { themeNodeRoute } from './themeSpecs.js'
 
-// An exhibition's theme page — legacy's ThemeComponent — as an EssayView
-// spec (themeSpecs.js) for the shell: the heading, the quote and body with
-// the glossary, the tour's previous/next. The picture panel and the
-// narrative are PictureGallery/PictureNarrative (docs/theme-components.md).
-// `aboutMode` serves /about: the About theme under the exhibition's own
-// title and subtitle, its pictures in the side column as legacy's, but without
-// the tour (EssayView's `about` mode, keeping the panel).
+// An exhibition's theme page as legacy's ThemeComponent (exhibitions-client,
+// inventory-app#2379): the band of the node's pictures, scrolled under two
+// arrows when legacy's width allowed fewer than it holds, with the "Add
+// Related Works" switch under it; then, side by side, the chosen picture
+// (zoomed under the pointer, the whole of it on a click) with its caption
+// and the way to its database entry, and the text: the theme's title bar,
+// the sub-theme's title ("Overview" on a theme's own page), the quote, the
+// presentation, the picture's curated text, its related works, ← PREVIOUS /
+// NEXT → and "In This Theme". `aboutMode` serves /about: the About theme
+// under the exhibition's own title and subtitle.
 //
 // The address keeps legacy's shape, so a legacy link still resolves:
 //   /theme/:id/:subtheme?/:image?
 //     :id       display_order - 1
 //     :subtheme `overview`, or a 1-based index into the sub-themes
-//     :image    the selection's display_order, which the importer sets to
-//               the legacy theme_item id, so `?image=5` picks the picture
-//               it picked on the legacy site.
+//     :image    the selection's display_order (the importer sets it to the
+//               legacy theme_item id)
 const props = defineProps({
   aboutMode: { type: Boolean, default: false },
 })
 
-const { aboutTheme, owningTheme, romanFor, themeByRouteId, themeText, useThemePictures } = themes
+const {
+  aboutTheme, listedThemes, pictureById, pictureParent, themeByRouteId, themeText, useThemePictures,
+} = themes
 const { t, locale } = useI18n()
 const route = useRoute()
 const router = useRouter()
@@ -41,154 +45,281 @@ const subIndex = computed(() => {
   const n = Number(raw)
   return Number.isInteger(n) && n >= 1 ? n : null
 })
-
-const subTheme = computed(() => {
-  if (subIndex.value === null) return null
-  return (theme.value?.sub_themes ?? [])[subIndex.value - 1] ?? null
-})
+const subTheme = computed(() => (subIndex.value === null ? null : (theme.value?.sub_themes ?? [])[subIndex.value - 1] ?? null))
 
 /** The node whose text and pictures the page shows: a sub-theme, or the theme. */
 const node = computed(() => subTheme.value ?? theme.value)
-
-const spec = computed(() => (props.aboutMode ? aboutSpec : themeSpec))
-
 const pictures = useThemePictures(node)
 
-// ── Selection ──────────────────────────────────────────────────────────────
-//
-// The page's own state rather than EssayView's `items`/`selected`: a curated
-// picture is its own id space, several can share one parent with different
-// crops and texts, and one whose parent was not exported still renders.
+// ── The band: a related work shows only once the switch is on ──────────────
+
+const isRelatedWork = (picture) => (picture.backRelated ?? []).length > 0
+const relatedExists = computed(() => pictures.value.some(isRelatedWork))
+const showAll = ref(false)
+const shown = computed(() => (showAll.value ? pictures.value : pictures.value.filter((p) => !isRelatedWork(p))))
+
+// Legacy scrolled the band under two arrows past as many pictures as its
+// width allowed: nine, then one fewer at each of its steps.
+const STEPS = [[774, 4], [899, 5], [1024, 6], [1199, 7], [1299, 8]]
+const width = ref(typeof window === 'undefined' ? 1366 : window.innerWidth)
+const onResize = () => { width.value = window.innerWidth }
+onMounted(() => window.addEventListener('resize', onResize))
+onBeforeUnmount(() => window.removeEventListener('resize', onResize))
+const bandLimit = computed(() => (STEPS.find(([max]) => width.value <= max)?.[1] ?? 9))
+const showScroll = computed(() => !showAll.value && shown.value.length > bandLimit.value)
+const strip = ref(null)
+function scrollBand(direction) {
+  const thumb = strip.value?.querySelector('img')
+  const step = (thumb?.clientWidth ?? 125) + 50
+  strip.value?.scrollTo({ left: (strip.value.scrollLeft ?? 0) + direction * step, behavior: 'smooth' })
+}
+
+// A thumbnail's caption opens on the side with more room.
+const tipLeft = ref(false)
+function placeTip(event) {
+  tipLeft.value = event.clientX > window.innerWidth / 2
+}
+
+// ── The selection: one of the node's pictures, or one of its related works ─
 
 const selectedId = ref(null)
+const relatedIndex = ref(null)
 
 function defaultSelection() {
   const wanted = Number(route.params.image)
   const byOrder = pictures.value.find((p) => p.displayOrder === wanted)
-  return (byOrder ?? pictures.value[0])?.id ?? null
+  return (byOrder ?? shown.value[0] ?? pictures.value[0])?.id ?? null
 }
-
 function reset() {
   selectedId.value = defaultSelection()
+  relatedIndex.value = null
 }
-
 onMounted(reset)
-watch(() => [route.params.id, route.params.subtheme, props.aboutMode], reset)
+// One getter per source: a getter that returns a new array would call back on
+// any route change (a query, a replace), dropping the visitor's selection.
+watch([() => route.params.id, () => route.params.subtheme, () => props.aboutMode], () => {
+  showAll.value = false
+  reset()
+})
+watch(pictures, (list) => {
+  if (!list.some((p) => p.id === selectedId.value)) reset()
+})
 
 const selected = computed(() => pictures.value.find((p) => p.id === selectedId.value) ?? null)
+const selectedRelated = computed(() => (relatedIndex.value === null ? null : selected.value?.related?.[relatedIndex.value] ?? null))
+const shownPicture = computed(() => selectedRelated.value?.picture ?? selected.value)
 
-// A pick among the node's own pictures updates the address as legacy's
-// `?image=` did; a cross-theme related pick has no display order in this
-// node's address to write, so the address is left alone.
-function onSelect(id) {
-  selectedId.value = id
+function select(picture) {
+  selectedId.value = picture.id
+  relatedIndex.value = null
   if (props.aboutMode) return
-  const picture = pictures.value.find((p) => p.id === id)
-  if (!picture) return
   router.replace({
     name: 'theme',
-    params: {
-      id: route.params.id,
-      subtheme: route.params.subtheme ?? 'overview',
-      image: String(picture.displayOrder),
-    },
+    params: { id: route.params.id, subtheme: route.params.subtheme ?? 'overview', image: String(picture.displayOrder) },
   })
 }
 
-// ── Text ───────────────────────────────────────────────────────────────────
-//
-// The quote and the body are the spec's; the two-tier heading (the owning
-// theme's title, then the sub-theme's or "Overview") is the page's own.
+// The caption under the picture, from its record as legacy's theme items
+// carried it: the curated caption and the name, also known as, artist,
+// materials, date, dynasty, then museum, location, province and country.
+const lightbox = ref(false)
+const details = computed(() => {
+  const picture = shownPicture.value
+  if (!picture) return null
+  const raw = pictureById.value.get(picture.id)
+  const parent = raw ? pictureParent(raw) : null
+  const sheet = parent ? tr('items', parent.id, locale.value) : {}
+  const materials = Array.isArray(sheet.materials) ? sheet.materials.join(', ') : (sheet.materials ?? '')
+  return {
+    caption: selectedRelated.value ? '' : (picture.imageCaption ?? ''),
+    name: picture.name ?? '',
+    alsoKnownAs: sheet.alternate_name ? renderInline(sheet.alternate_name) : '',
+    artist: sheet.artist ? renderInline(sheet.artist) : '',
+    materials: materials ? renderInline(materials) : '',
+    date: sheet.dates ? renderInline(sheet.dates) : '',
+    dynasty: sheet.dynasty ? renderInline(sheet.dynasty) : '',
+    place: [sheet.holder || (parent ? labelOf('partners', parent.partner_id) : ''), sheet.location, sheet.province,
+      parent ? labelOf('countries', parent.country_id) : ''].filter(Boolean).join(', '),
+    to: picture.to ?? null,
+  }
+})
 
-const themeTitle = computed(() => themeText(theme.value, locale.value).title ?? theme.value?.internal_name ?? '')
+// ── The text ────────────────────────────────────────────────────────────────
 
-const heading = computed(() => (props.aboutMode ? exhibitionTitle(locale.value) : themeTitle.value))
-
+const nodeText = computed(() => (node.value ? themeText(node.value, locale.value) : {}))
+const heading = computed(() => (props.aboutMode
+  ? exhibitionTitle(locale.value)
+  : (themeText(theme.value, locale.value).title ?? theme.value?.internal_name ?? '')))
 const subHeading = computed(() => {
   if (props.aboutMode) return exhibitionSubtitle(locale.value)
   if (subTheme.value) return themeText(subTheme.value, locale.value).title ?? subTheme.value.internal_name ?? ''
   return t('exhibition.theme.overview')
 })
 
-// Always the owning theme's numeral — legacy never numbered a sub-theme on
-// its own page — and empty for the About theme.
-const roman = computed(() => romanFor(owningTheme(theme.value)?.display_order ?? 1))
-
-// The selected picture's own curated text in this node, keyed as its
-// caption is: `<node id>/<picture item id>`. PictureNarrative renders it.
 const contextualDescription = computed(() => {
-  if (!node.value?.id || !selected.value?.id) return ''
+  if (!node.value?.id || !selected.value?.id || selectedRelated.value) return ''
   return tr('themes', `${node.value.id}/${selected.value.id}`, locale.value).contextual_description ?? ''
 })
 
-const subThemeNav = computed(() =>
-  (theme.value?.sub_themes ?? []).map((sub, index) => ({
-    index: index + 1,
-    title: themeText(sub, locale.value).title ?? sub.internal_name ?? '',
-    to: themeNodeRoute(sub),
-  })),
-)
+const glossaryTerms = computed(() => glossaryTermsForText(
+  [nodeText.value.quote, nodeText.value.presentation, contextualDescription.value].filter(Boolean).join('\n\n'),
+  locale.value,
+))
+const glossaryList = computed(() => glossaryEntries(glossaryTerms.value))
+const { active, onClick, close } = useGlossaryPopup(glossaryTerms)
+const activeHtml = computed(() => (active.value ? renderBlock(active.value.definition, { breaks: true }) : ''))
 
+const quoteHtml = computed(() => (nodeText.value.quote ? renderInline(String(nodeText.value.quote), { glossary: glossaryList.value }) : ''))
+const bodyHtml = computed(() => (nodeText.value.presentation
+  ? renderBlock(String(nodeText.value.presentation), { breaks: true, glossary: glossaryList.value }) : ''))
+const justificationHtml = computed(() => (contextualDescription.value
+  ? renderBlock(String(contextualDescription.value), { breaks: true, glossary: glossaryList.value }) : ''))
+
+// Related works: on a sub-theme, the selected picture's own (legacy's
+// relatedItems), and for a related work the picture it relates to
+// (relatesTo), with the relation's words.
+const relatedItems = computed(() => (subIndex.value === null || !selected.value ? [] : selected.value.related ?? []))
+const relatesTo = computed(() => (selected.value && !selectedRelated.value ? (selected.value.backRelated ?? [])[0] ?? null : null))
+function showRelatesTo() {
+  const target = pictures.value.find((p) => p.id === relatesTo.value?.picture?.id)
+  if (target) select(target)
+}
+
+// ── The tour: About, then each theme's overview and its sub-themes ─────────
+
+const tour = computed(() => {
+  const stops = aboutTheme.value ? [aboutTheme.value] : []
+  for (const owner of listedThemes.value) stops.push(owner, ...(owner.sub_themes ?? []))
+  return stops
+})
+const tourIndex = computed(() => tour.value.findIndex((stop) => stop.id === node.value?.id))
+const previous = computed(() => (tourIndex.value > 0 ? themeNodeRoute(tour.value[tourIndex.value - 1]) : null))
+const next = computed(() => (tourIndex.value >= 0 && tourIndex.value < tour.value.length - 1 ? themeNodeRoute(tour.value[tourIndex.value + 1]) : null))
+
+const subThemeNav = computed(() => (props.aboutMode ? [] : (theme.value?.sub_themes ?? []).map((sub, index) => ({
+  index: index + 1,
+  title: themeText(sub, locale.value).title ?? sub.internal_name ?? '',
+  to: themeNodeRoute(sub),
+}))))
 const overviewTo = computed(() => (theme.value ? themeNodeRoute(theme.value) : null))
 
-// Decoration, not a text: written twice, in the tour's navigation and in the
-// About page's one-way link into the tour.
-const nextArrow = '→'
+watch(showAll, () => nextTick(() => strip.value?.scrollTo({ left: 0 })))
 </script>
 
 <template>
-  <EssayView v-if="node" :spec="spec" :id="node.id" class="mwnf-dxa-theme" :class="{ 'mwnf-dxa-theme--about': aboutMode }">
-    <template #header>
-      <div class="mwnf-dxa-theme__heading">
-        <span v-if="roman" class="mwnf-dxa-theme__numeral">{{ t('exhibition.theme.romanLabel') }} {{ roman }} ▪ </span>{{ heading }}
-      </div>
-      <div class="mwnf-dxa-theme__subheading">{{ subHeading }}</div>
-    </template>
-
-    <template #panel>
-      <PictureGallery :pictures="pictures" :selected-id="selectedId" @update:selected-id="onSelect" />
-    </template>
-
-    <template #after-body>
-      <PictureNarrative
-        v-if="!aboutMode"
-        :picture="selected"
-        :contextual-description="contextualDescription"
-        @select="onSelect"
-      />
-    </template>
-
-    <!-- The tour, then the sub-theme list, in legacy's order. About mode has
-         neither: EssayView's `about` drops this block, and its one-way link
-         into the tour is in `after` below. -->
-    <template #navigation="{ previous, next }">
-      <div class="mwnf-dxa-theme__tour">
-        <RouterLink v-if="previous" :to="themeNodeRoute(previous)" class="mwnf-dxa-theme__tour-link">← {{ t('core.pagination.previous') }}</RouterLink>
-        <span v-else></span>
-        <RouterLink v-if="next" :to="themeNodeRoute(next)" class="mwnf-dxa-theme__tour-link">{{ t('core.pagination.next') }} {{ nextArrow }}</RouterLink>
-      </div>
-
-      <div v-if="subThemeNav.length" class="mwnf-dxa-theme__subthemes">
-        <div class="mwnf-dxa-theme__subthemes-label">{{ t('exhibition.theme.inThisTheme') }}</div>
-        <div class="mwnf-dxa-theme__subtheme">
-          <RouterLink :to="overviewTo" :class="{ 'mwnf-dxa-theme__subtheme--current': subIndex === null }">{{ t('exhibition.theme.overview') }}</RouterLink>
+  <div v-if="node" class="mwnf-dxa-theme-page" :class="{ 'mwnf-dxa-theme-page--about': aboutMode }">
+    <div class="mwnf-dxa-theme-page__band">
+      <div class="mwnf-dxa-theme-page__thumbs-frame">
+        <div v-if="showScroll" class="mwnf-dxa-theme-page__arrows">
+          <button type="button" class="mwnf-dxa-theme-page__arrow" :aria-label="t('core.pagination.previous')" @click="scrollBand(-1)">‹</button>
+          <button type="button" class="mwnf-dxa-theme-page__arrow" :aria-label="t('core.pagination.next')" @click="scrollBand(1)">›</button>
         </div>
-        <div v-for="entry in subThemeNav" :key="entry.index" class="mwnf-dxa-theme__subtheme">
-          <RouterLink :to="entry.to" :class="{ 'mwnf-dxa-theme__subtheme--current': subIndex === entry.index }">{{ entry.index }}. {{ entry.title }}</RouterLink>
+        <div v-if="pictures.length" ref="strip" class="mwnf-dxa-theme-page__thumbs" :class="{ 'mwnf-dxa-theme-page__thumbs--scroll': showScroll }">
+          <div
+            v-for="picture in shown"
+            :key="picture.id"
+            class="mwnf-dxa-theme-page__thumb"
+            :class="{ 'mwnf-dxa-theme-page__thumb--selected': picture.id === selectedId, 'mwnf-dxa-theme-page__thumb--related': isRelatedWork(picture) }"
+          >
+            <img :src="picture.image" :alt="picture.imageAlt" @click="select(picture)" @mouseover="placeTip" />
+            <div class="mwnf-dxa-theme-page__tip" :class="{ 'mwnf-dxa-theme-page__tip--left': tipLeft }">
+              <div>
+                <template v-if="picture.imageCaption"><span v-html="renderInline(picture.imageCaption)"></span>, </template><i v-html="picture.name"></i><template v-if="picture.detail">, {{ picture.detail }}</template>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
-    </template>
-
-    <!-- Filling `after` replaces its default SourceCredit, so the credit is
-         drawn here too; About mode adds its one-way link into the tour. -->
-    <template #after="{ next }">
-      <div v-if="aboutMode && next" class="mwnf-dxa-theme__tour">
-        <span></span>
-        <RouterLink :to="themeNodeRoute(next)" class="mwnf-dxa-theme__tour-link">{{ t('core.pagination.next') }} {{ nextArrow }}</RouterLink>
+      <div v-if="relatedExists" class="mwnf-dxa-theme-page__controls">
+        <div class="mwnf-dxa-theme-page__control">
+          <label class="mwnf-dxa-theme-page__switch">
+            <input v-model="showAll" type="checkbox" />
+            <span class="mwnf-dxa-theme-page__slider"></span>
+          </label>
+          <span @click="showAll = !showAll">{{ showAll ? t('exhibition.theme.hideRelatedWorks') : t('exhibition.theme.addRelatedWorks') }}</span>
+        </div>
       </div>
-      <SourceCredit />
-    </template>
-  </EssayView>
+    </div>
+
+    <div class="mwnf-dxa-theme-page__body">
+      <div v-if="pictures.length" class="mwnf-dxa-theme-page__selected">
+        <div v-if="shownPicture" class="mwnf-dxa-theme-page__picture" @click="lightbox = true">
+          <HoverZoom :src="shownPicture.image" :alt="shownPicture.imageAlt" />
+        </div>
+        <div v-if="lightbox && shownPicture" class="mwnf-dxa-theme-page__lightbox" @click="lightbox = false">
+          <div class="mwnf-dxa-theme-page__lightbox-frame"><img :src="shownPicture.image" :alt="shownPicture.imageAlt" /></div>
+        </div>
+        <div v-if="details" class="mwnf-dxa-theme-page__details">
+          <div class="mwnf-dxa-theme-page__detail mwnf-dxa-theme-page__detail--title">
+            <template v-if="details.caption"><span v-html="renderInline(details.caption)"></span>, </template><span v-html="details.name"></span>
+          </div>
+          <div v-if="details.alsoKnownAs" class="mwnf-dxa-theme-page__detail">{{ t('sheet.field.alsoKnownAs') }}: <span v-html="details.alsoKnownAs"></span></div>
+          <div v-if="details.artist" class="mwnf-dxa-theme-page__detail" v-html="details.artist"></div>
+          <div v-if="details.materials" class="mwnf-dxa-theme-page__detail" v-html="details.materials"></div>
+          <div v-if="details.date" class="mwnf-dxa-theme-page__detail" v-html="details.date"></div>
+          <div v-if="details.dynasty" class="mwnf-dxa-theme-page__detail" v-html="details.dynasty"></div>
+          <div v-if="details.place" class="mwnf-dxa-theme-page__detail">{{ details.place }}</div>
+          <RouterLink v-if="details.to" :to="details.to" class="mwnf-dxa-theme-page__detail mwnf-dxa-theme-page__entry">{{ t('exhibition.theme.seeItemEntry') }}</RouterLink>
+        </div>
+      </div>
+      <div v-else class="mwnf-dxa-theme-page__empty">{{ t('exhibition.theme.additionalContent') }}</div>
+
+      <div class="mwnf-dxa-theme-page__content" @click="onClick">
+        <div class="mwnf-dxa-theme-page__theme-title">{{ heading }}</div>
+        <div class="mwnf-dxa-theme-page__title">{{ subHeading }}</div>
+        <template v-if="quoteHtml"><br /><div class="mwnf-dxa-theme-page__quote" v-html="quoteHtml"></div></template>
+        <template v-if="bodyHtml"><br /><div class="mwnf-dxa-theme-page__presentation" v-html="bodyHtml"></div></template>
+        <br />
+        <div v-if="justificationHtml" class="mwnf-dxa-theme-page__justification" v-html="justificationHtml"></div>
+
+        <div v-if="relatedItems.length" class="mwnf-dxa-theme-page__related">
+          <div class="mwnf-dxa-theme-page__related-heading">{{ t('exhibition.related.items') }}</div>
+          <div v-if="selectedRelated?.text" class="mwnf-dxa-theme-page__justification" v-html="renderInline(selectedRelated.text)"></div>
+          <div class="mwnf-dxa-theme-page__related-images">
+            <div class="mwnf-dxa-theme-page__related-image mwnf-dxa-theme-page__related-image--main">
+              <img :src="selected.image" :alt="selected.imageAlt" @click="relatedIndex = null" />
+            </div>
+            <div
+              v-for="(entry, index) in relatedItems"
+              :key="entry.picture.id"
+              class="mwnf-dxa-theme-page__related-image"
+              :class="{ 'mwnf-dxa-theme-page__thumb--selected': index === relatedIndex }"
+            >
+              <img :src="entry.picture.image" :alt="entry.picture.imageAlt" @click="relatedIndex = index" />
+            </div>
+          </div>
+        </div>
+
+        <div v-if="relatesTo" class="mwnf-dxa-theme-page__related">
+          <div class="mwnf-dxa-theme-page__related-heading">{{ t('exhibition.related.items') }}</div>
+          <div class="mwnf-dxa-theme-page__justification mwnf-dxa-theme-page__reciprocal">
+            <span v-if="relatesTo.reciprocalText" v-html="renderInline(relatesTo.reciprocalText)"></span>
+            <span v-else>{{ t('exhibition.related.reciprocal') }}</span>
+          </div>
+          <div class="mwnf-dxa-theme-page__related-image">
+            <img :src="relatesTo.picture.image" :alt="relatesTo.picture.imageAlt" @click="showRelatesTo" />
+          </div>
+        </div>
+
+        <div class="mwnf-dxa-theme-page__tour">
+          <RouterLink v-if="previous" :to="previous" class="mwnf-dxa-theme-page__tour-link mwnf-dxa-theme-page__tour-link--previous">&larr; {{ t('core.pagination.previous') }}</RouterLink>
+          <RouterLink v-if="next" :to="next" class="mwnf-dxa-theme-page__tour-link mwnf-dxa-theme-page__tour-link--next">{{ t('core.pagination.next') }} &rarr;</RouterLink>
+        </div>
+
+        <div v-if="subThemeNav.length" class="mwnf-dxa-theme-page__links">
+          <div class="mwnf-dxa-theme-page__links-inner">
+            <div class="mwnf-dxa-theme-page__links-label">{{ t('exhibition.theme.inThisTheme') }}</div>
+            <div><RouterLink :to="overviewTo" :class="{ 'mwnf-dxa-theme-page__link--current': subIndex === null }">{{ t('exhibition.theme.overview') }}</RouterLink></div>
+            <div v-for="entry in subThemeNav" :key="entry.index">
+              <RouterLink :to="entry.to" :class="{ 'mwnf-dxa-theme-page__link--current': subIndex === entry.index }">{{ entry.index }}. {{ entry.title }}</RouterLink>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <GlossaryPopover :term="active" :html="activeHtml" @close="close" />
+  </div>
 
   <div v-else class="mwnf-loader">{{ t('exhibition.theme.notInExhibition') }}</div>
 </template>

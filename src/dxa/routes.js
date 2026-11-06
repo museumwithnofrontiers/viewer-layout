@@ -4,6 +4,7 @@ import { partnerDetail as galleryPartnerDetail } from './gallery/data.js'
 import { partnerDetail as exhibitionPartnerDetail } from './exhibition/data.js'
 import GalleryAbout from './gallery/About.vue'
 import GalleryCredits from './gallery/Credits.vue'
+import ExhibitionCredits from './exhibition/Credits.vue'
 import GallerySearchHowTo from './gallery/SearchHowTo.vue'
 import GalleryPartners from './gallery/Partners.vue'
 import GallerySearchResults from './gallery/SearchResults.vue'
@@ -20,7 +21,6 @@ import ExhibitionTimelineGallery from './exhibition/TimelineGallery.vue'
 import ExhibitionCollectionResults from './exhibition/CollectionResults.vue'
 import ExhibitionCollectionSearch from './exhibition/CollectionSearch.vue'
 import ExhibitionPartnerObjects from './exhibition/PartnerObjects.vue'
-import TextPageView from '../views/TextPageView.vue'
 
 // The family pages a site used to carry itself (inventory-app#2053/#2054),
 // served when `pages: true` — loaded on their route, as the sites loaded
@@ -153,7 +153,7 @@ function exhibitionRoutes(config) {
       { path: '/about', name: 'about', component: ExhibitionAbout, meta: meta('about', 'themes') },
       { path: '/themes', name: 'themes', component: ExhibitionThemes, meta: meta('themes', 'themes') },
       { path: '/theme/:id/:subtheme?/:image?', name: 'theme', component: ExhibitionTheme, meta: meta('themes', 'themes', 'glossary', 'dynasties') },
-      { path: '/theme-gallery/:id', name: 'theme-gallery', component: ExhibitionThemeGallery, meta: meta('themes', 'themes') },
+      { path: '/theme-gallery/:id/:subtheme?', name: 'theme-gallery', component: ExhibitionThemeGallery, meta: meta('themes', 'themes') },
       {
         path: '/item/:id',
         name: 'item',
@@ -164,7 +164,7 @@ function exhibitionRoutes(config) {
       { path: '/related', name: 'related', component: ExhibitionRelatedContent, meta: meta('related', 'related_content') },
       { path: '/timeline', name: 'timeline', component: ExhibitionTimeline, meta: meta('timeline', 'timelines', 'timeline_events') },
       ...(config.creditsBody
-        ? [{ path: '/credits', name: 'credits', component: TextPageView, props: { spec: { body: config.creditsBody, back: true } }, meta: meta('credits') }]
+        ? [{ path: '/credits', name: 'credits', component: ExhibitionCredits, props: { bodyKey: config.creditsBody }, meta: meta('credits') }]
         : []),
     ]
     : []
@@ -214,12 +214,12 @@ function exhibitionRoutes(config) {
       component: ExhibitionTimelineGallery,
       meta: meta('timeline', 'timelines', 'timeline_events'),
     },
-    { path: '/collection', name: 'collection', component: ExhibitionCollectionSearch, meta: meta('collection', 'tags') },
+    { path: '/collection', name: 'collection', component: ExhibitionCollectionSearch, meta: meta('collection', 'tags', 'themes') },
     {
       path: '/collection-results',
       name: 'collection-results',
       component: ExhibitionCollectionResults,
-      meta: meta('collection', 'tags', 'timelines'),
+      meta: meta('collection', 'tags', 'timelines', 'themes'),
     },
   ]
 }

@@ -35,6 +35,8 @@ import { limitPictures } from './pictureLimit.js'
 //     shortDescriptionLabels: { view, hide },          // the toggle's words, entry names (default record.action.*)
 //     media: (record, ctx) => [{ url, alt, caption, photographer }],   // default: the record's `images`
 //     mediaVariant: '' | 'row',
+//     mediaThumbsFrom: 2,                              // the thumbnails from this many pictures (MediaGallery's `thumbsFrom`)
+//     mediaCreditCaption: true,                        // the credit under the picture, else only in the thumbnail's tooltip
 //     pictureLimit: 15 | (ctx) => number,              // at most this many pictures, as legacy's query fetched; 0 or absent: all
 //     spaced: true,                                    // a gap under the pictures and under the sheet
 //     credits: [{ field: 'author', label: 'sheet.field.preparedBy' }, …],
@@ -101,7 +103,15 @@ const {
   translations: [...(props.spec.translations ?? []), ...(peopleEntity ? [peopleEntity] : [])],
   attribution: props.spec.attribution ?? [],
 })
-const languageEntries = computed(() => languageLabels(languages.value))
+// A language the build does not declare (an exhibition built in English
+// only) is named in itself, from the package's languages, as legacy named
+// every language of the record; its code only when the package has no name.
+const languageRows = entityRef('languages')
+const languageEntries = computed(() => languageLabels(languages.value).map((entry) => {
+  if (entry.label !== entry.code.toUpperCase()) return entry
+  const own = (languageRows.value ?? []).find((row) => row.code === entry.code)?.names?.[entry.code]
+  return own ? { ...entry, label: own } : entry
+}))
 
 const { active, onClick, close } = useGlossaryPopup(terms)
 const activeHtml = computed(() => (active.value ? renderBlock(active.value.definition, { breaks: true }) : ''))
@@ -307,10 +317,10 @@ const rowSlots = computed(() => Object.keys(slots).filter((name) => !OWN_SLOTS.h
     <div class="mwnf-record__body">
       <div class="mwnf-record__main">
         <div v-if="$slots['after-media']" class="mwnf-record__media">
-          <MediaGallery v-if="images.length" :images="images" :variant="spec.mediaVariant ?? ''" />
+          <MediaGallery v-if="images.length" :images="images" :variant="spec.mediaVariant ?? ''" :thumbs-from="spec.mediaThumbsFrom ?? 2" :credit-caption="spec.mediaCreditCaption ?? true" />
           <slot name="after-media" v-bind="ctx" />
         </div>
-        <MediaGallery v-else-if="images.length" :images="images" :variant="spec.mediaVariant ?? ''" />
+        <MediaGallery v-else-if="images.length" :images="images" :variant="spec.mediaVariant ?? ''" :thumbs-from="spec.mediaThumbsFrom ?? 2" :credit-caption="spec.mediaCreditCaption ?? true" />
         <p v-if="!ready" class="mwnf-record__status">{{ t('core.status.loading') }}</p>
 
         <slot name="before-sheet" v-bind="ctx" />

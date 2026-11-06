@@ -48,6 +48,8 @@ const props = defineProps({
   homepageLabel: { type: String, default: 'partner.nav.homepage' },
   readMoreLabel: { type: String, default: 'partner.action.readMore' },
   viewObjectsLabel: { type: String, default: 'partner.action.viewObjects' },
+  /** The pictures' strip: MediaGallery's `thumbsFrom` and `creditCaption` (`full` only). */
+  media: { type: Object, default: () => ({}) },
   dir: { type: String, default: '' },
 })
 
@@ -225,6 +227,8 @@ const links = computed(() => [
         v-if="shows('pictures') && partner.pictures?.length"
         class="mwnf-partner-panel__pictures"
         :images="partner.pictures"
+        :thumbs-from="media.thumbsFrom ?? 2"
+        :credit-caption="media.creditCaption ?? true"
       />
       <div class="mwnf-partner-panel__panels">
         <component

@@ -1,4 +1,4 @@
-import { partnerView, useSiteConfig } from '@museumwnf/viewer-core'
+import { partnerView, renderInline, useSiteConfig } from '@museumwnf/viewer-core'
 import { chromePicture } from '../../chrome.js'
 import {
   useExhibitionData, useExhibitionCollection, useExhibitionTimeline, useExhibitionPartner,
@@ -29,7 +29,7 @@ export const {
   visiblePartnerById, isHiddenPartner,
   itemRoute, partnerRoute, partnerObjectsRoute,
   countryLabelFromCode,
-  exhibitionTitle, exhibitionSubtitle, exhibitionHeadline, bannerCaption,
+  exhibitionTitle, exhibitionSubtitle, exhibitionHeadline, bannerCaption, projectName,
 } = data
 
 // A chrome picture the package names by its legacy path: the site's own copy
@@ -42,6 +42,54 @@ export function chromeImage(path, size = 'hi_res') {
 export const {
   FACETS, haystack, tile, collectionResults, countryIdForCode,
 } = collection
+
+// Legacy's lists of an exhibition's records (dxa-api Items::GetSome, as the
+// galleries'): twenty tiles a page, by start date, the undated first, and
+// the records of one year by country, partner, then legacy key
+// (inventory-app#2379).
+const compareText = (a, b) => String(a ?? '').localeCompare(String(b ?? ''), 'en', { sensitivity: 'base' })
+function compareKeys(a, b) {
+  const left = String(a ?? '').split(':')
+  const right = String(b ?? '').split(':')
+  for (let i = 0; i < Math.max(left.length, right.length); i++) {
+    const x = left[i] ?? ''
+    const y = right[i] ?? ''
+    if (x === y) continue
+    if (/^\d+$/.test(x) && /^\d+$/.test(y)) return Number(x) - Number(y)
+    return x.localeCompare(y, 'en')
+  }
+  return 0
+}
+export function legacyOrder(a, b) {
+  return compareText(labelOf('countries', a.country_id), labelOf('countries', b.country_id))
+    || compareText(labelOf('partners', a.partner_id), labelOf('partners', b.partner_id))
+    || compareKeys(a.backward_compatibility, b.backward_compatibility)
+}
+export const legacyPaging = {
+  pageSize: 20,
+  sort: { undated: 'first', tiebreak: (a, b) => legacyOrder(a, b) },
+}
+
+/**
+ * A record as legacy's exhibition ObjectGrid tile showed it (the galleries'
+ * ObjectGrid `rows`): the name, the date cut at eighty characters, the
+ * holder, "location, country" and the project.
+ */
+export function legacyTile(item) {
+  const text = tr('items', item.id, defaultLang)
+  const date = text.dates ?? ''
+  return {
+    id: item.id,
+    image: item.images?.[0]?.url ?? '',
+    imageAlt: labelOf('items', item.id),
+    name: renderInline(text.name ?? item.internal_name ?? ''),
+    date: date.length > 80 ? `${date.slice(0, 80)}...` : date,
+    partner: labelOf('partners', item.partner_id),
+    place: [text.location, labelOf('countries', item.country_id)].filter(Boolean).join(', '),
+    project: projectName(item, defaultLang) ?? '',
+    to: itemRoute(item),
+  }
+}
 
 export { FACET_CATEGORIES, FACET_LABEL_KEYS, PAGE_SIZE, useFacetLabels } from '@museumwnf/viewer-core/dxa'
 
@@ -69,13 +117,19 @@ export const partnerViewCtx = {
 }
 
 export const partnerDetail = {
-  spec: { ...partnerSheetSpec, media: () => [] },
+  spec: { ...partnerSheetSpec, media: () => [], sourceCredit: false },
   visible: (id) => Boolean(visiblePartnerById(id)),
   // The English the family loads up front, under the record's own language:
   // the page draws at once, and switches when that language arrives.
   view: (partner, text) => partnerView(partner, { ...tr('partners', partner.id, defaultLang), ...text }, partnerViewCtx),
   labels: {
-    partner: { objects: 'partner.action.viewObjects', homepage: 'partner.nav.homepage' },
+    partner: { objects: 'exhibition.action.viewItems', homepage: 'exhibition.partner.homepage' },
     institution: { objects: 'exhibition.action.viewItems', homepage: 'exhibition.action.institutionHomepage' },
   },
+  // Legacy's exhibitions-client PartnerProfile (inventory-app#2379): a
+  // thumbnail for one picture too, the photographer and copyright only in
+  // its tooltip, and Google's map under its own line.
+  className: 'mwnf-dxa-exhibition-profile',
+  media: { thumbsFrom: 1, creditCaption: false },
+  legacyMap: { label: 'exhibition.partner.mapLabel' },
 }
