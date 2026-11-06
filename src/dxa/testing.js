@@ -493,14 +493,18 @@ export function describeGallerySmoke({ config, sharedTexts, ownTexts, manifest, 
       app.unmount()
     }, 60000)
 
-    it('renders a partner profile on the composed record view', async () => {
-      const { app, host } = await mountSite(`#/partner/${partner.id}`)
+    // Legacy's PartnerProfile (inventory-app#2423): "View Objects" beside the
+    // tabs, Google's map under "Museum on Google Maps", no source credit.
+    it('renders a partner profile as legacy', async () => {
+      const { app, host } = await mountSite(`#/partner/${partner.id}?lang=en`)
       // The name and the city arrive with the translations the view loads.
       await vi.waitFor(() => expect(host.textContent).toContain(partner.name), WAIT)
       await vi.waitFor(() => expect(host.textContent).toContain(partner.city), WAIT)
+      expect(host.querySelector('.mwnf-dxa-gallery-profile')).not.toBeNull()
       expect(host.querySelector('.mwnf-partner-map')).not.toBeNull()
-      // The credit renders whatever the page's own citation switch says.
-      expect(host.querySelector('.mwnf-source-credit')).not.toBeNull()
+      expect(host.querySelector('.mwnf-dxa-profile-map-label').textContent).toBe('Museum on Google Maps')
+      expect(host.querySelector('.mwnf-partner-panel__actions').textContent).toContain('View Objects')
+      expect(host.querySelector('.mwnf-source-credit')).toBeNull()
       app.unmount()
     }, 60000)
 
