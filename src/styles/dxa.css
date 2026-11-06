@@ -1315,8 +1315,12 @@
   margin: 0.625rem 0;
 }
 
-.mwnf-dxa-gallery-item .mwnf-record__aside .mwnf-dynasty-list__heading {
+/* "Islamic Dynasties / Period", "Related Audio" and "Related Videos": legacy's plain
+   `conditional-margin` lines, not the sidebar's underlined headings. */
+.mwnf-dxa-gallery-item .mwnf-record__aside .mwnf-dynasty-list__heading,
+.mwnf-dxa-gallery-item .mwnf-record__aside .mwnf-sheet-related__media .mwnf-sheet-related__heading {
   margin: 0.625rem 0 0;
+  text-decoration: none;
   font-size: 1rem;
   font-weight: 400;
   text-transform: none;

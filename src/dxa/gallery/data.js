@@ -1,5 +1,6 @@
 import { partnerView, useSiteConfig } from '@museumwnf/viewer-core'
 import { chromePicture } from '../../chrome.js'
+import { withLegacyTagOrder } from '../legacyFacets.js'
 import {
   useGalleryData, useGalleryCollection, useGalleryTimeline, useGalleryPartner, useGalleryItemDetail,
   FACET_CATEGORIES as DXA_FACET_CATEGORIES,
@@ -32,6 +33,18 @@ export const {
   pickSiblings, siblingUrl,
 } = data
 
+// The gallery's full name, as legacy's: the gallery's project name where the
+// gallery is a project of its own (carpets: "Discover Carpet Art", glass:
+// "Discover Glass Art"), and the gallery's name everywhere else — dxa-client's
+// `VUE_APP_DXA_FULL`, read from the package rather than written per site.
+// `pick` chooses the language from a names map; `english` is legacy's own
+// pick for the sentences it wrote in English on every page.
+export const english = (names) => names?.en ?? ''
+export function galleryTitleIn(pick) {
+  const project = manifest.projects?.[manifest.gallery?.project_id ?? gallery.value?.project_id]
+  return pick(project?.name) || pick(manifest.site?.names) || pick(gallery.value?.names)
+}
+
 // A chrome picture the package names by its legacy path: the site's own copy
 // under `theme/assets/chrome/` (`config.chrome`, inventory-app#2233 D7)
 // when it supplies one, else the legacy media host, at `size`.
@@ -40,8 +53,11 @@ export function chromeImage(path, size = 'hi_res') {
 }
 
 export const {
-  FACETS, haystack, tile, legacyOrder, collectionResults, countryIdForCode,
+  haystack, tile, legacyOrder, countryIdForCode,
 } = collection
+// The tag lists in legacy's order (dxa/legacyFacets.js), on the entrance and the results page.
+export const FACETS = withLegacyTagOrder(collection.FACETS)
+export const collectionResults = { ...collection.collectionResults, facets: FACETS }
 
 // Legacy's lists of objects (dxa-api): twenty tiles a page, and the records
 // of one year in legacy's order (viewer-core's `legacyOrder`) — what every

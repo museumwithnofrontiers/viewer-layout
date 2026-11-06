@@ -1,3 +1,14 @@
+## 3.64.0 (2026-11-06)
+
+Reads `@museumwnf/viewer-i18n` 6.11.0: `gallery.related.audio`/`videos` and `exhibition.sheet.relatedAudio`/`relatedVideos` (6.10.0), `gallery.notice.searchThe`/`database` and `gallery.collection.introBeforeName`/`introAfterName` (6.11.0). Found in C1's live check of Historical Cars and Glass against legacy (inventory-app#2423).
+
+### Changed
+
+- **The galleries' and exhibitions' item sheet** heads a record's audio "Related Audio" and its videos "Related Videos", each entry a ↗ line, as legacy's sheet does, in place of one "Audio / Video" section. `ItemDetailView`'s related spec takes `mediaHeadings: { audio, video }`; without it, the section stays as it was.
+- **The galleries' menu tip** is legacy's English sentence naming the gallery ("… to search the Historical Cars database."), and **the collection entrance's text** names it too, in italics ("start exploring the *Historical Cars* database"): the gallery's English full name (`galleryTitleIn` in `dxa/gallery/data.js`, legacy's `VUE_APP_DXA_FULL`) between two entries.
+- **The collection entrance's and results page's tag lists** (type, dynasty, subject, material) come in dxa-api's order, PHP's byte order, capitals first ("SUV" before "Sedan Chair"), on the galleries and the exhibitions (`dxa/legacyFacets.js`). The countries keep their order.
+- The family smoke suite checks a record's videos under "Related Videos" and the collection text naming the gallery.
+
 ## 3.63.1 (2026-11-06)
 
 ### Fixed

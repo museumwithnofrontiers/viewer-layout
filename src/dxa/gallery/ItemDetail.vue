@@ -15,6 +15,8 @@ const WORDS = {
   dynasties: 'gallery.related.dynasties',
   exhibitions: 'gallery.related.exhibitions',
   workingNumber: 'gallery.sheet.workingNumber',
+  relatedAudio: 'gallery.related.audio',
+  relatedVideos: 'gallery.related.videos',
 }
 </script>
 

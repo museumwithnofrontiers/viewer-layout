@@ -48,7 +48,8 @@ const texts = {
   'core.section.database': 'Database',
   'core.section.collection': 'Collection',
   'core.section.timeline': 'Timeline',
-  'gallery.collection.intro': 'Search this gallery.',
+  'gallery.collection.introBeforeName': 'Start exploring the',
+  'gallery.collection.introAfterName': 'database.',
   'gallery.collection.filterBy': 'Filter by:',
   'gallery.collection.selectCountry': 'Select Country',
   'gallery.collection.startDate': 'Start Date',
@@ -234,7 +235,10 @@ describe('GalleryCollectionSearch', () => {
     expect(lists[0].element.selectedOptions[0].text).toBe('Select Country')
     expect(lists[0].element.selectedOptions[0].disabled).toBe(true)
     expect(wrapper.findAll('.mwnf-dxa-gallery-collection__dates select').map((s) => s.element.options[0].text)).toEqual(['Start Date', 'End Date'])
-    expect(wrapper.text()).toContain('Search this gallery')
+    // Legacy's text names the gallery, in italics, between its two parts.
+    const intro = wrapper.find('.mwnf-dxa-gallery-collection__description')
+    expect(intro.text()).toMatch(/^Start exploring the .+ database\.$/)
+    expect(intro.find('em').text()).not.toBe('')
   })
 })
 

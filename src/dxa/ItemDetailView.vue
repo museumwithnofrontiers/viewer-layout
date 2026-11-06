@@ -259,6 +259,17 @@ function relatedInfo(record, ctx) {
     dynasties: s.dynasties ? s.dynasties(record, ctx.language, ctx) : null,
     dynastiesHeading: t(s.dynastiesHeading ?? 'record.dynasty.list'),
     media: s.media !== false ? (record.media ?? []) : [],
+    // `mediaHeadings: { audio, video }`: legacy's sheet heads a record's audio and its videos
+    // apart ("Related Audio", "Related Videos"), each entry a line like the sidebar's other
+    // links; without it, one "Audio / Video" section.
+    mediaGroups: s.mediaHeadings && s.media !== false
+      ? ['audio', 'video'].map((type) => ({
+        type,
+        heading: t(s.mediaHeadings[type]),
+        entries: (record.media ?? []).filter((entry) => entry?.url && entry.type === type
+          && (!entry.language || !ctx.language || entry.language === ctx.language)),
+      })).filter((group) => group.entries.length)
+      : null,
     onDisplayIn,
     database,
     overallDatabase,
@@ -357,7 +368,15 @@ function printSheet() {
               :dir="relCtx.dir"
             />
 
-            <RelatedMedia :media="rel.media" :language="relCtx.language" :descriptions="false" :dir="relCtx.dir" />
+            <template v-if="rel.mediaGroups">
+              <div v-for="group in rel.mediaGroups" :key="group.type" class="mwnf-sheet-related__media" :class="`mwnf-sheet-related__media--${group.type}`">
+                <p class="mwnf-sheet-related__heading">{{ group.heading }}</p>
+                <p v-for="entry in group.entries" :key="entry.url" class="mwnf-sheet-related__line">
+                  <a :href="entry.url" target="_blank" rel="noopener">↗ {{ entry.title || entry.url }}</a>
+                </p>
+              </div>
+            </template>
+            <RelatedMedia v-else :media="rel.media" :language="relCtx.language" :descriptions="false" :dir="relCtx.dir" />
 
             <div v-if="rel.onDisplayIn?.groups.length">
               <p class="mwnf-sheet-related__heading">{{ t('record.related.onDisplayIn') }}</p>

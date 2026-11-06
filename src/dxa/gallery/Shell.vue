@@ -4,7 +4,7 @@ import { useI18n, useSection, useSiteConfig } from '@museumwnf/viewer-core'
 import SiteShell from '../../components/SiteShell.vue'
 import { chromeSource } from '../../chrome.js'
 import {
-  chromeImage, defaultLang, gallery, itemById, labelOf, manifest, tr,
+  chromeImage, defaultLang, english, gallery, galleryTitleIn, itemById, labelOf, manifest, tr,
 } from './data.js'
 
 // A gallery's page chrome: the layout's `SiteShell`, composed from the
@@ -42,16 +42,8 @@ function named(names) {
   return names?.[locale.value] ?? names?.en ?? ''
 }
 
-// Legacy's title is the gallery's project name where the gallery is a
-// project of its own (carpets: "Discover Carpet Art", glass: "Discover Glass
-// Art"), and the gallery's name everywhere else — dxa-client's
-// `VUE_APP_DXA_FULL`, read from the package rather than written per site.
-const galleryTitle = computed(() => {
-  const project = manifest.projects?.[manifest.gallery?.project_id ?? gallery.value?.project_id]
-  return named(project?.name)
-    || named(manifest.site?.names)
-    || named(gallery.value?.names)
-})
+// Legacy's title: the gallery's full name (data.js `galleryTitleIn`).
+const galleryTitle = computed(() => galleryTitleIn(named))
 
 // A field `config.galleryShell` names wins, an empty one meaning "no line";
 // the header's title cell is an inner page's only, as legacy's was.
@@ -88,9 +80,14 @@ const bannerEyebrow = computed(() => (isHome.value ? override('bannerEyebrow', (
 const bannerTitle = computed(() => (isHome.value ? override('bannerTitle', () => galleryTitle.value) : undefined))
 
 // The menu's standing tip about the search bar; a site without the search
-// (the hub) sets `galleryShell.notice: false`.
+// (the hub) sets `galleryShell.notice: false`. Legacy wrote it in English on
+// every language's page, naming the gallery in English (dxa-client
+// NavigationComponent.vue, `VUE_APP_DXA_FULL`).
 const notice = computed(() => (
-  overrides.value.notice === false ? null : { title: t('gallery.notice.tip'), text: t('gallery.notice.databaseReplaced') }
+  overrides.value.notice === false ? null : {
+    title: t('gallery.notice.tip'),
+    text: `${t('gallery.notice.searchThe')} ${galleryTitleIn(english)} ${t('gallery.notice.database')}`,
+  }
 ))
 
 // The header mark: the site's own logo file (`config.brand`), else the text.

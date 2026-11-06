@@ -269,7 +269,9 @@ export function describeGallerySmoke({ config, sharedTexts, ownTexts, manifest, 
       const dates = host.querySelectorAll('.mwnf-dxa-gallery-collection__dates select')
       expect(dates).toHaveLength(2)
       expect(dates[0].options.length).toBeGreaterThan(1)
-      expect(host.textContent).toContain('this Gallery’s database')
+      // Legacy's text, naming the gallery: "… exploring the <name> database."
+      expect(host.querySelector('.mwnf-dxa-gallery-collection__description em')?.textContent).toBeTruthy()
+      expect(host.querySelector('.mwnf-dxa-gallery-collection__description').textContent).toContain(' database. A range of filters')
       app.unmount()
     }, 30000)
 
@@ -326,6 +328,22 @@ export function describeGallerySmoke({ config, sharedTexts, ownTexts, manifest, 
         const name = ref.exhibition.titles.en ?? Object.values(ref.exhibition.titles)[0]
         if (name) expect(lines.some((line) => line.includes(name))).toBe(true)
       }
+      app.unmount()
+    }, 60000)
+
+    // Legacy heads a record's videos "Related Videos" (and its audio "Related
+    // Audio"), each a ↗ line of the sidebar (inventory-app#2423).
+    it('lists a record\'s videos under "Related Videos"', async () => {
+      const [items] = await loadEntities(['items'])
+      const item = items.find((i) => i.media?.some((m) => m.type === 'video' && m.url && (!m.language || m.language === 'en')))
+      if (!item) return
+      const { app, host } = await mountSite(`#/item/${item.id}?lang=en`)
+      await vi.waitFor(() => expect(host.querySelector('.mwnf-sheet-related__media--video')).not.toBeNull(), WAIT)
+      const block = host.querySelector('.mwnf-sheet-related__media--video')
+      expect(block.querySelector('.mwnf-sheet-related__heading').textContent).toBe('Related Videos')
+      const video = item.media.find((m) => m.type === 'video' && m.url && (!m.language || m.language === 'en'))
+      expect([...block.querySelectorAll('a')].map((a) => a.getAttribute('href'))).toContain(video.url)
+      expect(host.querySelector('.mwnf-related-media')).toBeNull()
       app.unmount()
     }, 60000)
 

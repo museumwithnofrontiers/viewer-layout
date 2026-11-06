@@ -1,8 +1,8 @@
 <script setup>
 import { computed } from 'vue'
 import { useRouter } from 'vue-router'
-import { I18nText, useFacets, useI18n, yearBuckets } from '@museumwnf/viewer-core'
-import { items, FACETS, GALLERY_ERA_WORDS, GALLERY_FACET_CATEGORIES } from './data.js'
+import { renderBlock, useFacets, useI18n, yearBuckets } from '@museumwnf/viewer-core'
+import { english, galleryTitleIn, items, FACETS, GALLERY_ERA_WORDS, GALLERY_FACET_CATEGORIES } from './data.js'
 
 // The collection entrance as legacy's (dxa-client CollectionSearch.vue,
 // inventory-app#2423): "Filter by:" over a column of dropdowns, each opening
@@ -11,11 +11,16 @@ import { items, FACETS, GALLERY_ERA_WORDS, GALLERY_FACET_CATEGORIES } from './da
 // the names in English on every language's page; they are the gallery's own
 // entries.
 //
-// The text names "this Gallery" rather than the gallery inside its first
-// sentence: an entry takes nothing inserted into it.
+// The text, English on every page as legacy wrote it, names the gallery in its
+// first sentence ("the *Historical Cars* database"): an entry takes nothing
+// inserted into it, so the gallery's English full name goes between the text
+// before it and the text after it.
 
 const router = useRouter()
 const { t } = useI18n()
+const intro = computed(() => renderBlock(
+  `${t('gallery.collection.introBeforeName')} *${galleryTitleIn(english)}* ${t('gallery.collection.introAfterName')}`,
+))
 
 const options = useFacets(items, FACETS)
 const NAMES = {
@@ -65,6 +70,6 @@ function choose(key, value) {
         </div>
       </div>
     </div>
-    <I18nText class="mwnf-dxa-gallery-collection__description mwnf-prose" dir="auto" keypath="gallery.collection.intro" />
+    <div class="mwnf-dxa-gallery-collection__description mwnf-prose vc-text" dir="auto" v-html="intro"></div>
   </div>
 </template>
