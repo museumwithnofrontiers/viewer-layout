@@ -225,9 +225,9 @@ export function exhibitionConfig({
         about: 'core.section.about',
         credits: 'core.section.credits',
       },
-      // `all-objects` is legacy's sentinel for an empty search, and the value
-      // the results page matches on.
-      search: { route: 'search-results', key: 'q', placeholder: 'catalogue.search.placeholder', submitLabel: 'catalogue.search.submit', empty: 'all-objects' },
+      // `all-items` is the exhibitions' legacy sentinel for an empty search,
+      // and the value the results page matches on.
+      search: { route: 'search-results', key: 'q', placeholder: 'catalogue.search.placeholder', submitLabel: 'catalogue.search.submit', empty: 'all-items' },
       // Legacy's exhibitions put the menu above the banner on every page.
       placement: 'before-banner',
       socialLinks: mwnfSocialLinks,

@@ -1848,3 +1848,241 @@ a { color: inherit; }
 @media only screen and (max-width: 31.1875rem) {
   .mwnf-dxa-exhibition-results__theme-selects { display: flex; flex-direction: column; }
 }
+
+/* An exhibition's search results (exhibitions-client SearchResults.vue,
+   inventory-app#2379). */
+.mwnf-dxa-exhibition-search {
+  width: 100%;
+  background-color: var(--secondary-color);
+  color: var(--secondary-text-color);
+  font-size: 16px;
+  line-height: normal;
+}
+.mwnf-dxa-exhibition-search .mwnf-catalogue {
+  gap: 0;
+  min-height: 0;
+  background: none;
+}
+.mwnf-dxa-exhibition-search .mwnf-summary { margin: 0; }
+.mwnf-dxa-exhibition-search .mwnf-catalogue__body { display: block; padding: 0; }
+.mwnf-dxa-exhibition-search .mwnf-catalogue__results { width: 100%; padding: 0; }
+.mwnf-dxa-exhibition-search .mwnf-back-link__button {
+  font-weight: 700;
+  color: var(--main-color);
+}
+.mwnf-dxa-exhibition-search p { margin: 0; }
+.mwnf-dxa-exhibition-search__header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  padding: 0 50px;
+}
+.mwnf-dxa-exhibition-search__info {
+  display: flex;
+  justify-content: flex-start;
+  width: 50%;
+  padding-top: 10px;
+}
+.mwnf-dxa-exhibition-search__info span { font-weight: 700; }
+.mwnf-dxa-exhibition-search__box {
+  display: flex;
+  flex-direction: column;
+  width: 50%;
+}
+.mwnf-dxa-exhibition-search__box form {
+  display: flex;
+  justify-content: flex-end;
+  width: 100%;
+}
+.mwnf-dxa-exhibition-search__input {
+  width: 50%;
+  margin-right: 5px;
+  padding: 5px;
+  border: 2px solid var(--contrast-color);
+  border-radius: 4px;
+  background: #ffffff;
+  color: #000000;
+  font: inherit;
+  font-size: 16px;
+}
+.mwnf-dxa-exhibition-search__buttons { display: flex; }
+.mwnf-dxa-exhibition-search__button {
+  min-width: 70px;
+  padding: 5px 8px;
+  border: 2px solid var(--contrast-color);
+  border-radius: 4px;
+  background-color: var(--contrast-color);
+  color: var(--contrast-text-color);
+  font: inherit;
+  font-size: 16px;
+  cursor: pointer;
+}
+.mwnf-dxa-exhibition-search__button:first-child { margin-right: 5px; }
+.mwnf-dxa-exhibition-search__tips {
+  align-self: flex-end;
+  margin: 5px 0;
+}
+.mwnf-dxa-exhibition-search__tips a {
+  color: var(--secondary-text-color);
+  font-size: 14px;
+  font-weight: 700;
+}
+.mwnf-dxa-exhibition-search__tips a:hover,
+.mwnf-dxa-exhibition-search__result-text a:hover {
+  color: var(--contrast-color);
+  text-decoration: underline;
+}
+.mwnf-dxa-exhibition-search__results {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 0 50px;
+}
+.mwnf-dxa-exhibition-search__main {
+  width: 25%;
+  padding: 30px 0;
+}
+.mwnf-dxa-exhibition-search__main-photo { margin-bottom: 15px; }
+.mwnf-dxa-exhibition-search__main-photo img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  max-height: 400px;
+  object-fit: contain;
+}
+.mwnf-dxa-exhibition-search .mwnf-dxa-exhibition-search__main-holder { margin-top: 15px; }
+.mwnf-dxa-exhibition-search__list {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 15px 30px;
+  width: 75%;
+  padding: 30px 0 30px 40px;
+}
+.mwnf-dxa-exhibition-search__result {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  height: 120px;
+}
+.mwnf-dxa-exhibition-search__result a {
+  color: var(--secondary-text-color);
+  text-decoration: none;
+}
+.mwnf-dxa-exhibition-search__result-image img {
+  display: block;
+  width: 150px;
+  height: 120px;
+  object-fit: contain;
+  border: 1px solid rgba(112, 112, 112, 0.2);
+}
+.mwnf-dxa-exhibition-search__result-text {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  height: 100%;
+  padding-left: 10px;
+}
+.mwnf-dxa-exhibition-search__result-text a { margin-bottom: 5px; }
+.mwnf-dxa-exhibition-search__none { padding: 50px 50px 0; }
+.mwnf-dxa-exhibition-search__none p { margin: 0 0 15px; }
+.mwnf-dxa-exhibition-search__end { padding-bottom: 75px; }
+@media only screen and (max-width: 74.9375rem) {
+  .mwnf-dxa-exhibition-search__input { width: 60%; }
+  .mwnf-dxa-exhibition-search__button { width: 16%; }
+  .mwnf-dxa-exhibition-search__result { height: 175px; }
+  .mwnf-dxa-exhibition-search__result-image img { width: 120px; height: 175px; }
+}
+@media only screen and (max-width: 60.875rem) {
+  .mwnf-dxa-exhibition-search__header { flex-direction: column; align-items: flex-start; }
+  .mwnf-dxa-exhibition-search__info { width: auto; }
+  .mwnf-dxa-exhibition-search__box { width: auto; margin-top: 20px; }
+  .mwnf-dxa-exhibition-search__box form { justify-content: flex-start; }
+  .mwnf-dxa-exhibition-search__input { min-width: 225px; }
+  .mwnf-dxa-exhibition-search__tips { align-self: flex-start; }
+  .mwnf-dxa-exhibition-search__list { width: 100%; padding-left: 0; }
+  .mwnf-dxa-exhibition-search__result { height: 135px; }
+  .mwnf-dxa-exhibition-search__result-image img { width: 150px; height: 135px; }
+}
+@media only screen and (max-width: 53.0625rem) {
+  .mwnf-dxa-exhibition-search__result { height: 175px; }
+  .mwnf-dxa-exhibition-search__result-image img { height: 175px; }
+}
+@media only screen and (max-width: 45.25rem) {
+  .mwnf-dxa-exhibition-search__list {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding-bottom: 20px;
+  }
+  .mwnf-dxa-exhibition-search__result { width: 100%; height: 200px; margin-bottom: 20px; }
+  .mwnf-dxa-exhibition-search__result a { width: 38%; }
+  .mwnf-dxa-exhibition-search__result-image img { width: 100%; height: 200px; }
+  .mwnf-dxa-exhibition-search__result-text { width: 62%; }
+  .mwnf-dxa-exhibition-search__result-text a { width: 100%; }
+}
+@media only screen and (max-width: 37.4375rem) {
+  .mwnf-dxa-exhibition-search .mwnf-back-link { padding: 30px 30px 0; }
+  .mwnf-dxa-exhibition-search__header { padding: 0 30px; }
+  .mwnf-dxa-exhibition-search__results { padding: 0 30px; }
+  .mwnf-dxa-exhibition-search__none { padding: 30px 30px 0; }
+}
+@media only screen and (max-width: 31.1875rem) {
+  .mwnf-dxa-exhibition-search__box { width: 100%; }
+  .mwnf-dxa-exhibition-search__box form { flex-direction: column; justify-content: center; align-items: center; width: 100%; }
+  .mwnf-dxa-exhibition-search__input { min-width: 0; width: 100%; margin-right: 0; }
+  .mwnf-dxa-exhibition-search__buttons { justify-content: flex-start; width: 100%; margin-top: 10px; }
+  .mwnf-dxa-exhibition-search__button { padding: 4px 8px; }
+  .mwnf-dxa-exhibition-search__result { flex-direction: column; height: 250px; }
+  .mwnf-dxa-exhibition-search__result a { width: 100%; height: 65%; }
+  .mwnf-dxa-exhibition-search__result-image img { height: 100%; }
+  .mwnf-dxa-exhibition-search__result-text { width: 100%; height: 35%; margin-top: 10px; padding-left: 0; }
+  .mwnf-dxa-exhibition-search__result-text a { height: auto; }
+}
+@media only screen and (max-width: 24.9375rem) {
+  .mwnf-dxa-exhibition-search__result { height: 225px; }
+}
+
+/* The search tips (exhibitions-client SearchHowTo.vue): Back 50px tall with
+   its own padding, then the text at 20px, 60% of the page wide. */
+.mwnf-dxa-exhibition-how-to {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  background-color: var(--secondary-color);
+  color: var(--secondary-text-color);
+  font-size: 20px;
+  line-height: normal;
+}
+.mwnf-dxa-exhibition-how-to .mwnf-back-link {
+  height: 50px;
+  padding: 30px 50px 0;
+}
+.mwnf-dxa-exhibition-how-to .mwnf-back-link__button {
+  padding: 2px;
+  font-size: 16px;
+  font-weight: 700;
+}
+.mwnf-dxa-exhibition-how-to .mwnf-back-link__arrow { width: 24px; }
+.mwnf-dxa-exhibition-how-to__text {
+  width: 60%;
+  padding: 50px;
+}
+.mwnf-dxa-exhibition-how-to__text p { margin: 0; }
+.mwnf-dxa-exhibition-how-to__text p + p { margin-top: 1lh; }
+.mwnf-dxa-exhibition-how-to__text a { color: var(--secondary-text-color); }
+.mwnf-dxa-exhibition-how-to__text a:hover {
+  color: var(--contrast-color);
+  text-decoration: underline;
+}
+@media only screen and (max-width: 74.9375rem) { .mwnf-dxa-exhibition-how-to__text { width: 70%; } }
+@media only screen and (max-width: 60.875rem) { .mwnf-dxa-exhibition-how-to__text { width: 80%; } }
+@media only screen and (max-width: 53.0625rem) { .mwnf-dxa-exhibition-how-to__text { width: 88%; } }
+@media only screen and (max-width: 45.25rem) { .mwnf-dxa-exhibition-how-to__text { width: 100%; font-size: 16px; } }
+@media only screen and (max-width: 37.4375rem) {
+  .mwnf-dxa-exhibition-how-to .mwnf-back-link { padding: 30px 30px 0; }
+  .mwnf-dxa-exhibition-how-to__text { padding: 30px; }
+}
