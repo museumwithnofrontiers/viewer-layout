@@ -16,6 +16,8 @@ const WORDS = {
   dynasties: 'exhibition.sheet.dynasties',
   exhibitions: 'exhibition.sheet.exhibitions',
   workingNumber: 'exhibition.sheet.workingNumber',
+  relatedAudio: 'exhibition.sheet.relatedAudio',
+  relatedVideos: 'exhibition.sheet.relatedVideos',
 }
 const inBuild = (itemId) => itemById.value.get(itemId)
 </script>

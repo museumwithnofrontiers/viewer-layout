@@ -1,3 +1,12 @@
+## 3.64.0 (2026-11-06)
+
+Reads `@museumwnf/viewer-i18n` 6.10.0's `gallery.related.audio`/`videos` and `exhibition.sheet.relatedAudio`/`relatedVideos`.
+
+### Changed
+
+- **The galleries' and exhibitions' item sheet** heads a record's audio "Related Audio" and its videos "Related Videos", each entry a ↗ line, as legacy's sheet does, in place of one "Audio / Video" section (inventory-app#2423). `ItemDetailView`'s related spec takes `mediaHeadings: { audio, video }`; without it, the section stays as it was.
+- The family smoke suite checks a record's videos under "Related Videos".
+
 ## 3.63.1 (2026-11-06)
 
 ### Fixed

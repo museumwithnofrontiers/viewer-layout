@@ -58,6 +58,7 @@ const spec = computed(() => ({
     ...props.itemDetail.related,
     glossaryLabels: { tool: props.words.glossary },
     dynastiesHeading: props.words.dynasties,
+    mediaHeadings: { audio: props.words.relatedAudio, video: props.words.relatedVideos },
     onDisplayIn: {
       ...props.itemDetail.related?.onDisplayIn,
       exhibitionsHeading: props.words.exhibitions,

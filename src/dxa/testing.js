@@ -329,6 +329,22 @@ export function describeGallerySmoke({ config, sharedTexts, ownTexts, manifest, 
       app.unmount()
     }, 60000)
 
+    // Legacy heads a record's videos "Related Videos" (and its audio "Related
+    // Audio"), each a ↗ line of the sidebar (inventory-app#2423).
+    it('lists a record\'s videos under "Related Videos"', async () => {
+      const [items] = await loadEntities(['items'])
+      const item = items.find((i) => i.media?.some((m) => m.type === 'video' && m.url && (!m.language || m.language === 'en')))
+      if (!item) return
+      const { app, host } = await mountSite(`#/item/${item.id}?lang=en`)
+      await vi.waitFor(() => expect(host.querySelector('.mwnf-sheet-related__media--video')).not.toBeNull(), WAIT)
+      const block = host.querySelector('.mwnf-sheet-related__media--video')
+      expect(block.querySelector('.mwnf-sheet-related__heading').textContent).toBe('Related Videos')
+      const video = item.media.find((m) => m.type === 'video' && m.url && (!m.language || m.language === 'en'))
+      expect([...block.querySelectorAll('a')].map((a) => a.getAttribute('href'))).toContain(video.url)
+      expect(host.querySelector('.mwnf-related-media')).toBeNull()
+      app.unmount()
+    }, 60000)
+
     outsideReferenceTest(mountSite, manifest, sharedTexts)
 
     // The Source box takes the colour `projectColors` gives the item's
