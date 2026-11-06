@@ -92,13 +92,15 @@ export const partnerViewCtx = {
 }
 
 /**
- * The home page's featured partners: up to `count` of the partners legacy
- * flagged for the portal, in a fresh random order on every visit — legacy drew
- * them server-side, which a static package cannot replay — as `partnerView()`
- * view-models `FeaturedPartners` reads (inventory-app#2015).
+ * The home page's featured partners: up to `count` of the gallery's partners,
+ * drawn afresh on every visit, as `partnerView()` view-models
+ * `FeaturedPartners` reads (inventory-app#2015). Legacy's dxa-api
+ * `/partners/featured` drew them at random from every partner of the gallery,
+ * whatever their `portal_display` flag (the package's `featured`), so a
+ * gallery with no flagged partner still shows three (inventory-app#2405).
  */
 export function featuredPartners(count) {
-  const pool = (partners.value ?? []).filter((p) => p.featured)
+  const pool = [...(partners.value ?? [])]
   for (let i = pool.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1))
     ;[pool[i], pool[j]] = [pool[j], pool[i]]
