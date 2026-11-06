@@ -1,3 +1,10 @@
+## 3.65.1 (2026-11-06)
+
+### Fixed
+
+- **A gallery's home** draws its "Featured Partners" from every partner of the gallery, three at random on each visit, as legacy's dxa-api `/partners/featured` did. It drew only the partners flagged for the portal (`featured`), so a gallery with none flagged, such as Historical Cars, showed no carousel at all (inventory-app#2405).
+- The gallery smoke suite checks the carousel holds up to three partners.
+
 ## 3.65.0 (2026-11-06)
 
 Reads `@museumwnf/viewer-i18n` 6.12.0's `gallery.partner.homepage`, `.viewObjects` and `.mapLabel`.

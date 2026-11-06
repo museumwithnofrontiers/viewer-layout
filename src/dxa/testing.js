@@ -256,6 +256,17 @@ export function describeGallerySmoke({ config, sharedTexts, ownTexts, manifest, 
       app.unmount()
     }, 20000)
 
+    // Legacy's home drew three of the gallery's partners at random, whichever
+    // they were (dxa-api /partners/featured, inventory-app#2405).
+    it("draws up to three of the gallery's partners into the featured carousel", async () => {
+      const [partners] = await loadEntities(['partners'])
+      const { app, host } = await mountSite()
+      await vi.waitFor(() => expect(host.querySelector('.mwnf-featured-partners__name')).not.toBeNull(), WAIT)
+      // One bullet a partner, when there is more than one to turn through.
+      if (partners.length > 1) expect(host.querySelectorAll('.mwnf-featured-partners__bullet').length).toBe(Math.min(3, partners.length))
+      app.unmount()
+    }, 20000)
+
     collectionTest(mountSite, picks.collection, { gallery: true })
 
     it("renders the collection entrance as legacy's", async () => {
