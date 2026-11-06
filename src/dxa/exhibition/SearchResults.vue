@@ -79,7 +79,7 @@ function resetSearch() {
 
 // The record in focus: the first of the page until another is pointed at.
 const focus = ref(null)
-const narrowQuery = typeof window !== 'undefined' ? window.matchMedia('(max-width: 974px)') : null
+const narrowQuery = typeof window !== 'undefined' && typeof window.matchMedia === 'function' ? window.matchMedia('(max-width: 974px)') : null
 const narrow = ref(Boolean(narrowQuery?.matches))
 narrowQuery?.addEventListener('change', (event) => { narrow.value = event.matches })
 function main(rows) {

@@ -39,6 +39,8 @@ const texts = {
   'core.section.collection': 'Collection',
   'core.section.timeline': 'Timeline',
   'exhibition.collection.intro': 'Search this exhibition.',
+  'exhibition.collection.selectCountry': 'Select Country',
+  'exhibition.search.heading': 'Results of your search',
   'test.partnerObjects.emptyPartner': 'This partner holds nothing in this exhibition.',
   'test.partnerObjects.emptyInstitution': 'This institution holds nothing in this exhibition.',
   'test.partner.monumentsInExhibition': 'monument(s) in this exhibition',
@@ -54,10 +56,10 @@ beforeAll(async () => {
 })
 
 describe('ExhibitionSearchHowTo', () => {
-  it('renders the essay and a back link to the collection entrance', async () => {
+  it('renders the essay under a Back button', async () => {
     const { wrapper } = await mountPage(ExhibitionSearchHowTo, { messages: texts })
     expect(wrapper.text()).toContain('How the search operators work.')
-    expect(wrapper.html()).toContain('href="/collection"')
+    expect(wrapper.find('.mwnf-back-link__button').exists()).toBe(true)
   })
 })
 
@@ -148,7 +150,7 @@ describe('ExhibitionCollectionSearch', () => {
     const { wrapper } = await mountPage(ExhibitionCollectionSearch, { messages: texts })
     await settle(() => true, 5)
     expect(wrapper.text()).toContain('Search this exhibition.')
-    expect(wrapper.text()).toContain('Select a country')
+    expect(wrapper.text()).toContain('Select Country')
   })
 })
 

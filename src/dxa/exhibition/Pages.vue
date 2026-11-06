@@ -14,7 +14,7 @@ const props = defineProps({
 const emit = defineEmits(['navigate'])
 const { t } = useI18n()
 
-const narrower = (px) => typeof window !== 'undefined' && window.matchMedia(`(max-width: ${px}px)`).matches
+const narrower = (px) => typeof window !== 'undefined' && typeof window.matchMedia === 'function' && window.matchMedia(`(max-width: ${px}px)`).matches
 const lessThan499 = narrower(499)
 const [middle, lesserHalf, maximum] = narrower(599) ? [3, 2, 5] : narrower(724) ? [5, 4, 9] : narrower(849) ? [6, 5, 11] : [8, 7, 15]
 

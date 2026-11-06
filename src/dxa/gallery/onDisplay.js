@@ -13,7 +13,8 @@ import { renderInline, siblingSiteUrl } from '@museumwnf/viewer-core'
 //   exhibition has it, else in English; the exhibitions in alphabetical
 //   order leaving out "a", "an" and "the", as legacy sorted them.
 //
-// Each line links to the page of our site that shows the item.
+// Each line links to the page of our site that shows the item: on that
+// site itself (`ownSite`, an exhibition's own pages), a route of its own.
 
 const ITALIC = 'mwnf-on-display__theme'
 
@@ -21,7 +22,8 @@ const inline = (text) => renderInline(text ?? '')
 const english = (titled) => titled?.titles?.en ?? Object.values(titled?.titles ?? {})[0] ?? ''
 const italic = (html) => `<span class="${ITALIC}">${html}</span>`
 
-function link(ref, label) {
+function link(ref, label, ownSite) {
+  if (ownSite && ref.site === ownSite) return { id: ref.path, label, to: ref.path }
   return { id: `${ref.site}${ref.path}`, label, href: siblingSiteUrl(ref.site, ref.path), external: true }
 }
 
@@ -30,8 +32,11 @@ function sortKey(title) {
   return title.toLowerCase().split(' ').filter((word) => !['a', 'an', 'the'].includes(word)).join(' ')
 }
 
-/** The sections (OnDisplayIn's `sections`) for a record in the page language `lang`. */
-export function galleryExhibitionSections(record, lang) {
+/**
+ * The sections (OnDisplayIn's `sections`) for a record in the page language
+ * `lang`; `ownSite` is the slug of the site drawing them.
+ */
+export function galleryExhibitionSections(record, lang, ownSite = null) {
   const refs = record?.exhibition_references ?? []
   const sections = []
 
@@ -43,7 +48,7 @@ export function galleryExhibitionSections(record, lang) {
         inline(english(ref.exhibition)),
         italic(inline(english(ref.theme))),
         ...(ref.subtheme ? [italic(inline(english(ref.subtheme)))] : []),
-      ].join(' | '))),
+      ].join(' | '), ownSite)),
     })
   }
 
@@ -57,7 +62,7 @@ export function galleryExhibitionSections(record, lang) {
   ))
   for (const ref of ordered) {
     const caption = inline(title(ref.exhibition))
-    const line = link(ref, `${inline(title(ref.theme))} | ${italic(inline(title(ref.subtheme)))}`)
+    const line = link(ref, `${inline(title(ref.theme))} | ${italic(inline(title(ref.subtheme)))}`, ownSite)
     const last = sections[sections.length - 1]
     if (last?.exhibition === ref.exhibition.id) last.links.push(line)
     else sections.push({ exhibition: ref.exhibition.id, caption, links: [line] })

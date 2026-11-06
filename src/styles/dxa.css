@@ -1157,6 +1157,17 @@
   font-size: 1rem;
 }
 
+/* Legacy's notice above the sheet (`#info-eiac`): italic text, 25px above
+   the first label, no box. */
+.mwnf-dxa-gallery-item .mwnf-sheet-notice {
+  margin: 0 0 25px;
+  padding: 0;
+  background: none;
+  font-size: 90%;
+  font-style: italic;
+  line-height: normal;
+}
+
 .mwnf-dxa-gallery-item .mwnf-sheet--list .mwnf-sheet__label {
   margin: 0;
   font-size: 1rem;

@@ -107,6 +107,25 @@ const exhibitionReferences = (record) => (record.gallery_references ?? []).filte
 const artisticIntroductionUrl = (record) => projects.links(record.project_id)?.artisticIntroductionUrl ?? null
 const relatedDatabaseUrl = (record) => projects.links(record.project_id)?.relatedDatabaseUrl ?? null
 
+// Legacy named the database it linked to, not the record's project: an
+// Explore Islamic Art Collections record searched "Discover Islamic Art"
+// (dxa-client/exhibitions-client DatabaseItem.vue). The database is the site
+// at the address; a site legacy did not name keeps the project's name.
+const DATABASE_NAMES = {
+  'islamicart.museumwnf.org': 'core.project.islamicArt',
+  'baroqueart.museumwnf.org': 'core.project.baroqueArt',
+  'sharinghistory.museumwnf.org': 'core.project.sharingHistory',
+}
+function relatedDatabaseName(record) {
+  try {
+    const key = DATABASE_NAMES[new URL(relatedDatabaseUrl(record)).host]
+    if (key) return t(key)
+  } catch {
+    // not an address: the project's name below
+  }
+  return projects.label(record.project_id)
+}
+
 // ── The source-database/collection block, and the notice ───────────────────
 
 function beforeSheetInfo(record, ctx) {
@@ -217,7 +236,7 @@ function relatedInfo(record, ctx) {
     }
     : null
   const database = s.databaseLabel && relatedDatabaseUrl(record)
-    ? { url: relatedDatabaseUrl(record), label: t(s.databaseLabel), name: projects.label(record.project_id) }
+    ? { url: relatedDatabaseUrl(record), label: t(s.databaseLabel), name: relatedDatabaseName(record) }
     : null
   const overallDatabase = s.overallDatabase && s.overallDatabase !== false
     ? { label: t(s.overallDatabase.label), linkLabel: t(s.overallDatabase.linkLabel) }

@@ -25,11 +25,25 @@
  */
 @import url('https://fonts.googleapis.com/css2?family=Roboto+Condensed:ital,wght@0,300;0,400;0,700;1,400&family=Roboto:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap');
 
+/* The arrows the pages print before a link (↗, ➤, ➦), which Roboto Condensed
+   lacks: from a symbol font the system has, held within Roboto Condensed's
+   own line, so a line with an arrow keeps the normal height of legacy's lines
+   (legacy drew its arrows as icons), as the galleries' (dxa-gallery.css). */
+@font-face {
+  font-family: 'mwnf-arrows';
+  src: local('Segoe UI Symbol'), local('SegoeUISymbol'), local('Apple Symbols'), local('DejaVu Sans'),
+    local('Noto Sans Symbols 2'), local('Noto Sans Symbols'), local('Arial Unicode MS');
+  unicode-range: U+2197, U+27A4, U+27A6;
+  ascent-override: 75%;
+  descent-override: 15%;
+  line-gap-override: 0%;
+}
+
 /* ── Theme: the family's tokens, read from the palette ───────────────────── */
 :root {
   /* ---------- Global ---------- */
-  --mwnf-font-body: 'Roboto Condensed', 'Roboto', Arial, sans-serif;
-  --mwnf-font-heading: 'Roboto Condensed', 'Roboto', Arial, sans-serif;
+  --mwnf-font-body: 'Roboto Condensed', 'mwnf-arrows', 'Roboto', Arial, sans-serif;
+  --mwnf-font-heading: 'Roboto Condensed', 'mwnf-arrows', 'Roboto', Arial, sans-serif;
   --mwnf-line-height: 1.4;
   --mwnf-weight-heading: 700;
   --mwnf-color-text: var(--secondary-text-color);
@@ -256,6 +270,8 @@
   /* Legacy's item page sat on the secondary colour; its sheet links are the
      content links. */
   --mwnf-dxa-item-background: var(--secondary-color);
+  /* The language band above the sheet, on the main colour. */
+  --mwnf-dxa-languages-background: var(--main-color);
 
   /* ---------- The sponsor popup, the card numbers, the source lines ---------- */
   /* The popup on the secondary colour, as legacy's; the card numbers and the
@@ -2085,4 +2101,36 @@ a { color: inherit; }
 @media only screen and (max-width: 37.4375rem) {
   .mwnf-dxa-exhibition-how-to .mwnf-back-link { padding: 30px 30px 0; }
   .mwnf-dxa-exhibition-how-to__text { padding: 30px; }
+}
+
+/* The item sheet (exhibitions-client DatabaseItem.vue): the galleries' sheet
+   (dxa.css `.mwnf-dxa-gallery-item`) in the exhibition's colours, the
+   language band's words at 16px in the main text colour, the chosen one on
+   the contrast colour. */
+.mwnf-dxa-gallery-item .mwnf-languages__button {
+  color: var(--main-text-color);
+  font-size: 16px;
+}
+.mwnf-dxa-gallery-item .mwnf-languages__button--active {
+  color: var(--contrast-text-color);
+}
+/* Legacy's exhibition sheet set its sizes in pixels where the galleries'
+   took percentages: Back on its own 30px above and below, the related
+   column's headings at 20px and its description at 16px, the notice at
+   16px; the picture no taller than 325px, against its left edge. */
+.mwnf-dxa-exhibition-item > .mwnf-back-link {
+  height: auto;
+  padding-block: 30px;
+}
+.mwnf-dxa-exhibition-item > .mwnf-back-link .mwnf-back-link__button {
+  color: var(--main-color);
+  font-size: 16px;
+  line-height: normal;
+}
+.mwnf-dxa-exhibition-item .mwnf-record__aside .mwnf-sheet-related__heading { font-size: 20px; }
+.mwnf-dxa-exhibition-item .mwnf-record__aside .mwnf-sheet-related__description { font-size: 16px; }
+.mwnf-dxa-exhibition-item .mwnf-sheet-notice { font-size: 16px; }
+.mwnf-dxa-exhibition-item .mwnf-media__image {
+  max-height: 325px;
+  object-position: left;
 }

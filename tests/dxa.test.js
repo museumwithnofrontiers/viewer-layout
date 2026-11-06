@@ -36,9 +36,9 @@ describe('standardRoutes', () => {
       expect(routes[name], name).toBeTruthy()
     }
     expect(routes.theme.path).toBe('/theme/:id/:subtheme?/:image?')
-    expect(routes['theme-gallery'].path).toBe('/theme-gallery/:id')
+    expect(routes['theme-gallery'].path).toBe('/theme-gallery/:id/:subtheme?')
     expect(routes.related.meta.entities).toContain('related_content')
-    expect(routes.credits.props).toEqual({ spec: { body: 'waterInIslam.credits.body', back: true } })
+    expect(routes.credits.props).toEqual({ bodyKey: 'waterInIslam.credits.body' })
 
     expect(byName(standardRoutes('exhibition', { pages: true })).credits).toBeUndefined()
   })
