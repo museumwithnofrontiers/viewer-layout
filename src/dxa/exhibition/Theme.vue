@@ -95,7 +95,9 @@ function reset() {
   relatedIndex.value = null
 }
 onMounted(reset)
-watch(() => [route.params.id, route.params.subtheme, props.aboutMode], () => {
+// One getter per source: a getter that returns a new array would call back on
+// any route change (a query, a replace), dropping the visitor's selection.
+watch([() => route.params.id, () => route.params.subtheme, () => props.aboutMode], () => {
   showAll.value = false
   reset()
 })
