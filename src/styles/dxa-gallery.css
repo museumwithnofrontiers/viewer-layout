@@ -32,11 +32,26 @@
    italic face is narrower (inventory-app#2423, the partner badges). */
 @import url('https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@300;400;700&family=Roboto:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap');
 
+/* The arrows the pages print before a link (↗, ➤, ➦), which Roboto Condensed
+   lacks: from a symbol font the system has, held within Roboto Condensed's
+   own line, so a line with an arrow keeps the normal height of legacy's lines
+   (legacy drew its arrows as icons). Without one of these fonts, the browser
+   picks its own, as before. */
+@font-face {
+  font-family: 'mwnf-arrows';
+  src: local('Segoe UI Symbol'), local('SegoeUISymbol'), local('Apple Symbols'), local('DejaVu Sans'),
+    local('Noto Sans Symbols 2'), local('Noto Sans Symbols'), local('Arial Unicode MS');
+  unicode-range: U+2197, U+27A4, U+27A6;
+  ascent-override: 75%;
+  descent-override: 15%;
+  line-gap-override: 0%;
+}
+
 /* ── Theme: the family's tokens, read from the palette ───────────────────── */
 :root {
   /* ---------- Global ---------- */
-  --mwnf-font-body: 'Roboto Condensed', 'Roboto', Arial, sans-serif;
-  --mwnf-font-heading: 'Roboto Condensed', 'Roboto', Arial, sans-serif;
+  --mwnf-font-body: 'Roboto Condensed', 'mwnf-arrows', 'Roboto', Arial, sans-serif;
+  --mwnf-font-heading: 'Roboto Condensed', 'mwnf-arrows', 'Roboto', Arial, sans-serif;
   --mwnf-line-height: 1.4;
   --mwnf-weight-heading: 700;
   --mwnf-color-text: #1a1a1a;

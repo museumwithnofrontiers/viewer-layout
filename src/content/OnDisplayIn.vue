@@ -14,7 +14,10 @@ import SmartLink from './SmartLink.vue'
 // With no `heading`, the groups render alone, under a heading the page draws
 // itself (the DXA item sheet's related block does).
 const props = defineProps({
-  /** `[{ heading? (entry name, inline Markdown), links: [{ id?, label (inline HTML), to? | href?, external? }] }]` */
+  /**
+   * `[{ heading? (entry name, inline Markdown), links: [{ id?, label (inline HTML), to? | href?, external? }] }]`;
+   * a group may carry `sections: [{ caption? (inline HTML), links }]` instead of `links`.
+   */
   groups: { type: Array, default: () => [] },
   heading: { type: String, default: 'record.related.onDisplayIn' },
   /** An entry name, shown after a name that has no address. */
@@ -23,7 +26,8 @@ const props = defineProps({
 })
 const { t } = useI18n()
 
-const filled = computed(() => props.groups.filter((group) => group.links?.length))
+const sectionsOf = (group) => (group.sections ?? [{ links: group.links ?? [] }]).filter((section) => section.links?.length)
+const filled = computed(() => props.groups.map((group) => ({ ...group, parts: sectionsOf(group) })).filter((group) => group.parts.length))
 </script>
 
 <template>
@@ -36,17 +40,20 @@ const filled = computed(() => props.groups.filter((group) => group.links?.length
   >
     <div v-for="(group, g) in filled" :key="group.heading ?? g" class="mwnf-on-display__group">
       <p v-if="group.heading" class="mwnf-on-display__subheading" v-html="renderInline(t(group.heading))"></p>
-      <ul class="mwnf-on-display__list">
-        <li v-for="(link, i) in group.links" :key="link.id ?? i" class="mwnf-on-display__item">
-          <SmartLink v-if="link.to || link.href" :to="link.to" :href="link.href" :external="Boolean(link.external)">
-            <template v-if="link.external">↗ </template><span v-html="link.label"></span>
-          </SmartLink>
-          <template v-else>
-            <span v-html="link.label"></span>
-            <template v-if="pendingLabel">{{ ' ' }}<span class="mwnf-on-display__pending">{{ t(pendingLabel) }}</span></template>
-          </template>
-        </li>
-      </ul>
+      <template v-for="(section, s) in group.parts" :key="s">
+        <p v-if="section.caption" class="mwnf-on-display__caption" v-html="section.caption"></p>
+        <ul class="mwnf-on-display__list">
+          <li v-for="(link, i) in section.links" :key="link.id ?? i" class="mwnf-on-display__item">
+            <SmartLink v-if="link.to || link.href" :to="link.to" :href="link.href" :external="Boolean(link.external)">
+              <template v-if="link.external">↗ </template><span v-html="link.label"></span>
+            </SmartLink>
+            <template v-else>
+              <span v-html="link.label"></span>
+              <template v-if="pendingLabel">{{ ' ' }}<span class="mwnf-on-display__pending">{{ t(pendingLabel) }}</span></template>
+            </template>
+          </li>
+        </ul>
+      </template>
     </div>
   </component>
 </template>
