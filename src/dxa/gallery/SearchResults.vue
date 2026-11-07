@@ -4,6 +4,7 @@ import { RouterLink } from 'vue-router'
 import { useKeywordIndex } from '@museumwnf/viewer-core'
 import BackLink from '../../content/BackLink.vue'
 import CatalogueResultsView from '../../views/CatalogueResultsView.vue'
+import LegacyPages from '../LegacyPages.vue'
 import ObjectGrid from './ObjectGrid.vue'
 import { loadEnglish, legacyPaging, haystack, tile } from './data.js'
 
@@ -36,7 +37,6 @@ const searchResultsSpec = computed(() => ({
   recordRoute: 'item',
   actionLabel: 'catalogue.results.seeDatabaseEntry',
   record: (item, { t }) => tile(item, t),
-  pagination: { jump: true },
 
   summary: ({ filters, pageInfo, t, total }) => [
     { label: t('core.section.database'), value: isAllObjects(filters.q) ? t('catalogue.results.allObjects') : `“${filters.q}”` },
@@ -61,6 +61,14 @@ const searchResultsSpec = computed(() => ({
         <button type="submit" class="mwnf-dxa-refine-search-submit">{{ $t('catalogue.search.submit') }}</button>
       </form>
       <p class="mwnf-dxa-how-to"><RouterLink :to="{ name: 'search-how-to' }">{{ $t('catalogue.search.howTo') }} ›</RouterLink></p>
+    </template>
+
+    <!-- Legacy's pages (PagesComponent) above the tiles and below them. -->
+    <template #actions="{ pageInfo, goToPage }">
+      <LegacyPages family="gallery" class="mwnf-dxa-gallery-pages--top" :page-info="pageInfo" @navigate="goToPage" />
+    </template>
+    <template #pagination="{ pageInfo, goToPage }">
+      <LegacyPages family="gallery" :page-info="pageInfo" @navigate="goToPage" />
     </template>
 
     <!-- Was one sentence with two links threaded through it. The message

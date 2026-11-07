@@ -38,6 +38,8 @@ export { default as FeaturedPartners } from './FeaturedPartners.vue'
 export { default as SiblingGalleries } from './SiblingGalleries.vue'
 export { default as PopupLogo } from './PopupLogo.vue'
 export { default as PictureGallery } from './PictureGallery.vue'
+// Legacy's pages of records, both families' (`family`: `gallery` or `exhibition`).
+export { default as LegacyPages } from './LegacyPages.vue'
 export { default as PictureNarrative } from './PictureNarrative.vue'
 // One partner page for both families (inventory-app#2034); each family's
 // own half is its `partnerDetail`, the `family` prop `standardRoutes`

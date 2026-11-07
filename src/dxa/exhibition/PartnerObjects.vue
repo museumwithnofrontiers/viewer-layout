@@ -5,7 +5,7 @@ import { I18nText } from '@museumwnf/viewer-core'
 import BackLink from '../../content/BackLink.vue'
 import CatalogueResultsView from '../../views/CatalogueResultsView.vue'
 import ObjectGrid from '../gallery/ObjectGrid.vue'
-import Pages from './Pages.vue'
+import Pages from '../LegacyPages.vue'
 import {
   visiblePartnerById, partnerRoute, tr, defaultLang, labelOf, legacyPaging, legacyTile,
 } from './data.js'

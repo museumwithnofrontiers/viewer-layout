@@ -272,7 +272,7 @@ export function describeGallerySmoke({ config, sharedTexts, ownTexts, manifest, 
       app.unmount()
     }, 20000)
 
-    collectionTest(mountSite, picks.collection, { gallery: true })
+    collectionTest(mountSite, picks.collection, { pager: '.mwnf-dxa-gallery-pages' })
 
     it("renders the collection entrance as legacy's", async () => {
       const { app, host } = await mountSite('#/collection')
@@ -811,6 +811,8 @@ export function describeExhibitionSmoke({
       await vi.waitFor(() => expect(host.querySelector('.mwnf-dxa-theme-page__content')).not.toBeNull(), WAIT)
       // The numeral is in the section banner's "Theme I ▪ …", as legacy's SubBanner.
       await vi.waitFor(() => expect(host.querySelector('.mwnf-banner').textContent).toMatch(/ [IVX]+ ▪ /), WAIT)
+      // And in the theme's bar, as legacy's deployed client draws it: "IV ▪ Islam in China".
+      expect(host.querySelector('.mwnf-dxa-theme-page__theme-title').textContent.trim()).toMatch(/^[IVXLC]+ ▪ \S/)
       expect(host.querySelector('.mwnf-dxa-theme-page__selected, .mwnf-dxa-theme-page__empty')).not.toBeNull()
       expect(host.querySelector('.mwnf-dxa-theme-page__tour')).not.toBeNull()
       if (themePick?.pictureTitle) {

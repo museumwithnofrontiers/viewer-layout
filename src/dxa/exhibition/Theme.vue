@@ -31,7 +31,7 @@ const props = defineProps({
 })
 
 const {
-  aboutTheme, listedThemes, pictureById, pictureParent, themeByRouteId, themeText, useThemePictures,
+  aboutTheme, listedThemes, pictureById, pictureParent, romanFor, themeByRouteId, themeText, useThemePictures,
 } = themes
 const { t, locale } = useI18n()
 const route = useRoute()
@@ -147,9 +147,12 @@ const details = computed(() => {
 // ── The text ────────────────────────────────────────────────────────────────
 
 const nodeText = computed(() => (node.value ? themeText(node.value, locale.value) : {}))
-const heading = computed(() => (props.aboutMode
-  ? exhibitionTitle(locale.value)
-  : (themeText(theme.value, locale.value).title ?? theme.value?.internal_name ?? '')))
+// Legacy's bar names a theme with its numeral, as its list does: "IV ▪ Islam in China".
+const heading = computed(() => {
+  if (props.aboutMode) return exhibitionTitle(locale.value)
+  const name = themeText(theme.value, locale.value).title ?? theme.value?.internal_name ?? ''
+  return theme.value ? `${romanFor(theme.value.display_order)} ▪ ${name}` : name
+})
 const subHeading = computed(() => {
   if (props.aboutMode) return exhibitionSubtitle(locale.value)
   if (subTheme.value) return themeText(subTheme.value, locale.value).title ?? subTheme.value.internal_name ?? ''

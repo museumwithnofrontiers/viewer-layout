@@ -7,7 +7,7 @@ import FacetSelect from '../../content/FacetSelect.vue'
 import FilterPanel from '../../content/FilterPanel.vue'
 import CatalogueResultsView from '../../views/CatalogueResultsView.vue'
 import ObjectGrid from '../gallery/ObjectGrid.vue'
-import Pages from './Pages.vue'
+import Pages from '../LegacyPages.vue'
 import {
   items, itemById, collectionResults, legacyPaging, legacyTile,
 } from './data.js'

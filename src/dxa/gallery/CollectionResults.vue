@@ -5,7 +5,7 @@ import { I18nText, useI18n, yearBuckets } from '@museumwnf/viewer-core'
 import BackLink from '../../content/BackLink.vue'
 import FacetSelect from '../../content/FacetSelect.vue'
 import FilterPanel from '../../content/FilterPanel.vue'
-import Pagination from '../../content/Pagination.vue'
+import LegacyPages from '../LegacyPages.vue'
 import CatalogueResultsView from '../../views/CatalogueResultsView.vue'
 import ObjectGrid from './ObjectGrid.vue'
 import {
@@ -74,7 +74,7 @@ function showTimelineLink(filters) {
       </template>
 
       <template #actions="{ pageInfo, goToPage }">
-        <Pagination v-if="pageInfo.lastPage > 1" class="mwnf-dxa-pages" :page-info="pageInfo" jump @navigate="goToPage" />
+        <LegacyPages family="gallery" class="mwnf-dxa-gallery-pages--top" :page-info="pageInfo" @navigate="goToPage" />
       </template>
 
       <template #records="{ rows }">
@@ -83,7 +83,7 @@ function showTimelineLink(filters) {
       </template>
 
       <template #pagination="{ pageInfo, goToPage }">
-        <Pagination v-if="pageInfo.lastPage > 1" class="mwnf-dxa-pages" :page-info="pageInfo" jump @navigate="goToPage" />
+        <LegacyPages v-if="pageInfo.lastPage > 1" family="gallery" :page-info="pageInfo" @navigate="goToPage" />
         <div v-else class="mwnf-dxa-gallery-results__end"></div>
       </template>
 

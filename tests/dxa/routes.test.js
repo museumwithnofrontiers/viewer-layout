@@ -90,6 +90,15 @@ describe('standardRoutes("exhibition", config)', () => {
     const partners = routes.find((r) => r.name === 'partners')
     expect(partners.meta).toEqual({ section: 'partners', entities: ['exhibition', 'items', 'partners', 'countries'] })
   })
+
+  // /about is drawn by the theme page: it loads what a theme page loads, or its
+  // glossary terms go unmarked (the glossary's records are what is matched).
+  it('loads for /about what a theme page loads', () => {
+    const pages = standardRoutes('exhibition', { ...config, pages: true })
+    const about = pages.find((r) => r.name === 'about')
+    const theme = pages.find((r) => r.name === 'theme')
+    expect(about.meta.entities).toEqual(expect.arrayContaining(theme.meta.entities))
+  })
 })
 
 describe('standardRoutes with an unknown family', () => {

@@ -5,7 +5,7 @@ import { useI18n, withEraWords, yearBucketsFromRange } from '@museumwnf/viewer-c
 import BackLink from '../../content/BackLink.vue'
 import CatalogueResultsView from '../../views/CatalogueResultsView.vue'
 import ObjectGrid from '../gallery/ObjectGrid.vue'
-import Pages from './Pages.vue'
+import Pages from '../LegacyPages.vue'
 import { timelineGallerySpec, timelineSpec, legacyPaging, legacyTile, countryLabelFromCode } from './data.js'
 
 // The items of a period as legacy's TimelineGallery (exhibitions-client,

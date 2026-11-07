@@ -1,3 +1,22 @@
+## 3.67.0 (2026-11-07)
+
+Found in M13's final comparison of every page type with live legacy (inventory-app#2491). Reads `@museumwnf/viewer-i18n` 6.13.0's `gallery.pages.first`/`previous`/`next`/`last`.
+
+### Added
+
+- **`LegacyPages`** (`@museumwnf/viewer-layout/dxa`): legacy's pages of records, the same `PagesComponent` in both DXA clients, which was the exhibitions' own `Pages.vue`. Its `family` prop (`exhibition` by default, or `gallery`) names its words (`<family>.pages.*`) and its classes (`mwnf-dxa-<family>-pages`).
+
+### Changed
+
+- **A gallery's pages of records** (collection results, partner objects, search results, timeline gallery) use legacy's pager above and below the tiles: "<< First < Previous 1 2 … Next > Last >>", centred, 16px, underlined, the current page bold, with no page box. They drew the platform's pager with buttons and a "Page _ / N Go" box. The gallery smoke suite looks for `.mwnf-dxa-gallery-pages`.
+- **A gallery's header** centres its title on the page, whatever the widths of the mark and the tools beside it, in legacy's 30.4px regular weight. It sat about 35px to the left, at 28px bold.
+- **A gallery's menu** gives each entry an equal share of the bar, whatever the number of entries: the hub's four filled only two thirds of the bar.
+- **An exhibition's theme bar** names the theme with its numeral, as legacy's deployed client does ("IV ▪ Islam in China"). The exhibition smoke suite checks it.
+
+### Fixed
+
+- **An exhibition's About page** marks its glossary terms, as its theme pages do. Its route did not load the glossary records, which the terms are matched against.
+
 ## 3.66.1 (2026-11-07)
 
 ### Fixed
