@@ -10,7 +10,9 @@ Found in M13's final comparison of every page type with live legacy (inventory-a
 
 - **A gallery's pages of records** (collection results, partner objects, search results, timeline gallery) use legacy's pager above and below the tiles: "<< First < Previous 1 2 … Next > Last >>", centred, 16px, underlined, the current page bold, with no page box. They drew the platform's pager with buttons and a "Page _ / N Go" box. The gallery smoke suite looks for `.mwnf-dxa-gallery-pages`.
 - **A gallery's header** centres its title on the page, whatever the widths of the mark and the tools beside it, in legacy's 30.4px regular weight. It sat about 35px to the left, at 28px bold.
-- **A gallery's menu** gives each entry an equal share of the bar, whatever the number of entries: the hub's four filled only two thirds of the bar.
+- **A gallery's menu** gives each entry an equal share of the bar, whatever the number of entries: the hub's four filled only two thirds of the bar. The current page's entry keeps its tab's shade, as legacy's: it was darkened.
+- **A gallery's section banner** as legacy's SubBanner: the title in 30.4px regular weight on its normal line, 10px above and below it (it was bold on a taller line), the band 50px at least, the caption's two lines on their normal height. The caption stays at the band's end on a page with no title, such as the hub's galleries list, where it moved to the start.
+- **A gallery's pages of records** span the page above and below the tiles and the column beside them, centred, as legacy's.
 - **An exhibition's theme bar** names the theme with its numeral, as legacy's deployed client does ("IV ▪ Islam in China"). The exhibition smoke suite checks it.
 
 ### Fixed

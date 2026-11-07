@@ -355,8 +355,9 @@ a { color: inherit; }
 .mwnf-nav__notice {
   line-height: normal;
 }
+/* Legacy marks no entry as the current one: its tab keeps its shade. */
 .mwnf-nav__link--active {
-  background: rgba(0, 0, 0, 0.18);
+  background: none;
   text-decoration: none;
 }
 .mwnf-nav__notice-title {
@@ -376,6 +377,15 @@ a { color: inherit; }
 .mwnf-dxa-gallery-pages--top {
   margin-top: 30px;
   margin-bottom: 0;
+}
+/* The upper pages have the summary's line to themselves, centred on the
+   page as legacy's. */
+.mwnf-summary:has(.mwnf-dxa-gallery-pages--top) {
+  flex-wrap: wrap;
+}
+.mwnf-summary__actions:has(.mwnf-dxa-gallery-pages--top) {
+  flex: 1 0 100%;
+  justify-content: center;
 }
 .mwnf-dxa-gallery-pages__numbers {
   display: flex;
@@ -404,6 +414,23 @@ a { color: inherit; }
 /* The banner is edge to edge inside the column. */
 .mwnf-banner {
   padding-inline: 0;
+}
+/* The caption stays at the band's end when the page has no title, as on the
+   hub's galleries list. */
+.mwnf-banner--section .mwnf-banner__caption {
+  margin-inline-start: auto;
+  line-height: normal;
+}
+/* Legacy's band is 50px at least, its 10px above and below the title's own
+   (dxa-client SubBanner): with no title, the caption is centred in 50px. */
+.mwnf-banner--section .mwnf-banner__body {
+  min-height: 50px;
+  padding-block: 0;
+}
+.mwnf-banner--section .mwnf-banner__title {
+  padding-block: 10px;
+  font-weight: 400;
+  line-height: normal;
 }
 .mwnf-banner--strip .mwnf-banner__title {
   font-weight: 700;

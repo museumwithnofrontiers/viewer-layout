@@ -67,7 +67,9 @@ const searchResultsSpec = computed(() => ({
     <template #actions="{ pageInfo, goToPage }">
       <LegacyPages family="gallery" class="mwnf-dxa-gallery-pages--top" :page-info="pageInfo" @navigate="goToPage" />
     </template>
-    <template #pagination="{ pageInfo, goToPage }">
+    <!-- The lower pages span the page, under the tiles. -->
+    <template #pagination></template>
+    <template #after="{ pageInfo, goToPage }">
       <LegacyPages family="gallery" :page-info="pageInfo" @navigate="goToPage" />
     </template>
 

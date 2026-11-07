@@ -34,7 +34,9 @@ import { legacyPaging, timelineGallery } from './data.js'
       <p v-else class="mwnf-record-grid__empty">{{ empty }}</p>
     </template>
 
-    <template #pagination="{ pageInfo, goToPage }">
+    <!-- Legacy's lower pages span the page, under the tiles. -->
+    <template #pagination></template>
+    <template #after="{ pageInfo, goToPage }">
       <LegacyPages family="gallery" :page-info="pageInfo" @navigate="goToPage" />
     </template>
   </CatalogueResultsView>

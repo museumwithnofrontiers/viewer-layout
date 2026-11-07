@@ -45,9 +45,12 @@ const place = computed(() => [view.value?.city, view.value?.country].filter(Bool
         <ObjectGrid :rows="rows" />
       </template>
 
-      <template #pagination="{ pageInfo, goToPage }">
-        <LegacyPages v-if="pageInfo.lastPage > 1" family="gallery" :page-info="pageInfo" @navigate="goToPage" />
-        <div v-else class="mwnf-dxa-gallery-objects__end"></div>
+      <!-- Legacy's lower pages span the page, under the tiles and the partner's link. -->
+      <template #pagination="{ pageInfo }">
+        <div v-if="pageInfo.lastPage <= 1" class="mwnf-dxa-gallery-objects__end"></div>
+      </template>
+      <template #after="{ pageInfo, goToPage }">
+        <LegacyPages family="gallery" :page-info="pageInfo" @navigate="goToPage" />
       </template>
 
       <template #aside>
