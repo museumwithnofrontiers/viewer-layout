@@ -1,3 +1,14 @@
+## 3.66.0 (2026-11-07)
+
+Found in Epic B's recheck of Islamic Art, Baroque Art and Sharing History against legacy (inventory-app#2404).
+
+### Added
+
+- **The standalone banner's picture position**, `--mwnf-standalone-banner-position` (default `center`, as before). Legacy's three products set the picture with the `background` shorthand (`.banner-image`), so it sits at its top left: their tokens give `0 0`.
+- **The standalone footer's icons from the left**, `--mwnf-standalone-footer-social-left` (default `auto`) and `--mwnf-standalone-footer-social-direction` (default `inherit`). Islamic Art's Arabic sheet anchors them 65px from the left, still left to right (`style_ar.css` `.socialIcons`). Anchored at both sides, as that sheet does on a phone, the icons are centred between them, as legacy's inline icons in its centred footer.
+
+Nothing changes on a site that sets none of them.
+
 ## 3.65.1 (2026-11-06)
 
 ### Fixed
