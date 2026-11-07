@@ -114,7 +114,9 @@
   background-color: var(--mwnf-standalone-banner-background, transparent);
   background-repeat: no-repeat;
   background-size: cover;
-  background-position: center;
+  /* Legacy's `.banner-image` set the picture with the `background` shorthand,
+     so it sits at its top left: the products' tokens give `0 0`. */
+  background-position: var(--mwnf-standalone-banner-position, center);
 }
 
 /* The title runs across the band, on its own ground where the site has one
@@ -2039,6 +2041,14 @@
   position: absolute;
   top: var(--mwnf-standalone-footer-social-top, calc(var(--mwnf-footer-padding, 1.25rem) + 1px));
   right: var(--mwnf-standalone-footer-social-right, max(var(--mwnf-content-padding, 1rem), calc((100% - var(--mwnf-content-width, 64rem)) / 2)));
+  /* A site whose right-to-left pages anchor the icons at the left, still left
+     to right (Islamic Art's Arabic sheet: `.socialIcons { left: 65px }`). */
+  left: var(--mwnf-standalone-footer-social-left, auto);
+  direction: var(--mwnf-standalone-footer-social-direction, inherit);
+  /* Anchored at both sides (that sheet on a phone also sets `right`), the
+     icons are centred between them, as legacy's inline ones in its centred
+     footer. Anchored at one side, the box fits them and this does nothing. */
+  justify-content: center;
   gap: 0;
   margin: 0;
   padding: 0 15px;

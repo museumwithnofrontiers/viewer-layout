@@ -882,6 +882,7 @@
   /* --mwnf-standalone-home-banner-title-weight: 400;  Its title weight */
   /* --mwnf-standalone-home-banner-line-size: 1.125rem;  Its line under the title: size */
   /* --mwnf-standalone-banner-background: transparent;  Band colour under its picture */
+  /* --mwnf-standalone-banner-position: center;      Where its picture sits (legacy's products: 0 0) */
   /* --mwnf-standalone-banner-title-size: 1.875rem;  Band title size */
   /* --mwnf-standalone-banner-title-color: inherit;  Band title colour */
   /* --mwnf-standalone-banner-title-background: transparent;  The title's own strip across the band */
@@ -950,6 +951,8 @@
   /* --mwnf-standalone-home-footer-margin: 0;        Room under the home page's footer, in the page's colour */
   /* --mwnf-standalone-footer-social-top: calc(var(--mwnf-footer-padding) + 1px);  The icons' distance from the footer's top */
   /* --mwnf-standalone-footer-social-right: the content's right edge;  Their distance from the right */
+  /* --mwnf-standalone-footer-social-left: auto;     Their distance from the left (both set: centred between) */
+  /* --mwnf-standalone-footer-social-direction: inherit;  Their order (ltr keeps it on a right-to-left page) */
   /* --mwnf-standalone-footer-social-margin: 5px;    The space either side of each icon */
   /* --mwnf-standalone-inner-footer-social-margin: var(--mwnf-standalone-footer-social-margin);  That space on the inner pages */
   /* --mwnf-standalone-pill: transparent;            The partner profile's rounded tab and items bars */
