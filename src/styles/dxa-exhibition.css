@@ -1018,6 +1018,29 @@ a { color: inherit; }
   padding-top: 30px;
   background-color: var(--secondary-color);
 }
+/* Legacy's "Related Audio/Videos" (ThemeComponent
+   .theme-component-related-av-container): on the contrast colour, 8px in,
+   20px under what precedes it; the heading bold, 10px over the entries, each
+   5px over the next, its link in the contrast text colour. */
+.mwnf-dxa-theme-page__media {
+  margin-top: 20px;
+  padding: 8px;
+  background-color: var(--contrast-color);
+  color: var(--contrast-text-color);
+}
+.mwnf-dxa-theme-page__media-heading {
+  margin-bottom: 10px;
+  font-weight: 700;
+}
+.mwnf-dxa-theme-page__media-entry {
+  margin-bottom: 5px;
+}
+.mwnf-dxa-theme-page__media-entry a {
+  color: var(--contrast-text-color);
+}
+.mwnf-dxa-theme-page__media-entry p {
+  margin: 0;
+}
 .mwnf-dxa-theme-page__links-label {
   padding-top: 10px;
   font-weight: 700;

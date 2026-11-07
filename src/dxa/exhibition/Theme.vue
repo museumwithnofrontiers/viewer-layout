@@ -6,7 +6,7 @@ import {
 } from '@museumwnf/viewer-core'
 import GlossaryPopover from '../../content/GlossaryPopover.vue'
 import HoverZoom from './HoverZoom.vue'
-import { exhibitionSubtitle, exhibitionTitle, labelOf, themes, tr } from './data.js'
+import { exhibition, exhibitionSubtitle, exhibitionTitle, labelOf, themes, tr } from './data.js'
 import { themeNodeRoute } from './themeSpecs.js'
 
 // An exhibition's theme page as legacy's ThemeComponent (exhibitions-client,
@@ -206,6 +206,20 @@ const subThemeNav = computed(() => (props.aboutMode ? [] : (theme.value?.sub_the
 }))))
 const overviewTo = computed(() => (theme.value ? themeNodeRoute(theme.value) : null))
 
+// Legacy's "Related Audio/Videos" (ThemeComponent): the page's own audio and
+// video in the page's language, the exhibition's own on /about (legacy's
+// theme 0); the heading names what there is.
+const media = computed(() => {
+  const source = props.aboutMode ? exhibition.value?.media : node.value?.media
+  return (source ?? []).filter((entry) => !entry.language || entry.language === locale.value)
+})
+const audio = computed(() => media.value.filter((entry) => entry.type === 'audio'))
+const videos = computed(() => media.value.filter((entry) => entry.type === 'video'))
+const mediaHeading = computed(() => {
+  if (audio.value.length && videos.value.length) return t('exhibition.sheet.relatedAudioVideos')
+  return audio.value.length ? t('exhibition.sheet.relatedAudio') : t('exhibition.sheet.relatedVideos')
+})
+
 watch(showAll, () => nextTick(() => strip.value?.scrollTo({ left: 0 })))
 </script>
 
@@ -316,6 +330,14 @@ watch(showAll, () => nextTick(() => strip.value?.scrollTo({ left: 0 })))
             <div v-for="entry in subThemeNav" :key="entry.index">
               <RouterLink :to="entry.to" :class="{ 'mwnf-dxa-theme-page__link--current': subIndex === entry.index }">{{ entry.index }}. {{ entry.title }}</RouterLink>
             </div>
+          </div>
+        </div>
+
+        <div v-if="media.length" class="mwnf-dxa-theme-page__media">
+          <div class="mwnf-dxa-theme-page__media-heading">{{ mediaHeading }}</div>
+          <div v-for="entry in [...audio, ...videos]" :key="entry.url" class="mwnf-dxa-theme-page__media-entry">
+            <a :href="entry.url" target="_blank" rel="noopener"><span class="mwnf-dxa-theme-page__media-icon" aria-hidden="true">↗</span> {{ entry.title }}</a>
+            <p v-if="entry.description" v-html="renderInline(entry.description)"></p>
           </div>
         </div>
       </div>

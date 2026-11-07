@@ -1,9 +1,10 @@
 ## 3.67.0 (2026-11-07)
 
-Found in M13's final comparison of every page type with live legacy (inventory-app#2491). Reads `@museumwnf/viewer-i18n` 6.13.0's `gallery.pages.first`/`previous`/`next`/`last`.
+Found in M13's final comparison of every page type with live legacy (inventory-app#2491). Reads `@museumwnf/viewer-i18n` 6.13.0's `gallery.pages.first`/`previous`/`next`/`last` and 6.14.0's `exhibition.sheet.relatedAudioVideos`.
 
 ### Added
 
+- **An exhibition's "Related Audio/Videos"** on its theme pages and its About page, as legacy's ThemeComponent: the page's own audio and video in the page's language (a theme's or a sub-theme's `media` in `themes.json`, the exhibition's own in `exhibition.json` on About), each its title linked with its description under it, on the contrast colour; the heading names what there is. The packages carry them from the dxa-exhibition exporter that ships them (inventory-app#2492). The About smoke test checks the list where the package has one.
 - **`LegacyPages`** (`@museumwnf/viewer-layout/dxa`): legacy's pages of records, the same `PagesComponent` in both DXA clients, which was the exhibitions' own `Pages.vue`. Its `family` prop (`exhibition` by default, or `gallery`) names its words (`<family>.pages.*`) and its classes (`mwnf-dxa-<family>-pages`).
 
 ### Changed

@@ -908,10 +908,16 @@ export function describeExhibitionSmoke({
 
     // Legacy's AboutPage is its ThemeComponent on the About theme.
     it("renders about as legacy's theme page", async () => {
+      const [exhibition] = await loadEntities(['exhibition'])
       const { app, host } = await mountSite('#/about')
       await vi.waitFor(() => expect(host.querySelector('.mwnf-dxa-about .mwnf-dxa-theme-page__content')).not.toBeNull(), WAIT)
       expect(host.querySelector('.mwnf-dxa-theme-page__selected, .mwnf-dxa-theme-page__empty')).not.toBeNull()
       expect(host.textContent).toContain(config.siteName)
+      // The exhibition's own audio and video, legacy's "Related Audio/Videos" (theme 0).
+      const ownMedia = (exhibition?.media ?? []).filter((entry) => !entry.language || entry.language === 'en')
+      if (ownMedia.length) {
+        expect(host.querySelectorAll('.mwnf-dxa-theme-page__media-entry')).toHaveLength(ownMedia.length)
+      }
       app.unmount()
     }, 30000)
 
