@@ -11,6 +11,11 @@
 // package resolve from the site.
 import { describe, expect, it, vi } from 'vitest'
 import { loadEntities, mergeMessages } from '@museumwnf/viewer-core'
+import * as viewerCore from '@museumwnf/viewer-core'
+
+// A link to a legacy site that has a new one is drawn with the new site's
+// address from viewer-core 2.18.0 on (inventory-app#2482), as stored before.
+const drawnAs = (url) => (url && typeof viewerCore.toNewSite === 'function' ? viewerCore.toNewSite(url) : url)
 import {
   checkOfferedLanguages, checkRoutes, checkSectionMeta, checkTextsRendered, mountSite as mountOn,
 } from '@museumwnf/viewer-core/testing'
@@ -396,10 +401,10 @@ export function describeGallerySmoke({ config, sharedTexts, ownTexts, manifest, 
 
       expect(project.related_database_url).toBeTruthy()
       expect(host.textContent).toContain('Search Related Database')
-      expect(links().some((a) => a.getAttribute('href') === project.related_database_url)).toBe(true)
+      expect(links().some((a) => a.getAttribute('href') === drawnAs(project.related_database_url))).toBe(true)
       if (project.artistic_introduction_url) {
         expect(host.textContent).toContain('Artistic Introduction')
-        expect(links().some((a) => a.getAttribute('href') === project.artistic_introduction_url)).toBe(true)
+        expect(links().some((a) => a.getAttribute('href') === drawnAs(project.artistic_introduction_url))).toBe(true)
       } else {
         expect(host.textContent).not.toContain('Artistic Introduction')
       }
@@ -718,8 +723,8 @@ export function describeExhibitionSmoke({
         const project = manifest.projects[item.project_id]
         const { app, host } = await mountSite(`#/item/${item.id}`)
         await vi.waitFor(() => expect(host.querySelector('.mwnf-sheet-related')).not.toBeNull(), WAIT)
-        expect(!!host.querySelector(`a[href="${project.related_database_url}"]`)).toBe(!!project.related_database_url)
-        expect(!!host.querySelector(`a[href="${project.artistic_introduction_url}"]`)).toBe(!!project.artistic_introduction_url)
+        expect(!!host.querySelector(`a[href="${drawnAs(project.related_database_url)}"]`)).toBe(!!project.related_database_url)
+        expect(!!host.querySelector(`a[href="${drawnAs(project.artistic_introduction_url)}"]`)).toBe(!!project.artistic_introduction_url)
         expect(!!host.querySelector('.mwnf-sheet-notice')).toBe(noticeProjects.includes(item.project_id))
         // Every project needs its chip colour, or the chip falls back to the
         // layout's default swatch.

@@ -1,3 +1,9 @@
+## 3.66.1 (2026-11-07)
+
+### Fixed
+
+- **The DXA smoke suites** check the item sheet's related-database and Artistic Introduction links as the installed viewer-core draws them. From 2.18.0 on, a link to a legacy site that has a new one goes to the new site (inventory-app#2482); before that, as stored. A site's tests pass with either.
+
 ## 3.66.0 (2026-11-07)
 
 Found in Epic B's recheck of Islamic Art, Baroque Art and Sharing History against legacy (inventory-app#2404).
