@@ -1,3 +1,11 @@
+## 3.68.1 (2026-11-08)
+
+Found re-measuring M13's final comparison with live legacy (inventory-app#2491).
+
+### Fixed
+
+- **A gallery's item sheet** draws its related objects once, in the Related Content sidebar, as legacy's. A grid of those in the gallery was also drawn under the citation, "Related Items" before 3.68.0 and "Related Objects" since: `ItemDetailView` filled RecordView's `related` slot with nothing, and Vue draws a slot's fallback when it renders nothing. RecordView's `related` spec takes `inline: false` now, which hands the rows to the slots without drawing its own block; `ItemDetailView` sets it. The gallery smoke suite checks that the sheet draws no grid of its own.
+
 ## 3.68.0 (2026-11-08)
 
 A gallery's Related Objects as legacy's (inventory-app#2491). Reads `@museumwnf/viewer-i18n` 6.15.0's `gallery.related.objects`.

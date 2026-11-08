@@ -95,11 +95,16 @@ function familyLabel(label) {
   const own = `sheet.dxa.${label.slice(FIELD_LABEL.length)}`
   return t(own) === own ? label : own
 }
-const spec = computed(() => (
-  Array.isArray(props.spec.fields)
+// The related block is drawn in the sidebar (`aside` below), so RecordView
+// resolves its rows but does not draw its own block under the sheet. An empty
+// `#related` slot cannot do that: Vue draws a slot's fallback when the slot
+// renders nothing.
+const spec = computed(() => {
+  const base = Array.isArray(props.spec.fields)
     ? { ...props.spec, fields: props.spec.fields.map((field) => ({ ...field, label: familyLabel(field.label) })) }
     : props.spec
-))
+  return base.related === false ? base : { ...base, related: { ...base.related, inline: false } }
+})
 const projects = useProjects()
 
 const byName = (a, b) => (a.name ?? '').localeCompare(b.name ?? '')
@@ -336,9 +341,6 @@ function printSheet() {
         </template>
       </slot>
     </template>
-
-    <!-- RecordView's own related block gives way to the sidebar below. -->
-    <template #related></template>
 
     <template #aside="relCtx">
       <slot name="related" v-bind="relCtx">
