@@ -2,7 +2,7 @@
 import { computed } from 'vue'
 import { useRoute, RouterLink } from 'vue-router'
 import {
-  mdInline, mwnfLinks, siblingSiteUrl, sourceUrl, useDataPackage, useI18n, useProjects, useSiteConfig,
+  mdInline, mdStrip, mwnfLinks, siblingSiteUrl, sourceUrl, useCatalogue, useDataPackage, useI18n, useProjects, useSiteConfig,
 } from '@museumwnf/viewer-core'
 import BackLink from '../content/BackLink.vue'
 import RecordLanguages from '../content/RecordLanguages.vue'
@@ -30,7 +30,9 @@ const props = defineProps({
   dataGetter: { type: Function, default: null },
   /**
    * The family's entry names for legacy's words:
-   * `{ viewShortDescription, hideShortDescription, glossary, dynasties, exhibitions, workingNumber }`.
+   * `{ viewShortDescription, hideShortDescription, glossary, dynasties, exhibitions, workingNumber }`,
+   * and `relatedObjects` for a family that draws legacy's Related Objects
+   * (RelatedObjects.vue; a gallery).
    */
   words: { type: Object, required: true },
 })
@@ -40,6 +42,42 @@ const route = useRoute()
 const projects = useProjects()
 const pkg = useDataPackage()
 const siteConfig = useSiteConfig()
+const catalogue = useCatalogue()
+
+// A related object's text in the sheet's language, else English, else any:
+// legacy fell back to its main language.
+const inLanguage = (byLanguage, language) =>
+  byLanguage?.[language] ?? byLanguage?.en ?? Object.values(byLanguage ?? {})[0] ?? ''
+
+// Legacy's Related Objects: every related object a thumbnail. One in this
+// package opens here; one elsewhere opens on its project's site, from what
+// its `related_items` entry carries (inventory-app#2491).
+function objectTiles({ record, inPackage, references, ctx }) {
+  const language = ctx.language
+  const refs = new Map((record.related_items ?? []).map((ref) => [ref.id, ref]))
+  const justification = (id) => mdStrip(inLanguage(refs.get(id)?.justifications, language))
+  const here = inPackage.map((row) => ({
+    id: row.id,
+    image: row.image,
+    name: row.name,
+    country: catalogue.countryLabel(catalogue.itemById.value.get(row.id)?.country_id),
+    justification: justification(row.id),
+    to: row.to,
+  }))
+  const elsewhere = references.map((ref) => {
+    const home = projects.links(ref.project_id)?.homeSite
+    return {
+      id: ref.id,
+      image: ref.image ?? '',
+      name: mdInline(inLanguage(ref.names, language)),
+      country: catalogue.countryLabel(ref.country_id),
+      justification: justification(ref.id),
+      href: home ? siblingSiteUrl(home, `/item/${ref.id}`) : '',
+    }
+  })
+  const order = (record.related_items ?? []).map((ref) => ref.id)
+  return [...here, ...elsewhere].sort((a, b) => order.indexOf(a.id) - order.indexOf(b.id))
+}
 
 // The chip line above the sheet gives way to legacy's links under the
 // pictures; the citation's address is the home's, printed below. The
@@ -59,6 +97,7 @@ const spec = computed(() => ({
     glossaryLabels: { tool: props.words.glossary },
     dynastiesHeading: props.words.dynasties,
     mediaHeadings: { audio: props.words.relatedAudio, video: props.words.relatedVideos },
+    ...(props.words.relatedObjects ? { heading: props.words.relatedObjects, objectTiles } : {}),
     onDisplayIn: {
       ...props.itemDetail.related?.onDisplayIn,
       exhibitionsHeading: props.words.exhibitions,

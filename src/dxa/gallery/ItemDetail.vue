@@ -17,6 +17,7 @@ const WORDS = {
   workingNumber: 'gallery.sheet.workingNumber',
   relatedAudio: 'gallery.related.audio',
   relatedVideos: 'gallery.related.videos',
+  relatedObjects: 'gallery.related.objects',
 }
 </script>
 

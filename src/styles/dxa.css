@@ -1417,6 +1417,95 @@
   }
 }
 
+/* Legacy's Related Objects (RelatedObjects.vue): 64px thumbnails in rows,
+   10px apart, and on hover a tooltip to their left on the site's dark
+   colour, which legacy left out below 975px. */
+
+.mwnf-related-objects {
+  margin-bottom: 0.625rem;
+}
+
+.mwnf-related-objects__heading {
+  margin: 0 0 0.625rem;
+}
+
+.mwnf-related-objects__tiles {
+  display: flex;
+  flex-wrap: wrap;
+  margin: -0.625rem -0.625rem 0.625rem 0;
+  padding: 0;
+  list-style: none;
+}
+
+.mwnf-related-objects__tile {
+  position: relative;
+  width: 4rem;
+  height: 4rem;
+  margin: 0.3125rem 0.625rem 0.3125rem 0;
+}
+
+.mwnf-related-objects__link,
+.mwnf-related-objects__link img,
+.mwnf-related-objects__empty {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.mwnf-related-objects__link img {
+  object-fit: cover;
+}
+
+.mwnf-related-objects__name-sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+.mwnf-related-objects__tooltip {
+  position: absolute;
+  inset-block-end: 0;
+  inset-inline-end: 110%;
+  z-index: 70;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 4.25rem;
+  padding: 0.3125rem 0.625rem;
+  border-radius: 6px;
+  background: color-mix(in srgb, var(--theme-dark, #333333) 95%, transparent);
+  color: #ffffff;
+  font-size: 90%;
+  text-align: center;
+  white-space: nowrap;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.mwnf-related-objects__tooltip::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  inset-inline-start: 100%;
+  transform: translateY(-50%);
+  border: 5px solid transparent;
+  border-inline-start-color: color-mix(in srgb, var(--theme-dark, #333333) 95%, transparent);
+}
+
+.mwnf-related-objects__tile:hover .mwnf-related-objects__tooltip {
+  visibility: visible;
+}
+
+@media only screen and (max-width: 60.875rem) {
+  .mwnf-related-objects__tooltip {
+    display: none;
+  }
+}
+
 /* An exhibition's theme pages. The colours are the exhibition's own theme
    colours (legacy's main/secondary/contrast): the page's ground and text,
    the heading band, and the hover of the tour links. */
