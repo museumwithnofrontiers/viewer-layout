@@ -3,16 +3,15 @@ import { I18nText } from '@museumwnf/viewer-core'
 import BackLink from '../../content/BackLink.vue'
 import SmartLink from '../../content/SmartLink.vue'
 import PartnerListView from '../../views/PartnerListView.vue'
-import { partnerBadge } from '../partnerBadge.js'
+import { exhibitionPartnerBadge as badge } from '../partnerBadge.js'
 import { partnerObjectsRoute, partnerListSpec } from './data.js'
 
 // An exhibition's partners list as legacy's (exhibitions-client
 // PartnersPage.vue, inventory-app#2379): the galleries' page (Back and the
 // country-order toggle on one line, the introduction and the countries in a
 // centred column, each partner its name and city, its project badge, Read
-// more · View Items, and its logo) in the exhibition's colours and sizes. An
-// institution (a monument's) is badged "Partner Institution (Monuments)" or
-// "Affiliate Institution (Monuments)" rather than by a project. A partner
+// more · View Items, and its logo) in the exhibition's colours and sizes. The
+// badge is `exhibitionPartnerBadge`'s (dxa/partnerBadge.js). A partner
 // holding nothing here (MWNF-384) keeps its row without View Items. The
 // grouping and the order are PartnerListView's, from `partnerListSpec`
 // (dxa/exhibition/data.js); legacy sorted a partner listed once per project
@@ -23,19 +22,6 @@ const spec = {
   objectsRoute: partnerObjectsRoute,
   orderToggle: false,
   tiebreak: (partner) => partner.own_project?.name ?? '',
-}
-
-const STATUS = { partner: 'exhibition.partners.statusPartner', affiliate: 'exhibition.partners.statusAffiliate' }
-
-function badge(partner) {
-  if (partner.type === 'institution') {
-    return {
-      name: '',
-      status: partner.level === 'partner' ? 'exhibition.partners.institutionPartner' : 'exhibition.partners.institutionAffiliate',
-      tone: 'institution',
-    }
-  }
-  return partnerBadge(partner, STATUS)
 }
 </script>
 

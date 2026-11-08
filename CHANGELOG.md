@@ -1,3 +1,10 @@
+## 3.67.1 (2026-11-08)
+
+Found in M13's final comparison with live legacy (inventory-app#2491).
+
+### Fixed
+
+- **An exhibition's partners list** badges a Sharing History partner by its project ("*Sharing History* Partner"), as legacy's `/partners` did. The package types it as an institution, so it took the badge of a monument's institution ("Affiliate Institution (Monuments)"). Only a record of legacy's institutions table, the source of its `/institutions`, takes that badge now: `exhibitionPartnerBadge` (`dxa/partnerBadge.js`).
 ## 3.67.0 (2026-11-07)
 
 Found in M13's final comparison of every page type with live legacy (inventory-app#2491). Reads `@museumwnf/viewer-i18n` 6.13.0's `gallery.pages.first`/`previous`/`next`/`last` and 6.14.0's `exhibition.sheet.relatedAudioVideos`.
