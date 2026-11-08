@@ -538,6 +538,17 @@ describe('RecordView', () => {
     expect(wrapper.find('.mwnf-related').exists()).toBe(false)
   })
 
+  it('hands the aside the related rows without drawing its own block when `related.inline` is false', async () => {
+    const { wrapper } = await mountView(RecordView, {
+      props: { spec: { ...spec, related: { ...spec.related, inline: false } }, id: 'o1' },
+      slots: { aside: '<template #aside="{ records }"><p class="own-aside">{{ records.map((r) => r.name).join("+") }}</p></template>' },
+      route: '/objects/o1',
+    })
+    await settle(() => wrapper.text().includes('Prepared by'))
+    expect(wrapper.find('.own-aside').text()).toBe('Mosque lamp')
+    expect(wrapper.find('.mwnf-related').exists()).toBe(false)
+  })
+
   it("gives a header of the site's own the record's languages and the switch", async () => {
     const { wrapper } = await mountView(RecordView, {
       props: { spec, id: 'o1' },

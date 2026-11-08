@@ -187,6 +187,8 @@ function relatedObjectsTest(mountSite, manifest, sharedTexts) {
       expect(hrefs.some((href) => href.endsWith(`/item/${outside.id}`))).toBe(true)
     }
     expect(host.querySelector('.mwnf-sheet-related__references')).toBeNull()
+    // Only in the sidebar: the sheet draws no grid of its own under the citation.
+    expect(host.querySelector('.mwnf-record__main .mwnf-related')).toBeNull()
     app.unmount()
   }, 60000)
 }

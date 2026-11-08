@@ -45,7 +45,8 @@ import { limitPictures } from './pictureLimit.js'
 //     workingNumberLabel: 'sheet.field.workingNumber',   // the entry naming it
 //     citation: { project: '<project id>' | (record, ctx) => string, permalink: true | false | string,
 //                 format: (ctx, { permalink, year }) => html } | false,   // the site's own sentence, escaped HTML
-//     related: { variant: 'list' | 'grid', heading: 'record.related.items', record: (entry, ctx) => row } | false,
+//     related: { variant: 'list' | 'grid', heading: 'record.related.items', record: (entry, ctx) => row,
+//                inline: true | false } | false,   // inline: false — the rows reach the slots, the block is not drawn
 //     back: { label: 'record.action.backToResults', to | href },
 //     title: (ctx) => inline HTML,                     // default: the record's name
 //   }
@@ -377,7 +378,7 @@ const rowSlots = computed(() => Object.keys(slots).filter((name) => !OWN_SLOTS.h
 
         <slot name="related" v-bind="{ ...ctx, records: relatedRows, outside: related.outside }">
           <RelatedRecords
-            v-if="relatedSpec"
+            v-if="relatedSpec && relatedSpec.inline !== false"
             :heading="t(relatedSpec.heading ?? 'record.related.items')"
             :records="relatedRows"
             :variant="relatedSpec.variant ?? 'list'"
