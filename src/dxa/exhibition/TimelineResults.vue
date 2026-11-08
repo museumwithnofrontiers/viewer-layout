@@ -4,7 +4,7 @@ import { RouterLink, useRoute } from 'vue-router'
 import { withEraWords, yearBucketsFromRange } from '@museumwnf/viewer-core'
 import TimelineResultsView from '../../views/TimelineResultsView.vue'
 import BackLink from '../../content/BackLink.vue'
-import Pages from './Pages.vue'
+import Pages from '../LegacyPages.vue'
 import { timelineSpec } from './data.js'
 
 // The timeline results as legacy's TimelineResults (exhibitions-client,

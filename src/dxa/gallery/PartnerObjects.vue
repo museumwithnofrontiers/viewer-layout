@@ -1,7 +1,7 @@
 <script setup>
 import { computed } from 'vue'
 import { useRoute, RouterLink } from 'vue-router'
-import Pagination from '../../content/Pagination.vue'
+import LegacyPages from '../LegacyPages.vue'
 import CatalogueResultsView from '../../views/CatalogueResultsView.vue'
 import BackLink from '../../content/BackLink.vue'
 import ObjectGrid from './ObjectGrid.vue'
@@ -38,16 +38,19 @@ const place = computed(() => [view.value?.city, view.value?.country].filter(Bool
       </template>
 
       <template #actions="{ pageInfo, goToPage }">
-        <Pagination v-if="pageInfo.lastPage > 1" class="mwnf-dxa-pages" :page-info="pageInfo" jump @navigate="goToPage" />
+        <LegacyPages family="gallery" class="mwnf-dxa-gallery-pages--top" :page-info="pageInfo" @navigate="goToPage" />
       </template>
 
       <template #records="{ rows }">
         <ObjectGrid :rows="rows" />
       </template>
 
-      <template #pagination="{ pageInfo, goToPage }">
-        <Pagination v-if="pageInfo.lastPage > 1" class="mwnf-dxa-pages" :page-info="pageInfo" jump @navigate="goToPage" />
-        <div v-else class="mwnf-dxa-gallery-objects__end"></div>
+      <!-- Legacy's lower pages span the page, under the tiles and the partner's link. -->
+      <template #pagination="{ pageInfo }">
+        <div v-if="pageInfo.lastPage <= 1" class="mwnf-dxa-gallery-objects__end"></div>
+      </template>
+      <template #after="{ pageInfo, goToPage }">
+        <LegacyPages family="gallery" :page-info="pageInfo" @navigate="goToPage" />
       </template>
 
       <template #aside>

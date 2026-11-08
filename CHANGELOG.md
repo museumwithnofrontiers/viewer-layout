@@ -1,3 +1,25 @@
+## 3.67.0 (2026-11-07)
+
+Found in M13's final comparison of every page type with live legacy (inventory-app#2491). Reads `@museumwnf/viewer-i18n` 6.13.0's `gallery.pages.first`/`previous`/`next`/`last` and 6.14.0's `exhibition.sheet.relatedAudioVideos`.
+
+### Added
+
+- **An exhibition's "Related Audio/Videos"** on its theme pages and its About page, as legacy's ThemeComponent: the page's own audio and video in the page's language (a theme's or a sub-theme's `media` in `themes.json`, the exhibition's own in `exhibition.json` on About), each its title linked with its description under it, on the contrast colour; the heading names what there is. The packages carry them from the dxa-exhibition exporter that ships them (inventory-app#2492). The About smoke test checks the list where the package has one.
+- **`LegacyPages`** (`@museumwnf/viewer-layout/dxa`): legacy's pages of records, the same `PagesComponent` in both DXA clients, which was the exhibitions' own `Pages.vue`. Its `family` prop (`exhibition` by default, or `gallery`) names its words (`<family>.pages.*`) and its classes (`mwnf-dxa-<family>-pages`).
+
+### Changed
+
+- **A gallery's pages of records** (collection results, partner objects, search results, timeline gallery) use legacy's pager above and below the tiles: "<< First < Previous 1 2 … Next > Last >>", centred, 16px, underlined, the current page bold, with no page box. They drew the platform's pager with buttons and a "Page _ / N Go" box. The gallery smoke suite looks for `.mwnf-dxa-gallery-pages`.
+- **A gallery's header** centres its title on the page, whatever the widths of the mark and the tools beside it, in legacy's 30.4px regular weight. It sat about 35px to the left, at 28px bold.
+- **A gallery's menu** gives each entry an equal share of the bar, whatever the number of entries: the hub's four filled only two thirds of the bar. The current page's entry keeps its tab's shade, as legacy's: it was darkened.
+- **A gallery's section banner** as legacy's SubBanner: the title in 30.4px regular weight on its normal line, 10px above and below it (it was bold on a taller line), the band 50px at least, the caption's two lines on their normal height. The caption stays at the band's end on a page with no title, such as the hub's galleries list, where it moved to the start.
+- **A gallery's pages of records** span the page above and below the tiles and the column beside them, centred, as legacy's.
+- **An exhibition's theme bar** names the theme with its numeral, as legacy's deployed client does ("IV ▪ Islam in China"). The exhibition smoke suite checks it.
+
+### Fixed
+
+- **An exhibition's About page** marks its glossary terms, as its theme pages do. Its route did not load the glossary records, which the terms are matched against.
+
 ## 3.66.1 (2026-11-07)
 
 ### Fixed

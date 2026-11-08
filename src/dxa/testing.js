@@ -272,7 +272,7 @@ export function describeGallerySmoke({ config, sharedTexts, ownTexts, manifest, 
       app.unmount()
     }, 20000)
 
-    collectionTest(mountSite, picks.collection, { gallery: true })
+    collectionTest(mountSite, picks.collection, { pager: '.mwnf-dxa-gallery-pages' })
 
     it("renders the collection entrance as legacy's", async () => {
       const { app, host } = await mountSite('#/collection')
@@ -811,6 +811,8 @@ export function describeExhibitionSmoke({
       await vi.waitFor(() => expect(host.querySelector('.mwnf-dxa-theme-page__content')).not.toBeNull(), WAIT)
       // The numeral is in the section banner's "Theme I ▪ …", as legacy's SubBanner.
       await vi.waitFor(() => expect(host.querySelector('.mwnf-banner').textContent).toMatch(/ [IVX]+ ▪ /), WAIT)
+      // And in the theme's bar, as legacy's deployed client draws it: "IV ▪ Islam in China".
+      expect(host.querySelector('.mwnf-dxa-theme-page__theme-title').textContent.trim()).toMatch(/^[IVXLC]+ ▪ \S/)
       expect(host.querySelector('.mwnf-dxa-theme-page__selected, .mwnf-dxa-theme-page__empty')).not.toBeNull()
       expect(host.querySelector('.mwnf-dxa-theme-page__tour')).not.toBeNull()
       if (themePick?.pictureTitle) {
@@ -906,10 +908,16 @@ export function describeExhibitionSmoke({
 
     // Legacy's AboutPage is its ThemeComponent on the About theme.
     it("renders about as legacy's theme page", async () => {
+      const [exhibition] = await loadEntities(['exhibition'])
       const { app, host } = await mountSite('#/about')
       await vi.waitFor(() => expect(host.querySelector('.mwnf-dxa-about .mwnf-dxa-theme-page__content')).not.toBeNull(), WAIT)
       expect(host.querySelector('.mwnf-dxa-theme-page__selected, .mwnf-dxa-theme-page__empty')).not.toBeNull()
       expect(host.textContent).toContain(config.siteName)
+      // The exhibition's own audio and video, legacy's "Related Audio/Videos" (theme 0).
+      const ownMedia = (exhibition?.media ?? []).filter((entry) => !entry.language || entry.language === 'en')
+      if (ownMedia.length) {
+        expect(host.querySelectorAll('.mwnf-dxa-theme-page__media-entry')).toHaveLength(ownMedia.length)
+      }
       app.unmount()
     }, 30000)
 

@@ -150,7 +150,8 @@ function exhibitionRoutes(config) {
   const pages = config.pages
     ? [
       { path: '/', name: 'home', component: ExhibitionHome, meta: meta('home') },
-      { path: '/about', name: 'about', component: ExhibitionAbout, meta: meta('about', 'themes') },
+      // The About theme is drawn by the theme page, which marks its glossary terms and names dynasties.
+      { path: '/about', name: 'about', component: ExhibitionAbout, meta: meta('about', 'themes', 'glossary', 'dynasties') },
       { path: '/themes', name: 'themes', component: ExhibitionThemes, meta: meta('themes', 'themes') },
       { path: '/theme/:id/:subtheme?/:image?', name: 'theme', component: ExhibitionTheme, meta: meta('themes', 'themes', 'glossary', 'dynasties') },
       { path: '/theme-gallery/:id/:subtheme?', name: 'theme-gallery', component: ExhibitionThemeGallery, meta: meta('themes', 'themes') },

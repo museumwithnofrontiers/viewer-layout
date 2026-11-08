@@ -1,7 +1,7 @@
 <script setup>
 import { RouterLink } from 'vue-router'
 import BackLink from '../../content/BackLink.vue'
-import Pagination from '../../content/Pagination.vue'
+import LegacyPages from '../LegacyPages.vue'
 import CatalogueResultsView from '../../views/CatalogueResultsView.vue'
 import ObjectGrid from './ObjectGrid.vue'
 import { legacyPaging, timelineGallery } from './data.js'
@@ -11,7 +11,7 @@ import { legacyPaging, timelineGallery } from './data.js'
 // platform's composed results view: the join, the date rule, the tiles and
 // the pages are the view's, from `timelineGallery` (dxa/gallery/data.js).
 // What fills the slots: the back link and the "back to events" link above
-// the tiles, and a second pagination beside it.
+// the tiles; legacy's pages (PagesComponent) above and below them.
 </script>
 
 <template>
@@ -26,12 +26,18 @@ import { legacyPaging, timelineGallery } from './data.js'
           ➤ {{ $t('timeline.nav.backToEvents') }}
         </RouterLink>
       </p>
-      <Pagination class="mwnf-dxa-pages" :page-info="pageInfo" jump @navigate="goToPage" />
+      <LegacyPages family="gallery" class="mwnf-dxa-gallery-pages--top" :page-info="pageInfo" @navigate="goToPage" />
     </template>
 
     <template #records="{ rows, empty }">
       <ObjectGrid v-if="rows.length" :rows="rows" />
       <p v-else class="mwnf-record-grid__empty">{{ empty }}</p>
+    </template>
+
+    <!-- Legacy's lower pages span the page, under the tiles. -->
+    <template #pagination></template>
+    <template #after="{ pageInfo, goToPage }">
+      <LegacyPages family="gallery" :page-info="pageInfo" @navigate="goToPage" />
     </template>
   </CatalogueResultsView>
 </template>

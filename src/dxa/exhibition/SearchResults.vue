@@ -4,7 +4,7 @@ import { RouterLink, useRoute, useRouter } from 'vue-router'
 import { I18nText, renderInline, useI18n, useKeywordIndex } from '@museumwnf/viewer-core'
 import BackLink from '../../content/BackLink.vue'
 import CatalogueResultsView from '../../views/CatalogueResultsView.vue'
-import Pages from './Pages.vue'
+import Pages from '../LegacyPages.vue'
 import {
   itemById, labelOf, loadEnglish, tr, defaultLang, haystack, itemRoute, legacyPaging,
 } from './data.js'
