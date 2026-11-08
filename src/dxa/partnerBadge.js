@@ -36,3 +36,27 @@ export function partnerBadge(partner, words = GALLERY_WORDS) {
     tone,
   }
 }
+
+const EXHIBITION_WORDS = { partner: 'exhibition.partners.statusPartner', affiliate: 'exhibition.partners.statusAffiliate' }
+
+// Legacy's institutions table: the only source of its `/institutions` list.
+const INSTITUTIONS_TABLE = 'mwnf3:institutions:'
+
+/**
+ * An exhibition's badge (exhibitions-client PartnersPage.vue). Legacy listed
+ * its `/partners` with their project's badge and its `/institutions` (the
+ * monuments' institutions) as "Partner Institution (Monuments)" or "Affiliate
+ * Institution (Monuments)". The package types a Sharing History partner as an
+ * institution too, but legacy took it from `/partners`, so only a record of
+ * legacy's institutions table takes the institution's badge.
+ */
+export function exhibitionPartnerBadge(partner) {
+  if (partner?.type === 'institution' && String(partner.backward_compatibility ?? '').startsWith(INSTITUTIONS_TABLE)) {
+    return {
+      name: '',
+      status: partner.level === 'partner' ? 'exhibition.partners.institutionPartner' : 'exhibition.partners.institutionAffiliate',
+      tone: 'institution',
+    }
+  }
+  return partnerBadge(partner, EXHIBITION_WORDS)
+}
