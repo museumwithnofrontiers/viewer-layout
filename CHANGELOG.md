@@ -1,3 +1,14 @@
+## 3.68.0 (2026-11-08)
+
+A gallery's Related Objects as legacy's (inventory-app#2491). Reads `@museumwnf/viewer-i18n` 6.15.0's `gallery.related.objects`.
+
+### Changed
+
+- **A gallery's item sheet** draws every related object as legacy's Related Objects did (dxa-client's `DatabaseItem.vue`): a 64px thumbnail each, those in the gallery and those elsewhere alike, under "Related Objects", with a tooltip beside it (its name, its country, why it is related) from 975px up. One in the gallery opens here; one elsewhere opens on its project's site in a new tab. The sheet showed only the related objects in the gallery, larger and 3 a row, and named each of the others "not in this gallery". The packages carry the name, country and picture of a related object outside the gallery from the dxa-gallery exporter (inventory-app#2493). Legacy's tooltip named the sheet's own object on every thumbnail; this one names the related object. The gallery smoke suite checks the thumbnails.
+
+### Added
+
+- **`RelatedObjects`** (`dxa/RelatedObjects.vue`) and `ItemDetailView`'s `related.objectTiles({ record, inPackage, references, ctx })`, which draws it in place of the grid and the reference list. `LegacyItemSheet` passes it when its words name `relatedObjects` (a gallery).
 ## 3.67.1 (2026-11-08)
 
 Found in M13's final comparison with live legacy (inventory-app#2491).

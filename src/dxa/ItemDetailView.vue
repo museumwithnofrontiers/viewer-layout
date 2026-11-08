@@ -12,6 +12,7 @@ import RelatedRecords from '../content/RelatedRecords.vue'
 import TimelineLookup from '../content/TimelineLookup.vue'
 import RecordView from '../views/RecordView.vue'
 import { chromeAsset } from '../chrome.js'
+import RelatedObjects from './RelatedObjects.vue'
 
 // The DXA gallery/exhibition item sheet, composed. `RecordView` is still the
 // engine — the field sheet, the credits, the citation, the related records,
@@ -245,6 +246,10 @@ function relatedInfo(record, ctx) {
     title: s.title ? t(s.title) : '',
     description: s.description ? t(s.description) : '',
     heading: t(s.heading ?? 'record.related.items'),
+    // `objectTiles({ record, inPackage, references, ctx })`: legacy's
+    // Related Objects (RelatedObjects.vue), every related object a thumbnail,
+    // in place of the grid and the reference list.
+    tiles: s.objectTiles ? s.objectTiles({ record, inPackage, references, ctx }) : null,
     variant: s.variant ?? 'grid',
     actionLabel: s.actionLabel ? t(s.actionLabel) : '',
     inPackage,
@@ -342,7 +347,8 @@ function printSheet() {
             <p v-if="rel.title" class="mwnf-sheet-related__heading mwnf-sheet-related__heading--caps">{{ rel.title }}</p>
             <p v-if="rel.description" class="mwnf-sheet-related__description">{{ rel.description }}</p>
 
-            <RelatedRecords v-if="rel.inPackage.length || rel.references.length" :heading="rel.heading" :records="rel.inPackage" :variant="rel.variant" :action-label="rel.actionLabel">
+            <RelatedObjects v-if="rel.tiles" :heading="rel.heading" :tiles="rel.tiles" />
+            <RelatedRecords v-else-if="rel.inPackage.length || rel.references.length" :heading="rel.heading" :records="rel.inPackage" :variant="rel.variant" :action-label="rel.actionLabel">
               <ul v-if="rel.references.length" class="mwnf-sheet-related__references">
                 <li v-for="ref in rel.references" :key="ref.id">
                   <span v-if="ref.chipClass" class="mwnf-chip" :class="ref.chipClass" aria-hidden="true"></span>

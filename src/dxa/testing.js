@@ -167,26 +167,26 @@ function searchTests(mountSite, loadItems) {
   }, 30000)
 }
 
-// A record related to an item but outside this site's own package is listed
-// with its project, not as a bare legacy code. Nothing to check in a package
-// whose related records are all its own.
-function outsideReferenceTest(mountSite, manifest, sharedTexts) {
-  it('names the project of a related record outside this site', async () => {
+// Legacy's Related Objects: every related object a thumbnail under "Related
+// Objects", those outside this site's package too (inventory-app#2491). One
+// outside whose project has a site of its own links to it there.
+function relatedObjectsTest(mountSite, manifest, sharedTexts) {
+  it('draws every related object as a thumbnail, those outside the gallery too', async () => {
     const [items] = await loadEntities(['items'])
     const item = items.find((i) => (i.related_items ?? []).some((ref) => ref.in_package === false))
+      ?? items.find((i) => (i.related_items ?? []).length)
     if (!item) return
-    const projects = item.related_items
-      .filter((ref) => ref.in_package === false)
-      .map((ref) => manifest.projects[ref.project_id]?.name?.en)
-    const notHere = sharedTexts.en['gallery.results.notInThisGallery']
-    const { app, host } = await mountSite(`#/item/${item.id}`)
-    const outsideRow = () => [...host.querySelectorAll('.mwnf-sheet-related__references li')]
-      .find((li) => li.textContent.includes(notHere))
-    await vi.waitFor(() => expect(outsideRow()).toBeTruthy(), WAIT)
-    const row = outsideRow()
-    expect(row.querySelector('.mwnf-chip')).not.toBeNull()
-    expect(projects).toContain(row.textContent.replace(notHere, '').trim())
-    expect(row.querySelector('code')).toBeNull()
+    const { app, host } = await mountSite(`#/item/${item.id}?lang=en`)
+    await vi.waitFor(() => expect(host.querySelector('.mwnf-related-objects__tile')).not.toBeNull(), WAIT)
+    const block = host.querySelector('.mwnf-related-objects')
+    expect(block.querySelector('.mwnf-related-objects__heading').textContent).toBe(sharedTexts.en['gallery.related.objects'])
+    expect(block.querySelectorAll('.mwnf-related-objects__tile')).toHaveLength(item.related_items.length)
+    const outside = item.related_items.find((ref) => ref.in_package === false && manifest.projects[ref.project_id]?.home_site)
+    if (outside) {
+      const hrefs = [...block.querySelectorAll('.mwnf-related-objects__link')].map((a) => a.getAttribute('href') ?? '')
+      expect(hrefs.some((href) => href.endsWith(`/item/${outside.id}`))).toBe(true)
+    }
+    expect(host.querySelector('.mwnf-sheet-related__references')).toBeNull()
     app.unmount()
   }, 60000)
 }
@@ -363,7 +363,7 @@ export function describeGallerySmoke({ config, sharedTexts, ownTexts, manifest, 
       app.unmount()
     }, 60000)
 
-    outsideReferenceTest(mountSite, manifest, sharedTexts)
+    relatedObjectsTest(mountSite, manifest, sharedTexts)
 
     // The Source box takes the colour `projectColors` gives the item's
     // project, and the citation its name from the manifest.
