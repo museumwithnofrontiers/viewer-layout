@@ -2201,7 +2201,6 @@ a { color: inherit; }
 }
 .mwnf-dxa-exhibition-partners .mwnf-dxa-gallery-partners__name { font-size: 20px; }
 .mwnf-dxa-exhibition-partners .mwnf-dxa-partner-badge { font-size: 16px; }
-.mwnf-dxa-partner-badge--institution { background: var(--mwnf-dxa-badge-institution, #006950); color: #ffffff; }
 @media only screen and (max-width: 74.9375rem) {
   .mwnf-dxa-exhibition-partners .mwnf-dxa-gallery-partners__country { font-size: 38px; }
   .mwnf-dxa-exhibition-partners .mwnf-dxa-gallery-partners__name { font-size: 20px; }

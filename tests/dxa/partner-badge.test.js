@@ -25,20 +25,29 @@ describe('exhibitionPartnerBadge', () => {
     expect(exhibitionPartnerBadge(partner('minor_contributor')).status).toBe('exhibition.partners.statusFurtherAssociated')
   })
 
-  it("badges a monument's institution by its role in the exhibition's project, and not at all without one", () => {
-    const institution = (level) => ({
+  it("badges a monument's institution by its own project, with its role in the exhibition's project", () => {
+    const institution = (level, ownProject) => ({
       type: 'institution',
-      backward_compatibility: 'mwnf3:institutions:Mon81:ma',
+      backward_compatibility: 'mwnf3:institutions:Mon01:jo',
       level,
-      own_project: { name: 'Discover Islamic Art', backward_compatibility: 'mwnf3:projects:ISL', level: 'partner', exhibition: false },
+      own_project: ownProject,
     })
-    expect(exhibitionPartnerBadge(institution('partner'))).toEqual({
-      name: '',
+    const islamicArt = { name: 'Discover Islamic Art', backward_compatibility: 'mwnf3:projects:ISL', level: 'partner', exhibition: false }
+    // The Hijaz Railway's jo/Mon01: the project's name alone, whatever its
+    // role in Discover Islamic Art itself.
+    expect(exhibitionPartnerBadge(institution(null, islamicArt))).toEqual({
+      name: 'Discover Islamic Art',
+      status: null,
+      tone: 'isl',
+    })
+    expect(exhibitionPartnerBadge(institution('associated_partner', islamicArt)).status).toBe('exhibition.partners.statusAssociated')
+    // sy/Mon91, an institution of the exhibition itself.
+    expect(exhibitionPartnerBadge(institution(null, { name: 'The Hijaz Railway', backward_compatibility: 'mwnf3:projects:GalEx5', level: null, exhibition: true }))).toEqual({
+      name: 'The Hijaz Railway',
       status: 'exhibition.partners.statusPartner',
-      tone: 'institution',
+      tone: 'exh',
     })
-    expect(exhibitionPartnerBadge(institution('associated_partner')).status).toBe('exhibition.partners.statusAssociated')
-    expect(exhibitionPartnerBadge(institution(null))).toBeNull()
+    expect(exhibitionPartnerBadge(institution('partner', null))).toBeNull()
   })
 
   it("badges a museum by its project, as a partner of an exhibition or by its role", () => {

@@ -52,25 +52,23 @@ const INSTITUTIONS_TABLE = 'mwnf3:institutions:'
 /**
  * An exhibition's badge, as legacy's client draws it since MWNF-621
  * (exhibitions-client PartnersPage.vue, `statusLabel`): every owner comes
- * from one `/partners` list. A museum or a Sharing History partner carries
- * its project's name and its role there: "Partner" for a project partner
- * or any partner of the exhibition, "Associated", "Further associated", or
- * no role at all. An mwnf3 institution has no project: it carries only its
- * role in the exhibition's own project (the package's `level`, which is
- * what legacy's institutions query asked), and nothing when it has none
- * there. `status` is null when there is no role to print.
+ * from one `/partners` list, and carries its own project's name, on that
+ * project's colour, then its role: "Partner" for any partner of an
+ * exhibition, else "Partner", "Associated", "Further associated" or no role
+ * at all. A museum or a Sharing History partner has its role in its own
+ * project; an mwnf3 institution its role in the exhibition's own project
+ * (the package's `level`, which is what legacy's institutions query asked),
+ * so a Discover Islamic Art institution prints the project's name alone.
+ * `status` is null when there is no role to print.
  */
 export function exhibitionPartnerBadge(partner) {
   const project = partner?.own_project
-  if (String(partner?.backward_compatibility ?? '').startsWith(INSTITUTIONS_TABLE)) {
-    const status = EXHIBITION_STATUS[partner.level] ?? null
-    return status ? { name: '', status, tone: 'institution' } : null
-  }
   if (!project?.name) return null
   const code = String(project.backward_compatibility ?? '').split(':').pop().toUpperCase()
+  const level = String(partner?.backward_compatibility ?? '').startsWith(INSTITUTIONS_TABLE) ? partner.level : project.level
   return {
     name: project.name,
-    status: project.exhibition ? EXHIBITION_STATUS.partner : (EXHIBITION_STATUS[project.level] ?? null),
+    status: project.exhibition ? EXHIBITION_STATUS.partner : (EXHIBITION_STATUS[level] ?? null),
     tone: project.exhibition ? 'exh' : (PROJECT_TONES[code] ?? ''),
   }
 }

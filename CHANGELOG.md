@@ -1,3 +1,11 @@
+## 3.70.0 (2026-11-09)
+
+An exhibition's Partners page as the updated Hijaz Railway demo shows it (inventory-app#2491). `@museumwnf/viewer-core` 2.20.0 drops a partner with no text in any language from the list, as the demo does.
+
+### Changed
+
+- **An mwnf3 institution's badge** (`exhibitionPartnerBadge`) carries its own project's name on that project's colour, as a museum's does, followed by its role in the exhibition's own project: "Discover Islamic Art" alone, "The Hijaz Railway Partner", "Water in Islam Partner". The status-only institution badge and its `mwnf-dxa-partner-badge--institution` colour are gone.
+
 ## 3.69.0 (2026-11-09)
 
 An exhibition's Partners page and item tiles as legacy's demo shows them since MWNF-621 (inventory-app#2491). Reads `@museumwnf/viewer-i18n` 6.16.0's `exhibition.partners.statusAssociated`, `exhibition.partners.statusFurtherAssociated` and `exhibition.results.for`; `@museumwnf/viewer-core` 2.19.0 routes a Sharing History partner to the partner pages and draws the monument sheet.
