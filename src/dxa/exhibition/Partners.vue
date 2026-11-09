@@ -11,8 +11,10 @@ import { partnerObjectsRoute, partnerListSpec } from './data.js'
 // country-order toggle on one line, the introduction and the countries in a
 // centred column, each partner its name and city, its project badge, Read
 // more · View Items, and its logo) in the exhibition's colours and sizes. The
-// badge is `exhibitionPartnerBadge`'s (dxa/partnerBadge.js). A partner
-// holding nothing here (MWNF-384) keeps its row without View Items. The
+// badge is `exhibitionPartnerBadge`'s (dxa/partnerBadge.js); a record of
+// legacy's mwnf3 institutions takes the institution's pages, every other
+// owner the partner's (MWNF-621). A partner holding nothing here (MWNF-384)
+// keeps its row without View Items. The
 // grouping and the order are PartnerListView's, from `partnerListSpec`
 // (dxa/exhibition/data.js); legacy sorted a partner listed once per project
 // by the project's name. Legacy wrote the words here in English on every
@@ -54,7 +56,7 @@ const spec = {
               v-if="badge(partner)"
               class="mwnf-dxa-partner-badge"
               :class="badge(partner).tone && `mwnf-dxa-partner-badge--${badge(partner).tone}`"
-            ><template v-if="badge(partner).name">{{ badge(partner).name + ' ' }}</template><span class="mwnf-dxa-partner-badge__status">{{ t(badge(partner).status) }}</span></div>
+            ><template v-if="badge(partner).name">{{ badge(partner).name + ' ' }}</template><span v-if="badge(partner).status" class="mwnf-dxa-partner-badge__status">{{ t(badge(partner).status) }}</span></div>
             <div class="mwnf-dxa-gallery-partners__links">
               <SmartLink :to="view.route">{{ t('partner.action.readMore') }}</SmartLink>
               <template v-if="partner.item_count > 0 && view.objectsRoute">

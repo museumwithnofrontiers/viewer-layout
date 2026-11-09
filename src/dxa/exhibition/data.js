@@ -81,7 +81,9 @@ export const legacyPaging = {
  */
 export function legacyTile(item) {
   const text = tr('items', item.id, defaultLang)
-  const date = text.dates ?? ''
+  // The tile printed the object's date; a monument's is its own field, which
+  // the tile never read.
+  const date = item.type === 'monument' ? '' : (text.dates ?? '')
   return {
     id: item.id,
     image: item.images?.[0]?.url ?? '',

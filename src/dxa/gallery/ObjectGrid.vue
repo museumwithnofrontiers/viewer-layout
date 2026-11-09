@@ -14,7 +14,9 @@ import SmartLink from '../../content/SmartLink.vue'
 //
 // The exhibitions' pages of objects draw legacy's exhibitions-client
 // ObjectGrid: the same grid in the exhibition's colours (`family` set to
-// `exhibition`), where a row with no project prints no "for" line.
+// `exhibition`), where a row with no project prints no "for" line, the
+// "for" is the exhibition's own entry, and a monument prints no date (its
+// tile reads the object's date, which a monument has not).
 defineProps({
   rows: { type: Array, default: () => [] },
   family: { type: String, default: 'gallery' },
@@ -45,7 +47,7 @@ const open = ref(-1)
           <p class="mwnf-dxa-grid__date">{{ row.date }}</p>
           <p class="mwnf-dxa-grid__partner">{{ row.partner }}</p>
           <p class="mwnf-dxa-grid__place">{{ row.place }}</p>
-          <p v-if="family !== 'exhibition' || row.project" class="mwnf-dxa-grid__project">{{ t('gallery.results.for') }} <span>{{ row.project }}</span></p>
+          <p v-if="family !== 'exhibition' || row.project" class="mwnf-dxa-grid__project">{{ family === 'exhibition' ? t('exhibition.results.for') : t('gallery.results.for') }} <span>{{ row.project }}</span></p>
           <SmartLink class="mwnf-dxa-grid__link" :to="row.to">{{ t('catalogue.results.seeDatabaseEntry') }} &gt;</SmartLink>
         </div>
       </div>
