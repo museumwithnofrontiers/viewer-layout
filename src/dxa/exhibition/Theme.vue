@@ -164,17 +164,22 @@ const contextualDescription = computed(() => {
   return tr('themes', `${node.value.id}/${selected.value.id}`, locale.value).contextual_description ?? ''
 })
 
+// Legacy's ThemeComponent asked for the glossary of one of the node's texts:
+// a sub-theme's quote, a theme's (and About's) presentation; the other stays
+// unmarked. The selected picture's contextual description is always marked.
+const markedText = computed(() => (subTheme.value ? nodeText.value.quote : nodeText.value.presentation))
 const glossaryTerms = computed(() => glossaryTermsForText(
-  [nodeText.value.quote, nodeText.value.presentation, contextualDescription.value].filter(Boolean).join('\n\n'),
+  [markedText.value, contextualDescription.value].filter(Boolean).join('\n\n'),
   locale.value,
 ))
 const glossaryList = computed(() => glossaryEntries(glossaryTerms.value))
 const { active, onClick, close } = useGlossaryPopup(glossaryTerms)
 const activeHtml = computed(() => (active.value ? renderBlock(active.value.definition, { breaks: true }) : ''))
 
-const quoteHtml = computed(() => (nodeText.value.quote ? renderInline(String(nodeText.value.quote), { glossary: glossaryList.value }) : ''))
+const quoteHtml = computed(() => (nodeText.value.quote
+  ? renderInline(String(nodeText.value.quote), { glossary: subTheme.value ? glossaryList.value : [] }) : ''))
 const bodyHtml = computed(() => (nodeText.value.presentation
-  ? renderBlock(String(nodeText.value.presentation), { breaks: true, glossary: glossaryList.value }) : ''))
+  ? renderBlock(String(nodeText.value.presentation), { breaks: true, glossary: subTheme.value ? [] : glossaryList.value }) : ''))
 const justificationHtml = computed(() => (contextualDescription.value
   ? renderBlock(String(contextualDescription.value), { breaks: true, glossary: glossaryList.value }) : ''))
 

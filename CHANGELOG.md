@@ -1,3 +1,17 @@
+## 3.70.1 (2026-11-09)
+
+Found re-measuring M13's final comparison with live legacy (inventory-app#2491).
+
+### Fixed
+
+- **An exhibition's theme page** marks glossary terms where legacy's ThemeComponent did: a sub-theme's quote, a theme's and About's presentation, and always the selected picture's contextual description. The other text is no longer marked, and neither is the welcome notice. The marked terms are underlined, with a pointer and the contrast colour on hover. The selected picture's name is drawn in the contrast colour, and its "See Database entry" link is always underlined, as the deployed client draws them (live, and the Hijaz demo).
+- **A gallery's colours** follow what the live site draws:
+  - Text is black.
+  - About's and Credits' links are the browser's link blue (`#0000ee`). Legacy wrote those texts through `v-html`, which its scoped link styles never reach.
+  - The banner caption is white at 80% on every banner, the section banner's included.
+  - The pager's disabled buttons use the browser's disabled grey.
+  - Back is bold, as BackComponent sets it.
+
 ## 3.70.0 (2026-11-09)
 
 An exhibition's Partners page as the updated Hijaz Railway demo shows it (inventory-app#2491). `@museumwnf/viewer-core` 2.20.0 drops a partner with no text in any language from the list, as the demo does.
