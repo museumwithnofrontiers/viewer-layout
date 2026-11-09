@@ -56,7 +56,7 @@ const spec = {
               v-if="badge(partner)"
               class="mwnf-dxa-partner-badge"
               :class="badge(partner).tone && `mwnf-dxa-partner-badge--${badge(partner).tone}`"
-            ><template v-if="badge(partner).name">{{ badge(partner).name + ' ' }}</template><span v-if="badge(partner).status" class="mwnf-dxa-partner-badge__status">{{ t(badge(partner).status) }}</span></div>
+            >{{ badge(partner).name + ' ' }}<span v-if="badge(partner).status" class="mwnf-dxa-partner-badge__status">{{ t(badge(partner).status) }}</span></div>
             <div class="mwnf-dxa-gallery-partners__links">
               <SmartLink :to="view.route">{{ t('partner.action.readMore') }}</SmartLink>
               <template v-if="partner.item_count > 0 && view.objectsRoute">
