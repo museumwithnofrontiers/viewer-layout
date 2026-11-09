@@ -82,6 +82,14 @@
   overflow-wrap: break-word;
 }
 
+/* About's and Credits' texts reach legacy's page through `v-html`, which its
+   scoped link styles never reach: the live site draws their links in the
+   browser's own link blue. */
+.mwnf-dxa-gallery-text--about .mwnf-dxa-gallery-text__body a,
+.mwnf-dxa-gallery-text--credits .mwnf-dxa-gallery-text__body a {
+  color: #0000ee;
+}
+
 @media only screen and (max-width: 1199px) {
   .mwnf-dxa-gallery-text__body { width: 70%; }
 }

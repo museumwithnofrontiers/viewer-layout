@@ -54,7 +54,8 @@
   --mwnf-font-heading: 'Roboto Condensed', 'mwnf-arrows', 'Roboto', Arial, sans-serif;
   --mwnf-line-height: 1.4;
   --mwnf-weight-heading: 700;
-  --mwnf-color-text: #1a1a1a;
+  /* Legacy's gallery sets no text colour: the browser's black. */
+  --mwnf-color-text: #000000;
   --mwnf-color-background: var(--background-color);
   --mwnf-color-accent: var(--theme-dark);
   --mwnf-color-muted: #555555;
@@ -140,7 +141,8 @@
   --mwnf-banner-overlay-text: #ffffff;
   --mwnf-banner-overlay-background: color-mix(in srgb, var(--theme-dark) 60%, transparent);
   --mwnf-banner-caption-background: rgba(0, 0, 0, 0.6);
-  --mwnf-banner-caption-text: rgba(255, 255, 255, 0.85);
+  /* dxa-client BannerComponent's and SubBanner's caption. */
+  --mwnf-banner-caption-text: rgba(255, 255, 255, 0.8);
   --mwnf-banner-section-height: 20vh;
   --mwnf-banner-section-max-height: 150px;
   --mwnf-banner-section-title-size: 190%;
@@ -402,8 +404,10 @@ a { color: inherit; }
   text-decoration: underline;
   cursor: pointer;
 }
+/* Legacy's pager buttons are disabled where they lead nowhere, and the live
+   site draws them in the browser's own colour for a disabled button. */
 .mwnf-dxa-gallery-pages__button.is-disabled {
-  color: #707070;
+  color: rgba(16, 16, 16, 0.3);
   cursor: default;
 }
 .mwnf-dxa-gallery-pages__numbers .is-disabled {
@@ -420,6 +424,7 @@ a { color: inherit; }
 .mwnf-banner--section .mwnf-banner__caption {
   margin-inline-start: auto;
   line-height: normal;
+  color: var(--mwnf-banner-caption-text);
 }
 /* Legacy's band is 50px at least, its 10px above and below the title's own
    (dxa-client SubBanner): with no title, the caption is centred in 50px. */
@@ -463,6 +468,7 @@ a { color: inherit; }
    line is taller). */
 .mwnf-back-link__button {
   padding: 2px 8px 2px 0;
+  font-weight: bold;
 }
 .mwnf-back-link__arrow {
   display: inline-block;

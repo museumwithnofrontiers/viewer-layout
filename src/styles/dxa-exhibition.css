@@ -913,14 +913,27 @@ a { color: inherit; }
   background-color: var(--main-color);
   color: var(--main-text-color);
 }
+/* The picture's name and its link to the sheet in the contrast colour, the
+   link underlined, as the deployed client draws them (live, and the Hijaz
+   demo). */
 .mwnf-dxa-theme-page__detail--title {
   font-weight: 700;
+  color: var(--contrast-color);
 }
 .mwnf-dxa-theme-page__entry {
   margin-top: 20px;
   font-style: italic;
   color: var(--contrast-color);
-  text-decoration: none;
+  text-decoration: underline;
+}
+/* ThemeComponent's glossary links: underlined, the contrast colour under the
+   pointer. */
+.mwnf-dxa-theme-page .gloss-term {
+  text-decoration: underline;
+  cursor: pointer;
+}
+.mwnf-dxa-theme-page .gloss-term:hover {
+  color: var(--contrast-color);
 }
 .mwnf-dxa-theme-page__entry:hover {
   text-decoration: underline;

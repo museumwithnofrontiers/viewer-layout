@@ -128,7 +128,8 @@ function popupPicture(src) {
 // pipeline and passed as HTML: the component's inline rendering drops the
 // paragraphs a notice needs.
 const popupContent = computed(() => withSitePictures(
-  md(exhibition.value?.popup_logos?.[locale.value] ?? exhibition.value?.popup_logos?.en ?? ''),
+  // Legacy marked no glossary term in its notice.
+  md(exhibition.value?.popup_logos?.[locale.value] ?? exhibition.value?.popup_logos?.en ?? '', { glossary: [] }),
   popupPicture,
 ))
 const popupEnabled = computed(() => {
