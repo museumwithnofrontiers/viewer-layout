@@ -1,3 +1,11 @@
+## 3.69.0 (2026-11-09)
+
+An exhibition's Partners page and item tiles as legacy's demo shows them since MWNF-621 (inventory-app#2491). Reads `@museumwnf/viewer-i18n` 6.16.0's `exhibition.partners.statusAssociated`, `exhibition.partners.statusFurtherAssociated` and `exhibition.results.for`; `@museumwnf/viewer-core` 2.19.0 routes a Sharing History partner to the partner pages and draws the monument sheet.
+
+### Changed
+
+- **An exhibition's partner badge** (`exhibitionPartnerBadge`) is legacy's `statusLabel`: a museum or a Sharing History partner carries its project's name and its role there, "Partner" (a project partner or any partner of the exhibition), "Associated", "Further associated", or no role. An mwnf3 institution carries only its role in the exhibition's own project, and no badge without one; "Partner Institution (Monuments)" and "Affiliate Institution (Monuments)" are no longer drawn.
+- **An exhibition's item tile** writes "for" with the exhibition's own entry (it read the galleries', which an exhibition's dictionary lacks), and prints no date on a monument: legacy's tile read the object's date, which a monument has not.
 ## 3.68.1 (2026-11-08)
 
 Found re-measuring M13's final comparison with live legacy (inventory-app#2491).

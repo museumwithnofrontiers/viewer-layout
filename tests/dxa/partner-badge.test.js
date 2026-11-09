@@ -1,53 +1,59 @@
 import { describe, expect, it } from 'vitest'
 import { exhibitionPartnerBadge } from '../../src/dxa/partnerBadge.js'
 
-const sharingHistory = {
+const sharingHistory = (level) => ({
   name: 'Sharing History',
   backward_compatibility: 'mwnf3_sharing_history:sh_projects:awe',
-  level: 'partner',
+  level,
   exhibition: false,
-}
+})
 
 describe('exhibitionPartnerBadge', () => {
-  it("badges a Sharing History partner by its project, as legacy's /partners", () => {
-    const partner = {
+  it("badges a Sharing History partner by its project and its role there, as legacy's /partners", () => {
+    const partner = (level) => ({
       type: 'institution',
       backward_compatibility: 'mwnf3_sharing_history:sh_partners:lb_01',
       level: null,
-      own_project: sharingHistory,
-    }
-    expect(exhibitionPartnerBadge(partner)).toEqual({
+      own_project: sharingHistory(level),
+    })
+    expect(exhibitionPartnerBadge(partner('partner'))).toEqual({
       name: 'Sharing History',
       status: 'exhibition.partners.statusPartner',
       tone: 'awe',
     })
+    expect(exhibitionPartnerBadge(partner('associated_partner')).status).toBe('exhibition.partners.statusAssociated')
+    expect(exhibitionPartnerBadge(partner('minor_contributor')).status).toBe('exhibition.partners.statusFurtherAssociated')
   })
 
-  it("badges a monument's institution as legacy's /institutions", () => {
+  it("badges a monument's institution by its role in the exhibition's project, and not at all without one", () => {
     const institution = (level) => ({
       type: 'institution',
       backward_compatibility: 'mwnf3:institutions:Mon81:ma',
       level,
-      own_project: { name: 'Water in Islam', backward_compatibility: 'mwnf3:projects:EXWAT', level: 'partner', exhibition: true },
+      own_project: { name: 'Discover Islamic Art', backward_compatibility: 'mwnf3:projects:ISL', level: 'partner', exhibition: false },
     })
     expect(exhibitionPartnerBadge(institution('partner'))).toEqual({
       name: '',
-      status: 'exhibition.partners.institutionPartner',
+      status: 'exhibition.partners.statusPartner',
       tone: 'institution',
     })
-    expect(exhibitionPartnerBadge(institution(null)).status).toBe('exhibition.partners.institutionAffiliate')
+    expect(exhibitionPartnerBadge(institution('associated_partner')).status).toBe('exhibition.partners.statusAssociated')
+    expect(exhibitionPartnerBadge(institution(null))).toBeNull()
   })
 
-  it("badges a museum by its project's status", () => {
-    const museum = {
-      type: 'museum',
-      backward_compatibility: 'mwnf3:museums:Mus01:ma',
-      own_project: { name: 'Discover Islamic Art', backward_compatibility: 'mwnf3:projects:ISL', level: null, exhibition: false },
-    }
-    expect(exhibitionPartnerBadge(museum)).toEqual({
+  it("badges a museum by its project, as a partner of an exhibition or by its role", () => {
+    const museum = (ownProject) => ({ type: 'museum', backward_compatibility: 'mwnf3:museums:Mus01:ma', own_project: ownProject })
+    expect(exhibitionPartnerBadge(museum({ name: 'The Hijaz Railway', backward_compatibility: 'mwnf3:projects:GalEx5', level: null, exhibition: true }))).toEqual({
+      name: 'The Hijaz Railway',
+      status: 'exhibition.partners.statusPartner',
+      tone: 'exh',
+    })
+    // A museum with no role in its project keeps the project's name alone.
+    expect(exhibitionPartnerBadge(museum({ name: 'Discover Islamic Art', backward_compatibility: 'mwnf3:projects:ISL', level: null, exhibition: false }))).toEqual({
       name: 'Discover Islamic Art',
-      status: 'exhibition.partners.statusAffiliate',
+      status: null,
       tone: 'isl',
     })
+    expect(exhibitionPartnerBadge(museum(null))).toBeNull()
   })
 })
