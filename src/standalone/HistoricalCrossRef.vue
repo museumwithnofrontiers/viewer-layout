@@ -1,5 +1,6 @@
 <script setup>
 import { computed } from 'vue'
+import { useI18n } from '@museumwnf/viewer-core'
 import StandaloneWindow from './Window.vue'
 
 // The standalone family's Historical Cross Referencing window, legacy's
@@ -12,12 +13,15 @@ import StandaloneWindow from './Window.vue'
 // Which events, which lists and every word are the website's.
 //
 //   labels: { heading, close, country, range }
+//   texts: a product's label set (`islamicart`): the labels are then its
+//     `<texts>.tl.title`, `<texts>.hcr.*` and `record.glossary.close`, unless given
 //   start, end: the period shown (the year scale reads them as legacy did)
 //   countries / ranges: [{ value, label }]
 //   item: { image, name, lines: [text] }   // name: rendered (HTML); lines: legacy's paragraph, '' for its blank line
 //   events: [{ id, date, html }]
 const props = defineProps({
-  labels: { type: Object, required: true },
+  labels: { type: Object, default: null },
+  texts: { type: String, default: '' },
   start: { type: Number, required: true },
   end: { type: Number, required: true },
   countries: { type: Array, default: () => [] },
@@ -30,6 +34,14 @@ const props = defineProps({
   dir: { type: String, default: '' },
 })
 const emit = defineEmits(['change'])
+
+const t = props.texts ? useI18n().t : (key) => key
+const words = computed(() => props.labels ?? {
+  heading: t(`${props.texts}.tl.title`),
+  close: t('record.glossary.close'),
+  country: t(`${props.texts}.hcr.country`),
+  range: t(`${props.texts}.hcr.range`),
+})
 
 // Legacy's scale: from two half-centuries before the period's, fourteen of
 // them (at most up to 2000: from 1350), each in the period marked.
@@ -44,7 +56,7 @@ const years = computed(() => {
 </script>
 
 <template>
-  <StandaloneWindow class="mwnf-standalone-hcr" :heading="labels.heading" :close-label="labels.close" :dir="dir">
+  <StandaloneWindow class="mwnf-standalone-hcr" :heading="words.heading" :close-label="words.close" :dir="dir">
     <template #before>
       <section class="mwnf-standalone-hcr__scale" aria-hidden="true">
         <div class="mwnf-standalone-hcr__years">
@@ -56,12 +68,12 @@ const years = computed(() => {
 
     <div class="mwnf-standalone-hcr__body">
       <div class="mwnf-standalone-hcr__left">
-        <p class="mwnf-standalone-hcr__title">{{ labels.country }}</p>
-        <select :value="country" :aria-label="labels.country" @change="emit('change', { key: 'country', value: $event.target.value })">
+        <p class="mwnf-standalone-hcr__title">{{ words.country }}</p>
+        <select :value="country" :aria-label="words.country" @change="emit('change', { key: 'country', value: $event.target.value })">
           <option v-for="option in countries" :key="option.value" :value="option.value">{{ option.label }}</option>
         </select>
-        <p class="mwnf-standalone-hcr__title">{{ labels.range }}</p>
-        <select :value="String(range)" :aria-label="labels.range" @change="emit('change', { key: 'start', value: $event.target.value })">
+        <p class="mwnf-standalone-hcr__title">{{ words.range }}</p>
+        <select :value="String(range)" :aria-label="words.range" @change="emit('change', { key: 'start', value: $event.target.value })">
           <option v-for="option in ranges" :key="option.value" :value="String(option.value)">{{ option.label }}</option>
         </select>
         <template v-if="item">

@@ -1,3 +1,9 @@
+## 3.72.0 (2026-11-12)
+
+### Added
+
+- **`texts` on `StandaloneTimelineEntrance` and `StandaloneHistoricalCrossRef`**: a product's label set by name (`texts="islamicart"`). The component reads its labels and alerts from that set's `tl.*`, `db.go` and `hcr.*` entries, so a page no longer maps each one (shared-code review R8). `labels` and `alerts` a page passes still win.
+
 ## 3.71.0 (2026-11-12)
 
 What every mini-site, gallery and exhibition copied by hand, done once here (shared-code review, inventory-app `tmp/shared-code-review-2026-11`). Nothing a site does today changes; requires `@museumwnf/viewer-core` 2.21.0.

@@ -778,6 +778,13 @@ every value is a `--mwnf-standalone-*` token with a neutral fallback
 (`tokens.reference.css`); a site's `theme/tokens.css` sets legacy's. It ships
 in `style.css`, so a site imports nothing more.
 
+A product's label set by name: `StandaloneTimelineEntrance` and
+`StandaloneHistoricalCrossRef` take `texts="<product>"` and read its
+`<product>.tl.*`, `<product>.db.go` and `<product>.hcr.*` entries themselves
+(viewer-i18n's convention, one label set per product), so a page passes the
+name instead of mapping each label. Labels a page passes still win, for a
+product whose entries are named otherwise.
+
 ## Mini-site family pages
 
 `@museumwnf/viewer-layout/minisite` is the family layer of the mini-sites:

@@ -1044,3 +1044,29 @@ describe('the standalone windows', () => {
     expect(wrapper.find('.mwnf-standalone-glossary__label').exists()).toBe(false)
   })
 })
+// A product's label set by name (`texts`): the components read its entries
+// themselves, so a page passes the name instead of mapping every label.
+describe('the timeline components read a product label set by name', () => {
+  const product = {
+    'shop.tl.selectCountry': 'Select a Country', 'shop.tl.allCountries': 'All countries', 'shop.tl.startDate': 'Start Date',
+    'shop.tl.endDate': 'End Date', 'shop.db.go': 'Go', 'shop.tl.alertCountry': 'Please select country',
+    'shop.tl.title': 'Timeline', 'shop.hcr.country': 'Get dates for', 'shop.hcr.range': 'Time Range', 'record.glossary.close': 'Close',
+  }
+  const mountTexts = (component, props) => mount(component, { props, global: { plugins: [createI18n({ messages: { en: product } })] } })
+
+  it("StandaloneTimelineEntrance: the lists, Go and legacy's alert", async () => {
+    const alert = vi.spyOn(window, 'alert').mockImplementation(() => {})
+    const wrapper = mountTexts(StandaloneTimelineEntrance, { texts: 'shop', countries: [{ value: 'egy', label: 'Egypt' }] })
+    expect(wrapper.findAll('select')[0].findAll('option').map((o) => o.text())).toEqual(['Select a Country', 'All countries', 'Egypt'])
+    expect(wrapper.find('button').text()).toBe('Go')
+    await wrapper.find('form').trigger('submit')
+    expect(alert).toHaveBeenLastCalledWith('Please select country')
+    alert.mockRestore()
+  })
+
+  it('StandaloneHistoricalCrossRef: the heading, the close label and the two list titles', () => {
+    const wrapper = mountTexts(StandaloneHistoricalCrossRef, { texts: 'shop', start: 1450, end: 1500 })
+    expect(wrapper.find('.mwnf-standalone-window__heading').text()).toBe('Timeline')
+    expect(wrapper.findAll('.mwnf-standalone-hcr__title').map((p) => p.text())).toEqual(['Get dates for', 'Time Range'])
+  })
+})
