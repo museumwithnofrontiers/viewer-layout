@@ -1,9 +1,6 @@
 <script setup>
 import { computed } from 'vue'
-import {
-  dateRange, entityRef, renderInline, renderPlain, sortChronological, useDataPackage, useFacets, useI18n,
-  useListQuery, usePagination,
-} from '@museumwnf/viewer-core'
+import { useCatalogueResults, useI18n } from '@museumwnf/viewer-core'
 import FacetSelect from '../content/FacetSelect.vue'
 import FilterPanel from '../content/FilterPanel.vue'
 import Pagination from '../content/Pagination.vue'
@@ -58,107 +55,16 @@ const props = defineProps({
   entity: { type: String, default: '' },
 })
 
-const { t, locale } = useI18n()
-const pkg = useDataPackage()
-
-const entity = props.spec.entity ?? props.entity
+const { t } = useI18n()
 const spec = computed(() => props.spec)
-const records = entityRef(entity)
-if (entity) pkg.loadTranslations(entity, 'en')
 
-const keys = computed(() => spec.value.keys ?? [...Object.keys(spec.value.facets ?? {}), ...datesKeys()])
-function datesKeys() {
-  const dates = spec.value.dates
-  return dates ? [dates.begin ?? 'begin', dates.end ?? 'end'] : []
-}
-
-const { filters, page, active, apply, reset, goToPage } = useListQuery({ keys: keys.value })
-
-const helpers = {
-  t,
-  locale,
-  tr: (name, id) => pkg.tr(name, id, locale.value, 'en'),
-  renderInline,
-  renderPlain,
-}
-
-// ── What matches ───────────────────────────────────────────────────────────
-
-function facetValues(record, facet) {
-  if (typeof facet.values === 'function') return [facet.values(record)].flat()
-  const raw = record?.[facet.field]
-  return Array.isArray(raw) ? raw : [raw]
-}
-
-const matching = computed(() => {
-  const s = spec.value
-  let list = records.value ?? []
-  if (s.scope) list = list.filter((record) => s.scope(record, filters, helpers))
-  for (const [key, facet] of Object.entries(s.facets ?? {})) {
-    const wanted = filters[key]
-    if (!wanted) continue
-    list = list.filter((record) => facetValues(record, facet).map(String).includes(String(wanted)))
-  }
-  if (s.match) list = list.filter((record) => s.match(record, filters, helpers))
-  if (s.narrow) list = s.narrow(list, filters, helpers)
-  if (s.dates) {
-    list = dateRange(list, {
-      begin: filters[s.dates.begin ?? 'begin'],
-      end: filters[s.dates.end ?? 'end'],
-      mode: s.dates.mode ?? 'overlap',
-      fields: s.dates.fields,
-    })
-  }
-  const sort = s.sort ?? 'chronological'
-  if (typeof sort === 'function') return sort(list)
-  if (sort === 'chronological') return sortChronological(list)
-  if (sort && typeof sort === 'object') return sortChronological(list, sort)
-  return list
-})
-
-const facetSource = computed(() => (spec.value.facetScope === 'matching' ? matching.value : records.value ?? []))
-const options = useFacets(facetSource, () => spec.value.facets ?? {})
-
-const pageInfo = usePagination(matching, { page, size: () => spec.value.pageSize ?? 20 })
-
-// ── The rows ───────────────────────────────────────────────────────────────
-
-const recordRoute = computed(() => spec.value.recordRoute ?? (props.entity ? `${props.entity}-detail` : 'item'))
-
-function defaultRecord(record) {
-  const text = helpers.tr(entity, record.id)
-  const name = text.name ?? record.internal_name ?? record.id
-  return {
-    id: record.id,
-    image: record.images?.[0]?.url ?? '',
-    imageAlt: renderPlain(String(name)),
-    name: renderInline(String(name)),
-    meta: [],
-    badge: record.type ?? '',
-    to: { name: recordRoute.value, params: { id: record.id } },
-  }
-}
-
-const rows = computed(() => pageInfo.value.rows.map((record) => (spec.value.record ?? defaultRecord)(record, helpers)))
-
-const slotProps = computed(() => ({
-  filters,
-  active: active.value,
-  apply,
-  reset,
-  goToPage,
-  matching: matching.value,
-  pageInfo: pageInfo.value,
-  options: options.value,
-}))
-
-// ── The summary ────────────────────────────────────────────────────────────
-
-const summary = computed(() => {
-  const s = spec.value
-  if (s.summary) return s.summary({ ...slotProps.value, t, total: (records.value ?? []).length })
-  return [{ label: t(s.summaryLabel ?? 'catalogue.results.itemsFound'), count: pageInfo.value.total }]
-})
+// The engine — the filters and the page in the URL, the facets, the dates,
+// the order, the pages, the rows and the summary — is viewer-core's; this view
+// draws it.
+const { filters, apply, reset, goToPage, options, pageInfo, rows, summary, state: slotProps } = useCatalogueResults(
+  () => props.spec,
+  { entity: props.entity },
+)
 
 // ── The controls ───────────────────────────────────────────────────────────
 

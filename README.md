@@ -22,6 +22,7 @@ all the packages:
 | `@museumwnf/viewer-layout/dxa/testing` | DXA family layer | each family's smoke test, `describeGallerySmoke` / `describeExhibitionSmoke` | the site's config, texts and package, in the site's own Vitest |
 | `@museumwnf/viewer-layout/standalone` | standalone family layer | the chrome, home page, item sheet, text page and blocks of Discover Islamic Art, Discover Baroque Art and Sharing History | the entries above and `@museumwnf/viewer-core` |
 | `@museumwnf/viewer-layout/minisite` | mini-site family layer | legacy's virtual exhibitions, one website each: the frame, the home page, the introduction, the exhibition pages, legacy's three windows, the caption rules, `minisiteRoutes` / `minisiteNavigation` / `minisiteSettings` | the entries above and `@museumwnf/viewer-core` |
+| `@museumwnf/viewer-layout/minisite/testing` | mini-site family layer | the family's smoke test, `describeMinisiteSmoke` | the site's config, settings, texts and chrome, in the site's own Vitest |
 | `@museumwnf/viewer-layout/style.css` | — | one stylesheet for every entry, the family styles included | — |
 | `@museumwnf/viewer-layout/tokens.reference.css` | — | every token the package reads, with its fallback | — |
 
@@ -636,11 +637,17 @@ export default galleryConfig({
   datasetPackage: '@museumwnf/carpets-data',
   siteName: 'Carpets',                                   // for a package without manifest.site
   origin: 'https://museumwithnofrontiers.github.io/carpets',
-  projectColors: { '<project id>': 'mwnf-chip--DCA' },  // one of the mwnf-chip--* classes
+  projectColors: { '<project id>': 'mwnf-chip--DCA' },  // only a project projectChips() cannot tell
   noticeProjects: ['<project id>'],                      // sheets with the Explore-partner notice
   creditsBody: 'carpets.credits.body',
 })
 ```
+
+A record's source chip comes from the project's site
+(`manifest.projects[id].home_site`, `projectChips()`): a product's own colour,
+an exhibition's project in the exhibitions' colour, a project with no site in
+the galleries'. `projectColors` names only what that cannot tell (an
+exhibition's package carries no `home_site`), and wins where it is given.
 
 `exhibitionConfig` takes the same values (and `partnerObjects`, overrides of
 the shared `exhibition.partnerObjects.*` entries). The config carries the
@@ -783,36 +790,42 @@ Art's and Sharing History's are products of their own, with pages of their own
 exhibition's own stays in its repository: its settings (`minisite`), its
 theme (`theme/tokens.css`), its legacy pictures and its texts.
 
+A mini-site's `dataset.config.js` is one call to its family's factory —
+`minisiteConfig` (Discover Islamic Art's exhibitions), `artintroConfig` (its
+Artistic Introduction), `baroqueartMinisiteConfig` or
+`sharinghistoryMinisiteConfig` — with what is the site's own:
+
 ```js
-import { languageLabels, offeredLanguages, sectionMeta } from '@museumwnf/viewer-core'
-import {
-  ISLAMICART_NO_COUNTRY, MinisiteHome, MinisiteShell, minisiteNavigation, minisiteRoutes, minisiteSettings,
-} from '@museumwnf/viewer-layout/minisite'
+import { minisiteConfig } from '@museumwnf/viewer-layout/minisite'
+import exhibition from './minisite.json'
 
-const languages = offeredLanguages()
-const parent = 'https://museumwithnofrontiers.github.io/islamicart'
+const chrome = import.meta.glob('../theme/assets/**/*.{jpg,jpeg,png,gif,svg}', { eager: true, query: '?url', import: 'default' })
 
-export default {
-  // …datasetPackage, siteName, site, features, languages…
-  shell: MinisiteShell,
-  chrome: import.meta.glob('../theme/assets/**/*.{jpg,jpeg,png,gif,svg}', { eager: true, query: '?url', import: 'default' }),
-  navigation: minisiteNavigation({ languages: languageLabels(languages), parent }),
-  minisite: minisiteSettings({
-    parent,
-    menuSecondColumnFrom: 7,
-    curators: [{ partner: '<uuid>', logo: 'legacy/JO-10.gif', space: 35 }],
-    map: {
-      thumbnail: 'legacy/intro_map_thumb.jpg',
-      picture: (lang, n) => (n ? `legacy/map${n}_${lang}.jpg` : `legacy/map_${lang}.jpg`),
-      count: 1,
-    },
-    noCountry: ISLAMICART_NO_COUNTRY,
-    documentTitle: 'MWNF DISCOVER ISLAMIC ART: Exhibition',
-  }),
-  views: { home: MinisiteHome },
-  extraViews: minisiteRoutes(sectionMeta()),
-}
+export default minisiteConfig({
+  datasetPackage: '@museumwnf/islamicart-women-data',
+  siteName: 'Women',                                    // for a package without manifest.site
+  origin: 'https://museumwithnofrontiers.github.io/islamicart-women',
+  exhibition,                                           // minisite.json, written by inventory-app's generators
+  chrome,
+})
 ```
+
+The factory reads `minisite.json` (`menuSecondColumnFrom`, `curators`, `maps`,
+and for the other families `social`, `design`, `banner`, `profiles`, `logos`,
+`partnerLinks`), points the frame's links at the parent product next to the
+site's own address (`parentSite(origin, 'islamicart')`), and gives the
+family's no-country rule (`ISLAMICART_NO_COUNTRY`, `BAROQUEART_NO_COUNTRY`) and
+Word document title unless `minisite.json` sets `noCountry` or
+`documentTitle` itself. The pieces it assembles — `MinisiteShell`,
+`minisiteNavigation`, `minisiteSettings`, `minisiteRoutes`, `MinisiteHome` and
+each family's own — stay exported for a site that needs to assemble them
+differently.
+
+The family's smoke test is `describeMinisiteSmoke` from
+`@museumwnf/viewer-layout/minisite/testing`, the site's tests/smoke.test.js
+calling it with its config, `minisite.json`, texts, `SOURCES.json` and text
+namespace; it also checks the chrome against `SOURCES.json`
+(`checkChromeSources`, viewer-core).
 
 - **Routes** (`minisiteRoutes`): `home`, `introduction`,
   `exhibition` (`/exhibition/<theme>/<page>`, 1-based as legacy's addresses),
