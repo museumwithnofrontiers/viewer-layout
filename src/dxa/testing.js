@@ -641,11 +641,13 @@ export function describeGallerySmoke({ config, sharedTexts, ownTexts, manifest, 
  * The smoke test every DXA exhibition runs. It finds the records it needs in
  * the exhibition's own package.
  *
- * - `config` with its `noticeProjects` and `projectColors`, `sharedTexts`
- *   (viewer-i18n's exhibition catalogues), `ownTexts` (locales/en.json),
- *   `manifest`, `partnerNames` and `dynastyNames` (the package's English
- *   partner and dynasty translations) and `namespace` (this exhibition's own
- *   text namespace).
+ * - `config` with its `noticeProjects`, `sharedTexts` (viewer-i18n's
+ *   exhibition catalogues), `ownTexts` (locales/en.json), `manifest`,
+ *   `partnerNames` and `dynastyNames` (the package's English partner and
+ *   dynasty translations) and `namespace` (this exhibition's own text
+ *   namespace). The chips are checked on `config.projectColors`, the ones the
+ *   site draws (derived from the package, its own `projectColors` winning),
+ *   so a site passes its own table no more; one passed is ignored.
  * - Optionally, `collection: { tiles, paginations }`; `theme: { id,
  *   pictureTitle, subthemes }`, a theme whose first picture and sub-theme
  *   titles the theme page shows; `relatedContent: true` when the
@@ -653,7 +655,7 @@ export function describeGallerySmoke({ config, sharedTexts, ownTexts, manifest, 
  *   exhibition no dynasty of which has a translated history.
  */
 export function describeExhibitionSmoke({
-  config, noticeProjects, projectColors, sharedTexts, ownTexts, manifest, partnerNames, dynastyNames, namespace,
+  config, noticeProjects, sharedTexts, ownTexts, manifest, partnerNames, dynastyNames, namespace,
   collection, theme: themePick, relatedContent = false, dynasties = true,
 }) {
   const { messages, mountSite } = mounter(config, sharedTexts, ownTexts)
@@ -730,7 +732,7 @@ export function describeExhibitionSmoke({
         expect(!!host.querySelector('.mwnf-sheet-notice')).toBe(noticeProjects.includes(item.project_id))
         // Every project needs its chip colour, or the chip falls back to the
         // layout's default swatch.
-        expect(projectColors[item.project_id]).toBeTruthy()
+        expect(config.projectColors[item.project_id]).toBeTruthy()
         app.unmount()
       }
     }, 120000)

@@ -1,3 +1,9 @@
+## 3.72.1 (2026-11-12)
+
+### Fixed
+
+- **`describeExhibitionSmoke`** checks each project's chip on `config.projectColors`, the chips the site draws (derived from the package, the site's own `projectColors` winning), instead of the table the site passed. The exhibition packages now carry `home_site` (inventory-app#2510), so an exhibition can drop its table as the galleries did; a `projectColors` still passed is ignored.
+
 ## 3.72.0 (2026-11-12)
 
 ### Added

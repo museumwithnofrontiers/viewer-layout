@@ -99,7 +99,7 @@ describe('projectChips', () => {
         hijaz: { home_site: 'the-hijaz-railway' },
         galleries: { home_site: null },
         unknown: { home_site: 'somewhere-else' },
-        // An exhibition's package names no home site: the site's own table does.
+        // A package exported before its exporter wrote home_site: the site's own table does.
         exwit: { name: { en: 'With Brush and Qalam' } },
       },
     }
