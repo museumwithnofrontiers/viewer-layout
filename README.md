@@ -646,8 +646,8 @@ export default galleryConfig({
 A record's source chip comes from the project's site
 (`manifest.projects[id].home_site`, `projectChips()`): a product's own colour,
 an exhibition's project in the exhibitions' colour, a project with no site in
-the galleries'. `projectColors` names only what that cannot tell (an
-exhibition's package carries no `home_site`), and wins where it is given.
+the galleries'. `projectColors` names only what that cannot tell (a package
+older than its exporter's `home_site`), and wins where it is given.
 
 `exhibitionConfig` takes the same values (and `partnerObjects`, overrides of
 the shared `exhibition.partnerObjects.*` entries). The config carries the

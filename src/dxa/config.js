@@ -52,7 +52,7 @@ const EXHIBITION_SITES = new Set(LEGACY_SITES.filter((site) => site.family === '
 /**
  * The source chip of every project the package names, from the site each one
  * belongs to (`manifest.projects[id].home_site`). A project the package gives
- * no `home_site` field (an exhibition's package carries none) gets no chip
+ * no `home_site` field (one exported before its exporter wrote it) gets no chip
  * here: the site's own `projectColors` names it. Exported for its test.
  */
 export function projectChips(manifest) {
