@@ -1,6 +1,6 @@
 {
   "name": "@museumwnf/viewer-layout",
-  "version": "3.70.1",
+  "version": "3.71.0",
   "description": "Page structure for MWNF websites: PageShell composing seven optional, token-styled sections, the content components a page is made of, and the composed views a website names instead of writing a page.",
   "type": "module",
   "license": "SEE LICENSE IN LICENSE.md",
@@ -17,7 +17,8 @@
     "src/tokens.reference.css",
     "src/styles/dxa-gallery.css",
     "src/styles/dxa-exhibition.css",
-    "src/dxa/testing.js"
+    "src/dxa/testing.js",
+    "src/minisite/testing.js"
   ],
   "main": "./dist/index.js",
   "module": "./dist/index.js",
@@ -32,6 +33,7 @@
     "./dxa/gallery.css": "./src/styles/dxa-gallery.css",
     "./dxa/exhibition.css": "./src/styles/dxa-exhibition.css",
     "./dxa/testing": "./src/dxa/testing.js",
+    "./minisite/testing": "./src/minisite/testing.js",
     "./style.css": "./dist/viewer-layout.css",
     "./tokens.reference.css": "./src/tokens.reference.css"
   },
@@ -43,12 +45,12 @@
     "test": "vitest run"
   },
   "peerDependencies": {
-    "@museumwnf/viewer-core": "^2.17.0",
+    "@museumwnf/viewer-core": "^2.21.0",
     "vue": "^3.5.0",
     "vue-router": "^4.5.0 || ^5.0.0"
   },
   "devDependencies": {
-    "@museumwnf/viewer-core": "^2.17.0",
+    "@museumwnf/viewer-core": "^2.21.0",
     "@vitejs/plugin-vue": "^6.0.10",
     "@vue/test-utils": "^2.5.1",
     "jsdom": "^30.1.3",

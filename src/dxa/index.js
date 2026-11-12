@@ -13,7 +13,7 @@ import '../styles/dxa.css'
 export { standardRoutes } from './routes.js'
 
 // A DXA site's whole declaration, from its own values (inventory-app#2053/#2054).
-export { exhibitionConfig, galleryConfig } from './config.js'
+export { exhibitionConfig, galleryConfig, projectChips } from './config.js'
 
 // The family pages a site used to carry, and the two shells. `standardRoutes`
 // serves the pages with `pages: true`; exported for a site that wraps one.

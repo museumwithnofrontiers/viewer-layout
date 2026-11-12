@@ -38,3 +38,5 @@ export {
   cleanText, curatorLabel, curatorLink, introCaption, ISLAMICART_NO_COUNTRY, pageWithNeighbours, placementCaption, PLACEHOLDER_TITLE,
   quoteHasItalics, readingOrder, sheetItemId, slotsOf, viewPicture, withFirstView,
 } from './rules.js'
+// A whole mini-site's declaration, one factory per family (./config.js).
+export { artintroConfig, baroqueartMinisiteConfig, minisiteConfig, parentSite, sharinghistoryMinisiteConfig } from './config.js'

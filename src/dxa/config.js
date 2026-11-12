@@ -1,5 +1,5 @@
 import {
-  languageLabels, loadEntities, mwnfLinks, offeredLanguages, useDataPackage,
+  languageLabels, LEGACY_SITES, loadEntities, mwnfLinks, offeredLanguages, useDataPackage,
 } from '@museumwnf/viewer-core'
 import { itemFromUidPath as itemFromUidList, partnerFromKey as partnerFromLists } from '@museumwnf/viewer-core/legacy'
 import { romanFor } from '@museumwnf/viewer-core/dxa'
@@ -21,7 +21,7 @@ import { mwnfSocialLinks } from '../sections/socialLinks.js'
 //     datasetPackage: '@museumwnf/carpets-data',
 //     siteName: 'Carpets',
 //     origin: 'https://museumwithnofrontiers.github.io/carpets',
-//     projectColors: { '<project id>': 'mwnf-chip--DCA', … },
+//     projectColors: { '<project id>': 'mwnf-chip--DCA', … },   // only where projectChips() cannot tell
 //     noticeProjects: ['<project id>'],
 //     creditsBody: 'carpets.credits.body',
 //   })
@@ -37,6 +37,35 @@ import { mwnfSocialLinks } from '../sections/socialLinks.js'
 // partner record; the language segment is dropped, the page number moves to
 // the query, and the timeline gallery's `start`/`end` path segments become
 // the platform's `begin`/`end` keys.
+// The colour each product wears on a record's source chip: a product by its
+// site, an exhibition's project in the exhibitions' colour, a project with no
+// site of its own (MWNF Galleries) in the galleries' colour.
+const PRODUCT_CHIPS = {
+  islamicart: 'mwnf-chip--ISLandEPM',
+  baroqueart: 'mwnf-chip--DBA',
+  sharinghistory: 'mwnf-chip--AWE',
+  carpets: 'mwnf-chip--DCA',
+  glass: 'mwnf-chip--DGA',
+}
+const EXHIBITION_SITES = new Set(LEGACY_SITES.filter((site) => site.family === 'exhibition').map((site) => site.slug))
+
+/**
+ * The source chip of every project the package names, from the site each one
+ * belongs to (`manifest.projects[id].home_site`). A project the package gives
+ * no `home_site` field (an exhibition's package carries none) gets no chip
+ * here: the site's own `projectColors` names it. Exported for its test.
+ */
+export function projectChips(manifest) {
+  const chips = {}
+  for (const [id, project] of Object.entries(manifest?.projects ?? {})) {
+    if (!project || !('home_site' in project)) continue
+    const site = project.home_site
+    const chip = site === null ? 'mwnf-chip--Galleries' : PRODUCT_CHIPS[site] ?? (EXHIBITION_SITES.has(site) ? 'mwnf-chip--EXH' : null)
+    if (chip) chips[id] = chip
+  }
+  return chips
+}
+
 // A logo category's heading a site names in its own locale; null when it
 // does not (the dictionary answers the entry's own name).
 function ownSectionTitle(t, categoryId) {
@@ -56,7 +85,8 @@ function timelineGalleryRedirect({ country, start, end, page }) {
 /**
  * A gallery's config. `siteName` is the fallback for a package that predates
  * `manifest.site`; `projectColors` maps a project id to one of the
- * `mwnf-chip--*` classes; `noticeProjects` lists the projects whose sheets
+ * `mwnf-chip--*` classes where projectChips() cannot tell (a site's own wins);
+ * `noticeProjects` lists the projects whose sheets
  * carry the Explore-partner notice; `creditsBody` is the credits page's entry;
  * `chrome` is the site's own chrome files and `homeLogos` the home page's
  * logo strip (README, "Site chrome").
@@ -133,7 +163,8 @@ export function galleryConfig({
     // media server; the package ships the path.
     media: { legacyHost: 'https://images.museumwnf.org' },
     links: { ...mwnfLinks },
-    projectColors,
+    // Derived from the package, a site's own projectColors winning.
+    projectColors: { ...projectChips(manifest), ...projectColors },
     noticeProjects,
     // The address this build is deployed at, base path included, read by
     // `sourceUrl()` for the source credit.
@@ -300,7 +331,8 @@ export function exhibitionConfig({
     // media server; the package ships the path.
     media: { legacyHost: 'https://images.museumwnf.org' },
     links: { ...mwnfLinks },
-    projectColors,
+    // Derived from the package, a site's own projectColors winning.
+    projectColors: { ...projectChips(manifest), ...projectColors },
     noticeProjects,
     site: { origin },
     extraViews: standardRoutes('exhibition', { creditsBody, partnerObjects, pages: true }),

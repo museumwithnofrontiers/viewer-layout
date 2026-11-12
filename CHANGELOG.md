@@ -1,3 +1,17 @@
+## 3.71.0 (2026-11-12)
+
+What every mini-site, gallery and exhibition copied by hand, done once here (shared-code review, inventory-app `tmp/shared-code-review-2026-11`). Nothing a site does today changes; requires `@museumwnf/viewer-core` 2.21.0.
+
+### Added
+
+- **Mini-site config factories**: `minisiteConfig`, `artintroConfig`, `baroqueartMinisiteConfig` and `sharinghistoryMinisiteConfig` build a whole mini-site's declaration from its data package, address, chrome and `minisite.json`, as `galleryConfig` does for a gallery. The family's no-country rule and Word document title are the defaults; `minisite.json` may set its own. `parentSite(origin, product)` gives the parent product's address next to the site's own.
+- **`describeMinisiteSmoke`** (`@museumwnf/viewer-layout/minisite/testing`): each family's smoke test, written once, the chrome check (`checkChromeSources`) included.
+- **`projectChips(manifest)`**: a record's source chip from the project's site (`home_site`). `galleryConfig` and `exhibitionConfig` derive the chips with it; a site's own `projectColors` still wins.
+
+### Changed
+
+- **`CatalogueResultsView`** draws viewer-core's `useCatalogueResults` engine instead of carrying its own copy. Its spec, slots and markup are unchanged.
+
 ## 3.70.1 (2026-11-09)
 
 Found re-measuring M13's final comparison with live legacy (inventory-app#2491).
