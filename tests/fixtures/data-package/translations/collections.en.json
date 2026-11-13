@@ -1,18 +1,12 @@
 {
-  "root1": {
-    "title": "Test Tree Root"
-  },
+  "root1": { "title": "Test Tree Root" },
   "theme-a": {
     "title": "Theme A",
     "quote": "A theme about *kufic* calligraphy.",
     "description": "This theme explores kufic script across the collection."
   },
-  "theme-b": {
-    "title": "Theme B"
-  },
-  "extra-a": {
-    "title": "Not A Theme"
-  },
+  "theme-b": { "title": "Theme B" },
+  "extra-a": { "title": "Not A Theme" },
   "page-a1": {
     "title": "Page A1",
     "quote": "An opening page.",
@@ -21,9 +15,7 @@
   "page-a2": {
     "title": "Page A2",
     "description": "The second page of theme A.",
-    "extra": {
-      "intro_text": "An introduction nested under extra."
-    }
+    "extra": { "intro_text": "An introduction nested under extra." }
   },
   "page-a3": {
     "title": "Page 999"
