@@ -18,6 +18,23 @@ export const LOCATION_TYPE = 'location'
  */
 export const HIDDEN_PROJECTS = Object.freeze(['GPA'])
 
+/**
+ * The countries legacy's menu left out. Its Exhibition Trails menu was written
+ * by hand (header.include.php) and names no Algeria, though its home's country
+ * select, read from the data, offers it and its project page lists the trail.
+ */
+export const MENU_HIDDEN_COUNTRIES = Object.freeze(['dz'])
+
+/** The legacy country code a trail's key names (legacy's `cid`), e.g. `tn`. */
+export function countryCode(trail) {
+  return segments(trail)[1] ?? ''
+}
+
+/** Whether legacy's menu named a trail's country. */
+export function inMenu(trail, hidden = MENU_HIDDEN_COUNTRIES) {
+  return !hidden.includes(countryCode(trail))
+}
+
 /** The trail pages' tabs (legacy's `fl`), in the order of its "See Also" menu. */
 export const TRAIL_TABS = Object.freeze(['desc', 'its', 'cur'])
 /** The itinerary pages' tabs. */

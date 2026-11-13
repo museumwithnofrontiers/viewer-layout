@@ -4,7 +4,7 @@ import { createMemoryHistory, createRouter } from 'vue-router'
 import { byId, loadEntities, useDataPackage, useSiteConfig } from '@museumwnf/viewer-core'
 import { createI18n } from '@museumwnf/viewer-core/i18n'
 import {
-  bookLink, galleryOf, isListed, itineraryNumber, lines, mainLocations, neighbours, projectCode, TRAVEL_ENTITIES, TravelsShell,
+  bookLink, countryCode, galleryOf, inMenu, isListed, itineraryNumber, lines, mainLocations, neighbours, projectCode, TRAVEL_ENTITIES, TravelsShell,
   travelsConfig, travelsRoutes,
 } from '../src/travels/index.js'
 import { layoutTexts } from './helpers.js'
@@ -85,6 +85,12 @@ describe('the rules legacy printed by', () => {
     expect(itineraryNumber({ backward_compatibility: 'mwnf3_travels:itinerary:IAM:tn:1:IV' })).toBe('IV')
     expect(isListed({ backward_compatibility: 'mwnf3_travels:trail:GPA:pt:1' })).toBe(false)
     expect(isListed({ backward_compatibility: 'mwnf3_travels:trail:IAM:pt:1' })).toBe(true)
+  })
+
+  it('leaves Algeria out of the menu, as legacy’s hand-written menu did', () => {
+    expect(countryCode({ backward_compatibility: 'mwnf3_travels:trail:IAM:dz:1' })).toBe('dz')
+    expect(inMenu({ backward_compatibility: 'mwnf3_travels:trail:IAM:dz:1' })).toBe(false)
+    expect(inMenu({ backward_compatibility: 'mwnf3_travels:trail:IAM:tn:1' })).toBe(true)
   })
 
   it('lists main locations once each, alphabetically, and a text’s lines', () => {

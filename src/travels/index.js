@@ -17,7 +17,7 @@ export { default as TravelsCrumbs } from './Crumbs.vue'
 export { useTravels } from './data.js'
 export { travelsConfig, travelsRoutes } from './routes.js'
 export {
-  bookLink, childrenOf, galleryOf, HIDDEN_PROJECTS, isListed, ITINERARY_TABS, ITINERARY_TYPE, itineraryNumber,
+  bookLink, childrenOf, countryCode, galleryOf, HIDDEN_PROJECTS, inMenu, isListed, ITINERARY_TABS, MENU_HIDDEN_COUNTRIES, ITINERARY_TYPE, itineraryNumber,
   itineraryPicture, lines, LOCATION_TYPE, locationsOfTrail, mainLocations, neighbours, projectCode, projectOfTrail,
   TRAIL_TABS, TRAIL_TYPE, TRAVEL_ENTITIES, trailsOf,
 } from './rules.js'

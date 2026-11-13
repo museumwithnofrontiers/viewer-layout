@@ -1,3 +1,12 @@
+## 3.74.1 (2026-11-13)
+
+What the parity comparison of the two new sites found (inventory-app#2511). A site that upgrades gets it with no change of its own.
+
+### Fixed
+
+- **`editionText`** (Publications) reads a version's own texts as legacy's book API named them: "About this book" is `description2`, "More about this book" `description1`; they were swapped. A version's own empty text (`''`, which the importer now keeps where legacy's version row had none) stays empty instead of showing the book's.
+- **`PublicationPage`** prints a version's page, image and plan counts as legacy wrote them when that is more than a number (`texts.count_images`: "868 + a DVD with 55,000 supplementary digital images"); `editionText` returns them as `pages`, `images` and `plans`.
+- **`TravelsShell`** leaves Algeria out of the Exhibition Trails menu, as legacy's hand-written menu did; the home's country select and the project page still list its trail. `MENU_HIDDEN_COUNTRIES`, `countryCode` and `inMenu` are exported.
 ## 3.74.0 (2026-11-13)
 
 Legacy's "See also" on the products' item sheets (inventory-app#2538). A site that upgrades draws it with no change of its own; it needs `@museumwnf/viewer-i18n` 6.17.0 for its three entries.
