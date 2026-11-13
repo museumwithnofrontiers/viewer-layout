@@ -8,6 +8,7 @@ export { default as AppContent } from './sections/AppContent.vue'
 export { default as AppHyperlinks } from './sections/AppHyperlinks.vue'
 export { default as AppSponsors } from './sections/AppSponsors.vue'
 export { default as AppFooter } from './sections/AppFooter.vue'
+export { default as GlobalSearchBox } from './sections/GlobalSearchBox.vue'
 
 // A site's chrome files and the footer's social links (inventory-app#2233).
 export { chromeAsset, chromePicture, chromeSource } from './chrome.js'

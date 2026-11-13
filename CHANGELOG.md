@@ -1,3 +1,12 @@
+## 3.75.0 (2026-11-13)
+
+The global search's box (inventory-app M15, ADR 005), off by default: no site changes until it sets `globalSearch`. Needs `@museumwnf/viewer-core` 2.23.0 and the `layout.globalSearch.*` texts of `@museumwnf/viewer-i18n` 6.18.0.
+
+### Added
+
+- **`GlobalSearchBox`**: a search form that sends the visitor to the global search with the text, the page's language and the site's slug (viewer-core's `globalSearchUrl()`). It renders only when the site's `dataset.config.js` sets `globalSearch`.
+- **`AppHeader`** shows it in its tools when the site turned it on. A site with a header of its own (the `header` slot) places `GlobalSearchBox` where it wants.
+
 ## 3.74.1 (2026-11-13)
 
 What the parity comparison of the two new sites found (inventory-app#2511). A site that upgrades gets it with no change of its own.
