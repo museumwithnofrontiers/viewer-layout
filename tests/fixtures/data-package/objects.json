@@ -20,7 +20,18 @@
       { "id": "ref-gal-1", "kind": "gallery", "name": "Sister Gallery", "legacy_host": "https://sister.example.org" },
       { "id": "ref-exh-1", "kind": "exhibition", "name": "Pending Exhibition" }
     ],
-    "media": [{ "url": "https://example.org/audio.mp3", "title": "An audio guide" }]
+    "media": [{ "url": "https://example.org/audio.mp3", "title": "An audio guide" }],
+    "travel_book": {
+      "id": "pub-trail", "backward_compatibility": "mwnf3:bookbase:7", "titles": { "en": "Mamluk Art" },
+      "site": "publications", "path": "/publication/pub-trail", "url": "https://example.org/publications/#/publication/pub-trail"
+    },
+    "exhibition_trails": [
+      {
+        "id": "tr-trail", "backward_compatibility": "mwnf3_travels:trail:IAM:eg:1",
+        "titles": { "en": "MAMLUK ART.", "fr": "L'ART MAMELOUK" }, "subtitles": { "en": "The Splendour and Magic of the Sultans." },
+        "site": "travels", "path": "/trail/tr-trail", "url": "https://example.org/travels/#/trail/tr-trail"
+      }
+    ]
   },
   {
     "id": "o2",

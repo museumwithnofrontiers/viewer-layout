@@ -6,6 +6,7 @@ import MediaGallery from '../content/MediaGallery.vue'
 import RecordLanguages from '../content/RecordLanguages.vue'
 import SmartLink from '../content/SmartLink.vue'
 import RelatedContent from './RelatedContent.vue'
+import { SEE_ALSO_LABELS, seeAlsoOf } from './seeAlso.js'
 import { limitPictures } from '../views/pictureLimit.js'
 
 // The standalone family's item sheet, `database_item.php` in its three
@@ -17,7 +18,12 @@ import { limitPictures } from '../views/pictureLimit.js'
 //   spec: RecordView's spec. Its pictures move to the left column.
 //   back: [{ label: entry, to | href, history: true }]   // legacy's breadcrumbs; `history` goes back one page
 //   related: { heading: entry, groups: [{ heading: entry, type }],
-//              download: { heading: entry, print: entry, word: entry, title: entry, wordFile: (record, language) => name } }
+//              download: { heading: entry, print: entry, word: entry, title: entry, wordFile: (record, language) => name },
+//              seeAlso: false | { heading, travelBook, exhibitionTrail } }
+//     // legacy's "See also", from the record's `travel_book` and
+//     // `exhibition_trails` (seeAlso.js): drawn wherever the record has one;
+//     // `false` leaves it out, an object names other entries. Its links carry
+//     // the page's language, as legacy's did.
 //
 // Slots: `sidebar` (the site's own blocks in the Related Content column,
 // after the related records), `before-sheet` and every slot RecordView hands
@@ -28,8 +34,14 @@ const props = defineProps({
   back: { type: Array, default: () => [] },
   related: { type: Object, default: () => ({}) },
 })
-const { t } = useI18n()
+const { t, locale } = useI18n()
 const slots = useSlots()
+
+function seeAlso(record) {
+  if (props.related.seeAlso === false) return null
+  const labels = { ...SEE_ALSO_LABELS, ...(typeof props.related.seeAlso === 'object' ? props.related.seeAlso : {}) }
+  return seeAlsoOf(record, locale.value, labels)
+}
 
 // RecordView draws no pictures here: the left column does.
 const sheetSpec = computed(() => ({ ...props.spec, media: () => [] }))
@@ -97,6 +109,7 @@ const byCodeDescending = (languages) => [...languages].sort((a, b) => b.code.loc
         :heading="related.heading ?? 'record.related.title'"
         :records="ctx.records"
         :groups="related.groups ?? []"
+        :see-also="seeAlso(ctx.record)"
         :download="related.download ?? null"
         :word-file="related.download?.wordFile?.(ctx.record, ctx.language) ?? 'sheet.doc'"
       >
