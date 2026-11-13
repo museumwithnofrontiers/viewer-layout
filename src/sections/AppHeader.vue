@@ -1,6 +1,8 @@
 <script setup>
 import { computed, ref, useSlots } from 'vue'
 import { useI18n } from '@museumwnf/viewer-core/i18n'
+import { useGlobalSearch } from '@museumwnf/viewer-core'
+import GlobalSearchBox from './GlobalSearchBox.vue'
 
 // The header every website needs, from props: a mark linking home, a title
 // cell with a line above it, a group of logos, a row of links, a search
@@ -36,6 +38,8 @@ const props = defineProps({
 const emit = defineEmits(['search', 'update:language'])
 const slots = useSlots()
 const { t } = useI18n()
+// The global search's box, when the site turned it on (`globalSearch`).
+const globalSearch = useGlobalSearch().enabled
 
 const normalizedLanguages = computed(() =>
   props.languages.map((l) => (typeof l === 'string' ? { code: l, label: l } : l)),
@@ -56,6 +60,7 @@ function visible() {
       props.logos.length ||
       props.links.length ||
       props.search ||
+      globalSearch ||
       switcher.value,
   )
 }
@@ -115,7 +120,7 @@ const searchOpen = ref(false)
           <p v-if="subtitle" class="mwnf-header__subtitle">{{ subtitle }}</p>
         </component>
 
-        <div v-if="links.length || search || switcher" class="mwnf-header__tools">
+        <div v-if="links.length || search || globalSearch || switcher" class="mwnf-header__tools">
           <ul v-if="links.length" class="mwnf-header__links">
             <li v-for="link in links" :key="link.href ?? link.label">
               <a
@@ -152,6 +157,7 @@ const searchOpen = ref(false)
               {{ search.submitText ?? '⌕' }}
             </button>
           </form>
+          <GlobalSearchBox v-if="globalSearch" />
           <div v-if="switcher && languageStyle === 'buttons'" class="mwnf-header__languages" role="group" :aria-label="t('layout.language.label')">
             <button
               v-for="l in normalizedLanguages"

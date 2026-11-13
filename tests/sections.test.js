@@ -8,8 +8,10 @@ import {
   AppHyperlinks,
   AppNavigation,
   AppSponsors,
+  GlobalSearchBox,
 } from '../src/index.js'
-import { globalWithI18n } from './helpers.js'
+import { globalWithI18n, layoutTexts } from './helpers.js'
+import { useSiteConfig } from '@museumwnf/viewer-core'
 
 const cases = [
   {
@@ -473,5 +475,42 @@ describe('AppFooter links', () => {
     expect(links.map((l) => l.text())).toEqual(['About MWNF', 'Credits'])
     expect(links[0].attributes('rel')).toBe('noopener')
     expect(wrapper.find('.mwnf-footer__text').text()).toBe('© MWNF')
+  })
+})
+
+describe('the global search box', () => {
+  const texts = { en: { ...layoutTexts, 'layout.globalSearch.label': 'Search Overall MWNF Database', 'layout.globalSearch.submit': 'Search' } }
+
+  it('is absent unless the site turns the global search on', () => {
+    const wrapper = mount(AppHeader, { props: { title: 'Carpets' }, ...globalWithI18n({ messages: texts }) })
+    expect(wrapper.find('.mwnf-global-search').exists()).toBe(false)
+  })
+
+  it("shows in the header's tools when the site sets globalSearch", () => {
+    const config = useSiteConfig()
+    const previous = config.globalSearch
+    config.globalSearch = true
+    try {
+      const wrapper = mount(AppHeader, { props: { title: 'Carpets' }, ...globalWithI18n({ messages: texts }) })
+      const box = wrapper.find('.mwnf-header__tools .mwnf-global-search')
+      expect(box.exists()).toBe(true)
+      expect(box.attributes('role')).toBe('search')
+      expect(box.find('input').attributes('placeholder')).toBe('Search Overall MWNF Database')
+      expect(box.find('button').text()).toBe('Search')
+    } finally {
+      config.globalSearch = previous
+    }
+  })
+
+  it('can be placed by a site with a header of its own', () => {
+    const config = useSiteConfig()
+    const previous = config.globalSearch
+    config.globalSearch = true
+    try {
+      const wrapper = mount(GlobalSearchBox, globalWithI18n({ messages: texts }))
+      expect(wrapper.find('form.mwnf-global-search').exists()).toBe(true)
+    } finally {
+      config.globalSearch = previous
+    }
   })
 })
