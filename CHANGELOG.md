@@ -1,3 +1,12 @@
+## 3.73.0 (2026-11-13)
+
+The pages of two new standalone sites, as legacy's (inventory-app#2515, #2542, #2543). Nothing a site does today changes.
+
+### Added
+
+- **`@museumwnf/viewer-layout/publications`**: legacy books.museumwnf.org — `PublicationsShell` (the header, the category menu, the search panel, the portal footer), `PublicationsHome` (a band per category), `PublicationsCategory` (`/category/:category`, twelve a page), `PublicationsResults` (`/results`, the search in the query, every field ANDed as legacy's book API did) and `PublicationPage` (`/publication/:id/:language?`: the book's languages, the current version with its cover, its sample and credits PDFs at the package's `/doc` URLs, its texts, and the list of its editions). The labels of a book's page are read in the version's language, English where legacy had none. `publicationsConfig()` is a site's whole declaration, `publicationsRoutes()` its routes; the rules (tiles, categories, the search) are exported as functions.
+- **`@museumwnf/viewer-layout/travels`**: the Exhibition Trails of legacy travels.museumwnf.org — `TravelsShell`, `TravelsHome` (the country and theme selects), `TravelsTrails` (`/trails?country=` / `?project=`), `TravelsTrail` (`/trail/:id?tab=`: its itineraries, description, curators and photographers, and its book linked to the Publications site in the page's language) and `TravelsItinerary` (`/itinerary/:id?tab=`: its description, its image gallery, the previous and next itinerary). `travelsConfig()` and `travelsRoutes()` declare a site.
+- The fixture package carries a small Publications and Travels data set for the tests.
 ## 3.72.1 (2026-11-12)
 
 ### Fixed

@@ -6,7 +6,7 @@ export default defineConfig({
   plugins: [vue()],
   build: {
     lib: {
-      // Seven entry points: the whole package; the content components on
+      // Nine entry points: the whole package; the content components on
       // their own, so a page that composes a list and a pagination does not
       // carry the shell with them; the composed views, which a website names
       // in its configuration; `SiteShell`, which — like the composed
@@ -24,6 +24,9 @@ export default defineConfig({
         dxa: 'src/dxa/index.js',
         standalone: 'src/standalone/index.js',
         minisite: 'src/minisite/index.js',
+        // The Publications and the Travels sites' pages (inventory-app#2542, #2543).
+        publications: 'src/publications/index.js',
+        travels: 'src/travels/index.js',
       },
       formats: ['es'],
       fileName: (format, name) => `${name}.js`,

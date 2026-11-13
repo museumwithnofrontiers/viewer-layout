@@ -1,0 +1,88 @@
+[
+  {
+    "id": "pub-trail",
+    "backward_compatibility": "mwnf3:bookbase:40",
+    "internal_name": "Une architecture de lumière",
+    "category": "exhibition-trail",
+    "project_id": "p-isl",
+    "country_id": "c-dz",
+    "language": "en",
+    "status": "published",
+    "display_order": null,
+    "extra": {
+      "date": "2017-08-04"
+    },
+    "cover": {
+      "url": "https://inventory.example.org/pub/cover-en-1.jpg",
+      "alt_text": null,
+      "photographer": null,
+      "display_order": 1,
+      "edition_id": "ed-en-1"
+    },
+    "pages": [],
+    "documents": [],
+    "edition_ids": [
+      "ed-en-1",
+      "ed-en-2",
+      "ed-fr-1"
+    ],
+    "tag_ids": [
+      "tag-architecture",
+      "tag-islamic-art"
+    ],
+    "trail_ids": [
+      "trail-tn"
+    ],
+    "catalogue_item_ids": [],
+    "languages": [
+      "en",
+      "fr"
+    ]
+  },
+  {
+    "id": "pub-vm",
+    "backward_compatibility": "mwnf3:bookbase:48",
+    "internal_name": "MWNF Educational Guide",
+    "category": "virtual-museum",
+    "project_id": null,
+    "country_id": null,
+    "language": "ar",
+    "status": "published",
+    "display_order": null,
+    "extra": null,
+    "cover": null,
+    "pages": [],
+    "documents": [],
+    "edition_ids": [
+      "ed-ar-1"
+    ],
+    "tag_ids": [],
+    "trail_ids": [],
+    "catalogue_item_ids": [],
+    "languages": [
+      "ar"
+    ]
+  },
+  {
+    "id": "pub-other",
+    "backward_compatibility": "mwnf3:bookbase:50",
+    "internal_name": "Other Book",
+    "category": "other",
+    "project_id": null,
+    "country_id": "c-tn",
+    "language": "en",
+    "status": "published",
+    "display_order": null,
+    "extra": null,
+    "cover": null,
+    "pages": [],
+    "documents": [],
+    "edition_ids": [],
+    "tag_ids": [],
+    "trail_ids": [],
+    "catalogue_item_ids": [],
+    "languages": [
+      "en"
+    ]
+  }
+]

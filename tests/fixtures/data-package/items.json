@@ -4,15 +4,29 @@
     "internal_name": "Fixture Bowl",
     "country_id": "c-eg",
     "partner_id": "p1",
-    "dynasty_ids": ["dyn-1"],
-    "tag_ids": ["tag-bowl", "tag-ceramic"],
+    "dynasty_ids": [
+      "dyn-1"
+    ],
+    "tag_ids": [
+      "tag-bowl",
+      "tag-ceramic"
+    ],
     "start_date": 900,
     "end_date": 950,
     "project_id": null,
     "owner_reference": "INV-DXA-1",
-    "artist_names": ["A. Potter"],
-    "images": [{ "url": "bowl.jpg", "display_order": 0 }],
-    "languages": ["en"]
+    "artist_names": [
+      "A. Potter"
+    ],
+    "images": [
+      {
+        "url": "bowl.jpg",
+        "display_order": 0
+      }
+    ],
+    "languages": [
+      "en"
+    ]
   },
   {
     "id": "item-dxa-2",
@@ -27,5 +41,66 @@
     "owner_reference": "INV-DXA-2",
     "images": [],
     "languages": []
+  },
+  {
+    "id": "tr-mon-1",
+    "type": "monument",
+    "internal_name": "tr-mon-1",
+    "backward_compatibility": "mwnf3_travels:monument:tr-mon-1",
+    "parent_id": null,
+    "partner_id": null,
+    "country_id": "c-tn",
+    "project_id": "p-isl",
+    "owner_reference": null,
+    "start_date": null,
+    "end_date": null,
+    "dynasty_ids": [],
+    "tag_ids": [],
+    "images": [
+      {
+        "url": "https://inventory.example.org/pub/medina-1.jpg",
+        "display_order": 1,
+        "captions": {
+          "en": "The Zaytuna Mosque."
+        }
+      }
+    ],
+    "languages": [
+      "en"
+    ]
+  },
+  {
+    "id": "tr-mon-2",
+    "type": "monument",
+    "internal_name": "tr-mon-2",
+    "backward_compatibility": "mwnf3_travels:monument:tr-mon-2",
+    "parent_id": null,
+    "partner_id": null,
+    "country_id": "c-tn",
+    "project_id": "p-isl",
+    "owner_reference": null,
+    "start_date": null,
+    "end_date": null,
+    "dynasty_ids": [],
+    "tag_ids": [],
+    "images": [
+      {
+        "url": "https://inventory.example.org/pub/palace-2.jpg",
+        "display_order": 2,
+        "captions": {
+          "en": "Cloister."
+        }
+      },
+      {
+        "url": "https://inventory.example.org/pub/palace-1.jpg",
+        "display_order": 1,
+        "captions": {
+          "en": "Nejma al-Zahra, great salon."
+        }
+      }
+    ],
+    "languages": [
+      "en"
+    ]
   }
 ]

@@ -23,6 +23,8 @@ all the packages:
 | `@museumwnf/viewer-layout/standalone` | standalone family layer | the chrome, home page, item sheet, text page and blocks of Discover Islamic Art, Discover Baroque Art and Sharing History | the entries above and `@museumwnf/viewer-core` |
 | `@museumwnf/viewer-layout/minisite` | mini-site family layer | legacy's virtual exhibitions, one website each: the frame, the home page, the introduction, the exhibition pages, legacy's three windows, the caption rules, `minisiteRoutes` / `minisiteNavigation` / `minisiteSettings` | the entries above and `@museumwnf/viewer-core` |
 | `@museumwnf/viewer-layout/minisite/testing` | mini-site family layer | the family's smoke test, `describeMinisiteSmoke` | the site's config, settings, texts and chrome, in the site's own Vitest |
+| `@museumwnf/viewer-layout/publications` | site layer | the Publications site (legacy books.museumwnf.org): its frame, home page, category and results lists, a publication's page, `publicationsConfig` | the entries above and `@museumwnf/viewer-core` |
+| `@museumwnf/viewer-layout/travels` | site layer | the Travels site (legacy travels.museumwnf.org's Exhibition Trails): its frame, the trails' lists, a trail's and an itinerary's pages, `travelsConfig` | the entries above and `@museumwnf/viewer-core` |
 | `@museumwnf/viewer-layout/style.css` | — | one stylesheet for every entry, the family styles included | — |
 | `@museumwnf/viewer-layout/tokens.reference.css` | — | every token the package reads, with its fallback | — |
 
@@ -971,6 +973,59 @@ export default {
   `legacy/dash_dark_back.gif`, `legacy/mwnfLogoShExIn-en.png`).
 - **The texts** are viewer-i18n's `minisiteSharingHistory` bundle (6.4).
 
+## Publications and Travels sites
+
+`@museumwnf/viewer-layout/publications` and `@museumwnf/viewer-layout/travels`
+are the pages of two standalone sites, each a product of its own
+(inventory-app#2515): Publications replaces books.museumwnf.org, Travels the
+Exhibition Trails of travels.museumwnf.org. Their layouts are legacy's, and
+they read only their data package (publications-data-package.md,
+travels-data-package.md in inventory-app) and their viewer-i18n bundle
+(`publications`, `travels`). A site's `dataset.config.js` is one call:
+
+```js
+import { publicationsConfig } from '@museumwnf/viewer-layout/publications'
+const chrome = import.meta.glob('../theme/assets/**/*.{jpg,png,gif,svg}', { eager: true, query: '?url', import: 'default' })
+export default publicationsConfig({
+  datasetPackage: '@museumwnf/publications-data',
+  origin: 'https://museumwithnofrontiers.github.io/publications',
+  siteName: 'MWNF Books',
+  chrome,                // legacy/logo-blue.png, legacy/logo-white.png
+})
+```
+
+```js
+import { travelsConfig } from '@museumwnf/viewer-layout/travels'
+export default travelsConfig({
+  datasetPackage: '@museumwnf/travels-data',
+  origin: 'https://museumwithnofrontiers.github.io/travels',
+})
+```
+
+| Site | Route | Legacy page | Reads |
+| --- | --- | --- | --- |
+| Publications | `/` | HomePage.vue: a band per category | `publications.json`, `editions.json`, `countries`, `languages` |
+| Publications | `/category/:category?page=` | CategoryPage.vue (`/category/<name>/<page>`), legacy's names (`travel-books`, …) | the same |
+| Publications | `/results?title=&author=&isbn=&language=&country=&subject=&type=&publisher=` | ResultsPage.vue | the same, `tags.json` (subjects) |
+| Publications | `/publication/:id/:language?` | BookPage.vue (`/book/<id>/<language>`) | a publication, its editions' covers and `/doc` PDFs, `translations/publications.<lang>.json` |
+| Travels | `/` | travel_et_home.php | `collections.json` (trails), `items.json` (their projects), `countries` |
+| Travels | `/trails?country=` / `?project=` | travel_et_trail.php (`cid` / `tid`) | trails, locations, the trail's `publications` |
+| Travels | `/trail/:id?tab=desc\|its\|cur` | travel_et_trailDetail.php (`fl`) | a trail's texts and `extra` (subtitle, region, curators, photographers), its itineraries and locations |
+| Travels | `/itinerary/:id?tab=des\|vl` | travel_et_itenary.php (`fl`) | an itinerary's texts, its locations' and monuments' pictures |
+
+The Publications site offers English, as legacy did; a publication's page
+reads its labels in the version's language (`tIn`), English where legacy had
+none. The Travels site offers the languages of its trails' texts, labels and
+texts alike, as legacy's trail pages were drawn in the trail's language. A
+trail's book links to its page on the Publications site in the page's
+language (`<url>/<lang>`, legacy's `/book/<id>/<lang>`).
+
+What legacy drew from data the packages do not carry is not drawn: the books'
+stock line ("AVAILABLE"), the "NEW" list (a site may give a `match` for it in
+`publications.categories`), the shop links (D-P8), the publisher popup; the
+Travels pages' tours, "Related Tours" and the itineraries' "AVAILABLE SOON"
+tabs (the tours are out, inventory-app#2515), and the trail's "Starting
+point", which legacy had commented out.
 ## Theming
 
 Every color, font, spacing, radius comes from a `--mwnf-*` CSS custom property with a neutral fallback. Full list: [`tokens.reference.css`](src/tokens.reference.css) (also exported as `@museumwnf/viewer-layout/tokens.reference.css`) — copy it into your website as `theme/tokens.css` and set values.

@@ -1,12 +1,18 @@
 {
-  "root1": { "title": "Test Tree Root" },
+  "root1": {
+    "title": "Test Tree Root"
+  },
   "theme-a": {
     "title": "Theme A",
     "quote": "A theme about *kufic* calligraphy.",
     "description": "This theme explores kufic script across the collection."
   },
-  "theme-b": { "title": "Theme B" },
-  "extra-a": { "title": "Not A Theme" },
+  "theme-b": {
+    "title": "Theme B"
+  },
+  "extra-a": {
+    "title": "Not A Theme"
+  },
   "page-a1": {
     "title": "Page A1",
     "quote": "An opening page.",
@@ -15,7 +21,9 @@
   "page-a2": {
     "title": "Page A2",
     "description": "The second page of theme A.",
-    "extra": { "intro_text": "An introduction nested under extra." }
+    "extra": {
+      "intro_text": "An introduction nested under extra."
+    }
   },
   "page-a3": {
     "title": "Page 999"
@@ -23,5 +31,38 @@
   "page-b1": {
     "title": "Page B1",
     "description": "The first page of theme B."
+  },
+  "tr-root": {
+    "title": "Travels"
+  },
+  "tr-trail": {
+    "title": "IFRIQIYA",
+    "description": "Ifriqiya occupies a predominant place.  \n  \nThe works of *Aghlabid* architecture.",
+    "extra": {
+      "subtitle": "Thirteen Centuries of Art",
+      "region_territory": "all of Tunisia",
+      "curated_by": "Jamila Binous  \nNaceur Baklouti",
+      "photo_by": "Salah Jabeur"
+    }
+  },
+  "tr-gpa": {
+    "title": "GPA TRAIL"
+  },
+  "tr-it-1": {
+    "title": "The Medina",
+    "description": "The *medina* maintains a typically Islamic urban plan."
+  },
+  "tr-it-2": {
+    "title": "The Summer Palaces",
+    "description": "A. Adorne describes the surroundings of Tunis."
+  },
+  "tr-loc-1": {
+    "title": "TUNIS"
+  },
+  "tr-loc-2": {
+    "title": "SIDI BOU SAID"
+  },
+  "tr-loc-3": {
+    "title": "THE MARSA"
   }
 }
