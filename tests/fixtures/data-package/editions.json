@@ -1,0 +1,109 @@
+[
+  {
+    "id": "ed-en-1",
+    "publication_id": "pub-trail",
+    "backward_compatibility": "mwnf3:books:ed-en-1",
+    "language": "en",
+    "format": "print-on-demand",
+    "edition": 1,
+    "publish_year": 2022,
+    "isbn": "9783902966131",
+    "publisher": "Museum With No Frontiers (MWNF)",
+    "page_count": 252,
+    "image_count": 209,
+    "plan_count": 26,
+    "dimensions": null,
+    "binding": "Paperback",
+    "display_order": 1,
+    "cover": {
+      "url": "https://inventory.example.org/pub/cover-en-1.jpg",
+      "alt_text": null,
+      "photographer": null,
+      "display_order": 1,
+      "edition_id": "ed-en-1"
+    },
+    "documents": [
+      {
+        "id": "doc-sample",
+        "kind": "sample",
+        "url": "https://inventory.example.org/doc/doc-sample.pdf",
+        "language": "en"
+      },
+      {
+        "id": "doc-credits",
+        "kind": "credits",
+        "url": "https://inventory.example.org/doc/doc-credits.pdf",
+        "language": "en"
+      }
+    ],
+    "texts": null
+  },
+  {
+    "id": "ed-en-2",
+    "publication_id": "pub-trail",
+    "backward_compatibility": "mwnf3:books:ed-en-2",
+    "language": "en",
+    "format": "ebook",
+    "edition": 1,
+    "publish_year": 2023,
+    "isbn": "9783902966148",
+    "publisher": "Museum With No Frontiers (MWNF)",
+    "page_count": 252,
+    "image_count": 209,
+    "plan_count": 0,
+    "dimensions": null,
+    "binding": "eBook",
+    "display_order": 2,
+    "cover": {
+      "url": "https://inventory.example.org/pub/cover-en-2.jpg",
+      "alt_text": null,
+      "photographer": null,
+      "display_order": 2,
+      "edition_id": "ed-en-2"
+    },
+    "documents": [],
+    "texts": {
+      "title": "An Architecture of Light (eBook)"
+    }
+  },
+  {
+    "id": "ed-fr-1",
+    "publication_id": "pub-trail",
+    "backward_compatibility": "mwnf3:books:ed-fr-1",
+    "language": "fr",
+    "format": "print-on-demand",
+    "edition": 1,
+    "publish_year": 2022,
+    "isbn": "9783902782229",
+    "publisher": "Éditions Fixture",
+    "page_count": 252,
+    "image_count": 209,
+    "plan_count": 26,
+    "dimensions": "15.2 x 22.9 cm",
+    "binding": "Paperback",
+    "display_order": 3,
+    "cover": null,
+    "documents": [],
+    "texts": null
+  },
+  {
+    "id": "ed-ar-1",
+    "publication_id": "pub-vm",
+    "backward_compatibility": "mwnf3:books:ed-ar-1",
+    "language": "ar",
+    "format": "print",
+    "edition": 1,
+    "publish_year": 2022,
+    "isbn": "9780000000001",
+    "publisher": "Museum With No Frontiers (MWNF)",
+    "page_count": 252,
+    "image_count": 209,
+    "plan_count": 26,
+    "dimensions": null,
+    "binding": "Hardcover",
+    "display_order": 4,
+    "cover": null,
+    "documents": [],
+    "texts": null
+  }
+]

@@ -1,4 +1,14 @@
 [
   { "id": "c-eg", "code": "eg", "internal_name": "Egypt" },
-  { "id": "c-sy", "code": "sy", "internal_name": "Syria" }
+  { "id": "c-sy", "code": "sy", "internal_name": "Syria" },
+  {
+    "id": "c-dz",
+    "code": "dz",
+    "internal_name": "Algeria"
+  },
+  {
+    "id": "c-tn",
+    "code": "tn",
+    "internal_name": "Tunisia"
+  }
 ]

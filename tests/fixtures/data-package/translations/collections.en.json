@@ -23,5 +23,38 @@
   "page-b1": {
     "title": "Page B1",
     "description": "The first page of theme B."
+  },
+  "tr-root": {
+    "title": "Travels"
+  },
+  "tr-trail": {
+    "title": "IFRIQIYA",
+    "description": "Ifriqiya occupies a predominant place.  \n  \nThe works of *Aghlabid* architecture.",
+    "extra": {
+      "subtitle": "Thirteen Centuries of Art",
+      "region_territory": "all of Tunisia",
+      "curated_by": "Jamila Binous  \nNaceur Baklouti",
+      "photo_by": "Salah Jabeur"
+    }
+  },
+  "tr-gpa": {
+    "title": "GPA TRAIL"
+  },
+  "tr-it-1": {
+    "title": "The Medina",
+    "description": "The *medina* maintains a typically Islamic urban plan."
+  },
+  "tr-it-2": {
+    "title": "The Summer Palaces",
+    "description": "A. Adorne describes the surroundings of Tunis."
+  },
+  "tr-loc-1": {
+    "title": "TUNIS"
+  },
+  "tr-loc-2": {
+    "title": "SIDI BOU SAID"
+  },
+  "tr-loc-3": {
+    "title": "THE MARSA"
   }
 }

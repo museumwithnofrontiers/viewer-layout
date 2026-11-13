@@ -1,0 +1,16 @@
+{
+  "pub-trail": {
+    "title": "An Architecture of Light",
+    "subtitle": "Islamic Art in Algeria",
+    "description": "An Architecture of Light is the most recent title.  \n  \nIt can be enjoyed as an *armchair guide*.",
+    "introduction": "Five itineraries.",
+    "author_credit": "Farida Benouis, Houria Chérid",
+    "photography_credit": "Kamredine Nasser Medjkane",
+    "coordination_credit": "Farida Benouis; Boussad Ouadi"
+  },
+  "pub-other": {
+    "title": "Other Book",
+    "subtitle": "A subtitle that is long enough to be shortened on the home page of the site",
+    "author_credit": "An Author"
+  }
+}

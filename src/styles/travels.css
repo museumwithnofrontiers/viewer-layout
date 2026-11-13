@@ -1,0 +1,114 @@
+/* The Travels site (travels.museumwnf.org's style/style.css): its 990px
+   column on the dark red panel, the beige page around it, its Trebuchet
+   headings and its pale texts. */
+
+.mwnf-travels {
+  --mwnf-travels-page: #bea684;
+  --mwnf-travels-panel: #680003;
+  --mwnf-travels-text: #efdaad;
+  --mwnf-travels-heading: #f6e2b6;
+  --mwnf-travels-title: #deceaa;
+  --mwnf-travels-line: #8c3a2b;
+  display: flex;
+  flex-direction: column;
+  width: 990px;
+  max-width: 100%;
+  min-height: 100vh;
+  margin: 0 auto;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 12px;
+  color: var(--mwnf-travels-text);
+  background-color: var(--mwnf-travels-panel);
+}
+.mwnf-travels *,
+.mwnf-travels *::before,
+.mwnf-travels *::after { box-sizing: border-box; }
+.mwnf-travels a { color: var(--mwnf-travels-heading); }
+.mwnf-travels p { margin: 0; padding: 0 0 7px; }
+.mwnf-travels h1,
+.mwnf-travels h2 { margin: 0; padding: 0 0 10px; font-family: 'Trebuchet MS', Arial, Helvetica, sans-serif; font-weight: bold; }
+.mwnf-travels h1 { font-size: 20px; color: var(--mwnf-travels-title); }
+.mwnf-travels h2 { font-size: 15px; color: var(--mwnf-travels-heading); }
+
+/* ── Header and menu ────────────────────────────────────────────────────── */
+.mwnf-travels-header { display: flex; flex-direction: column; padding: 16px 32px 0; }
+.mwnf-travels-header__title { font-family: 'Trebuchet MS', Arial, Helvetica, sans-serif; font-size: 26px; font-weight: bold; color: var(--mwnf-travels-title); text-decoration: none; }
+.mwnf-travels-menu { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; border-bottom: 1px solid var(--mwnf-travels-line); }
+.mwnf-travels-menu__list { display: flex; margin: 0; padding: 0; list-style: none; }
+.mwnf-travels-menu__entry { position: relative; padding: 6px 14px 6px 0; font-weight: bold; text-transform: uppercase; }
+.mwnf-travels-menu__entry > a { text-decoration: none; }
+.mwnf-travels-menu__children { position: absolute; top: 100%; left: 0; z-index: 10; display: none; min-width: 220px; margin: 0; padding: 6px 10px; list-style: none; text-transform: none; font-weight: normal; background-color: var(--mwnf-travels-panel); border: 1px solid var(--mwnf-travels-line); }
+.mwnf-travels-menu__entry:hover > .mwnf-travels-menu__children,
+.mwnf-travels-menu__entry:focus-within > .mwnf-travels-menu__children { display: block; }
+.mwnf-travels-menu__children li { padding: 2px 0; }
+.mwnf-travels-menu__language { font-size: 12px; }
+
+.mwnf-travels-main { flex: 1; padding: 16px 32px; }
+.mwnf-travels__empty { padding: 40px 0; }
+
+/* ── The bands over a page ──────────────────────────────────────────────── */
+.mwnf-travels-banner,
+.mwnf-travels-home__banner { margin-bottom: 16px; }
+.mwnf-travels-crumbs { margin-bottom: 10px; }
+.mwnf-travels-crumbs__link { color: var(--mwnf-travels-text); text-decoration: none; }
+.mwnf-travels-crumbs__link:hover { text-decoration: underline; }
+.mwnf-travels-banner__about,
+.mwnf-travels-home__about { margin-top: 10px; }
+.mwnf-travels-banner__about-heading,
+.mwnf-travels-home__about-heading { font-family: 'Trebuchet MS', Arial, Helvetica, sans-serif; font-size: 15px; font-weight: bold; color: var(--mwnf-travels-heading); }
+.mwnf-travels-home__selects { display: flex; gap: 40px; margin-top: 20px; }
+.mwnf-travels-home__select { display: flex; flex-direction: column; gap: 4px; font-weight: bold; }
+
+.mwnf-travels-detail-band { display: flex; justify-content: space-between; gap: 20px; }
+.mwnf-travels-detail-band__line { padding: 0 0 4px; }
+.mwnf-travels-detail-band__itinerary { font-weight: bold; text-transform: none; color: var(--mwnf-travels-heading); }
+.mwnf-travels-detail-band__book { display: flex; flex-direction: row-reverse; align-items: flex-start; gap: 8px; }
+.mwnf-travels-detail-band__book img { width: 93px; height: auto; border: 0; }
+.mwnf-travels-detail-band__book-label { font-weight: bold; }
+
+.mwnf-travels-see-also { margin-top: 12px; }
+.mwnf-travels-see-also__heading { font-family: 'Trebuchet MS', Arial, Helvetica, sans-serif; font-weight: bold; color: var(--mwnf-travels-heading); }
+.mwnf-travels-see-also__tabs { display: flex; flex-wrap: wrap; gap: 4px 16px; padding: 6px 0; border-bottom: 1px solid var(--mwnf-travels-line); }
+.mwnf-travels-see-also__tab a { text-decoration: none; }
+.mwnf-travels-see-also__tab--active a { font-weight: bold; text-decoration: underline; }
+
+/* ── Content ────────────────────────────────────────────────────────────── */
+.mwnf-travels-content { max-width: 707px; }
+.mwnf-travels-content__head { display: flex; justify-content: space-between; align-items: baseline; padding-top: 24px; }
+.mwnf-travels-content__back { text-decoration: none; }
+.mwnf-travels-content__neighbours { padding: 24px 0 10px; text-align: right; }
+.mwnf-travels-content__prose p { padding: 0 0 1em; }
+
+.mwnf-travels-trails__row,
+.mwnf-travels-itinerary-row { display: flex; gap: 16px; padding: 16px 0; border-bottom: 1px solid var(--mwnf-travels-line); }
+.mwnf-travels-trails__cover { flex: 0 0 120px; text-align: center; }
+.mwnf-travels-trails__cover img { width: 93px; height: auto; }
+.mwnf-travels-trails__title { text-transform: uppercase; }
+.mwnf-travels-itinerary-row__picture { flex: 0 0 100px; }
+.mwnf-travels-itinerary-row__picture img { width: 90px; height: auto; }
+.mwnf-travels-itinerary-row__text a { text-decoration: none; }
+
+.mwnf-travels-gallery { display: flex; gap: 30px; }
+.mwnf-travels-gallery__main { flex: 0 0 300px; }
+.mwnf-travels-gallery__picture { display: block; max-width: 300px; max-height: 240px; border: 0; }
+.mwnf-travels-gallery__caption { margin-top: 5px; }
+.mwnf-travels-gallery__thumbs { display: flex; flex-wrap: wrap; align-content: flex-start; gap: 2px; width: 350px; }
+.mwnf-travels-gallery__thumb { padding: 0; border: 1px solid transparent; background: transparent; cursor: pointer; }
+.mwnf-travels-gallery__thumb img { display: block; height: 30px; width: auto; }
+.mwnf-travels-gallery__thumb--current { border-color: var(--mwnf-travels-heading); }
+
+/* ── Footer ─────────────────────────────────────────────────────────────── */
+.mwnf-travels-footer { padding: 10px 32px; font-size: 10px; text-align: center; }
+.mwnf-travels-footer a { color: var(--mwnf-travels-text); text-decoration: none; }
+
+@media (max-width: 760px) {
+  .mwnf-travels-header,
+  .mwnf-travels-main,
+  .mwnf-travels-footer { padding-left: 16px; padding-right: 16px; }
+  .mwnf-travels-menu { flex-direction: column; align-items: flex-start; }
+  .mwnf-travels-menu__list { flex-wrap: wrap; }
+  .mwnf-travels-detail-band,
+  .mwnf-travels-gallery,
+  .mwnf-travels-home__selects { flex-direction: column; }
+  .mwnf-travels-gallery__thumbs { width: 100%; }
+}

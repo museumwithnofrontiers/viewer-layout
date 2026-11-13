@@ -101,5 +101,183 @@
     "parent_id": "theme-x",
     "display_order": 2,
     "items": []
+  },
+  {
+    "id": "tr-root",
+    "type": "collection",
+    "purpose": "travels-root",
+    "internal_name": "root",
+    "backward_compatibility": "mwnf3_travels:root",
+    "parent_id": null,
+    "country_id": null,
+    "display_order": null,
+    "latitude": null,
+    "longitude": null,
+    "map_zoom": null,
+    "extra": null,
+    "images": [],
+    "items": []
+  },
+  {
+    "id": "tr-trail",
+    "type": "exhibition trail",
+    "purpose": null,
+    "internal_name": "trail:IAM:tn:1",
+    "backward_compatibility": "mwnf3_travels:trail:IAM:tn:1",
+    "parent_id": "tr-root",
+    "country_id": "c-tn",
+    "display_order": null,
+    "latitude": null,
+    "longitude": null,
+    "map_zoom": null,
+    "extra": null,
+    "images": [
+      {
+        "url": "https://inventory.example.org/pub/trail-cover.jpg",
+        "alt_text": null,
+        "display_order": 1
+      }
+    ],
+    "items": [],
+    "entries": [
+      {
+        "id": "item-dxa-1",
+        "display_order": 1,
+        "contextual_descriptions": {}
+      }
+    ],
+    "partners": [
+      {
+        "id": "p1",
+        "level": "partner"
+      }
+    ],
+    "publications": [
+      {
+        "id": "pub-trail",
+        "backward_compatibility": "mwnf3:bookbase:8",
+        "titles": {
+          "en": "Ifriqiya",
+          "fr": "Ifriqiya"
+        },
+        "site": "publications",
+        "path": "/publication/pub-trail",
+        "url": "https://example.org/publications/#/publication/pub-trail"
+      }
+    ]
+  },
+  {
+    "id": "tr-gpa",
+    "type": "exhibition trail",
+    "purpose": null,
+    "internal_name": "trail:GPA:pt:1",
+    "backward_compatibility": "mwnf3_travels:trail:GPA:pt:1",
+    "parent_id": "tr-root",
+    "country_id": "c-tn",
+    "display_order": null,
+    "latitude": null,
+    "longitude": null,
+    "map_zoom": null,
+    "extra": null,
+    "images": [],
+    "items": []
+  },
+  {
+    "id": "tr-it-1",
+    "type": "itinerary",
+    "purpose": null,
+    "internal_name": "itinerary:IAM:tn:1:I",
+    "backward_compatibility": "mwnf3_travels:itinerary:IAM:tn:1:I",
+    "parent_id": "tr-trail",
+    "country_id": null,
+    "display_order": null,
+    "latitude": null,
+    "longitude": null,
+    "map_zoom": null,
+    "extra": {
+      "days": 1
+    },
+    "images": [],
+    "items": []
+  },
+  {
+    "id": "tr-it-2",
+    "type": "itinerary",
+    "purpose": null,
+    "internal_name": "itinerary:IAM:tn:1:II",
+    "backward_compatibility": "mwnf3_travels:itinerary:IAM:tn:1:II",
+    "parent_id": "tr-trail",
+    "country_id": null,
+    "display_order": null,
+    "latitude": null,
+    "longitude": null,
+    "map_zoom": null,
+    "extra": null,
+    "images": [
+      {
+        "url": "https://inventory.example.org/pub/itinerary-2.jpg",
+        "alt_text": "The itinerary",
+        "display_order": 1
+      }
+    ],
+    "items": []
+  },
+  {
+    "id": "tr-loc-1",
+    "type": "location",
+    "purpose": null,
+    "internal_name": "location:IAM:tn:1:I:1",
+    "backward_compatibility": "mwnf3_travels:location:IAM:tn:1:I:1",
+    "parent_id": "tr-it-1",
+    "country_id": null,
+    "display_order": null,
+    "latitude": null,
+    "longitude": null,
+    "map_zoom": null,
+    "extra": null,
+    "images": [],
+    "items": [
+      {
+        "id": "tr-mon-1",
+        "display_order": null
+      }
+    ]
+  },
+  {
+    "id": "tr-loc-2",
+    "type": "location",
+    "purpose": null,
+    "internal_name": "location:IAM:tn:1:II:1",
+    "backward_compatibility": "mwnf3_travels:location:IAM:tn:1:II:1",
+    "parent_id": "tr-it-2",
+    "country_id": null,
+    "display_order": null,
+    "latitude": null,
+    "longitude": null,
+    "map_zoom": null,
+    "extra": null,
+    "images": [],
+    "items": [
+      {
+        "id": "tr-mon-2",
+        "display_order": null
+      }
+    ]
+  },
+  {
+    "id": "tr-loc-3",
+    "type": "location",
+    "purpose": null,
+    "internal_name": "location:IAM:tn:1:II:2",
+    "backward_compatibility": "mwnf3_travels:location:IAM:tn:1:II:2",
+    "parent_id": "tr-it-2",
+    "country_id": null,
+    "display_order": null,
+    "latitude": null,
+    "longitude": null,
+    "map_zoom": null,
+    "extra": null,
+    "images": [],
+    "items": []
   }
 ]

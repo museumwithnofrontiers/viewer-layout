@@ -1,0 +1,37 @@
+[
+  {
+    "id": "ara",
+    "code": "ar",
+    "is_default": false,
+    "names": {
+      "ar": "العربية",
+      "en": "Arabic"
+    }
+  },
+  {
+    "id": "deu",
+    "code": "de",
+    "is_default": false,
+    "names": {
+      "de": "Deutsch",
+      "en": "German"
+    }
+  },
+  {
+    "id": "eng",
+    "code": "en",
+    "is_default": true,
+    "names": {
+      "en": "English"
+    }
+  },
+  {
+    "id": "fra",
+    "code": "fr",
+    "is_default": false,
+    "names": {
+      "fr": "Français",
+      "en": "French"
+    }
+  }
+]

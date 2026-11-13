@@ -1,4 +1,18 @@
 [
   { "id": "tag-bowl", "category": "type", "legacy_tag_id": "1", "label": "Bowl" },
-  { "id": "tag-ceramic", "category": "material", "legacy_tag_id": "2", "label": "Ceramic" }
+  { "id": "tag-ceramic", "category": "material", "legacy_tag_id": "2", "label": "Ceramic" },
+  {
+    "id": "tag-architecture",
+    "internal_name": "architecture",
+    "category": "subject",
+    "language": "en",
+    "description": "ARCHITECTURE"
+  },
+  {
+    "id": "tag-islamic-art",
+    "internal_name": "islamic art",
+    "category": "theme",
+    "language": "en",
+    "description": "Islamic Art"
+  }
 ]

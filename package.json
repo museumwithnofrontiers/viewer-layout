@@ -1,6 +1,6 @@
 {
   "name": "@museumwnf/viewer-layout",
-  "version": "3.72.1",
+  "version": "3.73.0",
   "description": "Page structure for MWNF websites: PageShell composing seven optional, token-styled sections, the content components a page is made of, and the composed views a website names instead of writing a page.",
   "type": "module",
   "license": "SEE LICENSE IN LICENSE.md",
@@ -30,6 +30,8 @@
     "./dxa": "./dist/dxa.js",
     "./standalone": "./dist/standalone.js",
     "./minisite": "./dist/minisite.js",
+    "./publications": "./dist/publications.js",
+    "./travels": "./dist/travels.js",
     "./dxa/gallery.css": "./src/styles/dxa-gallery.css",
     "./dxa/exhibition.css": "./src/styles/dxa-exhibition.css",
     "./dxa/testing": "./src/dxa/testing.js",
