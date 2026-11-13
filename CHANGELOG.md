@@ -1,3 +1,12 @@
+## 3.74.0 (2026-11-13)
+
+Legacy's "See also" on the products' item sheets (inventory-app#2538). A site that upgrades draws it with no change of its own; it needs `@museumwnf/viewer-i18n` 6.17.0 for its three entries.
+
+### Added
+
+- **`StandaloneItemSheet`** draws legacy's "See also" at the foot of the Related Content column, after the site's `sidebar` blocks and before the download links, wherever the record has a link: Discover Islamic Art's "Related MWNF Travel Book" (`travel_book`, the Travel Book of the item's country, its page on the Publications site in the page's language as legacy's `/book/<id>/<lang>`, in a window of its own) and Discover Baroque Art's exhibition trails (`exhibition_trails`, each "<title> - <subtitle>" under "Virtual Visit Exhibition Trail", its page on the Travels site in the page's language). `related.seeAlso: false` leaves it out; an object names other entries.
+- **`RelatedContent`** takes the block as `seeAlso`; **`seeAlsoOf`**, **`trailTitle`** and **`SEE_ALSO_LABELS`** build it.
+
 ## 3.73.0 (2026-11-13)
 
 The pages of two new standalone sites, as legacy's (inventory-app#2515, #2542, #2543). Nothing a site does today changes.
