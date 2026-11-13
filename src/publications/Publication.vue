@@ -130,9 +130,9 @@ function selectEdition(i) {
             <div v-if="present(text.authors)">{{ label('publications.edition.authors') }}: {{ text.authors }}</div>
             <div v-if="present(text.photographers)">{{ label('publications.edition.photographers') }}: {{ text.photographers }}</div>
             <div v-if="present(text.editors)">{{ label('publications.edition.editors') }}: {{ text.editors }}</div>
-            <div v-if="present(edition?.page_count)">{{ label('publications.edition.pages') }}: {{ edition.page_count }}</div>
-            <div v-if="present(edition?.image_count)">{{ label('publications.edition.images') }}: {{ edition.image_count }}</div>
-            <div v-if="present(edition?.plan_count)" class="mwnf-books-edition__plans">{{ label('publications.edition.plans') }}: {{ edition.plan_count }}</div>
+            <div v-if="present(text.pages)">{{ label('publications.edition.pages') }}: {{ text.pages }}</div>
+            <div v-if="present(text.images)">{{ label('publications.edition.images') }}: {{ text.images }}</div>
+            <div v-if="present(text.plans)" class="mwnf-books-edition__plans">{{ label('publications.edition.plans') }}: {{ text.plans }}</div>
           </div>
           <div class="mwnf-books-edition__group">
             <div v-if="present(edition?.publisher)" class="mwnf-books-edition__publisher">{{ label('publications.edition.publishers') }}: {{ edition.publisher }}</div>

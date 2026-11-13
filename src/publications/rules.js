@@ -126,22 +126,29 @@ export function formatsOf(editions) {
 
 /**
  * An edition's texts: the book's in that language, with the edition's own
- * where legacy kept a version's apart (`texts`, D-P9). Legacy's fields:
- * about_this_book (description1), more_about_this_book (description2), note
- * (remarks1), author, photographer and editors (local_coordinator).
+ * where legacy kept a version's apart (`texts`, D-P9). Legacy's fields (its
+ * API's BookDetailResource): about_this_book (description2),
+ * more_about_this_book (description1), note (remarks1), author, photographer
+ * and editors (local_coordinator). A version's own empty text ('') stays
+ * empty: legacy printed the version's row, which had none.
  */
 export function editionText(bookText = {}, edition = null) {
   const own = edition?.texts ?? {}
-  const pick = (value, fallback) => (value !== undefined && value !== null && value !== '' ? value : fallback ?? null)
+  const pick = (value, fallback) => (value !== undefined && value !== null ? value : fallback ?? null)
   return {
     title: pick(own.title, bookText.title),
     subtitle: pick(own.subtitle, bookText.subtitle),
-    about: pick(own.description1, bookText.description),
-    moreAbout: pick(own.description2, bookText.introduction),
+    about: pick(own.description2, bookText.description),
+    moreAbout: pick(own.description1, bookText.introduction),
     note: pick(own.remarks1, null),
     authors: pick(own.author, bookText.author_credit),
     photographers: pick(own.photographer, bookText.photography_credit),
     editors: pick(own.local_coordinator, bookText.coordination_credit),
+    // The counts, as legacy wrote them when that is more than a number
+    // ("868 + a DVD with 55,000 supplementary digital images").
+    pages: pick(own.count_pages, edition?.page_count),
+    images: pick(own.count_images, edition?.image_count),
+    plans: pick(own.count_plans, edition?.plan_count),
   }
 }
 

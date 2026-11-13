@@ -118,11 +118,20 @@ describe('the rules legacy printed by', () => {
     expect(formatsOf(editionsOf(trail, index, 'en'))).toEqual(['Paperback', 'eBook'])
   })
 
-  it('takes a version’s own texts over the book’s, field by field', () => {
+  it('takes a version’s own texts over the book’s, field by field, as legacy’s API named them', () => {
     const book = { title: 'Book', subtitle: 'Sub', description: 'About', introduction: 'More', author_credit: 'A' }
-    expect(editionText(book, { texts: { title: 'Own', description2: 'Own more' } })).toMatchObject({
-      title: 'Own', subtitle: 'Sub', about: 'About', moreAbout: 'Own more', authors: 'A',
+    // about_this_book is description2, more_about_this_book description1 (BookDetailResource).
+    expect(editionText(book, { texts: { title: 'Own', description2: 'Own about' } })).toMatchObject({
+      title: 'Own', subtitle: 'Sub', about: 'Own about', moreAbout: 'More', authors: 'A',
     })
+    expect(editionText(book, { texts: { description1: 'Own more' } })).toMatchObject({ about: 'About', moreAbout: 'Own more' })
+  })
+
+  it('leaves a version’s empty text empty, and prints a count as legacy wrote it', () => {
+    const book = { title: 'Book', author_credit: 'MWNF' }
+    expect(editionText(book, { texts: { author: '' } }).authors).toBe('')
+    const edition = { image_count: 868, page_count: 300, texts: { count_images: '868 + a DVD' } }
+    expect(editionText(book, edition)).toMatchObject({ images: '868 + a DVD', pages: 300, plans: null })
   })
 
   it('files a book under the category legacy named, and lists nothing as NEW without a rule', async () => {

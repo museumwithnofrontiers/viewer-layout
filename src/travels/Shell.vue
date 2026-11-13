@@ -12,6 +12,7 @@
 import { computed } from 'vue'
 import { mwnfLinks, useI18n, useSiteConfig } from '@museumwnf/viewer-core'
 import { useTravels } from './data.js'
+import { inMenu } from './rules.js'
 
 const props = defineProps({
   languages: { type: Array, default: () => [] },
@@ -31,7 +32,7 @@ const books = computed(() => {
   return url ? url.slice(0, url.indexOf('#')) || url : 'https://books.museumwnf.org'
 })
 
-const countries = computed(() => [...new Set(data.listed.value.map((trail) => trail.country_id).filter(Boolean))]
+const countries = computed(() => [...new Set(data.listed.value.filter((trail) => inMenu(trail)).map((trail) => trail.country_id).filter(Boolean))]
   .map((id) => ({ id, name: data.countryName(id) }))
   .sort((a, b) => a.name.localeCompare(b.name)))
 const year = new Date().getFullYear()
