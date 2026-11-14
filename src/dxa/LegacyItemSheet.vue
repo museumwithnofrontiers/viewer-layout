@@ -32,7 +32,7 @@ const props = defineProps({
    * The family's entry names for legacy's words:
    * `{ viewShortDescription, hideShortDescription, glossary, dynasties, exhibitions, workingNumber }`,
    * and `relatedObjects` for a family that draws legacy's Related Objects
-   * (RelatedObjects.vue; a gallery).
+   * (RelatedObjects.vue; both families do).
    */
   words: { type: Object, required: true },
 })

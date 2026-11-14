@@ -1,4 +1,5 @@
 import { beforeAll, describe, expect, it } from 'vitest'
+import { shallowMount } from '@vue/test-utils'
 import { loadEntities, useDataPackage } from '@museumwnf/viewer-core'
 import ExhibitionSearchHowTo from '../../src/dxa/exhibition/SearchHowTo.vue'
 import ExhibitionPartners from '../../src/dxa/exhibition/Partners.vue'
@@ -11,6 +12,8 @@ import ExhibitionCollectionResults from '../../src/dxa/exhibition/CollectionResu
 import ExhibitionCollectionSearch from '../../src/dxa/exhibition/CollectionSearch.vue'
 import ExhibitionPartnerObjects from '../../src/dxa/exhibition/PartnerObjects.vue'
 import { themeSpec, aboutSpec } from '../../src/dxa/exhibition/themeSpecs.js'
+import ExhibitionItemDetail from '../../src/dxa/exhibition/ItemDetail.vue'
+import LegacyItemSheet from '../../src/dxa/LegacyItemSheet.vue'
 import { mountPage, settle, sharedDxaTexts } from './helpers.js'
 
 // The exhibition family's thin pages (epic inventory-app#1731, from
@@ -207,5 +210,15 @@ describe('the theme page specs', () => {
     expect(aboutSpec.about()).toBe(true)
     expect(aboutSpec.aboutKeeps).toEqual(['panel'])
     expect(themeSpec.about()).toBe(false)
+  })
+})
+describe('ExhibitionItemDetail', () => {
+  // Legacy's exhibition sheet drew its related objects as the galleries' do,
+  // 64px thumbnails with a tooltip beside them; without the word the sidebar
+  // fell back to the results' tile grid, whose hover card does not fit its
+  // column.
+  it("draws legacy's Related Objects in the exhibition's word", () => {
+    const wrapper = shallowMount(ExhibitionItemDetail, { props: { id: 'o1' } })
+    expect(wrapper.findComponent(LegacyItemSheet).props('words').relatedObjects).toBe('exhibition.related.objects')
   })
 })

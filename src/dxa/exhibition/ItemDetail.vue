@@ -18,6 +18,9 @@ const WORDS = {
   workingNumber: 'exhibition.sheet.workingNumber',
   relatedAudio: 'exhibition.sheet.relatedAudio',
   relatedVideos: 'exhibition.sheet.relatedVideos',
+  // Legacy's exhibition sheet drew its related objects as the galleries'
+  // do: 64px thumbnails with a tooltip beside them (RelatedObjects.vue).
+  relatedObjects: 'exhibition.related.objects',
 }
 const inBuild = (itemId) => itemById.value.get(itemId)
 </script>

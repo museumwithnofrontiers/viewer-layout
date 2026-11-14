@@ -169,17 +169,20 @@ function searchTests(mountSite, loadItems) {
 
 // Legacy's Related Objects: every related object a thumbnail under "Related
 // Objects", those outside this site's package too (inventory-app#2491). One
-// outside whose project has a site of its own links to it there.
-function relatedObjectsTest(mountSite, manifest, sharedTexts) {
-  it('draws every related object as a thumbnail, those outside the gallery too', async () => {
+// outside whose project has a site of its own links to it there. Both
+// families drew them so; `heading` is the family's own word for them. An
+// exhibition's sheet shows only the records its build carries in English.
+function relatedObjectsTest(mountSite, manifest, heading) {
+  it('draws every related object as a thumbnail, those outside the package too', async () => {
     const [items] = await loadEntities(['items'])
-    const item = items.find((i) => (i.related_items ?? []).some((ref) => ref.in_package === false))
-      ?? items.find((i) => (i.related_items ?? []).length)
+    const shown = items.filter((i) => !i.languages?.length || i.languages.includes('en'))
+    const item = shown.find((i) => (i.related_items ?? []).some((ref) => ref.in_package === false))
+      ?? shown.find((i) => (i.related_items ?? []).length)
     if (!item) return
     const { app, host } = await mountSite(`#/item/${item.id}?lang=en`)
     await vi.waitFor(() => expect(host.querySelector('.mwnf-related-objects__tile')).not.toBeNull(), WAIT)
     const block = host.querySelector('.mwnf-related-objects')
-    expect(block.querySelector('.mwnf-related-objects__heading').textContent).toBe(sharedTexts.en['gallery.related.objects'])
+    expect(block.querySelector('.mwnf-related-objects__heading').textContent).toBe(heading)
     expect(block.querySelectorAll('.mwnf-related-objects__tile')).toHaveLength(item.related_items.length)
     const outside = item.related_items.find((ref) => ref.in_package === false && manifest.projects[ref.project_id]?.home_site)
     if (outside) {
@@ -187,8 +190,10 @@ function relatedObjectsTest(mountSite, manifest, sharedTexts) {
       expect(hrefs.some((href) => href.endsWith(`/item/${outside.id}`))).toBe(true)
     }
     expect(host.querySelector('.mwnf-sheet-related__references')).toBeNull()
-    // Only in the sidebar: the sheet draws no grid of its own under the citation.
+    // Only in the sidebar: the sheet draws no grid of its own under the
+    // citation, and the sidebar no tile grid with a card on hover.
     expect(host.querySelector('.mwnf-record__main .mwnf-related')).toBeNull()
+    expect(host.querySelector('.mwnf-record__aside .mwnf-grid')).toBeNull()
     app.unmount()
   }, 60000)
 }
@@ -365,7 +370,7 @@ export function describeGallerySmoke({ config, sharedTexts, ownTexts, manifest, 
       app.unmount()
     }, 60000)
 
-    relatedObjectsTest(mountSite, manifest, sharedTexts)
+    relatedObjectsTest(mountSite, manifest, sharedTexts.en['gallery.related.objects'])
 
     // The Source box takes the colour `projectColors` gives the item's
     // project, and the citation its name from the manifest.
@@ -698,6 +703,8 @@ export function describeExhibitionSmoke({
       expect(host.querySelector('.mwnf-dxa-gallery-item__source a')).not.toBeNull()
       app.unmount()
     }, 60000)
+
+    relatedObjectsTest(mountSite, manifest, messages.en['exhibition.related.objects'])
 
     // On display in: this exhibition's own pages that show the item open
     // here, as legacy's did.

@@ -2167,6 +2167,15 @@ a { color: inherit; }
 .mwnf-dxa-exhibition-item .mwnf-record__aside .mwnf-sheet-related__heading { font-size: 20px; }
 .mwnf-dxa-exhibition-item .mwnf-record__aside .mwnf-sheet-related__description { font-size: 16px; }
 .mwnf-dxa-exhibition-item .mwnf-sheet-notice { font-size: 16px; }
+/* The related objects' tooltip (RelatedObjects.vue) on black at 16px, where
+   the galleries' takes their dark tone at 90%. */
+.mwnf-dxa-exhibition-item .mwnf-related-objects__tooltip {
+  background: #000000;
+  font-size: 16px;
+}
+.mwnf-dxa-exhibition-item .mwnf-related-objects__tooltip::after {
+  border-inline-start-color: #000000;
+}
 .mwnf-dxa-exhibition-item .mwnf-media__image {
   max-height: 325px;
   object-position: left;
