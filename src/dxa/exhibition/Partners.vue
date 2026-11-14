@@ -4,13 +4,14 @@ import BackLink from '../../content/BackLink.vue'
 import SmartLink from '../../content/SmartLink.vue'
 import PartnerListView from '../../views/PartnerListView.vue'
 import { exhibitionPartnerBadge as badge } from '../partnerBadge.js'
-import { partnerObjectsRoute, partnerListSpec } from './data.js'
+import { partnerItemsLabel, partnerObjectsRoute, partnerListSpec } from './data.js'
 
 // An exhibition's partners list as legacy's (exhibitions-client
 // PartnersPage.vue, inventory-app#2379): the galleries' page (Back and the
 // country-order toggle on one line, the introduction and the countries in a
 // centred column, each partner its name and city, its project badge, Read
-// more · View Items, and its logo) in the exhibition's colours and sizes. The
+// more · View Objects, View Monuments or View Items as the partner holds
+// them (MWNF-653), and its logo) in the exhibition's colours and sizes. The
 // badge is `exhibitionPartnerBadge`'s (dxa/partnerBadge.js); a record of
 // legacy's mwnf3 institutions takes the institution's pages, every other
 // owner the partner's (MWNF-621). A partner holding nothing here (MWNF-384)
@@ -61,7 +62,7 @@ const spec = {
               <SmartLink :to="view.route">{{ t('partner.action.readMore') }}</SmartLink>
               <template v-if="partner.item_count > 0 && view.objectsRoute">
                 <span class="mwnf-dxa-gallery-partners__divider" aria-hidden="true">|</span>
-                <SmartLink :to="view.objectsRoute">{{ t('exhibition.partners.viewItems') }}</SmartLink>
+                <SmartLink :to="view.objectsRoute">{{ t(partnerItemsLabel(partner)) }}</SmartLink>
               </template>
             </div>
           </div>

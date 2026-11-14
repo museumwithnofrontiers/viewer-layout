@@ -1,3 +1,4 @@
+import { computed } from 'vue'
 import { partnerView, renderInline, useSiteConfig } from '@museumwnf/viewer-core'
 import { chromePicture } from '../../chrome.js'
 import { withLegacyTagOrder } from '../legacyFacets.js'
@@ -122,6 +123,40 @@ export const partnerViewCtx = {
   hidden: isHiddenPartner,
 }
 
+// What a partner's items link calls them, as legacy's exhibitions-client
+// has since MWNF-653: "View Objects", "View Monuments", or "View Items"
+// for a partner holding both. It reads the records the partner holds here,
+// not its type: a Sharing History partner is an institution that holds
+// objects.
+const heldTypes = computed(() => {
+  const held = new Map()
+  for (const item of items.value ?? []) {
+    if (!item.partner_id) continue
+    if (!held.has(item.partner_id)) held.set(item.partner_id, new Set())
+    held.get(item.partner_id).add(item.type)
+  }
+  return held
+})
+
+const ITEMS_LINK = {
+  both: 'exhibition.action.viewItems',
+  monuments: 'exhibition.action.viewMonuments',
+  objects: 'exhibition.action.viewObjects',
+}
+
+/** The items link's entry for a partner holding records of these types. */
+export function itemsLinkLabel(types = []) {
+  const held = [...types]
+  const monuments = held.includes('monument')
+  const objects = held.some((type) => type !== 'monument')
+  if (monuments && objects) return ITEMS_LINK.both
+  return monuments ? ITEMS_LINK.monuments : ITEMS_LINK.objects
+}
+
+export function partnerItemsLabel(partner) {
+  return itemsLinkLabel(heldTypes.value.get(partner?.id))
+}
+
 export const partnerDetail = {
   spec: { ...partnerSheetSpec, media: () => [], sourceCredit: false },
   visible: (id) => Boolean(visiblePartnerById(id)),
@@ -129,8 +164,8 @@ export const partnerDetail = {
   // the page draws at once, and switches when that language arrives.
   view: (partner, text) => partnerView(partner, { ...tr('partners', partner.id, defaultLang), ...text }, partnerViewCtx),
   labels: {
-    partner: { objects: 'exhibition.action.viewItems', homepage: 'exhibition.partner.homepage' },
-    institution: { objects: 'exhibition.action.viewItems', homepage: 'exhibition.action.institutionHomepage' },
+    partner: { objects: (partner) => partnerItemsLabel(partner), homepage: 'exhibition.partner.homepage' },
+    institution: { objects: (partner) => partnerItemsLabel(partner), homepage: 'exhibition.action.institutionHomepage' },
   },
   // Legacy's exhibitions-client PartnerProfile (inventory-app#2379): a
   // thumbnail for one picture too, the photographer and copyright only in
