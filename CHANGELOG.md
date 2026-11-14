@@ -1,3 +1,12 @@
+## 3.75.1 (2026-11-14)
+
+An exhibition's item sheet draws its related objects as legacy's. A site that upgrades gets it with no change of its own; it reads `exhibition.related.objects` of `@museumwnf/viewer-i18n` 6.18.0.
+
+### Fixed
+
+- **An exhibition's item sheet** draws its related objects in the Related Content column as legacy's exhibition sheet did, and as a gallery's does: 64px thumbnails under "Related Objects", those outside the package too, each with its tooltip on hover (the name, the country, why it is related), on black at 16px. It drew the results' tile grid there instead, whose card on hover did not fit the column: its text wrapped a word a line under two scrollbars.
+- **`describeExhibitionSmoke`** checks the related objects as `describeGallerySmoke` does, and both check that the sidebar draws no tile grid.
+
 ## 3.75.0 (2026-11-13)
 
 The global search's box (inventory-app M15, ADR 005), off by default: no site changes until it sets `globalSearch`. Needs `@museumwnf/viewer-core` 2.23.0 and the `layout.globalSearch.*` texts of `@museumwnf/viewer-i18n` 6.18.0.
