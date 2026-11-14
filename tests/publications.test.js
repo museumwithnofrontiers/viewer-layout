@@ -4,7 +4,7 @@ import { createMemoryHistory, createRouter } from 'vue-router'
 import { loadEntities, useDataPackage } from '@museumwnf/viewer-core'
 import { createI18n } from '@museumwnf/viewer-core/i18n'
 import {
-  availableLanguages, displayLanguage, editionsOf, editionText, formatsOf, inCategory, limitLanguages, PUBLICATION_CATEGORIES,
+  availableLanguages, displayLanguage, editionsByYear, editionsOf, editionText, formatsOf, homeLimit, inCategory, limitLanguages, PUBLICATION_CATEGORIES,
   PUBLICATION_ENTITIES, PublicationsShell, publicationsConfig, publicationsRoutes, searchPublications, themeKey, truncate,
 } from '../src/publications/index.js'
 import { layoutTexts } from './helpers.js'
@@ -118,6 +118,25 @@ describe('the rules legacy printed by', () => {
     expect(formatsOf(editionsOf(trail, index, 'en'))).toEqual(['Paperback', 'eBook'])
   })
 
+  it('lists a book’s editions on its page newest year first, as legacy’s API read them', () => {
+    // Andalusian Morocco (book 5): the 2000 print edition comes first in the
+    // package's order; legacy's page opened on the 2010 paperback.
+    const editions = new Map([
+      ['print-2000', { id: 'print-2000', language: 'en', publish_year: 2000, display_order: 60 }],
+      ['digp-2010', { id: 'digp-2010', language: 'en', publish_year: 2010, display_order: 61 }],
+      ['ebook-2010', { id: 'ebook-2010', language: 'en', publish_year: 2010, display_order: 62 }],
+      ['fr-2003', { id: 'fr-2003', language: 'fr', publish_year: 2003, display_order: 63 }],
+      ['no-year', { id: 'no-year', language: 'en', publish_year: null, display_order: 1 }],
+    ])
+    const book = { edition_ids: ['print-2000', 'digp-2010', 'ebook-2010', 'fr-2003', 'no-year'] }
+    expect(editionsByYear(book, editions, 'en').map((e) => e.id)).toEqual(['digp-2010', 'ebook-2010', 'print-2000', 'no-year'])
+    // The tiles keep the package's order, which legacy's lists printed the formats in.
+    expect(editionsOf(book, editions, 'en').map((e) => e.id)).toEqual(['no-year', 'print-2000', 'digp-2010', 'ebook-2010'])
+  })
+
+  it('keeps as many home tiles per band as legacy’s widths did', () => {
+    expect([1920, 1350, 1349, 1124, 899, 699, 474, 390].map(homeLimit)).toEqual([6, 6, 5, 4, 3, 2, 1, 1])
+  })
   it('takes a version’s own texts over the book’s, field by field, as legacy’s API named them', () => {
     const book = { title: 'Book', subtitle: 'Sub', description: 'About', introduction: 'More', author_credit: 'A' }
     // about_this_book is description2, more_about_this_book description1 (BookDetailResource).

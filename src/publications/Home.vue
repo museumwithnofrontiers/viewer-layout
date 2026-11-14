@@ -11,7 +11,7 @@ import { homeLimit, inCategory, PAGE_SIZE } from './rules.js'
 import Tile from './Tile.vue'
 
 const { t } = useI18n()
-const data = usePublications()
+const data = usePublications({ tiles: true })
 
 // Legacy kept a band on one line: as many tiles as the window's width holds
 // (assignBooks), the first page's on a wide screen.

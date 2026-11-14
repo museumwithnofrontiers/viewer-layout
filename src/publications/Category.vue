@@ -16,7 +16,7 @@ const props = defineProps({
 const { t } = useI18n()
 const route = useRoute()
 const router = useRouter()
-const data = usePublications()
+const data = usePublications({ tiles: true })
 
 const entry = computed(() => categoryBySlug(props.category, data.categories.value))
 const pageInfo = computed(() => paginate(entry.value ? data.inCategory(entry.value, inCategory) : [], route.query.page ?? 1, PAGE_SIZE))
