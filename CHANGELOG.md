@@ -1,3 +1,15 @@
+## 3.77.0 (2026-11-14)
+
+An exhibition's partner pages in legacy's words since MWNF-653, and the Books and Travels pages out of this package (appearance review 2026-11-14, findings E1 and C1). A site upgrading needs `@museumwnf/viewer-i18n` 6.19.0 for the exhibition texts.
+
+### Changed
+
+- **An exhibition's partner items link** reads "View Objects", "View Monuments", or "View Items" for a partner holding both, on the Partners page and the partner's page, as legacy's exhibitions client has since 12 November 2026 (`exhibition.action.viewObjects` / `.viewMonuments` / `.viewItems`). It reads what the partner holds in the exhibition, not its type: a Sharing History partner is an institution holding objects. The map's line is viewer-i18n 6.19.0's "Partner on Google Maps".
+- **`PartnerDetail`**: a family's `labels.<variant>.objects` may be a function of the partner record returning the entry name.
+
+### Removed
+
+- **`./publications` and `./travels`**: the Books and Travels sites keep their pages in their own repositories, on Explore's model (museumwithnofrontiers/publications#11, museumwithnofrontiers/travels#11), and no site imports these entries any more. Their styles leave `style.css` with them.
 ## 3.76.1 (2026-11-14)
 
 A site that upgrades gets it with no change of its own.

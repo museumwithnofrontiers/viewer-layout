@@ -4,7 +4,7 @@ import { loadEntities, useDataPackage } from '@museumwnf/viewer-core'
 import ExhibitionSearchHowTo from '../../src/dxa/exhibition/SearchHowTo.vue'
 import ExhibitionPartners from '../../src/dxa/exhibition/Partners.vue'
 import PartnerDetail from '../../src/dxa/PartnerDetail.vue'
-import { partnerDetail } from '../../src/dxa/exhibition/data.js'
+import { itemsLinkLabel, partnerDetail } from '../../src/dxa/exhibition/data.js'
 import ExhibitionSearchResults from '../../src/dxa/exhibition/SearchResults.vue'
 import ExhibitionTimelineResults from '../../src/dxa/exhibition/TimelineResults.vue'
 import ExhibitionTimelineGallery from '../../src/dxa/exhibition/TimelineGallery.vue'
@@ -72,6 +72,24 @@ describe('ExhibitionPartners', () => {
     await settle(() => wrapper.text().includes('Zed Museum'))
     expect(wrapper.html()).toContain('href="/partner/p1"')
   })
+
+  // Legacy's PartnersPage since MWNF-653: the link names what the partner holds.
+  it('names the items link by what the partner holds', async () => {
+    const { wrapper } = await mountPage(ExhibitionPartners, { messages: texts })
+    await settle(() => wrapper.text().includes('Zed Museum'))
+    const row = wrapper.findAll('.mwnf-dxa-gallery-partners__partner').find((r) => r.text().includes('Zed Museum'))
+    expect(row.find('.mwnf-dxa-gallery-partners__links').text()).toContain('View objects')
+  })
+})
+
+describe('itemsLinkLabel', () => {
+  it('reads View Objects, View Monuments, or View Items for both', () => {
+    expect(itemsLinkLabel(['object'])).toBe('exhibition.action.viewObjects')
+    expect(itemsLinkLabel([null])).toBe('exhibition.action.viewObjects')
+    expect(itemsLinkLabel(new Set(['monument']))).toBe('exhibition.action.viewMonuments')
+    expect(itemsLinkLabel(['monument', 'object'])).toBe('exhibition.action.viewItems')
+    expect(itemsLinkLabel(undefined)).toBe('exhibition.action.viewObjects')
+  })
 })
 
 // The exhibition's partner page: the family's shared PartnerDetail with its
@@ -85,6 +103,7 @@ describe('PartnerDetail (exhibition)', () => {
     })
     await settle(() => wrapper.text().includes('fixture'))
     expect(wrapper.text()).toContain('fixture')
+    expect(wrapper.find('.mwnf-partner-panel__actions').text()).toContain('View objects')
   })
 
   it('heads the page with the partner name and "city, country"', async () => {

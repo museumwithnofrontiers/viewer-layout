@@ -27,7 +27,8 @@ import RecordView from '../views/RecordView.vue'
 //                                 exhibitions' hidden rule)
 //     view(partner, text),        viewer-core's partnerView() with the
 //                                 family's routes, over its English text
-//     labels: { partner, institution? }  → { objects, homepage } entries
+//     labels: { partner, institution? }  → { objects, homepage } entries;
+//                                 `objects` may be a function of the record
 //     className,                  the family's own class on the page
 //     media,                      the pictures' strip (PartnerPanel's `media`)
 //     legacyMap: { label },       legacy's map instead of the panel's: under
@@ -46,6 +47,13 @@ const props = defineProps({
 const { t } = useI18n()
 
 const labels = computed(() => props.family.labels?.[props.variant] ?? props.family.labels?.partner ?? {})
+
+// The items link's entry, or a function of the partner record naming it
+// (the exhibitions word it by what the partner holds).
+function objectsLabel(record) {
+  const label = labels.value.objects
+  return (typeof label === 'function' ? label(record) : label) ?? 'partner.action.viewObjects'
+}
 </script>
 
 <template>
@@ -73,7 +81,7 @@ const labels = computed(() => props.family.labels?.[props.variant] ?? props.fami
       >
         <template #actions="{ partner }">
           <SmartLink v-if="partner.objectsRoute" class="mwnf-button" :to="partner.objectsRoute">
-            {{ t(labels.objects ?? 'partner.action.viewObjects') }}
+            {{ t(objectsLabel(record)) }}
           </SmartLink>
         </template>
         <template v-if="family.legacyMap" #after="{ partner }">
