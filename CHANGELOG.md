@@ -1,3 +1,11 @@
+## 3.76.1 (2026-11-14)
+
+A site that upgrades gets it with no change of its own.
+
+### Fixed
+
+- **An itinerary's gallery** draws its thumbnails 30px square again. 3.76.0 sized them, but the base `img { max-width: 100% }` resolved against the shrink-to-fit button and collapsed each picture to its 2px frame. The frame now sits outside the picture, as legacy's did.
+
 ## 3.76.0 (2026-11-14)
 
 What the appearance comparison of the Books and Travels sites with legacy found. A site that upgrades gets it with no change of its own.

@@ -96,7 +96,10 @@
    stretched, in a 1px gold frame, 5px apart. */
 .mwnf-travels-gallery__thumbs { display: flex; flex-wrap: wrap; align-content: flex-start; gap: 5px; width: 350px; }
 .mwnf-travels-gallery__thumb { padding: 0; border: 0; background: transparent; cursor: pointer; }
-.mwnf-travels-gallery__thumb img { display: block; width: 30px; height: 30px; border: 1px solid var(--mwnf-travels-thumb-border, #fc6); }
+/* max-width: none, because the base `img { max-width: 100% }` resolves against
+   the shrink-to-fit button and collapses the picture to its border. The frame
+   sits outside the 30px picture, as legacy's did. */
+.mwnf-travels-gallery__thumb img { display: block; box-sizing: content-box; width: 30px; height: 30px; max-width: none; border: 1px solid var(--mwnf-travels-thumb-border, #fc6); }
 
 /* ── Footer ─────────────────────────────────────────────────────────────── */
 .mwnf-travels-footer { padding: 10px 32px; font-size: 10px; text-align: center; }
