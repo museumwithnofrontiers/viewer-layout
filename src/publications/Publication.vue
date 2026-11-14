@@ -21,7 +21,7 @@ import { useRouter } from 'vue-router'
 import { byId, isRtl, renderBlock, useI18n } from '@museumwnf/viewer-core'
 import { usePublications } from './data.js'
 import {
-  availableLanguages, displayLanguage, documentsOf, editionsOf, editionText, present,
+  availableLanguages, displayLanguage, documentsOf, editionsByYear, editionText, present,
 } from './rules.js'
 
 const props = defineProps({
@@ -43,7 +43,7 @@ const dir = computed(() => (isRtl(current.value) ? 'rtl' : 'ltr'))
 /** A label in the version's language, English where legacy had none. */
 const label = (key) => tIn(current.value, key)
 
-const editions = computed(() => (publication.value ? editionsOf(publication.value, data.editionById.value, current.value) : []))
+const editions = computed(() => (publication.value ? editionsByYear(publication.value, data.editionById.value, current.value) : []))
 const index = ref(0)
 watch([() => props.id, current], () => { index.value = 0 })
 const edition = computed(() => editions.value[index.value] ?? editions.value[0] ?? null)

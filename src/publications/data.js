@@ -22,21 +22,26 @@ export function categoriesOf(config) {
 /**
  * The books and what every page derives from them. `languagesToLoad` (a
  * getter) names the languages whose texts the page needs on top of English.
+ * `tiles`: the page draws books as tiles, each in its main language (legacy's
+ * display_lang_id), so the texts of every book's main language are loaded —
+ * an Arabic-only book's tile takes its title from its Arabic texts.
  */
-export function usePublications({ languagesToLoad = () => [] } = {}) {
+export function usePublications({ languagesToLoad = () => [], tiles = false } = {}) {
   const pkg = useDataPackage()
   const config = useSiteConfig()
   const { locale } = useI18n()
   const editionById = byId('editions')
   const publicationById = byId('publications')
 
+  const all = computed(() => publications.value ?? [])
+  const tileLanguages = () => (tiles ? all.value.map((publication) => displayLanguage(publication, editionById.value)) : [])
+
   watch(
-    () => [...new Set(['en', locale.value, ...languagesToLoad()])],
+    () => [...new Set(['en', locale.value, ...languagesToLoad(), ...tileLanguages()])].filter(Boolean),
     (codes) => Promise.all(codes.flatMap((code) => [pkg.loadTranslations('publications', code), pkg.loadTranslations('countries', code)])),
     { immediate: true },
   )
 
-  const all = computed(() => publications.value ?? [])
   const categories = computed(() => categoriesOf(config))
 
   /** A book's texts in one language, `{}` where it has none. */

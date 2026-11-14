@@ -27,14 +27,18 @@ export const PUBLICATION_CATEGORIES = Object.freeze([
 ])
 
 /**
- * How many tiles a home page band shows at a window's width: legacy cut its
- * first page to 3 under 900px, 4 under 1125px, 5 under 1350px (assignBooks).
+ * How many tiles a home page band shows at a window's width: legacy kept six
+ * of a category's first page, and cut them to 5 up to 1349px, 4 up to 1124px,
+ * 3 up to 899px, 2 up to 699px and 1 up to 474px (assignBooks, its
+ * max-width media queries).
  */
 export function homeLimit(width) {
-  if (width < 900) return 3
-  if (width < 1125) return 4
-  if (width < 1350) return 5
-  return Infinity
+  if (width <= 474) return 1
+  if (width <= 699) return 2
+  if (width <= 899) return 3
+  if (width <= 1124) return 4
+  if (width <= 1349) return 5
+  return 6
 }
 
 /** The search form's keys, as legacy's client wrote them in the results' address. */
@@ -89,6 +93,16 @@ export function editionsOf(publication, editionById, language = null) {
     if (edition && (!language || edition.language === language)) out.push(edition)
   }
   return out.sort(byOrder)
+}
+
+/**
+ * A book's editions as its page lists them: the newest publication year
+ * first, as legacy's book API read them (`orderBy('publish_year', 'desc')`),
+ * then in their order. The page opens on the first.
+ */
+export function editionsByYear(publication, editionById, language = null) {
+  const year = (edition) => Number(edition.publish_year) || 0
+  return editionsOf(publication, editionById, language).sort((a, b) => year(b) - year(a) || byOrder(a, b))
 }
 
 /**

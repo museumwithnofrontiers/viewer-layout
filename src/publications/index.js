@@ -18,7 +18,7 @@ export { categoriesOf, usePublications } from './data.js'
 export { PUBLICATIONS_FOOTER } from './footer.js'
 export { publicationsConfig, publicationsRoutes } from './routes.js'
 export {
-  availableLanguages, categoryBySlug, displayLanguage, documentsOf, editionsOf, editionText, FORMATS, formatsOf, hasSearch, homeLimit,
+  availableLanguages, categoryBySlug, displayLanguage, documentsOf, editionsByYear, editionsOf, editionText, FORMATS, formatsOf, hasSearch, homeLimit,
   inCategory, limitLanguages, PAGE_SIZE, present, PUBLICATION_CATEGORIES, PUBLICATION_ENTITIES, SEARCH_KEYS,
   searchPublications, themeKey, truncate,
 } from './rules.js'

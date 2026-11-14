@@ -1,3 +1,17 @@
+## 3.76.0 (2026-11-14)
+
+What the appearance comparison of the Books and Travels sites with legacy found. A site that upgrades gets it with no change of its own.
+
+### Added
+
+- **`editionsByYear`** (`/publications`): a book's editions newest year first, then in their order, as legacy's book API read them.
+
+### Fixed
+
+- **A book's page** opens on its newest edition and lists the editions newest year first, as legacy did (`orderBy('publish_year', 'desc')`). It opened on the package's first edition: *Andalusian Morocco* showed its 2000 print edition, without an ISBN, instead of the 2010 paperback.
+- **The Books home page** keeps six books per category band, and 5, 4, 3, 2 or 1 as the window narrows past 1349, 1124, 899, 699 and 474px, as legacy's `assignBooks` did. It showed a category's whole first page on a wide screen, and three on a phone.
+- **A book's tile** on the home and category pages takes its texts in the book's main language. An Arabic-only book (the *MWNF Educational Guide*) drew a tile without a title or subtitle, because only the English and page-language texts were loaded.
+- **An itinerary's gallery** draws its thumbnails as legacy did: every picture 30px square in a 1px gold frame, 5px apart. They kept each picture's proportions.
 ## 3.75.1 (2026-11-14)
 
 An exhibition's item sheet draws its related objects as legacy's. A site that upgrades gets it with no change of its own; it reads `exhibition.related.objects` of `@museumwnf/viewer-i18n` 6.18.0.
