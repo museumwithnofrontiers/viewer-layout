@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import { mount } from '@vue/test-utils'
 import RelatedObjects from '../../src/dxa/RelatedObjects.vue'
+import { relatedKind } from '../../src/dxa/relatedKind.js'
 
 describe('RelatedObjects', () => {
   const tiles = [
@@ -26,5 +27,21 @@ describe('RelatedObjects', () => {
   it('draws nothing without related objects', () => {
     const wrapper = mount(RelatedObjects, { props: { heading: 'Related Objects', tiles: [] } })
     expect(wrapper.find('.mwnf-related-objects').exists()).toBe(false)
+  })
+})
+
+describe('relatedKind', () => {
+  const itemById = new Map([['m-here', { id: 'm-here', type: 'monument' }], ['o-here', { id: 'o-here', type: 'object' }]])
+
+  it('reads the type the exporter writes on the entry', () => {
+    expect(relatedKind({ id: 'x', type: 'monument' }, itemById)).toBe('monument')
+    expect(relatedKind({ id: 'm-here', type: 'object' }, itemById)).toBe('object')
+  })
+
+  it('falls back to the record in the package, and counts an untyped entry outside as an object', () => {
+    expect(relatedKind({ id: 'm-here' }, itemById)).toBe('monument')
+    expect(relatedKind({ id: 'o-here' }, itemById)).toBe('object')
+    expect(relatedKind({ id: 'elsewhere' }, itemById)).toBe('object')
+    expect(relatedKind({ id: 'elsewhere' })).toBe('object')
   })
 })
