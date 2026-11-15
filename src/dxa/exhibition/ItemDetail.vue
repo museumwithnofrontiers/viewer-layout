@@ -21,6 +21,9 @@ const WORDS = {
   // Legacy's exhibition sheet drew its related objects as the galleries'
   // do: 64px thumbnails with a tooltip beside them (RelatedObjects.vue).
   relatedObjects: 'exhibition.related.objects',
+  // Legacy's client drew only the related objects; its API also returned the
+  // related monuments, drawn apart as Discover Islamic Art's sheet did.
+  relatedMonuments: 'exhibition.related.monuments',
 }
 const inBuild = (itemId) => itemById.value.get(itemId)
 </script>

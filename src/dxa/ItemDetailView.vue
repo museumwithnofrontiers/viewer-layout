@@ -247,14 +247,20 @@ function relatedInfo(record, ctx) {
   const overallDatabase = s.overallDatabase && s.overallDatabase !== false
     ? { label: t(s.overallDatabase.label), linkLabel: t(s.overallDatabase.linkLabel) }
     : null
+  // `objectTiles({ record, inPackage, references, ctx })`: legacy's Related
+  // Objects (RelatedObjects.vue), every related object a thumbnail, in place
+  // of the grid and the reference list. With `monumentsHeading`, the tiles
+  // whose `kind` is a monument are drawn apart under it, after the objects,
+  // as Discover Islamic Art's sheet drew its "Related monuments".
+  const allTiles = s.objectTiles ? s.objectTiles({ record, inPackage, references, ctx }) : null
+  const apart = Boolean(allTiles && s.monumentsHeading)
   return {
     title: s.title ? t(s.title) : '',
     description: s.description ? t(s.description) : '',
     heading: t(s.heading ?? 'record.related.items'),
-    // `objectTiles({ record, inPackage, references, ctx })`: legacy's
-    // Related Objects (RelatedObjects.vue), every related object a thumbnail,
-    // in place of the grid and the reference list.
-    tiles: s.objectTiles ? s.objectTiles({ record, inPackage, references, ctx }) : null,
+    tiles: apart ? allTiles.filter((tile) => tile.kind !== 'monument') : allTiles,
+    monumentsHeading: apart ? t(s.monumentsHeading) : '',
+    monumentTiles: apart ? allTiles.filter((tile) => tile.kind === 'monument') : [],
     variant: s.variant ?? 'grid',
     actionLabel: s.actionLabel ? t(s.actionLabel) : '',
     inPackage,
@@ -359,6 +365,7 @@ function printSheet() {
                 </li>
               </ul>
             </RelatedRecords>
+            <RelatedObjects v-if="rel.monumentTiles.length" :heading="rel.monumentsHeading" :tiles="rel.monumentTiles" class="mwnf-related-objects--monuments" />
 
             <p v-if="rel.artisticIntroduction" class="mwnf-sheet-related__line">
               <a :href="rel.artisticIntroduction.url" target="_blank" rel="noopener">↗ {{ rel.artisticIntroduction.label }}</a>

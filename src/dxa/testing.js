@@ -12,6 +12,7 @@
 import { describe, expect, it, vi } from 'vitest'
 import { loadEntities, mergeMessages } from '@museumwnf/viewer-core'
 import * as viewerCore from '@museumwnf/viewer-core'
+import { relatedKind } from './relatedKind.js'
 
 // A link to a legacy site that has a new one is drawn with the new site's
 // address from viewer-core 2.18.0 on (inventory-app#2482), as stored before.
@@ -168,25 +169,37 @@ function searchTests(mountSite, loadItems) {
 }
 
 // Legacy's Related Objects: every related object a thumbnail under "Related
-// Objects", those outside this site's package too (inventory-app#2491). One
-// outside whose project has a site of its own links to it there. Both
-// families drew them so; `heading` is the family's own word for them. An
+// Objects", those outside this site's package too (inventory-app#2491), and
+// the related monuments apart under "Related Monuments", after them, as
+// Discover Islamic Art's sheet drew them (inventory-app#2611). One outside
+// whose project has a site of its own links to it there. Both families draw
+// them so; `headings` are the family's own words for the two blocks. An
 // exhibition's sheet shows only the records its build carries in English.
-function relatedObjectsTest(mountSite, manifest, heading) {
-  it('draws every related object as a thumbnail, those outside the package too', async () => {
+function relatedObjectsTest(mountSite, manifest, headings) {
+  it('draws every related object and monument as a thumbnail, apart, those outside the package too', async () => {
     const [items] = await loadEntities(['items'])
+    const byId = new Map(items.map((i) => [i.id, i]))
+    const isMonument = (ref) => relatedKind(ref, byId) === 'monument'
     const shown = items.filter((i) => !i.languages?.length || i.languages.includes('en'))
-    const item = shown.find((i) => (i.related_items ?? []).some((ref) => ref.in_package === false))
-      ?? shown.find((i) => (i.related_items ?? []).length)
+    const related = (i) => i.related_items ?? []
+    const item = shown.find((i) => related(i).some(isMonument) && related(i).some((ref) => !isMonument(ref)) && related(i).some((ref) => ref.in_package === false))
+      ?? shown.find((i) => related(i).some((ref) => ref.in_package === false))
+      ?? shown.find((i) => related(i).length)
     if (!item) return
     const { app, host } = await mountSite(`#/item/${item.id}?lang=en`)
     await vi.waitFor(() => expect(host.querySelector('.mwnf-related-objects__tile')).not.toBeNull(), WAIT)
-    const block = host.querySelector('.mwnf-related-objects')
-    expect(block.querySelector('.mwnf-related-objects__heading').textContent).toBe(heading)
-    expect(block.querySelectorAll('.mwnf-related-objects__tile')).toHaveLength(item.related_items.length)
+    const expected = [
+      [headings.objects, item.related_items.filter((ref) => !isMonument(ref))],
+      [headings.monuments, item.related_items.filter(isMonument)],
+    ].filter(([, refs]) => refs.length)
+    const blocks = [...host.querySelectorAll('.mwnf-related-objects')]
+    expect(blocks.map((block) => block.querySelector('.mwnf-related-objects__heading').textContent)).toEqual(expected.map(([heading]) => heading))
+    expected.forEach(([, refs], index) => {
+      expect(blocks[index].querySelectorAll('.mwnf-related-objects__tile')).toHaveLength(refs.length)
+    })
     const outside = item.related_items.find((ref) => ref.in_package === false && manifest.projects[ref.project_id]?.home_site)
     if (outside) {
-      const hrefs = [...block.querySelectorAll('.mwnf-related-objects__link')].map((a) => a.getAttribute('href') ?? '')
+      const hrefs = blocks.flatMap((block) => [...block.querySelectorAll('.mwnf-related-objects__link')].map((a) => a.getAttribute('href') ?? ''))
       expect(hrefs.some((href) => href.endsWith(`/item/${outside.id}`))).toBe(true)
     }
     expect(host.querySelector('.mwnf-sheet-related__references')).toBeNull()
@@ -370,7 +383,7 @@ export function describeGallerySmoke({ config, sharedTexts, ownTexts, manifest, 
       app.unmount()
     }, 60000)
 
-    relatedObjectsTest(mountSite, manifest, sharedTexts.en['gallery.related.objects'])
+    relatedObjectsTest(mountSite, manifest, { objects: sharedTexts.en['gallery.related.objects'], monuments: sharedTexts.en['gallery.related.monuments'] })
 
     // The Source box takes the colour `projectColors` gives the item's
     // project, and the citation its name from the manifest.
@@ -704,7 +717,7 @@ export function describeExhibitionSmoke({
       app.unmount()
     }, 60000)
 
-    relatedObjectsTest(mountSite, manifest, messages.en['exhibition.related.objects'])
+    relatedObjectsTest(mountSite, manifest, { objects: messages.en['exhibition.related.objects'], monuments: messages.en['exhibition.related.monuments'] })
 
     // On display in: this exhibition's own pages that show the item open
     // here, as legacy's did.

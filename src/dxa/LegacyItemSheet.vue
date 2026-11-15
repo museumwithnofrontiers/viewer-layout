@@ -8,6 +8,7 @@ import BackLink from '../content/BackLink.vue'
 import RecordLanguages from '../content/RecordLanguages.vue'
 import ItemDetailView from './ItemDetailView.vue'
 import { galleryExhibitionSections } from './gallery/onDisplay.js'
+import { relatedKind } from './relatedKind.js'
 
 // Legacy's DXA item sheet (dxa-client's and exhibitions-client's
 // DatabaseItem.vue, the same template; inventory-app#2423, #2379):
@@ -32,7 +33,8 @@ const props = defineProps({
    * The family's entry names for legacy's words:
    * `{ viewShortDescription, hideShortDescription, glossary, dynasties, exhibitions, workingNumber }`,
    * and `relatedObjects` for a family that draws legacy's Related Objects
-   * (RelatedObjects.vue; both families do).
+   * (RelatedObjects.vue; both families do), with `relatedMonuments` for the
+   * heading its related monuments are drawn under, apart.
    */
   words: { type: Object, required: true },
 })
@@ -51,15 +53,20 @@ const inLanguage = (byLanguage, language) =>
 
 // Legacy's Related Objects: every related object a thumbnail. One in this
 // package opens here; one elsewhere opens on its project's site, from what
-// its `related_items` entry carries (inventory-app#2491).
+// its `related_items` entry carries (inventory-app#2491). Each tile says its
+// `kind`, so the related monuments are drawn apart under their own heading.
 function objectTiles({ record, inPackage, references, ctx }) {
   const language = ctx.language
   const refs = new Map((record.related_items ?? []).map((ref) => [ref.id, ref]))
   const justification = (id) => mdStrip(inLanguage(refs.get(id)?.justifications, language))
+  const kind = (id) => relatedKind(refs.get(id) ?? { id }, catalogue.itemById.value)
+  // Legacy took the name's closing full stop off ("Column capital, Jordan").
+  const named = (name) => (name ?? '').replace(/\.$/, '')
   const here = inPackage.map((row) => ({
     id: row.id,
+    kind: kind(row.id),
     image: row.image,
-    name: row.name,
+    name: named(row.name),
     country: catalogue.countryLabel(catalogue.itemById.value.get(row.id)?.country_id),
     justification: justification(row.id),
     to: row.to,
@@ -68,8 +75,9 @@ function objectTiles({ record, inPackage, references, ctx }) {
     const home = projects.links(ref.project_id)?.homeSite
     return {
       id: ref.id,
+      kind: kind(ref.id),
       image: ref.image ?? '',
-      name: mdInline(inLanguage(ref.names, language)),
+      name: named(mdInline(inLanguage(ref.names, language))),
       country: catalogue.countryLabel(ref.country_id),
       justification: justification(ref.id),
       href: home ? siblingSiteUrl(home, `/item/${ref.id}`) : '',
@@ -98,6 +106,7 @@ const spec = computed(() => ({
     dynastiesHeading: props.words.dynasties,
     mediaHeadings: { audio: props.words.relatedAudio, video: props.words.relatedVideos },
     ...(props.words.relatedObjects ? { heading: props.words.relatedObjects, objectTiles } : {}),
+    ...(props.words.relatedMonuments ? { monumentsHeading: props.words.relatedMonuments } : {}),
     onDisplayIn: {
       ...props.itemDetail.related?.onDisplayIn,
       exhibitionsHeading: props.words.exhibitions,

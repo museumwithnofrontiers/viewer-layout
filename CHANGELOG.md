@@ -1,3 +1,14 @@
+## 3.78.0 (2026-11-15)
+
+A DXA item sheet's related monuments drawn apart from its related objects, under a heading of their own (inventory-app#2611). A site upgrading needs `@museumwnf/viewer-i18n` 6.20.0 for the heading.
+
+### Changed
+
+- **Related Objects** on a gallery's and an exhibition's item sheet holds only the related objects, as legacy's DXA client drew them. The related monuments, which legacy's API returned but its client never drew, follow under **Related Monuments** (`gallery.related.monuments` / `exhibition.related.monuments`), as Discover Islamic Art's legacy sheet drew them: the same thumbnails, tooltips and links. An entry's `type` (data packages exported from inventory-app#2611 on) says which; an older entry takes its record's type in the package, else counts as an object.
+- **A related item's tooltip** names it without its closing full stop ("Column capital, Jordan"), as legacy's client took it off.
+- **`ItemDetailView`**: a spec's `related.monumentsHeading` draws the `objectTiles` whose `kind` is `monument` in a second Related Objects block, after the first. **`LegacyItemSheet`**: `words.relatedMonuments` sets it; each tile carries its `kind`.
+- **The DXA smoke suite** (`./dxa/testing`) expects the two blocks, each with its own heading and tiles.
+
 ## 3.77.0 (2026-11-14)
 
 An exhibition's partner pages in legacy's words since MWNF-653, and the Books and Travels pages out of this package (appearance review 2026-11-14, findings E1 and C1). A site upgrading needs `@museumwnf/viewer-i18n` 6.19.0 for the exhibition texts.

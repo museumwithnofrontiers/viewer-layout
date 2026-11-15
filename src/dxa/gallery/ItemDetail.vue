@@ -18,6 +18,9 @@ const WORDS = {
   relatedAudio: 'gallery.related.audio',
   relatedVideos: 'gallery.related.videos',
   relatedObjects: 'gallery.related.objects',
+  // Legacy's client drew only the related objects; its API also returned the
+  // related monuments, drawn apart as Discover Islamic Art's sheet did.
+  relatedMonuments: 'gallery.related.monuments',
 }
 </script>
 
