@@ -37,7 +37,7 @@ const curatorName = (curator) =>
   })
 const curatorHref = (curator) => curatorLink(curator, settings.partnerHref)
 
-const credits = computed(() => (root.value ? text(root.value.id).extra?.credits ?? '' : ''))
+const credits = computed(() => (root.value ? text(root.value.id).extra?.exhibition_credits ?? '' : ''))
 const design = computed(() => settings.design ?? null)
 const banner = computed(() => picture(settings.banner))
 
