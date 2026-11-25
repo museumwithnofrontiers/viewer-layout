@@ -34,7 +34,7 @@ watch([title, lang], () => {
     <div class="mwnf-artintro-home__title" v-html="data.mdInline(title)" />
     <div class="mwnf-artintro-home__subtitle" v-html="data.mdInline(own.extra?.subtitle ?? '')" />
     <div class="mwnf-artintro-home__description" v-html="description" />
-    <div class="mwnf-artintro-home__credits" v-html="data.mdInline(own.extra?.credits ?? '')" />
+    <div class="mwnf-artintro-home__credits" v-html="data.mdInline(own.extra?.exhibition_credits ?? '')" />
     <!-- eslint-enable vue/no-v-html -->
     <div class="mwnf-artintro-home__menu">
       <div v-for="{ theme, number } in firstColumn" :key="theme.id">

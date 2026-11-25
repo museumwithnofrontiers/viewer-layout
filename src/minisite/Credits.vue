@@ -5,7 +5,7 @@ import { computed } from 'vue'
 import { useExhibition } from './exhibition.js'
 
 const { data, root, text, title } = useExhibition()
-const credits = computed(() => (root.value ? data.md(text(root.value.id).extra?.credits) : ''))
+const credits = computed(() => (root.value ? data.md(text(root.value.id).extra?.exhibition_credits) : ''))
 </script>
 
 <template>

@@ -1,3 +1,11 @@
+## 3.79.0 (2026-11-25)
+
+A mini-site reads its exhibition's credits under the key the data packages give them since inventory-app#2795. A site upgrading needs a data package exported from that change on.
+
+### Changed
+
+- **The exhibition's credits** on a mini-site (the credits window, Discover Baroque Art's home band, the Artistic Introduction's home) are read from `extra.exhibition_credits`, the credit's category since inventory-app#2795, instead of `extra.credits`. The packages ship both keys until every site reads the new one.
+
 ## 3.78.0 (2026-11-15)
 
 A DXA item sheet's related monuments drawn apart from its related objects, under a heading of their own (inventory-app#2611). A site upgrading needs `@museumwnf/viewer-i18n` 6.20.0 for the heading.
